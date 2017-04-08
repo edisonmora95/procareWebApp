@@ -1,0 +1,22 @@
+{
+  "name": "procareapp",
+  "description": "",
+  "main": "",
+  "authors": [
+    "edisonmora95 <edison_andre_9@hotmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/javiteri95/procareWebApp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "materialize": "^0.98.1",
+    "jquery": "^3.2.1",
+    "vue": "^2.2.6"
+  }
+}
