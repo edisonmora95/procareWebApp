@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecs-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+	</head>
+	<body>
+		<header>
+			
+		</header>
+		<main>
+			<div class="container" id="app">
+				<!--Row ver procariano-->
+				<div class="row rowVer" id="rowVer">
+					<div class="col s12">
+						<div class="card">
+							<div class="card-content">
+								<!--Nombres-->
+								<div class="row rowVer" id="rowVerNombres">
+									<div class="col s6" id="verNombre">
+										<label>Nombres</label>
+										<p>{{procariano.nombres}}</p>
+									</div>
+									<div class="col s6" id="verApellido">
+										<label>Apellidos</label>
+										<p>{{procariano.apellidos}}</p>
+									</div>
+								</div>
+								<!--Cedula-fecha-->
+								<div class="row rowVer" id="rowVerCedulaFecha">
+									<div class="col s6" id="verCedula">
+										<label>Cédula</label>
+										<p>{{procariano.cedula}}</p>
+									</div>
+									<div class="col s6" id="verFecha">
+										<label>Fecha de nacimiento</label>
+										<p>{{procariano.fechaNacimiento}}</p>
+									</div>
+								</div>
+								<!--Direccion-email-->
+								<div class="row rowVer" id="rowVerDireccionEmail">
+									<div class="col s6" id="verDireccion">
+										<label>Dirección</label>
+										<p>{{procariano.direccion}}</p>
+									</div>
+									<div class="col s6" id="verEmail">
+										<label>Email</label>
+										<p>{{procariano.email}}</p>
+									</div>
+								</div>
+								<!--Celular-convencional-->
+								<div class="row rowVer" id="rowVerTelefonos">
+									<div class="col s6" id="verConvencional">
+										<label>Convencional</label>
+										<p>{{procariano.convencional}}</p>
+									</div>
+									<div class="col s6" id="verCelular">
+										<label>Celular</label>
+										<p>{{procariano.celular}}</p>
+									</div>
+								</div>
+								<!--Tipo-grupo-->
+								<div class="row rowVer" id="rowVerTipoGrupo">
+									<div class="col s6" id="verTipo">
+										<label>Tipo</label>
+										<p>{{procariano.tipo}}</p>
+									</div>
+									<div class="col s6" id="verGrupo">
+										<label>Grupo</label>
+										<p>{{procariano.grupo}}</p>
+									</div>
+								</div>
+								<!--Colegio-Universidad-->
+								<div class="row rowVer" id="rowVerEducacion">
+									<div class="col s6" id="verColegio">
+										<label>Colegio</label>
+										<p>{{procariano.colegio}}</p>
+									</div>
+									<div class="col s6" id="verUniversidad">
+										<label>Universidad</label>
+										<p>{{procariano.universidad}}</p>
+									</div>
+								</div>
+								<!--Botones-->
+								<div class="row row-botones">
+									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action">Eliminar<a>
+									<a class="btn waves-effect waves-light pull right" type="submit" name="action">Editar<a>
+								</div>
+							</div><!--End card content-->
+						</div><!--End card-->
+					</div>
+				</div>
+				<!--End row ver procariano-->
+			</div>
+		</main>
+		<footer>
+			<script src='/bower_components/jquery/dist/jquery.js'></script>
+			<script src='/bower_components/materialize/bin/materialize.js'></script>
+			<script src='/bower_components/vue/dist/vue.js'></script>
+			<script src="/js/procariano/verProcarianoScript.js"></script>
+		</footer>
+	</body>
+</html>

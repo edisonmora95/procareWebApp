@@ -1,3 +1,5 @@
+Vue.use(VueMaterial)
+
 var main = new Vue({
 	el: '#main',
 	mounted: function(){
@@ -28,7 +30,8 @@ var main = new Vue({
 			trabajo: '',
 			parroquia: '',
 			fechaOrdenacion: ''
-		}
+		},
+		src: ''
 	},
 	methods: {
 		prueba: function(){

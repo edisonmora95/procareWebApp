@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+		<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/scripts/vue-material/dist/vue-material.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/asistencias/subirAsistenciasStyles.css">
+	</head>
+	<body>
+		<main>
+			<div id="app" class="container">
+				<div class="phone-viewport">
+				  <md-toolbar>
+				    <md-button class="md-icon-button" @click.native="toggleLeftSidenav">
+				      <md-icon>menu</md-icon>
+				    </md-button>
+
+				    <h2 class="md-title">Procare</h2>
+				  </md-toolbar>
+				  <md-sidenav class="md-left md-fixed" ref="leftSidenav">
+				    <md-toolbar class="md-large">
+				      <div class="md-toolbar-container">
+				        <h3 class="md-title">Sidenav content</h3>
+				      </div>
+				    </md-toolbar>
+				    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi cupiditate esse necessitatibus beatae nobis, deserunt ut est fugit, tempora deleniti, eligendi commodi doloribus. Nemo, assumenda possimus, impedit inventore perferendis iusto!</p>
+				  </md-sidenav>
+				</div>
+				<md-layout md-gutter md-row-large>
+					<md-layout>
+						<md-input-container class='select-grupo'>
+							<label for='grupo'>Seleccione un grupo</label>
+							<md-select name='grupo' id='grupo' v-model='grupoSel'>
+								<md-option value='' disabled='true'>Grupos</md-option>
+								<md-option v-for='grupo in grupos' v-bind:value='grupo'>{{grupo}}</md-option>
+							</md-select>
+						</md-input-container>
+					</md-layout>
+					<md-layout>
+						<md-input-container class='select-fecha'>
+					    <label for='fecha'>Fecha</label>
+					    <md-input v-model="fechaSel" type='date' name='fecha' id='fecha'></md-input>
+					  </md-input-container>
+					</md-layout>
+					
+				</md-layout>
+				{{grupoSel}}
+				{{fechaSel}}
+
+				<datepicker></datepicker>
+			</div>
+
+		</main>
+		<footer>
+			<script src='/bower_components/jquery/dist/jquery.js'></script>
+			<script src='/bower_components/vue/dist/vue.js'></script>
+			<script src='/scripts/vue-material/dist/vue-material.js'></script>
+			<script src='/scripts/vuejs-datepicker/dist/build.js'></script>
+			<script src='/js/asistencias/subirAsistenciasScript.js'></script>
+		</footer>
+	</body>
+</html>
