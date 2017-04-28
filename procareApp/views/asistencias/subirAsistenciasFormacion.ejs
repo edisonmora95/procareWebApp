@@ -42,15 +42,24 @@
 					<md-layout>
 						<md-input-container class='select-fecha'>
 					    <label for='fecha'>Fecha</label>
-					    <md-input v-model="fechaSel" type='date' name='fecha' id='fecha'></md-input>
+					    <md-input v-model="fechaSel" type='date' name='fecha' id='fecha' v-on:change="revisarDia"></md-input>
 					  </md-input-container>
 					</md-layout>
 					
 				</md-layout>
-				{{grupoSel}}
-				{{fechaSel}}
+				
 
-				<datepicker></datepicker>
+				<md-dialog md-open-from="#custom" md-close-to="#custom" ref="dialog1">
+				  <md-dialog-title>Lorem ipsum dolor sit amet</md-dialog-title>
+
+				  <md-dialog-content>Nemo, nobis necessitatibus ut illo, ducimus ex.</md-dialog-content>
+
+				  <md-dialog-actions>
+				   
+				  </md-dialog-actions>
+				</md-dialog>
+
+				
 			</div>
 
 		</main>
@@ -58,7 +67,6 @@
 			<script src='/bower_components/jquery/dist/jquery.js'></script>
 			<script src='/bower_components/vue/dist/vue.js'></script>
 			<script src='/scripts/vue-material/dist/vue-material.js'></script>
-			<script src='/scripts/vuejs-datepicker/dist/build.js'></script>
 			<script src='/js/asistencias/subirAsistenciasScript.js'></script>
 		</footer>
 	</body>

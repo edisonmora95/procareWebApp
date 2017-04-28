@@ -7,12 +7,31 @@
 		<!--Materializecs-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
-		<link rel="stylesheet" type="text/css" href="https://unpkg.com/vue-material@0.7.1/dist/vue-material.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/ingresarProcarianoStyles.css">
 	</head>
 	<body>
 		<header>
-			<!--Aqui va el navbar-->
+			<nav>
+				<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
+				<a href="" class="brand-logo">Procare</a>
+				<ul id="slide-out" class="side-nav">
+			    <li>
+			    	<div class="userView">
+				      <div class="background">
+				        
+				      </div>
+				      <a href="#!user"></a>
+				      <a href="#!name"><span class="white-text name">John Doe</span></a>
+				      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+				    </div>
+			    </li>
+			    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+			    <li><a href="#!">Second Link</a></li>
+			    <li><div class="divider"></div></li>
+			    <li><a class="subheader">Subheader</a></li>
+			    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+			  </ul>
+			</nav>
 		</header>
 		<main class="container" id="main">
 			<div class="row">
@@ -84,7 +103,7 @@
 						</div>
 					</div>
 					<!--Chico formacion-->
-					<div class="row row-chico-formacion" v-if="procariano.tipo=='Chico de Formación'">
+					<div class="row row-chico-formacion" v-show="procariano.tipo=='Chico de Formación'">
 						<div class="input-field col s6">
 							<input type="text" name="colegio" id="colegio" v-model="procariano.colegio">
 							<label for="colegio">Colegio</label>
@@ -97,7 +116,7 @@
 						</div>
 					</div>
 					<!--Caminante-->
-					<div class="row row-caminante" v-else-if="procariano.tipo=='Caminante'">
+					<div class="row row-caminante" v-show="procariano.tipo=='Caminante'">
 						<div class="input-field col s6">
 							<input type="text" name="universidad" id="universidad" v-model="procariano.universidad">
 							<label for="universidad">Universidad</label>
@@ -107,14 +126,14 @@
 							<label for="trabajo">Trabajo</label>
 						</div>
 						<div class="input-field col s12">
-							<select>
+							<select id="select-grupo-caminante">
 								<option></option>
 							</select>
 							<label>Grupo de caminantes</label>
 						</div>
 					</div>
 					<!--Pescador-->
-					<div class="row row-pescador" v-else-if="procariano.tipo=='Pescador'">
+					<div class="row row-pescador" v-show="procariano.tipo=='Pescador'">
 						<div class="input-field col s6">
 							<input type="text" name="universidad" id="universidad" v-model="procariano.universidad">
 							<label for="universidad">Universidad</label>
@@ -131,7 +150,7 @@
 						</div>
 					</div>
 					<!--Sacerdote-->
-					<div class="row row-sacerdote" v-else-if="procariano.tipo=='Sacerdote'">
+					<div class="row row-sacerdote" v-show="procariano.tipo=='Sacerdote'">
 						<div class="input-field col s6">
 							<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia">
 							<label for="parroquia">Parroquia</label>
@@ -154,7 +173,6 @@
 			<script src='/bower_components/jquery/dist/jquery.js'></script>
 			<script src='/bower_components/materialize/bin/materialize.js'></script>
 			<script src='/bower_components/vue/dist/vue.js'></script>
-			<script src="https://unpkg.com/vue-material@0.7.1"></script>
 			<script src="/js/procariano/ingresarProcarianoScript.js"></script>
 		</footer>
 	</body>

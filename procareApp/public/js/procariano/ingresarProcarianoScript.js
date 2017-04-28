@@ -1,4 +1,3 @@
-Vue.use(VueMaterial)
 
 var main = new Vue({
 	el: '#main',
@@ -10,8 +9,11 @@ var main = new Vue({
 		 $('#select-tipo-procariano').material_select();
 		 $('#select-genero').material_select();
 		 $('#select-grupo-formacion').material_select();
+		 $('#select-grupo-caminante').material_select();
+		  $(".button-collapse").sideNav();
 	},
 	data: {
+		usuario: '',
 		procariano: {
 			nombre: '',
 			apellido: '',
@@ -31,7 +33,11 @@ var main = new Vue({
 			parroquia: '',
 			fechaOrdenacion: ''
 		},
-		src: ''
+		src: '',
+		gruposCaminantes: [],
+		gruposFormacion: [],
+		gruposPescadores: [],
+		gruposMayores: []
 	},
 	methods: {
 		prueba: function(){
@@ -39,6 +45,11 @@ var main = new Vue({
 			var picker = $input.pickadate('picker')
 			var fecha = picker.get('view', 'yyyy/mm/dd')
 			console.log(fecha)
+		},
+		formarNavbar: function(){
+			if(usuario=='personal'){
+				
+			}
 		}
 	}
 });
@@ -56,8 +67,23 @@ $('#select-tipo-procariano').change(function(){
 });
 
 $('#fecha-nacimiento').change(function(){
-	var $input = $('#fecha-nacimiento').pickadate();
-	var picker = $input.pickadate('picker')
-	var fecha = picker.get('view', 'yyyy/mm/dd')
+	var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
+	var day = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
+	var month = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'mm');
+	console.log(year)
+	console.log(month)
+	console.log(day)
+	var fecha = year + '/' + month + '/' + day
 	main.$data.procariano.fechaNacimiento = fecha;
+})
+
+$('#fecha-ordenacion').change(function(){
+	var year = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'yyyy');
+	var day = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'dd');
+	var month = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'mm');
+	console.log(year)
+	console.log(month)
+	console.log(day)
+	var fecha = year + '/' + month + '/' + day
+	main.$data.procariano.fechaOrdenacion = fecha;
 })
