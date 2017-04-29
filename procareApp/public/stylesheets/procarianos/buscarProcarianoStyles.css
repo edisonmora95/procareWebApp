@@ -12,3 +12,14 @@
 .row{
 	margin-bottom: 0;
 }
+
+#main{
+	margin-top: 5%;
+	background-color: white;
+	padding: 3%;
+	border-radius: 2%;
+}
+
+#row-busqueda, #row-resultados{
+	padding: 2%;
+}

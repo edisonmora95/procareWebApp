@@ -2,6 +2,7 @@ var main = new Vue({
 	el: '#main',
 	mounted: function(){
 		$('.modal').modal();
+		$(".button-collapse").sideNav();
 	},
 	data: {
 		checkboxesAux: [
