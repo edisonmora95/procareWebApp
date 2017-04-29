@@ -1,7 +1,7 @@
 var app = new Vue({
 	el: '#app',
 	mounted: function(){
-
+		$(".button-collapse").sideNav();
 	},
 	data: {
 		procariano:{

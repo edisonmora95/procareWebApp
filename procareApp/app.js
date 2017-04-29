@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var procarianos = require('./routes/procarianos');
-var asistencias = require('./routes/asistencias');
+var procarianos = require('./routes/procarianos.router');
+var asistencias = require('./routes/asistencias.router');
 var login = require('./routes/login');
 
 var app = express();
