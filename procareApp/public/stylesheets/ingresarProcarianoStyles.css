@@ -1,6 +1,25 @@
 #main{
 	margin-top: 5%;
 }
-.btn-cancelar{
-	background-color: red;
+.btn-cancelar, .btn-cancelar:hover{
+	background-color: #F04F5A;
+}
+
+body{
+	background-color: #d3dbdb;
+}
+
+#row-form{
+	padding: 3%;
+	/*border: 1px solid black;*/
+	background-color: white;
+	border-radius: 2%;
+}
+
+.modal-text{
+	color: black;
+}
+
+.modal{
+	width: 25%;
 }
