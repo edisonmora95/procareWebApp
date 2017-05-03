@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--materialize-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/asistencias/subirAsistenciasStyles.css">
+	</head>
+	<body>
+		<header>
+			<nav>
+				<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
+				<a href="" class="brand-logo">Procare</a>
+				<ul id="slide-out" class="side-nav">
+			    <li>
+			    	<div class="userView">
+				      <div class="background">
+				      </div>
+				      <a href="#!user"></a>
+				      <a href="#!name"><span class="white-text name">John Doe</span></a>
+				      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+				    </div>
+			    </li>
+			    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+			    <li><a href="#!">Second Link</a></li>
+			    <li><div class="divider"></div></li>
+			    <li><a class="subheader">Subheader</a></li>
+			    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+			  </ul>
+			</nav>
+		</header>
+		<main>
+			<div id="app" class="container">
+				<div class="row" id="row-busqueda">
+					<div class="col s6 input-field" id="div-select-paralelos">
+						<label class="active">Seleccione un paralelo</label>
+					</div>
+					<div class="col s6 input-field">
+						<input type="date" name="fecha-asistencia" id="fecha-asistencia" class="datepicker" v-model="fechaSel">
+						<label for="fecha-asistencia">Seleccione una fecha</label>
+					</div>
+				</div>
+				<div class="row" id="row-resultados" v-if="grupoSel.nombre!=''">
+					<div class="col s7" id="col-chicos">
+						<h5 class="center-align">Lista de niños</h5>
+						<div id="lista-chicos">
+							<hr>
+							<div class="row row-li" v-for="chico in chicos">
+
+								<div class="col s6 l8 col-nombre valign-wrapper">
+									<p class="nombre">{{chico.nombre}}</p>
+								</div>
+								<div class="col s6 l4 col-radio valign-wrapper">
+									<p class="radio">
+										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
+										<label v-bind:for="'asist-'+chico.id">A</label>
+									</p>
+									<p class="radio">
+										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
+										<label v-bind:for="'falta-'+chico.id">F</label>
+									</p>
+									<p class="radio">
+										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
+										<label v-bind:for="'fj-'+chico.id">FJ</label>
+									</p>
+								</div>
+								<hr>
+							</div>
+
+						</div>
+					</div>
+					<div class="col s5" id="col-grupo">
+						<h5 class="center-align">Paralelo</h5>
+						<div id="grupo">
+							<h6 class="center-align">{{grupoSel.nombre}}</h6>
+							<p>Total de niños: {{totalChicos}}</p>
+							<p>Asistieron: {{totalAsistieron}}</p>
+							<p>Faltaron: {{totalFaltas}}</p>
+							<p>Justificaron: {{totalJustificados}}</p>
+						</div>
+					</div>
+				</div>
+				<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="subirAsistencias" >Subir asistencias<a>
+
+				<!-- Modal día incorrecto Structure -->
+			  <div id="modalDia" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">El paralelo seleccionado no se reúne ese día</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+			    </div>
+			  </div>
+
+				<!-- Modal Confirmación Structure -->
+			  <div id="modalConfirmacion" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">Las asistencias han sido subidas</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- Modal Error Structure -->
+			<div id="modalError" class="modal">
+				<div class="modal-content">
+					<p class="center-align">Debe marcar las asistencias de todos los niños</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+				</div>
+			</div>
+		</div>
+		</main>
+		<footer>
+			<script src='/bower_components/jquery/dist/jquery.js'></script>
+			<script src='/bower_components/materialize/bin/materialize.js'></script>
+			<script src='/bower_components/vue/dist/vue.js'></script>
+			<script src='/js/asistencias/accion/subirAsistenciasScript.js'></script>
+		</footer>
+	</body>
+</html>
