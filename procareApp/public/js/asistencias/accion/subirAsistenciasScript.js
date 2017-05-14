@@ -2,28 +2,27 @@
 var app = new Vue({
 	el: '#app',
 	data: {
-		grupos: [
+		paralelos: [
       {
-        nombre: 'Grupo A',
+        nombre: 'Paralelo A',
         id: '1'
       },
       {
-        nombre: 'Grupo B',
+        nombre: 'Paralelo B',
         id: '2'
       },
       {
-        nombre: 'Grupo C',
+        nombre: 'Paralelo C',
         id: '3'
       }
 
     ],
-		grupoSel: {
+		paraleloSel: {
       nombre: '',
-      id: '',
-      genero: 'masculino'
+      id: ''
     },
 		fechaSel:'',
-    chicos: [
+    ninos: [
       {
         nombre: 'Edison',
         id: '1'
@@ -50,13 +49,15 @@ var app = new Vue({
     justificadas: []
 	},
 	mounted: function(){
+		//Materialize
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 100 // Creates a dropdown of 50 years to control year
     });
     $(".button-collapse").sideNav();
     $('.modal').modal();
-    this.crearSelectGrupos('select-grupos', this.grupoSel, 'div-select-grupos', this.grupos)
+		//Aplicacion
+    this.crearSelectParalelos('select-paralelos', this.paraleloSel, 'div-select-paralelos', this.paralelos)
 	},
 	methods: {
     crearNavbar: function(){
@@ -68,47 +69,46 @@ var app = new Vue({
     openDialog(ref) {
       this.$refs[ref].open();
     },
-    crearSelectGrupos: function(idSelect, grupoEscogido, idDivSelect, grupos){
+    crearSelectParalelos: function(idSelect, paraleloEscogido, idDivSelect, paralelos){
       /*
         Parámetros:
-          idSelect -> id del elemento select que se va a crear en esta función para contener a los grupos deseados. Ejemplo: select-grupo-formacion
-          grupoEscogido ->  Elemento de data con el cual se hará el 2 way data binding. Almacenará el grupo escogido del select
+          idSelect -> id del elemento select que se va a crear en esta función para contener a los paralelos deseados. Ejemplo: select-paralelos
+          paraleloEscogido ->  Elemento con el cual se hará el 2 way data binding. Almacenará el paralelo escogido del select
           idDivSelect -> id del div que contendrá al elemento select que se va a crear
-          grupos -> Los grupos que se van a mostrar en el select
+          paralelos -> Los paralelos que se van a mostrar en el select
       */
       var self = this;
       var select = $('<select>').attr({"id":idSelect});
       var optionSelectedAux = '#' + idSelect + ' option:selected';
       select.change(function(){
-        grupoEscogido.id = $(optionSelectedAux).val();
-        grupoEscogido.nombre = $(optionSelectedAux).text();
+        paraleloEscogido.id = $(optionSelectedAux).val();
+        paraleloEscogido.nombre = $(optionSelectedAux).text();
         //Una vez seleccionado el grupo, se hace la búsqueda en la base de datos sobre los chicos que pertenecen al grupo
         self.obtenerChicos();
       });
       var idDivSelectAux = '#' + idDivSelect;
       var divSelect = $(idDivSelectAux);
-      self.crearSelectOptions(select, grupos, divSelect);
+      self.crearSelectOptions(select, paralelos, divSelect);
       divSelect.append(select);
       select.material_select();
     },
-    crearSelectOptions: function(select, grupos, divSelect){
+    crearSelectOptions: function(select, paralelos, divSelect){
       /*
         Parámetros:
-          select -> elemento select creado en la función crearSelectGrupo que mostrará a los grupos deseados
-          grupos -> los grupos que se mostrarán como opciones dentro del select
+          select -> elemento select creado en la función crearSelectParalelos que mostrará a los paralelos deseados
+          paralelos -> los paralelos que se mostrarán como opciones dentro del select
           divSelect -> elemento div que contendrá al select
       */
       var self = this;
       var optionDisabled = $('<option>').val("").text("");
       select.append(optionDisabled);
-      $.each(grupos, function(index, grupo){
-        var option = $('<option>').val(grupo.id).text(grupo.nombre);
+      $.each(paralelos, function(index, paralelo){
+        var option = $('<option>').val(paralelo.id).text(paralelo.nombre);
         select.append(option);
       });
       divSelect.append(select)
     },
     obtenerChicos: function(){
-      //TODO
       //Buscar en la base de datos al grupo en self.grupoSel, y devolver a los integrantes
     },
     subirAsistencias: function(){
@@ -117,18 +117,18 @@ var app = new Vue({
       var idRadioFalta = "";
       var idRadioFJ = "";
 			var flag = true;
-      $.each(self.chicos, function(index, chico){
+      $.each(self.ninos, function(index, nino){
         //console.log('Revisando al chico: ' + chico.nombre + ' con id: ' + chico.id);
-        idRadioAsistencia = '#asist-' + chico.id;
-        idRadioFalta = '#falta-' + chico.id;
-        idRadioFJ = '#fj-' + chico.id;
+        idRadioAsistencia = '#asist-' + nino.id;
+        idRadioFalta = '#falta-' + nino.id;
+        idRadioFJ = '#fj-' + nino.id;
         //revisar asistencia
         if ($(idRadioAsistencia).is(':checked')) {
-          self.asistencias.push(chico);
+          self.asistencias.push(nino);
         }else if($(idRadioFalta).is(':checked')){
-          self.faltas.push(chico);
+          self.faltas.push(nino);
         }else if($(idRadioFJ).is(':checked')){
-          self.justificadas.push(chico);
+          self.justificadas.push(nino);
         }else{
 					//Si existe por lo menos un chico al cual no le he marcado su asistencia,
 					self.asistencias = [];
@@ -139,19 +139,18 @@ var app = new Vue({
 					return false
 				}
       });
-      //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
-			//Abre el modal de confirmación en caso de éxito
 			if(flag){
+				//CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
+				//Abre el modal de confirmación en caso de éxito
 				$('#modalConfirmacion').modal('open');
 			}
-			//Luego de subir las asistencias, se debe actualizar la parte del grupo
     }
 
 	},
 	computed: {
-		totalChicos(){
+		totalNinos(){
 			var self = this;
-			return self.chicos.length;
+			return self.ninos.length;
 		},
 		totalAsistieron(){
 			var self = this;
@@ -170,7 +169,7 @@ var app = new Vue({
 $('#fecha-asistencia').change(function(){
   //Los hombres se reúnen los jueves y las mujeres los martes
   var dia = new Date($('#fecha-asistencia').val());
-  if((dia.getDay()==4&&app.$data.grupoSel.genero=='masculino')||(dia.getDay()==2&&app.$data.grupoSel.genero=='femenino')){
+  if(dia.getDay()==6){
     app.$data.fechaSel = $('#fecha-asistencia').val();
   }else{
     $('#modalDia').modal('open');

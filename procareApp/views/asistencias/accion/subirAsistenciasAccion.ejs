@@ -35,36 +35,36 @@
 		<main>
 			<div id="app" class="container">
 				<div class="row" id="row-busqueda">
-					<div class="col s6 input-field" id="div-select-grupos">
-						<label class="active">Seleccione un grupo</label>
+					<div class="col s6 input-field" id="div-select-paralelos">
+						<label class="active">Seleccione un paralelo</label>
 					</div>
 					<div class="col s6 input-field">
 						<input type="date" name="fecha-asistencia" id="fecha-asistencia" class="datepicker" v-model="fechaSel">
 						<label for="fecha-asistencia">Seleccione una fecha</label>
 					</div>
 				</div>
-				<div class="row" id="row-resultados" v-if="grupoSel.nombre!=''">
-					<div class="col s7" id="col-chicos">
-						<h5 class="center-align">Lista de chicos</h5>
-						<div id="lista-chicos">
+				<div class="row" id="row-resultados" v-if="paraleloSel.nombre!=''">
+					<div class="col s7" id="col-ninos">
+						<h5 class="center-align">Lista de niños</h5>
+						<div id="lista-ninos">
 							<hr>
-							<div class="row row-li" v-for="chico in chicos">
+							<div class="row row-li" v-for="nino in ninos">
 
 								<div class="col s6 l8 col-nombre valign-wrapper">
-									<p class="nombre">{{chico.nombre}}</p>
+									<p class="nombre">{{nino.nombre}}</p>
 								</div>
 								<div class="col s6 l4 col-radio valign-wrapper">
 									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
-										<label v-bind:for="'asist-'+chico.id">A</label>
+										<input type="radio" v-bind:name="'asistencia-'+nino.id" v-bind:id="'asist-'+nino.id" class="with-gap">
+										<label v-bind:for="'asist-'+nino.id">A</label>
 									</p>
 									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
-										<label v-bind:for="'falta-'+chico.id">F</label>
+										<input type="radio" v-bind:name="'asistencia-'+nino.id" v-bind:id="'falta-'+nino.id" class="with-gap">
+										<label v-bind:for="'falta-'+nino.id">F</label>
 									</p>
 									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
-										<label v-bind:for="'fj-'+chico.id">FJ</label>
+										<input type="radio" v-bind:name="'asistencia-'+nino.id" v-bind:id="'fj-'+nino.id" class="with-gap">
+										<label v-bind:for="'fj-'+nino.id">FJ</label>
 									</p>
 								</div>
 								<hr>
@@ -72,11 +72,11 @@
 
 						</div>
 					</div>
-					<div class="col s5" id="col-grupo">
-						<h5 class="center-align">Grupo</h5>
-						<div id="grupo">
-							<h6 class="center-align">{{grupoSel.nombre}}</h6>
-							<p>Total de chicos: {{totalChicos}}</p>
+					<div class="col s5" id="col-paralelo">
+						<h5 class="center-align">Paralelo</h5>
+						<div id="paralelo">
+							<h6 class="center-align">{{paraleloSel.nombre}}</h6>
+							<p>Total de niños: {{totalNinos}}</p>
 							<p>Asistieron: {{totalAsistieron}}</p>
 							<p>Faltaron: {{totalFaltas}}</p>
 							<p>Justificaron: {{totalJustificados}}</p>
@@ -88,13 +88,12 @@
 				<!-- Modal día incorrecto Structure -->
 			  <div id="modalDia" class="modal">
 			    <div class="modal-content">
-			      <p class="center-align">El grupo seleccionado no se reúne ese día</p>
+			      <p class="center-align">El paralelo seleccionado no se reúne ese día</p>
 			    </div>
 			    <div class="modal-footer">
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
 			    </div>
 			  </div>
-
 				<!-- Modal Confirmación Structure -->
 			  <div id="modalConfirmacion" class="modal">
 			    <div class="modal-content">
@@ -104,24 +103,23 @@
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
 			    </div>
 			  </div>
-			</div>
-
-			<!-- Modal Error Structure -->
-			<div id="modalError" class="modal">
-				<div class="modal-content">
-					<p class="center-align">Debe marcar las asistencias de todos los chicos</p>
 				</div>
-				<div class="modal-footer">
-					<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+				<!-- Modal Error Structure -->
+				<div id="modalError" class="modal">
+					<div class="modal-content">
+						<p class="center-align">Debe marcar las asistencias de todos los niños</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+					</div>
 				</div>
 			</div>
-		</div>
 		</main>
 		<footer>
 			<script src='/bower_components/jquery/dist/jquery.js'></script>
 			<script src='/bower_components/materialize/bin/materialize.js'></script>
 			<script src='/bower_components/vue/dist/vue.js'></script>
-			<script src='/js/asistencias/subirAsistenciasScript.js'></script>
+			<script src='/js/asistencias/accion/subirAsistenciasScript.js'></script>
 		</footer>
 	</body>
 </html>
