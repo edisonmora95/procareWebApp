@@ -19,7 +19,7 @@ body{
 	width: 100%;
 }
 
-#col-chicos, #col-grupo{
+#col-chicos, #col-grupo, #col-ninos, #col-paralelo{
 	/*border: 1px solid blue;*/
 	display: table-cell;
 }
@@ -38,7 +38,7 @@ body{
 	margin-bottom: 0;
 }
 
-#lista-chicos{
+#lista-chicos, #lista-ninos{
 	height: 250px;
 	overflow:hidden;
 	overflow-y: scroll;
