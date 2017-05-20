@@ -4,9 +4,10 @@ Para el analisis de codigo usaremos JsHint
 
 ## Documentacion
 
-Cada clase y archivo del proyecto debe tener tres cosas:
+Cada clase y archivo del proyecto debe tener cuatro cosas:
 
 * Una descripcion de lo que la clase o archivo hace
+* Autor
 * La fecha de creacion del docuemnto
 * La ultima modificacion del documento
 
