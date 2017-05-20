@@ -1,8 +1,38 @@
+Vue.use(VeeValidate);
+//Validaciones. Cambio de mensajes de error
+const dictionary = {
+	en: {
+		messages: {
+			email : function(){
+				return 'Ingrese un correo válido.';
+			},
+			required: function(){
+				return 'Este campo es obligatorio.';
+			},
+			alpha_spaces: function(){
+				return 'Este campo sólo puede contener letras y espacios.';
+			},
+			digits: function(field, length){
+				return 'Este campo sólo puede contener ' + length + ' números.';
+			},
+			numeric: function(){
+				return 'Este campo sólo puede contener números.';
+			},
+			alpha_num: function(){
+				return 'Este campo sólo puede contener letras y números.';
+			},
+			regex: function(field, val){
+				return 'No ingrese caracteres especiales.';
+			}
+		}
+	}
+};
+VeeValidate.Validator.updateDictionary(dictionary);
 
 var main = new Vue({
 	el: '#main',
 	mounted: function(){
-		
+		//Inicializadores de Materializecss
 		$('.datepicker').pickadate({
 			selectMonths: true, // Creates a dropdown to control month
 			selectYears: 100 // Creates a dropdown of 15 years to control year
@@ -12,14 +42,15 @@ var main = new Vue({
 		$('#select-grupo-formacion').material_select();
 		$('#select-grupo-caminante').material_select();
 		$(".button-collapse").sideNav();
-		//this.crearSelectGrupoFormacion();
+		$('.modal').modal();
+		//Creación dinámica de los selects
 		this.crearSelectGrupo('select-grupo-formacion', this.grupoFormacionEscogido, 'div-select-grupo-formacion', this.gruposFormacion);
 		this.crearSelectGrupo('select-grupo-caminantes', this.grupoCaminantesEscogido, 'div-select-grupo-caminantes', this.gruposCaminantes);
 		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
-		$('.modal').modal();
+		this.formarNavbar();
 	},
 	data: {
-		usuario: '',
+		usuario: '',		//tipo de usuario conectado
 		procariano: {
 			nombre: '',
 			apellido: '',
@@ -31,7 +62,7 @@ var main = new Vue({
 			convencional: '',
 			genero: '',
 			tipo: '',	//chico de formación/caminante/pescador/pescador consagrado/sacerdote
-			estado: '',	//activo/inactivo... Activo por default
+			estado: 'activo',	//activo/inactivo... Activo por default
 			colegio: '',
 			universidad: '',
 			grupo: '',
@@ -99,14 +130,49 @@ var main = new Vue({
 	methods: {
 		prueba: function(){
 			var $input = $('#fecha-nacimiento').pickadate();
-			var picker = $input.pickadate('picker')
-			var fecha = picker.get('view', 'yyyy/mm/dd')
-			console.log(fecha)
+			var picker = $input.pickadate('picker');
+			var fecha = picker.get('view', 'yyyy/mm/dd');
+			console.log(fecha);
 		},
 		formarNavbar: function(){
-			if(usuario=='personal'){
-				
+			/*
+				Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
+			*/
+			var usuario = 'personal';
+			if(usuario === 'personal'){
+				this.crearDropdownPA();
+				this.crearDropdownPF();
 			}
+		},
+		crearDropdownPA: function(){
+			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
+			var liAsistencias = $('<li>');
+			var aAsistencias = $('<a>').html('Asistencias');
+			liAsistencias.append(aAsistencias);
+			$('#ulProcareAccion').append(liAsistencias);
+			var liParalelos = $('<li>')
+			var aParalelos = $('<a>').html('Paralelos');
+			liParalelos.append(aParalelos);
+			$('#ulProcareAccion').append(liParalelos);
+			var liNinos = $('<li>');
+			var aNinos = $('<a>').html('Niños');
+			liNinos.append(aNinos);
+			$('#ulProcareAccion').append(liNinos);
+		},
+		crearDropdownPF: function(){
+			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
+			var liAsistencias = $('<li>');
+			var aAsistencias = $('<a>').html('Asistencias');
+			liAsistencias.append(aAsistencias);
+			$('#ulProcareFormacion').append(liAsistencias);
+			var liGrupos = $('<li>')
+			var aGrupos = $('<a>').html('Grupos');
+			liGrupos.append(aGrupos);
+			$('#ulProcareFormacion').append(liGrupos);
+			var liProcarianos = $('<li>');
+			var aProcarianos = $('<a>').html('Procarianos');
+			liProcarianos.append(aProcarianos);
+			$('#ulProcareFormacion').append(liProcarianos);
 		},
 		crearSelectGrupo: function(idSelect, grupoEscogido, idDivSelect, grupos){
 			/*
@@ -138,51 +204,46 @@ var main = new Vue({
 					grupos -> los grupos que se mostrarán como opciones dentro del select
 					divSelect -> elemento div que contendrá al select
 			*/
-			var self = this;
 			var optionDisabled = $('<option>').val("").text("");
 			select.append(optionDisabled);
 			$.each(grupos, function(index, grupo){
 				var option = $('<option>').val(grupo.id).text(grupo.nombre);
 				select.append(option);
 			});
-			divSelect.append(select)
+			divSelect.append(select);
 		},
-		crearProcariano: function(){
-			$('#modalProcarianoCreado').modal('open');
-		}
+		validateBeforeSubmit: function() {
+      this.$validator.validateAll().then(() => {
+          // eslint-disable-next-line
+          $('#modalProcarianoCreado').modal('open');
+      }).catch(() => {
+          // eslint-disable-next-line
+          alert('Correct them errors!');
+      });
+    }
 	}
 });
-
+// 2 way data binding de los selects
 $('#select-tipo-procariano').change(function(){
-	var tipoProcariano = $('#select-tipo-procariano option:selected').text()
+	var tipoProcariano = $('#select-tipo-procariano option:selected').text();
 	main.$data.procariano.tipo = tipoProcariano;
-	console.log(tipoProcariano)
-	console.log(main.$data.procariano)
 });
-
 $('#select-genero').change(function(){
 	var generoProcariano = $('#select-genero option:selected').text();
 	main.$data.procariano.genero = generoProcariano;
 });
-
+//2 way data binding de los date pickers
 $('#fecha-nacimiento').change(function(){
 	var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
 	var day = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'mm');
-	console.log(year)
-	console.log(month)
-	console.log(day)
-	var fecha = year + '/' + month + '/' + day
+	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaNacimiento = fecha;
-})
-
+});
 $('#fecha-ordenacion').change(function(){
 	var year = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'yyyy');
 	var day = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'mm');
-	console.log(year)
-	console.log(month)
-	console.log(day)
-	var fecha = year + '/' + month + '/' + day
+	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaOrdenacion = fecha;
-})
+});
