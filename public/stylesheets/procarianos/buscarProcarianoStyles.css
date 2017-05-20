@@ -23,3 +23,11 @@
 #row-busqueda, #row-resultados{
 	padding: 2%;
 }
+
+table{
+	overflow-x: auto;
+	display: block;
+}
+.nombre{
+	color: black;
+}

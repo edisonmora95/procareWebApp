@@ -18,19 +18,31 @@
 				<ul id="slide-out" class="side-nav">
 			    <li>
 			    	<div class="userView">
-				      <div class="background">
-				        
-				      </div>
-				      <a href="#!user"></a>
-				      <a href="#!name"><span class="white-text name">John Doe</span></a>
-				      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
 				    </div>
 			    </li>
-			    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-			    <li><a href="#!">Second Link</a></li>
-			    <li><div class="divider"></div></li>
-			    <li><a class="subheader">Subheader</a></li>
-			    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+			    <li class="no-padding">
+			    	<ul class="collapsible collapsible-accordion">
+			    		<li>
+			    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
+			    			<div class="collapsible-body">
+			            <ul id="ulProcareFormacion">
+			            </ul>
+			          </div>
+			    		</li>
+			    	</ul>
+			    </li>
+			    <li class="no-padding">
+			    	<ul class="collapsible collapsible-accordion">
+			    		<li>
+			    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
+			    			<div class="collapsible-body">
+			            <ul id="ulProcareAccion">
+			            </ul>
+			          </div>
+			    		</li>
+			    	</ul>
+			    </li>
+			    <li><a href="#">Salir</a></li>
 			  </ul>
 			</nav>
 		</header>
@@ -183,7 +195,37 @@
 			<!--Resultados-->
 			<section id="section-resultados">
 				<div class="row" id="row-resultados">
-					<li v-for="procariano in procarianos"><a>{{procariano.nombre}}</a></li>
+					<!--<li v-for="procariano in procarianos"><a>{{procariano.nombre}}</a></li>-->
+					<table class="stripped bordered responsive-table centered highlight">
+						<thead>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Cédula</th>
+							<th>Fecha de nacimiento</th>
+							<th>Email</th>
+							<th>Convencional</th>
+							<th>Celular</th>
+							<th>Tipo</th>
+							<th>Estado</th>
+							<th>Colegio</th>
+							<th>Universidad</th>
+						</thead>
+						<tbody>
+							<tr v-for="procariano in procarianos">
+								<td ><a :href="'/procarianos/' + procariano.nombre" class="nombre">{{procariano.nombre}}</a></td>
+								<td>{{procariano.apellido}}</td>
+								<td>{{procariano.cedula}}</td>
+								<td>{{procariano.fechaNacimiento}}</td>
+								<td>{{procariano.email}}</td>
+								<td>{{procariano.convencional}}</td>
+								<td>{{procariano.celular}}</td>
+								<td>{{procariano.tipo}}</td>
+								<td>{{procariano.estado}}</td>
+								<td>{{procariano.colegio}}</td>
+								<td>{{procariano.universidad}}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 
