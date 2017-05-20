@@ -8,8 +8,8 @@ Cada clase y archivo del proyecto debe tener cuatro cosas:
 
 * Una descripcion de lo que la clase o archivo hace
 * Autor
-* La fecha de creacion del docuemnto
-* La ultima modificacion del documento
+* La fecha de creacion del documento
+* La ultima modificacion del documento y quien lo hizo
 
 EJ 
 
@@ -19,7 +19,7 @@ EJ
 @Descripcion: esta es una clase poligono
 @Autor: jose viteri
 @FechaCreacion: 19/05/2017
-@UltimaFechaModificacion: 25/05/2017
+@UltimaFechaModificacion: 25/05/2017 @EdisonMora
 
 */
 class Poligono {
