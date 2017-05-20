@@ -2,6 +2,35 @@
 
 Para el analisis de codigo usaremos JsHint
 
+## Documentacion
+
+Cada clase y archivo del proyecto debe tener tres cosas:
+
+* Una descripcion de lo que la clase o archivo hace
+* La fecha de creacion del docuemnto
+* La ultima modificacion del documento
+
+EJ 
+
+```
+
+/*
+@Descripcion: esta es una clase poligono
+@Autor: jose viteri
+@FechaCreacion: 19/05/2017
+@UltimaFechaModificacion: 25/05/2017
+
+*/
+class Poligono {
+  constructor(alto, ancho) {
+    this.alto = alto;
+    this.ancho = ancho;
+  }
+}
+```
+
+Esto tambien debe aplicarse a las funciones cuya fuincionalidad no queda clara con su nombre
+
 ## Estandar de codificacion para el proyecto de procare
 ### Identacion
 
@@ -102,11 +131,29 @@ function Animal () {}
 var dog = new Animal()    // ✓ ok 
 
 ```
-### funciones
 
-Comienzan en minucula
+### Idioma
 
+Las variables, funciones, y etc, deberan ser llamadas en español, PERO NO USAR caracteres especiales en su declaracion:
 
+```
+var variable = 5 OK
+
+var niño = 'pepito' MAL
+
+var ninno = 'pepito' OK
+
+```
+### Funciones
+
+Comienzan en minuscula
+
+```
+function estoEsUnaFuncion(){
+
+}
+
+```
 
 
 # Importante
