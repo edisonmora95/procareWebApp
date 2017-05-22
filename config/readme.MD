@@ -1,4 +1,4 @@
-# Para cambiar la configuracion del readme
+# Para cambiar la configuracion de la base.
 
 * cambiar al dialecto, sea que usen mariadb y mariasql.
 * cambiar el nombre de la base de datos
