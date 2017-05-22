@@ -384,8 +384,9 @@ CREATE TABLE IF NOT EXISTS empresa(
     PRIMARY KEY (id_empresa),
     CONSTRAINT FOREIGN KEY (id_benefactor) REFERENCES benefactor(id_benefactor)
 )ENGINE = InnoDB;
-
+/*
 CREATE TABLE IF NOT EXISTS persona_tarea(
 
 )ENGINE = InnoDB;
+*/
 
