@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var procarianos = require('./routes/procarianos.router');
 var asistencias = require('./routes/asistencias.router');
+var grupos = require('./routes/grupos.router');
 var login = require('./routes/login');
 
 var app = express();
@@ -32,6 +33,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
+app.use('/grupos', grupos);
 app.use('/login',login);
 
 // catch 404 and forward to error handler
