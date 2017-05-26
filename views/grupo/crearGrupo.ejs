@@ -7,14 +7,27 @@
 		<!--Materializecss-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/grupoStyles.css">
 	</head>
 	<body>
 		<div id="app">
-			<navbar></navbar>
+			<header>
+				<navbar></navbar>	
+			</header>
+			<main class="container">
+				<div class="card large">
+					<div class="row">
+						<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
+					</div>
+					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event"></crear-grupo-1>
+					<escoger-chicos v-if="!flag"></escoger-chicos>
+				</div>
+			</main>
 		</div>
-		<script src='/bower_components/jquery/dist/jquery.js'></script>
-			<script src='/bower_components/materialize/bin/materialize.js'></script>
-			<script src='/bower_components/vue/dist/vue.js'></script>
-		<script src='/dist/js/grupo/bundle.js'></script>
+		
 	</body>
+	<script src='/bower_components/jquery/dist/jquery.js'></script>
+	<script src='/bower_components/materialize/bin/materialize.js'></script>
+	<script src='/bower_components/vue/dist/vue.js'></script>
+	<script src='/build/grupo/crearGrupoScript.js'></script>
 </html>
