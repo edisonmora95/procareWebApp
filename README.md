@@ -33,6 +33,7 @@ class Poligono {
 Esto tambien debe aplicarse a las funciones cuya fuincionalidad no queda clara con su nombre
 
 ## Estandar de codificacion para el proyecto de procare
+
 ### Identacion
 
 Dos espacios para la identacion
@@ -55,6 +56,7 @@ comillas simples para strings sencillos
 ```
 var a = 'hola mundo'
 ```
+
 ### Variables 
 
 sin espacio despues de las keywords ( if , while, etc )
@@ -85,7 +87,6 @@ if(condicion){
 
 }
 ```
-
 
 ### Errores
 
@@ -145,6 +146,7 @@ var niño = 'pepito' MAL
 var ninno = 'pepito' OK
 
 ```
+
 ### Funciones
 
 Comienzan en minuscula
@@ -156,8 +158,4 @@ function estoEsUnaFuncion(){
 
 ```
 
-
 # Importante
-
-
-
