@@ -51,7 +51,9 @@ gulp.task('vueify', function(){
 	gulp.src(src, { read: false })
 			.pipe(browserify({
 				//debug: false,
-				transform: ['vueify'],
+				transform: ['vueify'], //anterior
+				//transform: [babelify, [{_flags: {debug: true}}, vueify]], internte
+				//transform: [{_flags: {debug: false}}, 'vueify'], //mia
 			}))
 			.pipe(gulp.dest(build));
 });

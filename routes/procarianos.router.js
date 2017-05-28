@@ -1,8 +1,10 @@
 /*
 	CRUD de procarianos
 */
+var controladorProcariano = require('../controllers/procariano')
 var express = require('express');
 var router = express.Router();
+
 
 //Create procariano
 //Responde con la página
@@ -10,9 +12,7 @@ router.get('/nuevo', function(req, res, next){
 	res.render('procariano/ingresarProcariano');
 });
 //Post del procariano
-router.post('/nuevo', function(req, res, next){
-
-});
+router.post('/nuevo', controladorProcariano.crearProcariano);
 
 //Read procariano
 //Responde con la página
