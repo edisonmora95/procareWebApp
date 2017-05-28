@@ -27,7 +27,7 @@
 		@FechaCreación: 26-05-2017
 	*/
 	module.exports = {
-		props: ['flag'],
+		props: ['grupo'],
 		data() {
 			return{
 				sinGrupo: [

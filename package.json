@@ -33,6 +33,6 @@
     "gulp-nodemon": "^2.2.1",
     "nodemon": "^1.11.0",
     "run-sequence": "^1.2.2",
-    "vueify": "^9.4.1"
+    "vueify": "^9.0.0"
   }
 }

@@ -19,12 +19,11 @@
 					<div class="row">
 						<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
 					</div>
-					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event"></crear-grupo-1>
-					<escoger-chicos v-if="!flag"></escoger-chicos>
+					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" @nombrechanged="grupo.nombre = $event" @animadorchanged="grupo.animador = $event"></crear-grupo-1>
+					<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
 				</div>
 			</main>
 		</div>
-		
 	</body>
 	<script src='/bower_components/jquery/dist/jquery.js'></script>
 	<script src='/bower_components/materialize/bin/materialize.js'></script>

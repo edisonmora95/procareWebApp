@@ -3,11 +3,11 @@
 		<form class="col s12">
 			<div class="row" id="row-nombre-genero">
 				<div class="input-field col s6">
-					<input type="text" name="nombre" id="nombre" v-model="grupo.nombre">
+					<input type="text" name="nombre" id="nombre" v-model="grupo.nombre" @input="nombreChange">
 					<label for="nombre">Nombre del grupo</label>
 				</div>
 				<div class="input-field col s6">
-					<select id="genero" v-model="grupo.genero">
+					<select id="genero">
 						<option value="" disabled selected class="optDis">Procare/Procare Mujeres</option>	
 						<option value="1">Procare</option>
 						<option value="2">Procare Mujeres</option>
@@ -17,7 +17,7 @@
 			</div>
 			<div class="row" id="row-etapa-animador">
 				<div class="input-field col s6">
-					<select id="etapa" v-model="grupo.etapa">
+					<select id="etapa">
 						<option value="" disabled selected class="optDis">Etapa</option>	
 						<option value="1">Iniciación</option>
 						<option value="2">Primera etapa</option>
@@ -29,13 +29,13 @@
 					<!--<label for="etapa">Etapa</label>-->
 				</div>
 				<div class="input-field col s6">
-					<input type="text" name="animador" id="animador" v-model="grupo.animador">
+					<input type="text" name="animador" id="animador" v-model="grupo.animador" @input="animadorChange">
 					<label for="animador">Animador</label>
 				</div>
 			</div>
 			<div class="row" id="row-btn">
 				<a class="waves-effect waves-light btn" id="btnCancelar" @click="cancelar">Cancelar</a>
-				<a class="waves-effect waves-light btn" id="btnContinuar" @click="continuar">Continuar</a>
+				<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="continuar">Continuar</a>
 			</div>
 		</form>
 	</div>
@@ -54,8 +54,6 @@
 				grupo: {
 					nombre: '',
 					animador: '',
-					etapa: '',
-					genero: ''
 				},
 				animadores: [],
 				flagVue: true
@@ -71,6 +69,15 @@
 				this.flagVue = false;
 				this.$emit('flagchanged', this.flagVue);
 			},
+			nombreChange(){
+				this.$emit('nombrechanged', this.grupo.nombre);
+			},
+			animadorChange(){
+				this.$emit('animadorchanged', this.grupo.animador);
+			}
 		}
 	}
+
+
+
 </script>

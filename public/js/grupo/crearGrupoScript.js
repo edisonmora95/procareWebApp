@@ -22,7 +22,13 @@ var app = new Vue({
 		this.formarNavbar();
 	},
 	data: {
-		flag: true
+		flag: true,
+		grupo: {
+			nombre: '',
+			animador: '',
+			genero: '',
+			etapa: ''
+		}
 	},
 	methods: {
 		formarNavbar: function() {
@@ -66,5 +72,16 @@ var app = new Vue({
 			$('#ulProcareFormacion').append(liProcarianos);
 		},
 	}
+});
+
+//2 way data binding con jquery porque Materialize no lo permite con v-model
+
+$('#genero').change(function(){
+	console.log('holaaa')
+	app.$data.grupo.genero = $('#genero option:selected').text();
+});
+$('#etapa').change(function(){
+	console.log('holaaa')
+	app.$data.grupo.etapa = $('#etapa option:selected').text();
 });
 
