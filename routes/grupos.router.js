@@ -1,8 +1,20 @@
 var express = require('express');
 var router = express.Router();
-
-router.get('/', function(req, res, next){
+//Create grupo
+//Responde con la página
+router.get('/nuevo', function(req, res, next){
 	res.render('grupo/crearGrupo');
 });
+//Post del grupo. API
+router.post('/nuevo', function(req, res ,next){
+
+});
+
+//Read grupo
+//Responde con la página
+router.get('/', function(req, res, next){
+	res.render('grupo/buscarGrupo');
+});
+
 
 module.exports = router;

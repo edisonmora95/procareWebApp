@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecss-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/buscarGrupoStyles.css">
+	</head>
+	<body>
+		<div id="BuscarGrupoApp">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<section id="section-busqueda" class="card large">
+					<div class="row" id="row-busqueda">
+						<form class="çol s12">
+							<div class="row">
+								<div class="input-field col s12">
+									<input type="text" name="animador" v-model="grupo.animador">
+									<label for="animador">Nombre del animador</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s10">
+									<select id="etapaSelect">
+										<option value="" disabled selected></option>
+										<option value="iniciacion">Iniciación</option>
+										<option value="primera">Primera etapa</option>
+										<option value="segunda">Segunda etapa</option>
+										<option value="tercera">Tercera etapa</option>
+										<option value="cuarta">Cuarta etapa</option>
+										<option value="quinta">Quinta etapa</option>
+										<option value="graduados">Graduados</option>
+									</select>
+									<label>Etapa</label>
+								</div>
+								<div class="input-field col s2">
+									<input type="number" name="anio" v-model="grupo.anio">
+									<label for="anio">Año</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s12">
+									<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</section>
+				<section id="section-resultados" class="card large">
+					<div class="row" id="row-resultados">
+						<table class="stripped bordered responsive-table centered highlight">
+							<thead>
+								<th>Nombre</th>
+								<th>Etapa</th>
+								<th>Año</th>
+								<th>Animador</th>
+							</thead>
+							<tbody>
+								<tr v-for="grupo in grupos">
+									<td>{{grupo.nombre}}</td>
+									<td>{{grupo.etapa}}</td>
+									<td>{{grupo.anio}}</td>
+									<td>{{grupo.animador}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
+	<script src='/bower_components/jquery/dist/jquery.js'></script>
+	<script src='/bower_components/materialize/bin/materialize.js'></script>
+	<script src='/bower_components/vue/dist/vue.js'></script>
+	<script src='/build/grupo/buscarGrupoScript.js'></script>
+</html>
