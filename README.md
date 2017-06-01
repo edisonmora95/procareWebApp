@@ -2,6 +2,28 @@
 
 Para el analisis de codigo usaremos JsHint
 
+## Para pruebas
+
+Para las pruebas usaremos mocha.js
+
+## Links importantes
+Entre los links de interes,
+
+### Explicacion breve de la infraestructura del proyecto
+
+https://groundberry.github.io/development/2016/11/04/build-your-node-app-with-express-and-sequelize.html 
+
+### Joins como hacerlos en sequelize
+
+http://lorenstewart.me/2016/09/12/sequelize-table-associations-joins/ 
+
+### Uso de mocha
+
+http://mherman.org/blog/2015/09/10/testing-node-js-with-mocha-and-chai/#.WS9s9mg19Eb 
+
+### explicasion basica de como esta organizado la base de datos.
+
+
 ## Documentacion
 
 Cada clase y archivo del proyecto debe tener cuatro cosas:
