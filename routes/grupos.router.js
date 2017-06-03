@@ -16,5 +16,8 @@ router.get('/', function(req, res, next){
 	res.render('grupo/buscarGrupo');
 });
 
+router.get('/:id', function(req, res, next){
+	res.render('grupo/verGrupo');
+});
 
 module.exports = router;

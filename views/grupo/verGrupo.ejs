@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecss-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/verGrupoStyles.css">
+	</head>
+	<body>
+		<div id="verGrupoApp">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<div class="card large">
+					<div class="row">
+						<div class="col s12">
+							<h2 class="center-align">{{grupo.nombre}}</h2>
+							<p class="center-align">Animador: {{grupo.animador}}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<h5 class="center-align">Lista de chicos</h5>
+							<ul id="listaChicos">
+								<li v-for="chico in integrantes" @click="seleccionChico(chico)">{{chico.nombres}} {{chico.apellidos}}</li>
+							</ul>
+						</div>
+						<div class="col s6">
+							<h5 class="center-align">Vista previa</h5>
+							<h6 class="center-align">{{chicoSeleccionado.nombres}} {{chicoSeleccionado.apellidos}}</h6>
+							<p class="center-align">Cédula: {{chicoSeleccionado.cedula}}</p>
+							<p>Fecha de nacimiento: {{chicoSeleccionado.fechaNacimiento}}</p>
+							<p>Celular: {{chicoSeleccionado.celular}}</p>
+							<p>Convencional: {{chicoSeleccionado.convencional}}</p>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</body>
+	<script src='/bower_components/jquery/dist/jquery.js'></script>
+	<script src='/bower_components/materialize/bin/materialize.js'></script>
+	<script src='/bower_components/vue/dist/vue.js'></script>
+	<script src='/build/grupo/verGrupoScript.js'></script>
+</html>
