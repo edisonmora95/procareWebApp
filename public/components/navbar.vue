@@ -1,38 +1,41 @@
 <template>
-	<nav>
-		<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
-		<a href="" class="brand-logo">Procare</a>
-		<ul id="slide-out" class="side-nav">
-	    <li>
-	    	<div class="userView">
-		      
-		    </div>
-	    </li>
-	    <li class="no-padding">
-	    	<ul class="collapsible collapsible-accordion">
-	    		<li>
-	    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
-	    			<div class="collapsible-body">
-	            <ul id="ulProcareFormacion">
-	            </ul>
-	          </div>
-	    		</li>
-	    	</ul>
-	    </li>
-	    <li class="no-padding">
-	    	<ul class="collapsible collapsible-accordion">
-	    		<li>
-	    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
-	    			<div class="collapsible-body">
-	            <ul id="ulProcareAccion">
-	            </ul>
-	          </div>
-	    		</li>
-	    	</ul>
-	    </li>
-	    <li><a href="#">Salir</a></li>
-	  </ul>
-	</nav>
+	<div id="template">
+		<nav>
+			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
+			<a href="" class="brand-logo">Procare</a>
+			<ul id="slide-out" class="side-nav">
+		    <li>
+		    	<div class="userView">
+			      
+			    </div>
+		    </li>
+		    <li class="no-padding">
+		    	<ul class="collapsible collapsible-accordion">
+		    		<li>
+		    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
+		    			<div class="collapsible-body">
+		            <ul id="ulProcareFormacion">
+		            </ul>
+		          </div>
+		    		</li>
+		    	</ul>
+		    </li>
+		    <li class="no-padding">
+		    	<ul class="collapsible collapsible-accordion">
+		    		<li>
+		    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
+		    			<div class="collapsible-body">
+		            <ul id="ulProcareAccion">
+		            </ul>
+		          </div>
+		    		</li>
+		    	</ul>
+		    </li>
+		    <li><a href="#">Salir</a></li>
+		  </ul>
+		</nav>
+	</div>
+	
 </template>
 
 <script>
@@ -42,54 +45,132 @@
 		},
 		mounted(){
 			$(".button-collapse").sideNav();
+			$(".dropdown-button").dropdown();
 			this.formarNavbar();
 		},
 		data: function() {
 			return{
-				greeting: 'Hello'
+				greeting: 'Hello',
+				usuario: 'personal'
 			}
 		},
 		methods: {
 			formarNavbar() {
-			/*
-		   	Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
-		   */
-			let usuario = 'personal';
-			if (usuario === 'personal') {
-				this.crearDropdownPA();
+				/*
+			   	Esta función crea el navbar dependiendo del tipo de usuario que está loggeado.
+			   */
+			  this.crearDropdownPA();
 				this.crearDropdownPF();
+			},
+			crearDropdownPA() {
+				//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
+				let liAsistencias = $('<li>');
+				let aAsistencias = $('<a>').html('Asistencias');
+				liAsistencias.append(aAsistencias);
+				$('#ulProcareAccion').append(liAsistencias);
+				let liParalelos = $('<li>');
+				let aParalelos = $('<a>').html('Paralelos');
+				liParalelos.append(aParalelos);
+				$('#ulProcareAccion').append(liParalelos);
+				let liNinos = $('<li>');
+				let aNinos = $('<a>').html('Niños');
+				liNinos.append(aNinos);
+				$('#ulProcareAccion').append(liNinos);
+			},
+			crearDropdownPF() {
+				//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
+				let liAsistencias = $('<li>');
+				let aAsistencias = $('<a>').html('Asistencias');
+				liAsistencias.append(aAsistencias);
+				$('#ulProcareFormacion').append(liAsistencias);
+				if(this.usuario === 'personal'){
+					this.crearDropdownGrupos();
+					this.crearDropdownProcarianos();	
+				}else{
+					//Grupos
+					let liGrupo = $('<li>');
+					let aGrupo = $('<a>').html('Grupo');
+					liGrupo.append(aGrupo);
+					$('#ulProcareFormacion').append(liGrupo);
+					//Procarianos
+					let liProcarianos = $('<li>');
+					let aProcarianos = $('<a>').html('Integrantes');
+					liProcarianos.append(aProcarianos);
+					$('#ulProcareFormacion').append(liProcarianos);
+				}				
+			},
+			crearDropdownGrupos(){
+				/*
+				Procare Formación
+					Grupos -> <li>
+						Crear
+						Buscar
+				*/
+				//Primero creo el li exterior.
+				let liGrupos = $('<li>');
+				let aGrupos = $('<a>').html('Grupos')
+															.attr({
+																'class': 'dropdown-button',
+																'href': '#',
+																'data-activates': 'dropGrupos',
+																'data-hover': 'hover'
+															});
+				liGrupos.append(aGrupos);
+				//Luego creo el ul del dropdown interior a Grupos
+				let ulDropGrupos = $('<ul>').attr({
+					'id': 'dropGrupos',
+					'class': 'dropdown-content'
+				});
+				//Creo los li del dropdown. Crear y Buscar
+				let liCrear = $('<li>');
+				let aCrear = $('<a>').html('Crear').attr({'href': '/grupos/nuevo'});
+				liCrear.append(aCrear);
+				let liBuscar = $('<li>');
+				let aBuscar = $('<a>').html('Buscar').attr({'href': '/grupos/'});
+				liBuscar.append(aBuscar);
+				ulDropGrupos.append(liCrear, liBuscar);
+				$('#template').append(ulDropGrupos);
+				$('#ulProcareFormacion').append(liGrupos);
+			},
+			crearDropdownProcarianos(){
+				/*
+				Procare Formación
+					Procarianos -> <li>
+						Ingresar
+						Buscar
+				*/
+				//Primero creo el li exterior.
+				let liProcarianos = $('<li>');
+				let aProcarianos = $('<a>').html('Procarianos')
+															.attr({
+																'class': 'dropdown-button',
+																'href': '#',
+																'data-activates': 'dropProcarianos',
+																'data-hover': 'hover'
+															});
+				liProcarianos.append(aProcarianos);
+				//Luego creo el ul del dropdown interior a Grupos
+				let ulDropProcarianos = $('<ul>').attr({
+					'id': 'dropProcarianos',
+					'class': 'dropdown-content'
+				});
+				//Creo los li del dropdown. Ingresar y Buscar
+				let liCrear = $('<li>');
+				let aCrear = $('<a>').html('Ingresar').attr({'href': '/procarianos/nuevo/'});
+				liCrear.append(aCrear);
+				let liBuscar = $('<li>');
+				let aBuscar = $('<a>').html('Buscar').attr({'href': '/procarianos/'});
+				liBuscar.append(aBuscar);
+				ulDropProcarianos.append(liCrear, liBuscar);
+				$('#template').append(ulDropProcarianos);
+				$('#ulProcareFormacion').append(liProcarianos);
 			}
-		},
-		crearDropdownPA() {
-			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
-			let liAsistencias = $('<li>');
-			let aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
-			let liParalelos = $('<li>');
-			let aParalelos = $('<a>').html('Paralelos');
-			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
-			let liNinos = $('<li>');
-			let aNinos = $('<a>').html('Niños');
-			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
-		crearDropdownPF() {
-			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
-			let liAsistencias = $('<li>');
-			let aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareFormacion').append(liAsistencias);
-			let liGrupos = $('<li>');
-			let aGrupos = $('<a>').html('Grupos');
-			liGrupos.append(aGrupos);
-			$('#ulProcareFormacion').append(liGrupos);
-			let liProcarianos = $('<li>');
-			let aProcarianos = $('<a>').html('Procarianos');
-			liProcarianos.append(aProcarianos);
-			$('#ulProcareFormacion').append(liProcarianos);
-		},
 		}
 	}
 </script>
+
+<style>
+	#dropGrupos, #dropProcarianos{
+		margin-left: 50% !important;
+	}
+</style>
