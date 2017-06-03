@@ -37,10 +37,59 @@
 
 <script>
 	module.exports = {
+		created(){
+			
+		},
+		mounted(){
+			$(".button-collapse").sideNav();
+			this.formarNavbar();
+		},
 		data: function() {
 			return{
 				greeting: 'Hello'
 			}
+		},
+		methods: {
+			formarNavbar() {
+			/*
+		   	Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
+		   */
+			let usuario = 'personal';
+			if (usuario === 'personal') {
+				this.crearDropdownPA();
+				this.crearDropdownPF();
+			}
+		},
+		crearDropdownPA() {
+			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
+			let liAsistencias = $('<li>');
+			let aAsistencias = $('<a>').html('Asistencias');
+			liAsistencias.append(aAsistencias);
+			$('#ulProcareAccion').append(liAsistencias);
+			let liParalelos = $('<li>');
+			let aParalelos = $('<a>').html('Paralelos');
+			liParalelos.append(aParalelos);
+			$('#ulProcareAccion').append(liParalelos);
+			let liNinos = $('<li>');
+			let aNinos = $('<a>').html('Niños');
+			liNinos.append(aNinos);
+			$('#ulProcareAccion').append(liNinos);
+		},
+		crearDropdownPF() {
+			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
+			let liAsistencias = $('<li>');
+			let aAsistencias = $('<a>').html('Asistencias');
+			liAsistencias.append(aAsistencias);
+			$('#ulProcareFormacion').append(liAsistencias);
+			let liGrupos = $('<li>');
+			let aGrupos = $('<a>').html('Grupos');
+			liGrupos.append(aGrupos);
+			$('#ulProcareFormacion').append(liGrupos);
+			let liProcarianos = $('<li>');
+			let aProcarianos = $('<a>').html('Procarianos');
+			liProcarianos.append(aProcarianos);
+			$('#ulProcareFormacion').append(liProcarianos);
+		},
 		}
 	}
 </script>
