@@ -12,55 +12,22 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
 	<body>
-		<header>
-			<nav>
-				<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
-				<a href="" class="brand-logo">Procare</a>
-				<ul id="slide-out" class="side-nav">
-			    <li>
-			    	<div class="userView">
-				      
-				    </div>
-			    </li>
-			    <li class="no-padding">
-			    	<ul class="collapsible collapsible-accordion">
-			    		<li>
-			    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
-			    			<div class="collapsible-body">
-			            <ul id="ulProcareFormacion">
-			            </ul>
-			          </div>
-			    		</li>
-			    	</ul>
-			    </li>
-			    <li class="no-padding">
-			    	<ul class="collapsible collapsible-accordion">
-			    		<li>
-			    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
-			    			<div class="collapsible-body">
-			            <ul id="ulProcareAccion">
-			            </ul>
-			          </div>
-			    		</li>
-			    	</ul>
-			    </li>
-			    <li><a href="#">Salir</a></li>
-			  </ul>
-			</nav>
-		</header>
-		<main>
-			<div class="container" id="app">
+		<div id="app">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container" >
 				<!--Row ver procariano-->
 				<div class="row rowVer" id="rowVer">
 					<div class="col s12">
 						<div class="card">
 							<div class="card-content">
-								<div class="row rowVer" id="rowVerImagen">
+								<!--<div class="row rowVer" id="rowVerImagen">
 									<div class="col s12 center-align" id="verImagen">
 										<img class="responsive-img circle" src="http://placehold.it/350x150">
 									</div>
 									<p class="center-align">Estado: {{procariano.estado}}</p>
-								</div>
+								</div>-->
 								<!--Nombres-->
 								<div class="row rowVer" id="rowVerNombres">
 									<div class="col s6" id="verNombre">
@@ -137,14 +104,13 @@
 					</div>
 				</div>
 				<!--End row ver procariano-->
-			</div>
-		</main>
-		<footer>
+			</main>
+		</div>
+		<div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 			<script src='https://unpkg.com/vue@2.3.3'></script>
-			<script src="/js/procariano/verProcarianoScript.js"></script>
-		</footer>
+			<script src="/build/procariano/verProcarianoScript.js"></script>
+		</div>
 	</body>
 </html>
