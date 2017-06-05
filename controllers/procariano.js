@@ -24,21 +24,21 @@ const crearProcariano = (req, res, next) => {
 
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
-	apellidos = req.body.apellidos
-	direccion = req.body.direccion
-	fechaNacimiento = req.body.fechaNacimiento
-	genero = req.body.genero
-	contrasenna = req.body.contrasenna
-	email =  req.body.email
-	celular = req.body.celular
-	trabajo = req.body.trabajo
+	apellidos = req.body.apellidos;
+	direccion = req.body.direccion;
+	fechaNacimiento = req.body.fechaNacimiento;
+	genero = req.body.genero;
+	contrasenna = req.body.contrasenna;
+	email =  req.body.email;
+	celular = req.body.celular;
+	trabajo = req.body.trabajo;
 
-	colegio = req.body.colegio
-	universidad = req.body.universidad
-	parroquia = req.body.parroquia
-	fechaOrdenacion = req.body.fechaOrdenacion
-	estado = req.body.estado
-	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil
+	colegio = req.body.colegio;
+	universidad = req.body.universidad;
+	parroquia = req.body.parroquia;
+	fechaOrdenacion = req.body.fechaOrdenacion;
+	estado = req.body.estado;
+	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
 
 
 	modelo.Persona.create({
@@ -69,7 +69,7 @@ const crearProcariano = (req, res, next) => {
 				persona : persona,
 				procariano : procariano,
 				mensaje : 'exito'
-			}
+			};
 
 			res.json(json1);
 		});
@@ -82,6 +82,59 @@ const crearProcariano = (req, res, next) => {
 	});
 }
 
+const buscarProcariano = (req, res , next) => {
+
+	
+
+	console.log(req.query.cedula + "\n")
+	modelo.Procariano.findAll({
+	    include: [{
+	        model: modelo.Persona ,
+	        where: {
+	        	cedula : {
+	        		$like :  '%' + req.query.cedula + '%'
+	        	},
+	        	nombres : req.query.nombres
+	         }/*,
+	        required : false
+	        	/*,
+
+	        where: { 
+	        	id: Sequelize.col('project.state') 
+	        }*/
+	    }]/*,
+	    where: {
+	    	colegio : 'nueva semilla'
+	    } */
+	    
+	}).then( procarianos => {
+		const respuesta = procarianos.map( procariano => {
+
+			return Object.assign(
+				{},
+				{
+					procarianoID : procariano.id ,
+					colegio : procariano.colegio ,
+					universidad : procariano.universidad ,
+					parroquia : procariano.parroquia ,
+					fechaOrdenacion : procariano.fecha_ordenacion ,
+					estado : procariano.hace_participacion_estudiantil ,
+					cedula : procariano.Persona.cedula ,
+					nombres : procariano.Persona.nombres ,
+					apellidos : procariano.Persona.apellidos ,
+					direccion : procariano.Persona.fechaNacimiento ,
+					genero : procariano.Persona.genero ,
+					fechaNacimiento : procariano.Persona.fechaNacimiento ,
+					convencional : procariano.Persona.convencional ,
+					celular : procariano.Persona.celular ,
+					trabajo : procariano.Persona.trabajo
+				});
+		});
+		return res.json(respuesta);
+	});
+};
 module.exports = {
-	crearProcariano
-}
+	crearProcariano,
+	buscarProcariano
+};
+

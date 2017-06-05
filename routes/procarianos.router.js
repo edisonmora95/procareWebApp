@@ -19,10 +19,10 @@ router.post('/nuevo', controladorProcariano.crearProcariano);
 router.get('/', function(req, res, next) {
   res.render('procariano/buscarProcariano');
 });
-//Responde con los procarianos encontrados
-router.get('/buscar', function(req, res, next){
 
-});
+//Responde con los procarianos encontrados
+router.get('/buscar', controladorProcariano.buscarProcariano);
+
 //Responde con la ventana del procariano indicado
 router.get('/:id', function(req, res, next){
 	res.render('procariano/verProcariano');
