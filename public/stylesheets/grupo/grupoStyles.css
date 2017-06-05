@@ -1,0 +1,50 @@
+body{
+	background-color: #d3dbdb;
+}
+
+.card{
+	margin-top: 5%;
+	padding: 3%;
+	border-radius: 2%;
+	height: auto !important;
+}
+
+.col-chicos{
+	border: 1px solid #d3dbdb;
+	border-radius: 3%;
+	padding: 0 !important;
+}
+
+.btn-small{
+	width: 100%;
+	text-align: center;
+	padding: 1%;
+	margin-bottom: 10%;
+}
+
+li{
+	/*border: 1px solid red;*/
+	padding: 3%;
+	/*border-bottom: 1px solid #d3dbdb;*/
+}
+
+li:hover{
+	background-color: #d3dbdb;
+}
+
+#row-escoger-chicos{
+	padding: 0 5%;
+}
+
+#col-sin-grupo{
+	margin-left: 3%;
+}
+
+#col-con-grupo{
+	margin-right: 3%;
+}
+
+#col-btn{
+	margin-top: 5%;
+	padding: 0 5%;
+}

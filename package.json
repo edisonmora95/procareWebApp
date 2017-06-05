@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm install && npm run gulp",
-    "gulp": "gulp"
+    "start": "npm run gulp",
+    "gulp": "gulp",
+    "build": "gulp build",
+    "babel": "gulp babel",
+    "vueify": "gulp vueify"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -25,8 +28,11 @@
     "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.18.12",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-browserify": "^0.5.1",
     "gulp-nodemon": "^2.2.1",
     "nodemon": "^1.11.0",
+    "run-sequence": "^1.2.2",
     "vueify": "^9.4.1"
   }
 }
