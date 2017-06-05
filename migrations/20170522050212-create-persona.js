@@ -16,7 +16,6 @@ module.exports = {
       nombres: {
         type : DataTypes.STRING,
         allowNull : false
-
       },
       apellidos: {
         type : DataTypes.STRING
