@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     estado: {
       type : DataTypes.BOOLEAN,
-      allowNull : true
+      allowNull : false
     },
     hace_participacion_estudiantil: {
       type : DataTypes.BOOLEAN,

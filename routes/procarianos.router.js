@@ -24,20 +24,14 @@ router.get('/', function(req, res, next) {
 router.get('/buscar', controladorProcariano.buscarProcariano);
 
 //Responde con la ventana del procariano indicado
-router.get('/:id', function(req, res, next){
-	res.render('procariano/verProcariano');
-});
+router.get('/api/:id', controladorProcariano.buscarProcarianoPorId);
 
 //Update procariano
 //Responde con un status indicando si se pudo actualizar o no
-router.put(':id', function(req, res, next){
-
-});
+router.put('/api/:id', controladorProcariano.editarProcariano);
 
 //Delete procariano
 //Responde con un status indicando si se pudo eliminar o no
-router.delete(':id', function(req, res, next){
-
-});
+router.delete('/api/:id', controladorProcariano.eliminarProcariano);
 
 module.exports = router;
