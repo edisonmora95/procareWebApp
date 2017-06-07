@@ -1,3 +1,4 @@
+var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Procariano = sequelize.define('Procariano', {
@@ -13,15 +14,18 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : true
     },
-    fecha_ordenacion: {
+    fechaOrdenacion: {
       type : DataTypes.DATE,
       allowNull : true
     },
     estado: {
-      type : DataTypes.BOOLEAN,
-      allowNull : false
+      type : DataTypes.STRING,
+      allowNull : false,
+      validate : {
+        isIn : ['activo', 'inactivo' ]
+      }
     },
-    hace_participacion_estudiantil: {
+    haceParticipacionEstudiantil: {
       type : DataTypes.BOOLEAN,
       allowNull : true
     }
@@ -32,6 +36,8 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     }
+
   });
   return Procariano;
 };
+

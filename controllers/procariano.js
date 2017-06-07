@@ -1,6 +1,8 @@
 var modelo = require('../models');
+var utils = require('../utils/utils')
 
 const crearProcariano = (req, res, next) => {
+	//formato fechas : YYYY-MM-DD
 
 	/*
 	cedula = '0990218506';
@@ -26,19 +28,23 @@ const crearProcariano = (req, res, next) => {
 	nombres = req.body.nombres;
 	apellidos = req.body.apellidos;
 	direccion = req.body.direccion;
-	fechaNacimiento = req.body.fechaNacimiento;
-	genero = req.body.genero;
+	fechaNacimiento = new Date(req.body.fechaNacimiento);
 	contrasenna = req.body.contrasenna;
+	genero = req.body.genero;
 	email =  req.body.email;
 	celular = req.body.celular;
 	trabajo = req.body.trabajo;
+	convencional = req.body.convencional;
+
+
 
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	fechaOrdenacion = req.body.fechaOrdenacion;
-	estado = true;
+	fechaOrdenacion = new Date(req.body.fechaOrdenacion);
+	estado = 'activo';
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
+
 
 
 	modelo.Persona.create({
@@ -51,11 +57,11 @@ const crearProcariano = (req, res, next) => {
 		contrasenna : contrasenna,
 		email : email,
 		celular : celular,
-		trabajo : trabajo
+		trabajo : trabajo,
+		convencional : convencional
 
 
 	}).then( persona => {
-		console.log("se creo una persona");
 		modelo.Procariano.create({
 			PersonaId : persona.get('id'),
 			colegio : colegio,
@@ -65,47 +71,52 @@ const crearProcariano = (req, res, next) => {
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
+			var status = true;
 			var json1 = {
+				status : status,
+				mensaje : 'Se pudo crear correctamente',
+				//para motivos de debug
 				persona : persona,
-				procariano : procariano,
-				mensaje : 'exito'
+				procariano : procariano
 			};
 
 			res.json(json1);
+		}).catch( error2 => {
+			var json1 = {
+			status : false,
+			mensaje : 'No se pudo crear esta persona',
+			error : error2
+			}
+		res.send(json1);
+
 		});
 	}).catch( error => {
 		var json1 = {
-			esteEsElError : error,
-			esteEsElbody : req.body
-		}
+			status : false,
+			mensaje : 'No se pudo crear esta persona',
+			error : error
+			}
 		res.send(json1);
 	});
 }
 
+
+
+
 const buscarProcariano = (req, res , next) => {
 
-	
+	//no puede haber objetos vacios
 
 	console.log(req.query.cedula + "\n")
+	console.log(req.query);
+	var jsonModelo = utils.generarJsonProcariano(req.query);
+	console.log(jsonModelo);
+	
 	modelo.Procariano.findAll({
 	    include: [{
 	        model: modelo.Persona ,
-	        where: {
-	        	cedula : {
-	        		$like :  '%' + req.query.cedula + '%'
-	        	}
-	        	
-	         }/*,
-	        required : false
-	        	/*,
-
-	        where: { 
-	        	id: Sequelize.col('project.state') 
-	        }*/
-	    }]/*,
-	    where: {
-	    	colegio : 'nueva semilla'
-	    } */
+	        where: jsonModelo.persona
+	    }], where : jsonModelo.procariano//aqui va el where
 	    
 	}).then( procarianos => {
 		const respuesta = procarianos.map( procariano => {
@@ -133,7 +144,10 @@ const buscarProcariano = (req, res , next) => {
 		});
 		return res.json(respuesta);
 	});
+	
 };
+
+
 
 const buscarProcarianoPorId = (req, res, next) => {
 	//tener cuidado xq cualquiera podra ver este id
@@ -185,11 +199,12 @@ const editarProcariano = (req, res, next) => {
 		nombres : req.query.nombres,
 		apellidos : req.query.apellidos,
 		direccion :req.query.direccion,
-		fechaNacimiento : req.query.fechaNacimiento,
+		fechaNacimiento : new Date(req.body.fechaNacimiento),
 		genero : req.query.genero,
 		email :  req.query.email,
 		celular : req.query.celular,
-		trabajo : req.query.trabajo
+		trabajo : req.query.trabajo,
+		convencional : req.query.convencional
 	  
 	}, {
 	  where: {
@@ -200,7 +215,7 @@ const editarProcariano = (req, res, next) => {
 			colegio : req.query.colegio,
 			universidad : req.query.universidad,
 			parroquia : req.query.parroquia,
-			fechaOrdenacion : req.query.fechaOrdenacion,
+			fechaOrdenacion : new Date(req.body.fechaOrdenacion),
 			haceParticipacionEstudiantil : req.query.haceParticipacionEstudiantil
 		}, { 
 			where : {
@@ -232,7 +247,7 @@ const editarProcariano = (req, res, next) => {
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : errj
+				sequelizeStatus : err
 			}
 			res.json(jsonRespuesta);
 	});
@@ -241,7 +256,7 @@ const editarProcariano = (req, res, next) => {
 const eliminarProcariano = (req, res, next) => {
 	var id = req.params.id;
 	modelo.Procariano.update({
-		estado : false	  
+		estado : 'inactivo'	  
 	}, {
 	  where: {
 	    PersonaId : id

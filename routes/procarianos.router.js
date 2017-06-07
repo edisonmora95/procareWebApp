@@ -4,15 +4,16 @@
 var controladorProcariano = require('../controllers/procariano')
 var express = require('express');
 var router = express.Router();
+var utils = require('../utils/utils')
 
 
 //Create procariano
 //Responde con la página
-router.get('/nuevo', function(req, res, next){
+router.get('/nuevo',  function(req, res, next){
 	res.render('procariano/ingresarProcariano');
 });
 //Post del procariano
-router.post('/nuevo', controladorProcariano.crearProcariano);
+router.post('/nuevo', utils.generarHash , controladorProcariano.crearProcariano);
 
 //Read procariano
 //Responde con la página

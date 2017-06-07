@@ -8,10 +8,11 @@
     "build": "gulp build",
     "babel": "gulp babel",
     "vueify": "gulp vueify",
-    "sequelize" : "node_modules/.bin/sequelize",
-    "mocha" : "node_modules/.bin/mocha"
+    "sequelize": "node_modules/.bin/sequelize",
+    "mocha": "node_modules/.bin/mocha"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
