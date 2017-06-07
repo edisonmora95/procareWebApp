@@ -1,3 +1,6 @@
+/* jshint node: true */
+'use strict';
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,6 +8,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+//Ventanas
 var index = require('./routes/index');
 var users = require('./routes/users');
 var procarianos = require('./routes/procarianos.router');
@@ -28,13 +32,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 
-
-app.use('/', index);
+//Rutas de las ventanas
+app.use('/', login);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
 app.use('/login',login);
+
+//Rutas de la api
+app.use('/api/procarianos', require('./routes/api/procarianos.api.router'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

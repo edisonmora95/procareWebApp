@@ -16,21 +16,21 @@
 	</header>
 
 	<body>
-	  <div >
-	    <form method="post" action="/">
+	  <div id="appLogin">
+	    <form>
 	      <div class="login-form">
 	       <img src="images/nuevo_logo_procare.jpg" alt="logo espol" width="100%" heigth = "10%">
 	       <div class="form-group ">
-	         <input type="text" class="form-control " placeholder="Correo " id="UserName" name="correo" >
+	         <input type="email" class="form-control " placeholder="Correo " id="UserName" name="correo" v-model="correo">
 	         <i class="fa fa-user"></i>
 	       </div>
 	       <div class="form-group log-status">
-	         <input type="password" class="form-control " placeholder="Contraseña" id="Password" name="password" >
+	         <input type="password" class="form-control " placeholder="Contraseña" id="Password" name="password" v-model="contrasenna">
 	         <i class="fa fa-lock"></i>
 	       </div>
 	        <span class="alert">credenciales incorrectas!!</span>
 	        <a class="link" href="#" data-toggle="modal" data-target="#myModal">¿Perdió su contraseña?</a>
-	       <button type="submit" class="log-btn" >Entrar</button>  
+	       <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="login">Entrar<a>
 	     </div>
 	    </form>
 	<!--  
@@ -66,14 +66,15 @@
 				
 			</div>
 	    </form>
-
+			-->
 	  </div>
-	  -->
+	  
 	<div class="scriptsZone">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+		<script src='https://unpkg.com/vue@2.3.3'></script>
+		<script src="/build/login/login.js"></script>
 	</div>
 
 	</body>
