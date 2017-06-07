@@ -30,11 +30,12 @@ const crearProcariano = (req, res, next) => {
 	direccion = req.body.direccion;
 	fechaNacimiento = new Date(req.body.fechaNacimiento);
 	contrasenna = req.body.contrasenna;
-	genero = req.body.genero;
+	
 	email =  req.body.email;
 	celular = req.body.celular;
 	trabajo = req.body.trabajo;
 	convencional = req.body.convencional;
+	genero = req.body.genero;
 
 
 

@@ -30,7 +30,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     genero : {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      validate : {
+        isIn : ['masculino', 'femenino']
+      }
     },
     email : {
       type : DataTypes.STRING,
