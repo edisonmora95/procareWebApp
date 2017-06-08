@@ -168,6 +168,15 @@ var main = new Vue({
 		buscar: function(){
 			console.log(self.procariano)
 			
+		},
+		irAPerfil(procariano){
+			let urlApi = '/procarianos/perfil/' + procariano.cedula;
+			/*$.ajax({
+				type: 'GET',
+				url: urlApi
+
+			})*/
+			window.location.href = '/procarianos/perfil/' + procariano.cedula;
 		}
 	}
 });

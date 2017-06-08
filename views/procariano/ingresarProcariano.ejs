@@ -23,12 +23,12 @@
 						<!--Row nombres y apellidos-->
 						<div class="row row-nombres-apellidos">
 							<div class="input-field col s6">
-								<input type="text" name="nombres" id="nombres" v-model="procariano.nombre" v-validate="'required|alpha_spaces'">
+								<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
 								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
 								<label for="nombres">Nombres</label>
 							</div>
 							<div class="input-field col s6">
-								<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellido" v-validate="'required|alpha_spaces'">
+								<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'">
 								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 								<label for="apellidos">Apellidos</label>
 							</div>

@@ -5,7 +5,9 @@
 */
 
 import Navbar from './../../components/navbar.vue';
+import FormProcariano from './../../components/formProcariano.vue';
 Vue.component('navbar', Navbar); 
+Vue.component('editar', FormProcariano);
 
 var app = new Vue({
 	el: '#app',
@@ -14,8 +16,8 @@ var app = new Vue({
 	},
 	data: {
 		procariano:{
-			nombres: 'Edison',
-			apellidos: 'Mora',
+			nombres: 'Edison André',
+			apellidos: 'Mora Cazar',
 			cedula: '0927102848',
 			direccion: 'Cdla. Coviem',
 			fechaNacimiento: '27/06/1995',
@@ -31,7 +33,8 @@ var app = new Vue({
 			fechaOrdenacion: '',
 			estado: 'Activo',
 			grupo: ''
-		}
+		},
+		habilitaredicion: false
 	},
 	methods: {
 		eliminar: function(){
@@ -42,6 +45,9 @@ var app = new Vue({
 			//Llamada a la api para eliminar al procariano
 			this.procariano.estado = 'inactivo';
 			Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded')
+		},
+		habilitarEditar(){
+			this.habilitaredicion = true;
 		}
 	}
 });

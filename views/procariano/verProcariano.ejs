@@ -16,9 +16,9 @@
 			<header>
 				<navbar></navbar>
 			</header>
-			<main class="container" >
+			<main class="container">
 				<!--Row ver procariano-->
-				<div class="row rowVer" id="rowVer">
+				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
 					<div class="col s12">
 						<div class="card">
 							<div class="card-content">
@@ -97,19 +97,25 @@
 								<!--Botones-->
 								<div class="row row-botones">
 									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="eliminar">Eliminar<a>
-									<a class="btn waves-effect waves-light pull right" type="submit" name="action">Editar<a>
+									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
 								</div>
 							</div><!--End card content-->
 						</div><!--End card-->
 					</div>
 				</div>
 				<!--End row ver procariano-->
+				<div class="card" id="rowEditar" v-if="habilitaredicion">
+					<div class="card-content">
+						<editar :procariano="procariano" :habilitaredicion="habilitaredicion" @edicionchanged="habilitaredicion"></editar>	
+					</div>
+				</div>
 			</main>
 		</div>
 		<div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/build/procariano/verProcarianoScript.js"></script>
 		</div>
 	</body>

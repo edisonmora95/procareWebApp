@@ -3,6 +3,10 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 */
+/*globals Vue:false */
+/*globals $:false */
+/*globals VeeValidate:false */
+'use strict';
 
 import Navbar from './../../components/navbar.vue';
 Vue.component('navbar', Navbar); 
@@ -60,8 +64,8 @@ var main = new Vue({
 	data: {
 		usuario: '',		//tipo de usuario conectado
 		procariano: {
-			nombre: '',
-			apellido: '',
+			nombres: '',
+			apellidos: '',
 			fechaNacimiento: '',
 			cedula: '',
 			direccion: '',
@@ -136,12 +140,6 @@ var main = new Vue({
 		}
 	},
 	methods: {
-		prueba: function(){
-			var $input = $('#fecha-nacimiento').pickadate();
-			var picker = $input.pickadate('picker');
-			var fecha = picker.get('view', 'yyyy/mm/dd');
-			console.log(fecha);
-		},
 		crearSelectGrupo: function(idSelect, grupoEscogido, idDivSelect, grupos){
 			/*
 				Parámetros:
@@ -181,9 +179,24 @@ var main = new Vue({
 			divSelect.append(select);
 		},
 		validateBeforeSubmit: function() {
+			var self = this;
       this.$validator.validateAll().then(() => {
-          // eslint-disable-next-line
-          $('#modalProcarianoCreado').modal('open');
+        // eslint-disable-next-line
+        var urlApi = '/api/procarianos/';
+        $.ajax({
+        	type:'POST',
+        	url: urlApi,
+        	data: self.procariano,
+        	success: function(res){
+        		console.log(res);
+        		if(res.mensaje === 'exito'){
+        			$('#modalProcarianoCreado').modal('open');
+        		}else{
+        			alert('Error al ingresar en la base de datos');
+        		}
+        	}
+        });
+        
       }).catch(() => {
           // eslint-disable-next-line
           alert('Correct them errors!');

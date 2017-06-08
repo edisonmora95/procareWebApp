@@ -154,7 +154,7 @@
 							</thead>
 							<tbody>
 								<tr v-for="procariano in procarianos">
-									<td ><a :href="'/procarianos/' + procariano.nombre" class="nombre">{{procariano.nombre}}</a></td>
+									<td @click="irAPerfil(procariano)"><a  class="nombre">{{procariano.nombre}}</a></td>
 									<td>{{procariano.apellido}}</td>
 									<td>{{procariano.cedula}}</td>
 									<td>{{procariano.fechaNacimiento}}</td>
