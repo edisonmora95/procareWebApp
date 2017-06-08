@@ -9,13 +9,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 //Ventanas
-var index = require('./routes/index');
-var users = require('./routes/users');
-var procarianos = require('./routes/procarianos.router');
-var asistencias = require('./routes/asistencias.router');
-var grupos = require('./routes/grupos.router');
-var login = require('./routes/login');
-
+var users = require('./routes/ventanas/users');
+var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
+var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
+var grupos = require('./routes/ventanas/grupos.ventanas.router');
+var login = require('./routes/ventanas/login');
+//Api
+let apiProcarianos = require('./routes/api/procarianos.api.router');
 var app = express();
 
 
@@ -41,7 +41,7 @@ app.use('/grupos', grupos);
 app.use('/login',login);
 
 //Rutas de la api
-app.use('/api/procarianos', require('./routes/api/procarianos.api.router'));
+app.use('/api/procarianos', apiProcarianos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

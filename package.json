@@ -8,8 +8,8 @@
     "build": "gulp build",
     "babel": "gulp babel",
     "vueify": "gulp vueify",
-    "sequelize" : "node_modules/.bin/sequelize",
-    "mocha" : "node_modules/.bin/mocha"
+    "sequelize": "node_modules/.bin/sequelize",
+    "mocha": "node_modules/.bin/mocha"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -23,6 +23,7 @@
     "sequelize": "^3.30.4",
     "sequelize-cli": "^2.7.0",
     "serve-favicon": "~2.3.0",
+    "vee-validate": "^2.0.0-rc.5",
     "vue-material": "^0.7.1"
   },
   "devDependencies": {
