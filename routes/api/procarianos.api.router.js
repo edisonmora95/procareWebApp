@@ -4,11 +4,12 @@
 var controladorProcariano = require('../../controllers/procariano');
 var express = require('express');
 var router = express.Router();
+var utils = require('../utils/utils');
 
 //API
 
 //Post del procariano
-router.post('/', controladorProcariano.crearProcariano);
+router.post('/', utils.generarHash,controladorProcariano.crearProcariano);
 
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.

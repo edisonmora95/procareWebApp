@@ -1,3 +1,4 @@
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Persona = sequelize.define('Persona', {
@@ -28,7 +29,11 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING
     },
     genero : {
-      type : DataTypes.STRING
+      type : DataTypes.STRING,
+      allowNull : false,
+      validate : {
+        isIn : ['masculino', 'femenino']
+      }
     },
     email : {
       type : DataTypes.STRING,
@@ -48,7 +53,22 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // associations can be defined here
       }
-    }
+    }/*, hooks : {
+      beforeCreate : (persona, options) => {
+         bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
+            console.log('este es el hash' + hash)
+            persona.contrasenna = hash;
+          });
+
+      }
+    }/*,instanceMethods: {
+        generateHash: function(password) {
+            return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+        },
+        validPassword: function(password) {
+            return bcrypt.compareSync(password, this.password);
+        },
+    }*/
   });
 
   return Persona;
