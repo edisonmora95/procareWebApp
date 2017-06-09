@@ -4,7 +4,7 @@
 var controladorProcariano = require('../../controllers/procariano');
 var express = require('express');
 var router = express.Router();
-var utils = require('../utils/utils');
+var utils = require('../../utils/utils');
 
 //API
 

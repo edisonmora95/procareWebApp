@@ -182,6 +182,8 @@ var main = new Vue({
 			var self = this;
       this.$validator.validateAll().then(() => {
         // eslint-disable-next-line
+        console.log('Se va a enviar: ');
+        console.log(self.procariano);
         var urlApi = '/api/procarianos/';
         $.ajax({
         	type:'POST',
@@ -189,7 +191,7 @@ var main = new Vue({
         	data: self.procariano,
         	success: function(res){
         		console.log(res);
-        		if(res.mensaje === 'exito'){
+        		if(res.mensaje === 'Se pudo crear correctamente'){
         			$('#modalProcarianoCreado').modal('open');
         		}else{
         			alert('Error al ingresar en la base de datos');
@@ -210,7 +212,7 @@ $('#select-tipo-procariano').change(function(){
 	main.$data.procariano.tipo = tipoProcariano;
 });
 $('#select-genero').change(function(){
-	var generoProcariano = $('#select-genero option:selected').text();
+	var generoProcariano = $('#select-genero option:selected').val();
 	main.$data.procariano.genero = generoProcariano;
 });
 //2 way data binding de los date pickers

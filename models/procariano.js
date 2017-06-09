@@ -15,15 +15,15 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : true
     },
     fechaOrdenacion: {
-      type : DataTypes.DATE,
+      type : DataTypes.DATEONLY,
       allowNull : true
     },
     estado: {
       type : DataTypes.STRING,
       allowNull : false,
-      validate : {
+      /*validate : {
         isIn : ['activo', 'inactivo' ]
-      }
+      }*/
     },
     haceParticipacionEstudiantil: {
       type : DataTypes.BOOLEAN,

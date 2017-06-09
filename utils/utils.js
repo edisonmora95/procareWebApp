@@ -37,13 +37,13 @@ module.exports.generarJsonProcariano = function(procariano){
 	respuesta['procariano'] = {};
 	for (var clave in procariano) {
 		if (procariano.hasOwnProperty(clave)) {
-    		if ( (clave == 'cedula') || (clave == 'nombres') || (clave == 'apellidos') || (clave == 'direccion')  || (clave == 'genero') || (clave == 'email') || (clave == 'celular') || (clave == 'trabajo')  || (clave == 'convencional') || (clave == 'fechaNacimiento')) {
+    		if ( ( (clave == 'cedula') || (clave == 'nombres') || (clave == 'apellidos') || (clave == 'direccion')  || (clave == 'genero') || (clave == 'email') || (clave == 'celular') || (clave == 'trabajo')  || (clave == 'convencional') || (clave == 'fechaNacimiento') ) && ( procariano[clave] != '' ) ) {
 
     			respuesta['persona'][clave] = {
     				$like : '%' + procariano[clave] + '%'
     			}
     		}
-    		if ( (clave == 'colegio') || (clave == 'universidad') || (clave == 'parroquia') || (clave == 'fechaOrdenacion')  || (clave == 'estado') || (clave == 'haceParticipacionEstudiantil') ) {
+    		if ( ( (clave == 'colegio') || (clave == 'universidad') || (clave == 'parroquia') || (clave == 'fechaOrdenacion')  || (clave == 'estado') || (clave == 'haceParticipacionEstudiantil') ) && ( procariano[clave] != '' )) {
     			respuesta['procariano'][clave] = {
     				$like : '%' + procariano[clave] + '%'
     			}

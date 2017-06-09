@@ -9,7 +9,7 @@ const crearProcariano = (req, res, next) => {
 	nombres = 'Jose Antonio'
 	apellidos = 'Viteri Cuenca'
 	direccion = 'esta es una direccion'
-	fechaNacimiento = '25-08-1995'
+	fechaNacimiento = '1995-06-27'
 	genero = 'masculino'
 	contrasenna = '12345'
 	email = 'jose@hotmail.com'
@@ -23,6 +23,9 @@ const crearProcariano = (req, res, next) => {
 	estado = false
 	haceParticipacionEstudiantil = true
 	*/
+
+	console.log('REQ.BODY: ');
+	console.log(req.body);
 
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
@@ -42,8 +45,16 @@ const crearProcariano = (req, res, next) => {
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	fechaOrdenacion = new Date(req.body.fechaOrdenacion);
-	estado = 'activo';
+	/*if(req.body.fechaOrdenacion != ''){
+		console.log('La fecha de ordenación NO está vacía!');
+		fechaOrdenacion = new Date(req.body.fechaOrdenacion);
+	}else{
+		console.log('LA FECHA DE ORDENACIÓN ESTÁ VACÍA!')
+		//fechaOrdenacion = '';		
+	}*/
+	//fechaOrdenacion = new Date(req.body.fechaOrdenacion);
+	
+	estado = req.body.estado;
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
 
 
@@ -68,7 +79,7 @@ const crearProcariano = (req, res, next) => {
 			colegio : colegio,
 			universidad : universidad,
 			parroquia : parroquia,
-			fechaOrdenacion : fechaOrdenacion,
+			//fechaOrdenacion : fechaOrdenacion,
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
@@ -85,7 +96,7 @@ const crearProcariano = (req, res, next) => {
 		}).catch( error2 => {
 			var json1 = {
 			status : false,
-			mensaje : 'No se pudo crear esta persona',
+			mensaje : 'No se pudo crear este procariano',
 			error : error2
 			}
 		res.send(json1);
@@ -107,7 +118,8 @@ const crearProcariano = (req, res, next) => {
 const buscarProcariano = (req, res , next) => {
 
 	//no puede haber objetos vacios
-
+	console.log('sadfsdafasdfdsaf')
+	console.log(req.query)
 	console.log(req.query.cedula + "\n")
 	console.log(req.query);
 	var jsonModelo = utils.generarJsonProcariano(req.query);
@@ -140,7 +152,9 @@ const buscarProcariano = (req, res , next) => {
 					fechaNacimiento : procariano.Persona.fechaNacimiento ,
 					convencional : procariano.Persona.convencional ,
 					celular : procariano.Persona.celular ,
-					trabajo : procariano.Persona.trabajo
+					trabajo : procariano.Persona.trabajo,
+					email: procariano.Persona.email,
+					estado: procariano.estado
 				});
 		});
 		return res.json(respuesta);
@@ -180,12 +194,14 @@ const buscarProcarianoPorId = (req, res, next) => {
 					cedula : procariano.Persona.cedula ,
 					nombres : procariano.Persona.nombres ,
 					apellidos : procariano.Persona.apellidos ,
-					direccion : procariano.Persona.fechaNacimiento ,
+					direccion : procariano.Persona.direccion ,
 					genero : procariano.Persona.genero ,
 					fechaNacimiento : procariano.Persona.fechaNacimiento ,
 					convencional : procariano.Persona.convencional ,
 					celular : procariano.Persona.celular ,
-					trabajo : procariano.Persona.trabajo
+					trabajo : procariano.Persona.trabajo ,
+					email: procariano.Persona.email,
+					estado: procariano.estado
 				});
 		});
 		return res.json(respuesta);
@@ -193,19 +209,20 @@ const buscarProcarianoPorId = (req, res, next) => {
 };
 
 const editarProcariano = (req, res, next) => {
-	console.log(req.query)
-	var id = req.params.id;
+	console.log('REQ.BODY')
+	console.log(req.body)
+	var id = req.body.id;
 	modelo.Persona.update({
-		cedula : req.query.cedula,
-		nombres : req.query.nombres,
-		apellidos : req.query.apellidos,
-		direccion :req.query.direccion,
+		cedula : req.body.cedula,
+		nombres : req.body.nombres,
+		apellidos : req.body.apellidos,
+		direccion :req.body.direccion,
 		fechaNacimiento : new Date(req.body.fechaNacimiento),
-		genero : req.query.genero,
-		email :  req.query.email,
-		celular : req.query.celular,
-		trabajo : req.query.trabajo,
-		convencional : req.query.convencional
+		genero : req.body.genero,
+		email :  req.body.email,
+		celular : req.body.celular,
+		trabajo : req.body.trabajo,
+		convencional : req.body.convencional
 	  
 	}, {
 	  where: {
@@ -213,11 +230,11 @@ const editarProcariano = (req, res, next) => {
 	  }
 	}).then( result => {
 		modelo.Procariano.update({
-			colegio : req.query.colegio,
-			universidad : req.query.universidad,
-			parroquia : req.query.parroquia,
-			fechaOrdenacion : new Date(req.body.fechaOrdenacion),
-			haceParticipacionEstudiantil : req.query.haceParticipacionEstudiantil
+			colegio : req.body.colegio,
+			universidad : req.body.universidad,
+			parroquia : req.body.parroquia,
+			//fechaOrdenacion : new Date(req.body.fechaOrdenacion),
+			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
 		}, { 
 			where : {
 				PersonaId : id
@@ -255,7 +272,9 @@ const editarProcariano = (req, res, next) => {
 };
 
 const eliminarProcariano = (req, res, next) => {
+	console.log('SE VA A ELIMINAR EL PROCARIANO');
 	var id = req.params.id;
+	console.log(id);
 	modelo.Procariano.update({
 		estado : 'inactivo'	  
 	}, {

@@ -85,7 +85,7 @@ var main = new Vue({
 			}
 		],
 		checkboxes: ['Nombre'],
-		procarianos: [
+		/*procarianos: [
 			{
 				nombre: 'Edison',
 				apellido: 'Mora',
@@ -124,10 +124,10 @@ var main = new Vue({
 				estado: 'Activo',
 				grupo: ''
 			}
-		],
+		],*/
 		procariano: {
-			nombre: '',
-			apellido: '',
+			nombres: '',
+			apellidos: '',
 			cedula: '',
 			direccion: '',
 			fechaNacimiento: '',
@@ -144,6 +144,7 @@ var main = new Vue({
 			estado: '',
 			grupo: ''
 		},
+		procarianos: [],
 		resultados: [],
 		usuario: 'personal'
 	},
@@ -166,7 +167,20 @@ var main = new Vue({
 			return flag;
 		},
 		buscar: function(){
-			console.log(self.procariano)
+			var self = this;
+			console.log(self.procariano);
+			var urlApi = '/api/procarianos/';
+			$.ajax({
+				type: 'GET',
+				url: urlApi,
+				data: self.procariano,
+				success: function(res){
+					console.log(res);
+					$.each(res, function(index, procarianoEncontrado){
+						self.procarianos.push(procarianoEncontrado);
+					});
+				}
+			})
 			
 		},
 		irAPerfil(procariano){
@@ -176,7 +190,7 @@ var main = new Vue({
 				url: urlApi
 
 			})*/
-			window.location.href = '/procarianos/perfil/' + procariano.cedula;
+			window.location.href = '/procarianos/perfil/' + procariano.personaId;
 		}
 	}
 });

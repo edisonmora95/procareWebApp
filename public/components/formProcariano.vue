@@ -139,20 +139,35 @@
 		props: ['procariano', 'habilitaredicion'],
 		data(){
 			return{
-				flag: true
+				flag: true,
+				procarianoId: 1
 			}
 		},
 		methods: {
 			cancelarEdicion(){
-
+				location.reload();
 			},
 			aceptarEdicion(){
 				var self = this;
 	      this.$validator.validateAll().then(() => {
 	        // eslint-disable-next-line
 	        self.flag = false;
-	       console.log('dfsfasdfasf');
-	      	location.reload(); 
+	      	console.log('dfsfasdfasf');
+	      	
+	      	self.procariano.id = self.procarianoId;
+	      	console.log(self.procariano);
+	      	var urlApi = '/api/procarianos/' + self.procarianoId;
+	      	$.ajax({
+	      		type: 'PUT',
+	      		data: self.procariano,
+	      		url: urlApi,
+	      		success: function(res){
+	      			console.log('SI SE PUDO');
+	      			console.log(res);
+	      			location.reload();
+	      		} 
+	      	});
+	      	//location.reload(); 
 	      }).catch(() => {
           // eslint-disable-next-line
           alert('Correct them errors!');
