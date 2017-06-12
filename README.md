@@ -1,3 +1,8 @@
+## Para correr el proyecto
+
+1) npm run build
+2) npm start
+
 ## Analizador de codigo
 
 Para el analisis de codigo usaremos JsHint
