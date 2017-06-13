@@ -170,7 +170,6 @@
 			},
 			formCompleto(){
 				var self = this;
-				//Revisión del input nombre
 				if( $('#nombre').val() === '' ){
 					self.mensaje = 'Debe ingresar el nombre del grupo';
 					return false;

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="row">
+		<div class="row" id="row-info-general">
 			<h5 class="center-align">Editar grupo</h5>
 			<h6 class="center-align">Información general</h6>
 			<form class="col s12">
@@ -38,10 +38,6 @@
 						<label for="animador" class="active">Animador</label>
 					</div>
 				</div>
-				<div class="row">
-					<a class="waves-effect waves-light btn" @click="cancelar">Cancelar</a>
-					<a class="waves-effect waves-light btn pull right" @click="aceptar">Aceptar</a>
-				</div>
 			</form>
 		</div>
 		<div class="row" id="row-escoger-chicos">
@@ -64,6 +60,16 @@
 				<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
 			</div>
 		</div>
+		 <!-- Modal Structure -->
+	  <div id="modalCamposIncompletos" class="modal">
+	    <div class="modal-content">
+	      <h4 class="center-align">¡Campos incompletos!</h4>
+      	<p class="center-align">{{mensaje}}</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	    </div>
+	  </div>
 	</div>
 	
 </template>
@@ -85,9 +91,11 @@
 		props: ['grupo', 'integrantes'],
 		mounted(){
 			$('select').material_select();
+			$('.modal').modal();
 		},
 		data() {
 			return{
+				mensaje: '',
 				animadores: [],
 				finEdicion: false,
 				sinGrupo: [
@@ -222,8 +230,37 @@
 			cancelar(){
 				this.$emit('edicionterminada', this.finEdicion);
 			},
+			formCompleto(){
+				var self = this;
+				if( $('#nombre').val() === '' ){
+					self.mensaje = 'El campo nombre no puede quedar vacío';
+					return false;
+				}
+				else if( $('#genero').val() === '' ){
+					self.mensaje = 'El campo género no puede quedar vacío';
+					return false;
+				}
+				else if( $('#etapa').val() === '' ){
+					self.mensaje = 'El campo etapa no puede quedar vacío';
+					return false;
+				}
+				else if( $('#animador').val() === '' ){
+					self.mensaje = 'El campo animador no puede quedar vacío';
+					return false;
+				}
+				else{
+					return true;
+				}
+			},
 			aceptar(){
-				this.$emit('edicionterminada', this.finEdicion);
+				if(!this.formCompleto()){
+					console.log('Incompleto')
+					$('#modalCamposIncompletos').modal('open');
+				}
+				else{
+					this.$emit('edicionterminada', this.finEdicion);	
+				}
+				
 			}
 		}
 	}

@@ -5,8 +5,8 @@ const babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 
-gulp.task('default', ['browser-sync'], function(){
-
+gulp.task('default', function(){
+	runSequence('babel', 'vueify', 'browser-sync');
 });
 
 gulp.task('browser-sync', ['nodemon'], function(){
@@ -33,7 +33,7 @@ gulp.task('nodemon', function(cb){
 });
 
 gulp.task('babel', function(){
-	console.log('Convirtiendo a es5');
+	console.log('Convirtiendo a ES5');
 	var dist = './public/dist/';
 	return gulp.src('./public/js/*/*')
 				.pipe(babel({
@@ -43,7 +43,7 @@ gulp.task('babel', function(){
 });
 
 gulp.task('vueify', function(){
-	console.log('Vueify');
+	console.log('Importando los módulos con Vueify');
 	//var src = './public/js/grupo/crearGrupoScript.js'
 	//var build = './build/grupo/bundle.js'
 	var src = './public/dist/**/*.js'

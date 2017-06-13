@@ -8,7 +8,7 @@ import EditarGrupo from './../../components/editarGrupo.vue';
 import EscogerChicos from './../../components/escogerChicos.vue';
 
 Vue.component('navbar', Navbar);
-Vue.component('info-grupo', EditarGrupo);
+Vue.component('editar-grupo', EditarGrupo);
 Vue.component('chicos-grupo', EscogerChicos);
 
 let verGrupoApp = new Vue({
@@ -94,6 +94,9 @@ let verGrupoApp = new Vue({
 		},
 		checkIsEmpty(obj){
 			return $.isEmptyObject(obj);
+		},
+		eliminar(){
+			
 		}
 	}
 });
