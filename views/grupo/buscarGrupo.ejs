@@ -20,7 +20,14 @@
 					<div class="row" id="row-busqueda">
 						<form class="çol s12">
 							<div class="row">
-								<div class="input-field col s12">
+								<div class="input-field col s4">
+									<v-select name="genero" id="genero" select-text="Procare/Procare Mujeres" v-model="grupo.genero">
+										<option value="Procare">Procare</option>
+										<option value="Procare Mujeres">Procare Mujeres</option>
+									</v-select>
+									<label for="genero">Procare/Procare Mujeres</label>
+								</div>
+								<div class="input-field col s8">
 									<input type="text" name="animador" v-model="grupo.animador">
 									<label for="animador">Nombre del animador</label>
 								</div>

@@ -209,7 +209,21 @@ var main = new Vue({
           self.errorObj.msj = self.errors.errors[0].msg;
           $('#modalError').modal('open');
       });
-    }
+    },/*
+    llenarBaseDeDatos(){
+    	var self = this;
+    	var urlApi = '/api/procarianos/';
+    	$.each(self.temp, function(index, procariano){
+    		$.ajax({
+    			type: 'POST',
+    			url: urlApi,
+    			data: procariano,
+    			success(res){
+    				console.log(res);
+    			}
+    		})
+    	});
+    }*/
 	}
 });
 // 2 way data binding de los selects

@@ -17,7 +17,7 @@ let verGrupoApp = new Vue({
 
 	},
 	mounted(){
-
+		$('.modal').modal();
 	},
 	data: {
 		usuario: 'personal',
@@ -95,7 +95,7 @@ let verGrupoApp = new Vue({
 		checkIsEmpty(obj){
 			return $.isEmptyObject(obj);
 		},
-		eliminar(){
+		eliminarGrupo(){
 			
 		}
 	}
