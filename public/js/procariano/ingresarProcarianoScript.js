@@ -62,6 +62,10 @@ var main = new Vue({
 		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
 	},
 	data: {
+		errorObj: {
+			campo: '',
+			msj: ''
+		},
 		usuario: '',		//tipo de usuario conectado
 		procariano: {
 			nombres: '',
@@ -201,7 +205,9 @@ var main = new Vue({
         
       }).catch(() => {
           // eslint-disable-next-line
-          alert('Correct them errors!');
+          self.errorObj.campo = self.errors.errors[0].field;
+          self.errorObj.msj = self.errors.errors[0].msg;
+          $('#modalError').modal('open');
       });
     }
 	}

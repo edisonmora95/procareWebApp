@@ -168,7 +168,9 @@ var main = new Vue({
 		},
 		buscar: function(){
 			var self = this;
+			self.procarianos = [];
 			console.log(self.procariano);
+			console.log('Mira Erick que no se recarga la página.')
 			var urlApi = '/api/procarianos/';
 			$.ajax({
 				type: 'GET',

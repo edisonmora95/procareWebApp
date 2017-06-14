@@ -96,8 +96,8 @@
 									</div>
 								</div>
 								<!--Botones-->
-								<div class="row row-botones">
-									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="eliminar">Eliminar<a>
+								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
+									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
 									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
 								</div>
 							</div><!--End card content-->
@@ -111,6 +111,36 @@
 					</div>
 				</div>
 			</main>
+
+			<!-- Modal Structure -->
+		  <div id="modalErrorEliminar" class="modal">
+		    <div class="modal-content">
+		      <h4 class="center-align">¡Error!</h4>
+		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalConfirmarEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">¿Está seguro de que desea eliminar a este procariano de la base de datos?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalExitoEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">Procariano eliminado correctamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
 		</div>
 		<div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
