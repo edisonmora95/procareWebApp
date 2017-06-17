@@ -1,28 +1,16 @@
 var modelo = require('../models');
 var utils = require('../utils/utils')
 
+
+/*
+Autor : JV
+Creado : 26/06/2017
+Modificado: 07/07/2017
+Por: JV , agregados campos convencional y fecha date
+
+*/
 const crearProcariano = (req, res, next) => {
 	//formato fechas : YYYY-MM-DD
-
-	/*
-	cedula = '0990218506';
-	nombres = 'Jose Antonio'
-	apellidos = 'Viteri Cuenca'
-	direccion = 'esta es una direccion'
-	fechaNacimiento = '1995-06-27'
-	genero = 'masculino'
-	contrasenna = '12345'
-	email = 'jose@hotmail.com'
-	celular = '0951698554'
-	trabajo = 'no te importa'
-
-	colegio = 'esto es colegio'
-	universidad = 'ESPOL'
-	parroquia = 'Ximena'
-	fechaOrdenacion = '23-04-2000'
-	estado = false
-	haceParticipacionEstudiantil = true
-	*/
 
 	console.log('REQ.BODY: ');
 	console.log(req.body);
@@ -45,16 +33,8 @@ const crearProcariano = (req, res, next) => {
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	/*if(req.body.fechaOrdenacion != ''){
-		console.log('La fecha de ordenación NO está vacía!');
-		fechaOrdenacion = new Date(req.body.fechaOrdenacion);
-	}else{
-		console.log('LA FECHA DE ORDENACIÓN ESTÁ VACÍA!')
-		//fechaOrdenacion = '';		
-	}*/
-	//fechaOrdenacion = new Date(req.body.fechaOrdenacion);
 	
-	estado = req.body.estado;
+	estado = 'activo';
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
 
 
@@ -113,17 +93,16 @@ const crearProcariano = (req, res, next) => {
 }
 
 
-
+/*
+Autor : JV
+Creado : 28/05/2017
+Modificado: 07/07/2017
+Por : Jv , agregado meyodo generar JsonProcariano
+*/
 
 const buscarProcariano = (req, res , next) => {
 
-	//no puede haber objetos vacios
-	console.log('sadfsdafasdfdsaf')
-	console.log(req.query)
-	console.log(req.query.cedula + "\n")
-	console.log(req.query);
 	var jsonModelo = utils.generarJsonProcariano(req.query);
-	console.log(jsonModelo);
 	
 	modelo.Procariano.findAll({
 	    include: [{
@@ -163,6 +142,12 @@ const buscarProcariano = (req, res , next) => {
 };
 
 
+/*
+Autor : JV
+Creado : 28/05/2017
+Modificad8: 07/07/2017
+Por : JV , para que modifique por ID
+*/
 
 const buscarProcarianoPorId = (req, res, next) => {
 	//tener cuidado xq cualquiera podra ver este id
@@ -207,6 +192,13 @@ const buscarProcarianoPorId = (req, res, next) => {
 		return res.json(respuesta);
 	});
 };
+
+/*
+Autor : JV
+Creado : 28/05/2017
+Modificad8: 07/07/2017
+por : JV , agregado date a datos date
+*/
 
 const editarProcariano = (req, res, next) => {
 	console.log('REQ.BODY')
@@ -270,6 +262,13 @@ const editarProcariano = (req, res, next) => {
 			res.json(jsonRespuesta);
 	});
 };
+
+/*
+Autor : JV
+Creado : 28/05/2017
+Modificad8: 07/07/2017
+por : JV , agregado date a datos date
+*/
 
 const eliminarProcariano = (req, res, next) => {
 	console.log('SE VA A ELIMINAR EL PROCARIANO');
