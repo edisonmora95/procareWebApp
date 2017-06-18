@@ -14,6 +14,7 @@ var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var login = require('./routes/ventanas/login');
+var index = require('./routes/ventanas/index');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 var app = express();
@@ -33,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 
 //Rutas de las ventanas
-app.use('/', login);
+app.use('/', index);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
