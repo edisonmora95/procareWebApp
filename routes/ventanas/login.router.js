@@ -19,12 +19,23 @@ passport.use(new LocalStrategy({
 },
 function(correo, password, done) {
 	console.log('entra aqui passport');
-	modelos.Persona.find(
-	{
-		where : {
-			email : correo
-		}
+	modelos.Persona.find({
+  	  attributes: ['id','contrasenna','nombres','apellidos','email'],
+  	  where : {
+  	  	email : correo
+  	  },
+	  include: [{
+	    model: modelos.Rol,
+	    through: {
+	      attributes: ['RolNombre'],
+	    }
+	  }]
 	}).then( persona => {
+		var roles = persona.Rols
+		console.log({
+			estaPersona : persona,
+			roles : roles
+		})
 		isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
 	}).catch( err => {
 		console.log('no existe usuario')
@@ -40,24 +51,98 @@ passport.serializeUser(function(persona, done) {
 
 
 
-
+/*
 passport.deserializeUser(function(id, done) {
   modelos.Persona.find({
   	where : {
   		id : id
   	}
   }).then( persona => {
+  	modelos
   	done(null, persona);
   }).catch( err => {
   	done(err, null);
   })
 });
 
+
+passport.deserializeUser(function(id, done) {
+  modelos.Persona.findAll({
+  	where : {
+  		id : id
+  	}
+  }).then( persona => {
+  	modelos.PersonaRol.findAll({
+  		attributes: ['RolNombre'],
+  		where : {
+  			PersonaId : id
+  		}
+  	}).then( roles => {
+  		var json = {
+  			persona : persona,
+  			rol : roles
+  		};
+  		const respuesta = persona.map( per => {
+
+			return Object.assign(
+				{},
+				{
+					id : per.id,
+					nombres : per.nombres ,
+					apellidos : per.apellidos ,
+					correo : per.correo ,
+				});
+		});
+  		
+  	}).catch( err2 => {
+  		done(err2,null);
+  	})
+  }).catch( err => {
+  	done(err, null);
+  })
+});
+
+*/
+passport.deserializeUser(function(id, done) {
+  modelos.Persona.findAll({
+  	  attributes: ['id','nombres','apellidos','email'],
+  	  where : {
+  	  	id : id
+  	  },
+	  include: [{
+	    model: modelos.Rol,
+	    through: {
+	      attributes: ['RolNombre'],
+	    }
+	  }]
+  }).then( persona => {
+
+  	done(null, persona);
+  }).catch( err => {
+  	done(err, null);
+  })
+});
+
+
 router.post('/',
   passport.authenticate('local', {failureRedirect:'/',failureFlash: true}),
   function(req, res) {
-  	console.log(req.user);
-  	res.redirect("/procarianos/")
+  	var rols = req.user.Rols;
+  	console.log(req.user.Rols[0].nombre)
+  	var rolsJson = [];
+  	for (i = 0 ; i< rols.length ; i++){
+  		rolsJson.push(rols[i].nombre);
+  	}
+  	var json = {
+  		nombre : req.user.nombres,
+  		apellidos : req.user.apellidos,
+  		correo : req.user.email, 
+  		rols : rolsJson
+  	}
+
+
+  	console.log(json);
+  	res.render("procariano/verProcariano", json)
 });
 
 /* GET home page. */
