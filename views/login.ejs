@@ -28,7 +28,7 @@
 	         <input type="password" class="form-control " placeholder="Contraseña" id="Password" name="password" v-model="contrasenna">
 	         <i class="fa fa-lock"></i>
 	       </div>
-	        <span class="alert">credenciales incorrectas!!</span>
+	        <span class="alert" v-show="fallaLogin">¡Usuario o contraseña incorrecta!</span>
 	        <a class="link" href="#" data-toggle="modal" data-target="#myModal">¿Perdió su contraseña?</a>
 	        <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action"  @click="login"  >Entrar</a> 
 

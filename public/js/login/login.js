@@ -7,11 +7,13 @@ var appLogin = new Vue({
 	},
 	data: {
 		correo: '',
-		contrasenna: ''
+		contrasenna: '',
+		fallaLogin: false
 	},
 	methods: {
 		login(){
-			var url = "/";
+			let self = this;
+			var url = "/login/";
 			let obj = {
 				correo : $('#UserName').val(),
 				password : $('#Password').val()
@@ -21,6 +23,17 @@ var appLogin = new Vue({
 				data : obj,
 				success(res){
 					console.log(res);
+					if(res.status){
+						window.location.href = '/';
+					}
+					else{
+						self.fallaLogin = true;
+						console.log(self.fallaLogin);
+					}
+				},
+				error(res){
+					self.fallaLogin = true;
+					console.log(self.fallaLogin);
 				}
 			});
 			
