@@ -17,6 +17,8 @@ var users = require('./routes/ventanas/users');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
+//var login = require('./routes/ventanas/login');
+var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
@@ -52,7 +54,7 @@ app.use(flash());
 
 
 //Rutas de las ventanas
-app.use('/', login);
+app.use('/', index);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);

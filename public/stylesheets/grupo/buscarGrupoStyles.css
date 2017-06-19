@@ -18,7 +18,7 @@ body{
 .row{
 	margin-bottom: 0;
 	/*margin-left: 0;*/
-	padding: 0 2%;
+	padding: 0 2% !important;
 }
 
 form{

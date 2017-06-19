@@ -1,17 +1,22 @@
 /*
-	@Descripción: Controlador de la vista de buscarGrupo.ejs
+	@Descripción: Controlador de la vista de buscarGrupo. Permisos:
+		* Si el usuario es Director Ejecutivo o Personal, tiene acceso a todos los grupos.
+		* Si el usuario es Director de Formación, tiene acceso solo a los grupos de Procare o Procare Mujeres dependiendo de su género.
+		* Si el usuario es Animador, no tiene acceso a esta página... Solo se muestra el grupo al que pertenece.
 	@Autor: @edisonmora95
 	@FechaCreación: 31/05/2017
 */
 
 import Navbar from './../../components/navbar.vue';
+import Materials from 'vue-materials';
 
+Vue.use(Materials);
 Vue.component('navbar', Navbar); 
 
 let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
 	created: function(){
-
+		this.obtenerUsuario();
 	},
 	mounted: function(){
 		//Inicializadores de componentes de Materialize
@@ -22,12 +27,6 @@ let BuscarGrupoApp = new Vue({
 	},
 	data: {
 		grupos: [],
-		/*grupo:{
-			nombre: '',
-			anio: '',
-			animador: '',
-			etapa: ''
-		}*/
 		aux: [
 			{
 				nombre: 'Grupo de Mario',
@@ -54,11 +53,29 @@ let BuscarGrupoApp = new Vue({
 			nombre: '',
 			anio: new Date().getFullYear(),
 			animador: '',
-			etapa: ''
-		}
-
+			etapa: '',
+			genero: ''
+		},
+		usuario: {}
 	},
 	methods: {
+		obtenerUsuario(){
+			//Codigo para obtener el usuario loggeado
+			let self = this;
+			self.usuario = {
+				nombre: '',
+				tipo: 'director formacion',
+				grupo: '',
+				genero: 'masculino'
+			};
+			if(self.usuario.tipo === 'director formacion'){
+				if(self.usuario.genero === 'masculino'){
+					self.grupo.genero = 'Procare';
+				}else if(self.usuario.genero === 'femenino'){
+					self.grupo.genero = 'Procare Mujeres';
+				}
+			}
+		},
 		//Eventos
 		buscar(){
 			let self = this;

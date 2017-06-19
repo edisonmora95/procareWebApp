@@ -62,6 +62,10 @@ var main = new Vue({
 		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
 	},
 	data: {
+		errorObj: {
+			campo: '',
+			msj: ''
+		},
 		usuario: '',		//tipo de usuario conectado
 		procariano: {
 			nombres: '',
@@ -201,9 +205,25 @@ var main = new Vue({
         
       }).catch(() => {
           // eslint-disable-next-line
-          alert('Correct them errors!');
+          self.errorObj.campo = self.errors.errors[0].field;
+          self.errorObj.msj = self.errors.errors[0].msg;
+          $('#modalError').modal('open');
       });
-    }
+    },/*
+    llenarBaseDeDatos(){
+    	var self = this;
+    	var urlApi = '/api/procarianos/';
+    	$.each(self.temp, function(index, procariano){
+    		$.ajax({
+    			type: 'POST',
+    			url: urlApi,
+    			data: procariano,
+    			success(res){
+    				console.log(res);
+    			}
+    		})
+    	});
+    }*/
 	}
 });
 // 2 way data binding de los selects

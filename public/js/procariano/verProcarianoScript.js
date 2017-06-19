@@ -16,6 +16,7 @@ var app = new Vue({
 	},
 	mounted: function(){
 		$('.tooltipped').tooltip({delay: 50});
+		$('.modal').modal();
 	},
 	data: {
 		id: 0,
@@ -62,14 +63,11 @@ var app = new Vue({
 			var self = this;
 			var path = window.location.pathname;
 			self.id = path.split('/')[3];
-			console.log(path);
-			console.log(self.id);
 			var urlApi = '/api/procarianos/' + self.id;
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success: function(res){
-					console.log(res[0]);
 					self.procariano = res[0];
 				}
 			})
@@ -79,21 +77,23 @@ var app = new Vue({
 				@Autor: @edisonmora95
 				@FechaCreación: 20-05-2017
 			*/
-			//Llamada a la api para eliminar al procariano
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
 				type: 'DELETE',
 				url: urlApi,
 				success: function(res){
-					console.log(res);
-					Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
-					self.procariano.estado = 'inactivo';
+					if (res.status) {
+						//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
+						self.procariano.estado = 'inactivo';
+						//window.location.href = '/procarianos/';	
+						$('#modalExitoEliminar').modal('open');
+					}else{
+						$('#modalErrorEliminar').modal('open');
+						console.log(res);
+					}
 				}
 			});
-
-			//this.procariano.estado = 'inactivo';
-			//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded')
 		},
 		habilitarEditar(){
 			this.habilitaredicion = true;

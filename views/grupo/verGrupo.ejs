@@ -42,14 +42,25 @@
 							</div>
 						</div>
 					</div>
-					<div class="row" v-if="usuario === 'personal'">
+					<div class="row" v-if="usuario === 'personal'" id="row-btns">
+						<a class="waves-effect waves-light btn" href="#modalEliminarGrupo">Eliminar</a>
 						<a class="waves-effect waves-light btn pull right" @click="habilitarEditar">Editar</a>
 					</div>
 				</div>
 				<div class="card large" v-if="editar === true">
-					<info-grupo :grupo="grupo" :integrantes="integrantes" @edicionterminada="editar = $event"></info-grupo>
+					<editar-grupo :grupo="grupo" :integrantes="integrantes" @edicionterminada="editar = $event"></editar-grupo>
 				</div>
 			</main>
+			<!-- Modal Structure -->
+		  <div id="modalEliminarGrupo" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">¿Seguro que desea eliminar este grupo?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="eliminarGrupo">Si</a>
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+		    </div>
+		  </div>
 		</div>
 	</body>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

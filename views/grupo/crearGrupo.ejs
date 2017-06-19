@@ -20,7 +20,7 @@
 					<div class="row">
 						<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
 					</div>
-					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" @nombrechanged="grupo.nombre = $event" @animadorchanged="grupo.animador = $event"></crear-grupo-1>
+					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" :grupo="grupo"></crear-grupo-1>
 					<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
 				</div>
 			</main>
@@ -30,5 +30,6 @@
 	<!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 	<script src='https://unpkg.com/vue@2.3.3'></script>
+	<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 	<script src='/build/grupo/crearGrupoScript.js'></script>
 </html>
