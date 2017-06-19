@@ -58,10 +58,10 @@ module.exports = function(sequelize, DataTypes) {
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
             if (isMatch){
-              return done(null,user);
+              return done(null,user, {status : true , message : "logueado correcatmente"});
             }
             else{
-              return done(null, false , { message : "Contraseña inválida"});
+              return done(null, false , { status : false ,  message : "Contraseña inválida"});
             }
         });
       },

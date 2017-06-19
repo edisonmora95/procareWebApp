@@ -11,18 +11,19 @@ var appLogin = new Vue({
 	},
 	methods: {
 		login(){
-			var urlRuta = '/grupos/';
-			if( this.correo === 'personal@hotmail.com' && this.contrasenna === ''){
-				console.log('dasfsda');
-				/*$.ajax({
-					type: 'GET',
-					url: urlRuta,
-					success: function(){
-
-					}
-				});*/
-				window.location.href = '/grupos/';
+			var url = "/";
+			let obj = {
+				correo : $('#UserName').val(),
+				password : $('#Password').val()
+			}
+			$.ajax({
+				type : 'POST',
+				data : obj,
+				success(res){
+					console.log(res);
+				}
+			});
+			
 			}
 		}
-	}
-});
+	});

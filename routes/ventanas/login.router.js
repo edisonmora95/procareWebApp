@@ -40,7 +40,7 @@ function(correo, password, done) {
 	}).catch( err => {
 		console.log('no existe usuario')
 		console.log(err);
-		return done(null, false, {message : "usuario no existe"});
+		return done(null, false, { status : false , message : "usuario no existe"});
 	})
  }));
 
@@ -125,8 +125,14 @@ passport.deserializeUser(function(id, done) {
 
 
 router.post('/',
-  passport.authenticate('local', {failureRedirect:'/',failureFlash: true}),
+  passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
+  	let objeto = {
+  		status : true , 
+  		message : "logueado correcto"
+  	}
+  	res.json(objeto);
+  	/*
   	var rols = req.user.Rols;
   	console.log(req.user.Rols[0].nombre)
   	var rolsJson = [];
@@ -134,6 +140,7 @@ router.post('/',
   		rolsJson.push(rols[i].nombre);
   	}
   	var json = {
+  		status : true,
   		nombre : req.user.nombres,
   		apellidos : req.user.apellidos,
   		correo : req.user.email, 
@@ -143,7 +150,16 @@ router.post('/',
 
   	console.log(json);
   	res.render("procariano/verProcariano", json)
+  	*/
 });
+
+router.get('/api/loginFalla', function(req,res,next){
+	let objeto = {
+		status : false,
+		message : "algo paso"
+	}
+	res.json(objeto);
+})
 
 /* GET home page. */
 
