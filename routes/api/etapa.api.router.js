@@ -1,7 +1,7 @@
 /*
 	CRUD de Etapas
 */
-var controladorEtapa = require('../controllers/etapa')
+var controladorEtapa = require('../../controllers/etapa')
 var express = require('express');
 var router = express.Router();
 
