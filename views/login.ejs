@@ -16,8 +16,9 @@
 	</header>
 
 	<body>
-	  <div id="appLogin">
-	    <form>
+	  <!-- <div id="appLogin"> -->
+	  <div>
+	    <form method="post" action="/">
 	      <div class="login-form">
 	       <img src="images/nuevo_logo_procare.jpg" alt="logo espol" width="100%" heigth = "10%">
 	       <div class="form-group ">
@@ -30,7 +31,8 @@
 	       </div>
 	        <span class="alert">credenciales incorrectas!!</span>
 	        <a class="link" href="#" data-toggle="modal" data-target="#myModal">¿Perdió su contraseña?</a>
-	       <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="login">Entrar<a>
+	        <!-- <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action"  @click="login"  >Entrar<a> -->
+	        <a class="btn waves-effect waves-light btn-cancelar" type="submit" value="Submit" name="action" >Entrar<a>
 	     </div>
 	    </form>
 	<!--  
