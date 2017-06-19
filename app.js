@@ -22,6 +22,7 @@ var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
+let apiEtapa = require('./routes/api/etapa.api.router');
 var app = express();
 
 
@@ -63,6 +64,7 @@ app.use('/login',login);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
+app.use('/api/etapa',apiEtapa);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
