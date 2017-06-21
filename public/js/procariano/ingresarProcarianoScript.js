@@ -3,6 +3,7 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 */
+
 /*globals Vue:false */
 /*globals $:false */
 /*globals VeeValidate:false */
@@ -12,7 +13,9 @@ import Navbar from './../../components/navbar.vue';
 Vue.component('navbar', Navbar); 
 
 Vue.use(VeeValidate);
-//Validaciones. Cambio de mensajes de error
+/*
+	Validaciones. Cambio de mensajes de error
+*/
 const dictionary = {
 	en: {
 		messages: {
@@ -50,10 +53,11 @@ var main = new Vue({
 			selectMonths: true, // Creates a dropdown to control month
 			selectYears: 100 // Creates a dropdown of 15 years to control year
 		});
-		$('#select-tipo-procariano').material_select();
+		$('.select').material_select();
+		/*$('#select-tipo-procariano').material_select();
 		$('#select-genero').material_select();
 		$('#select-grupo-formacion').material_select();
-		$('#select-grupo-caminante').material_select();
+		$('#select-grupo-caminante').material_select();*/
 		$(".button-collapse").sideNav();
 		$('.modal').modal();
 		//Creación dinámica de los selects
@@ -62,6 +66,7 @@ var main = new Vue({
 		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
 	},
 	data: {
+		fechaIncorrecta: false,
 		errorObj: {
 			campo: '',
 			msj: ''
@@ -184,17 +189,28 @@ var main = new Vue({
 		},
 		validateBeforeSubmit: function() {
 			var self = this;
+			//Primero valida que la fecha ingresada no sea de alguien menor a 11 años
+			var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
+			let actualYear = new Date().getFullYear();
+			let diferencia = actualYear - year;
+			if(diferencia < 11){
+				self.errorObj.campo = 'Fecha de nacimiento';
+				self.errorObj.msj = 'No puede ingresar a alguien con menos de 11 años.';
+				$('#modalError').modal('open');
+				return false;
+			}
+
       this.$validator.validateAll().then(() => {
         // eslint-disable-next-line
-        console.log('Se va a enviar: ');
-        console.log(self.procariano);
+        //console.log('Se va a enviar: ');
+        //console.log(self.procariano);
         var urlApi = '/api/procarianos/';
         $.ajax({
         	type:'POST',
         	url: urlApi,
         	data: self.procariano,
         	success: function(res){
-        		console.log(res);
+        		//console.log(res);
         		if(res.mensaje === 'Se pudo crear correctamente'){
         			$('#modalProcarianoCreado').modal('open');
         		}else{
@@ -240,6 +256,15 @@ $('#fecha-nacimiento').change(function(){
 	var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
 	var day = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'mm');
+	//Primero valida que la fecha ingresada no sea de alguien menor a 11 años
+	let actualYear = new Date().getFullYear();
+	let diferencia = actualYear - year;
+	if(diferencia < 11){
+		main.$data.fechaIncorrecta = true;
+	}else{
+		main.$data.fechaIncorrecta = false;
+	}
+
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaNacimiento = fecha;
 });
