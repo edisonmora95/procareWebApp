@@ -53,11 +53,10 @@ var main = new Vue({
 			selectMonths: true, // Creates a dropdown to control month
 			selectYears: 100 // Creates a dropdown of 15 years to control year
 		});
-		$('.select').material_select();
-		/*$('#select-tipo-procariano').material_select();
+		$('#select-tipo-procariano').material_select();
 		$('#select-genero').material_select();
 		$('#select-grupo-formacion').material_select();
-		$('#select-grupo-caminante').material_select();*/
+		$('#select-grupo-caminante').material_select();
 		$(".button-collapse").sideNav();
 		$('.modal').modal();
 		//Creación dinámica de los selects
