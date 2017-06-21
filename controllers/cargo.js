@@ -100,9 +100,7 @@ const asignarCargoFormacion = (req, res, next) => {
 			fechaInicio : new Date(),
 			fechaFin : null
 		}).then( repuesta => {
-			var status = true;
-			/*
-			modelo.personaRol.create({
+			modelo.PersonaRol.create({
 				PersonaId : req.body.procarianoId,
 				RolNombre : req.body.nombre,
 			}).then( repuesta2 => {
@@ -124,8 +122,6 @@ const asignarCargoFormacion = (req, res, next) => {
 				}
 				res.json(jsonRespuesta);
 			});
-			*/
-
 		}).catch( error2 => {
 			var status = false;
 			var mensaje = 'no se pudo asignar'
@@ -154,3 +150,13 @@ module.exports = {
 	asignarCargoFormacion
 };
 
+			/*
+			var status = true;
+			var mensaje = 'se pudo crear correctamente'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : repuesta
+			}
+			res.json(jsonRespuesta);
+			*/
