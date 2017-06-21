@@ -22,7 +22,7 @@ const crearEtapa = (req, res, next) => {
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se pudo crear'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -75,7 +75,7 @@ const editarEtapa = (req, res, next) => {
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se pudo editar'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -99,7 +99,7 @@ const mostrarEtapa = (req,res,next) =>{
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se consigio elementos'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,

@@ -33,6 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Procariano.belongsTo(models.Persona)
+        Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'});
         // associations can be defined here
       }
     }
