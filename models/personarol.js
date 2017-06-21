@@ -1,3 +1,14 @@
+/*
+
+@Descripcion: Modelo de rol persona, une a rol con persona
+@Autor: jose viteri
+@FechaCreacion: 18/05/2017
+@UltimaFechaModificacion: --
+
+
+*/
+
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var personaRol = sequelize.define('PersonaRol', {

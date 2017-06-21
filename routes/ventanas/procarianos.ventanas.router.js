@@ -1,5 +1,11 @@
 /*
-	Ventanas de Procarianos
+
+@Descripcion: Ventanas del procariano
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 05/06/2017 @EdisonMora (se lo puso bonito)
+
+
 */
 
 /* jshint node: true */

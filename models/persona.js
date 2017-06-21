@@ -1,3 +1,14 @@
+
+/*
+
+@Descripcion: Modelo de persona
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 18/06/2017 @JoseViteri (se agrego la funcion de clase compararContrasenna)
+
+
+*/
+
 var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {

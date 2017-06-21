@@ -1,3 +1,11 @@
+/*
+@Descripcion: Clase controladora de todos los procarianos
+@Autor: Jose Viteri
+@FechaCreacion: 26/06/2017
+@UltimaFechaModificacion: 07/06/2017 @JoseViteri (cambios detallados abajo)
+*/
+
+
 var modelo = require('../models');
 var utils = require('../utils/utils')
 

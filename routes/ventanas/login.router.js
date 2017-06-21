@@ -1,7 +1,10 @@
+
 /*
-modificado : 14/06/2017
-por: Jose Viteri
-desc: ventana del login y autenticacion usando passport
+@Descripcion: esta es la ventana del login , implementa passport para hacerlo
+@Autor: jose viteri
+@FechaCreacion: 14/06/2017
+@UltimaFechaModificacion: 16/06/2017 @JoseViteri
+
 */
 
 
@@ -12,7 +15,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var modelos = require('../../models');
 
 
-
+//estartegia local, compara contraseña y usuario, ademas genera el req.user
 passport.use(new LocalStrategy({
 	usernameField : 'correo',
 	passwordField : 'password'
@@ -45,64 +48,13 @@ function(correo, password, done) {
  }));
 
 
+//serializador de passport
 passport.serializeUser(function(persona, done) {
   done(null, persona.id);
 });
 
 
-
-/*
-passport.deserializeUser(function(id, done) {
-  modelos.Persona.find({
-  	where : {
-  		id : id
-  	}
-  }).then( persona => {
-  	modelos
-  	done(null, persona);
-  }).catch( err => {
-  	done(err, null);
-  })
-});
-
-
-passport.deserializeUser(function(id, done) {
-  modelos.Persona.findAll({
-  	where : {
-  		id : id
-  	}
-  }).then( persona => {
-  	modelos.PersonaRol.findAll({
-  		attributes: ['RolNombre'],
-  		where : {
-  			PersonaId : id
-  		}
-  	}).then( roles => {
-  		var json = {
-  			persona : persona,
-  			rol : roles
-  		};
-  		const respuesta = persona.map( per => {
-
-			return Object.assign(
-				{},
-				{
-					id : per.id,
-					nombres : per.nombres ,
-					apellidos : per.apellidos ,
-					correo : per.correo ,
-				});
-		});
-  		
-  	}).catch( err2 => {
-  		done(err2,null);
-  	})
-  }).catch( err => {
-  	done(err, null);
-  })
-});
-
-*/
+//desarializador de passport
 passport.deserializeUser(function(id, done) {
   modelos.Persona.findAll({
   	  attributes: ['id','nombres','apellidos','email'],
@@ -124,6 +76,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 
+//post del login, manda un json si la autenticacion fue correcta o incorrecta
 router.post('/',
   passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
@@ -153,6 +106,7 @@ router.post('/',
   	*/
 });
 
+//api get para cuando falla la autenticacion (deberia moverese a login.api.router)
 router.get('/api/loginFalla', function(req,res,next){
 	let objeto = {
 		status : false,
@@ -175,12 +129,14 @@ router.get('/', function(req, res, next) {
 
 
   // loggedin
+  //revisa si esta autenticadno
 router.get("/loggedin", function(req, res) {
   res.send(req.isAuthenticated() ? req.user : '0');
 });
 
 
 //logout
+//deslogea la sesion
 router.get('/logout', function(req, res){
 	req.logout();
 
@@ -193,7 +149,7 @@ router.get('/logout', function(req, res){
 /*
 
 
-//cambio password
+//cambio password, no implemnetado del todo
 router.post('/cambio', function(req, res){
 
   Usuario.getUsuarioByCorreo(req.body.correo, function(err, user){

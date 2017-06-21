@@ -1,4 +1,10 @@
+/*
+@Descripcion: utils, lugar donde existen las funciones que estandarizan el codigo
+@Autor: Jose Viteri
+@FechaCreacion: 20/05/2017
+@UltimaEdicion: 05/06/2017 (agregado generarJsonProcariano)
 
+*/
 
 
 
