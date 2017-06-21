@@ -9,83 +9,43 @@ var modelo = require('../models');
 
 const crearGrupo = (req, res, next) => {
 
-	/*
-	cedula = '0990218506';
-	nombres = 'Jose Antonio'
-	apellidos = 'Viteri Cuenca'
-	direccion = 'esta es una direccion'
-	fechaNacimiento = '25-08-1995'
-	genero = 'masculino'
-	contrasenna = '12345'
-	email = 'jose@hotmail.com'
-	celular = '0951698554'
-	trabajo = 'no te importa'
+	// nombre = 'Developers'
+	// tipo = true
+	// cantidadChicos = 42
+	// numeroReuniones = 0
+	// genero = 'masculino'
 
-	colegio = 'esto es colegio'
-	universidad = 'ESPOL'
-	parroquia = 'Ximena'
-	fechaOrdenacion = '23-04-2000'
-	estado = false
-	haceParticipacionEstudiantil = true
-	*/
-
-	cedula = req.body.cedula;
-	nombres = req.body.nombres;
-	apellidos = req.body.apellidos
-	direccion = req.body.direccion
-	fechaNacimiento = req.body.fechaNacimiento
+	nombre = req.body.nombre
+	tipo = req.body.tipo
+	cantidadChicos = req.body.cantidadChicos
+	numeroReuniones = req.body.numeroReuniones
 	genero = req.body.genero
-	contrasenna = req.body.contrasenna
-	email =  req.body.email
-	celular = req.body.celular
-	trabajo = req.body.trabajo
-
-	colegio = req.body.colegio
-	universidad = req.body.universidad
-	parroquia = req.body.parroquia
-	fechaOrdenacion = req.body.fechaOrdenacion
-	estado = req.body.estado
-	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil
-
 
 	modelo.Grupo.create({
-		cedula : cedula,
-		nombres : nombres,
-		apellidos : apellidos,
-		direccion : direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero : genero,
-		contrasenna : contrasenna,
-		email : email,
-		celular : celular,
-		trabajo : trabajo
+		console.log("Se creo un grupo")
 
+		GrupoId : grupo.get('id'),
+		nombre : nombre,
+		tipo : tipo,
+		cantidadChicos : cantidadChicos,
+		numeroReuniones : numeroReuniones,
+		genero : genero
 
 	}).then( grupo => {
-		console.log("se creo una grupo");
-		modelo.Grupo.create({
-			GrupoId : grupo.get('id'),
-			colegio : colegio,
-			universidad : universidad,
-			parroquia : parroquia,
-			fechaOrdenacion : fechaOrdenacion,
-			estado : estado,
-			haceParticipacionEstudiantil : haceParticipacionEstudiantil
-		}).then( grupo => {
-			var json1 = {
-				grupo : grupo,
-				grupo : grupo,
-				mensaje : 'exito'
-			}
+		var status = true
+		var rjson = {
+			status : status,
+			mensaje : 'Grupo creado exitosamente',
+			persona : persona // @ Debug(gus)
+		}
+		res.json(rjson);
 
-			res.json(json1);
-		});
 	}).catch( error => {
-		var json1 = {
+		var rjson = {
 			esteEsElError : error,
 			esteEsElbody : req.body
 		}
-		res.send(json1);
+		res.send(rjson);
 	});
 }
 
