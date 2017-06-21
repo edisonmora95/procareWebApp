@@ -22,9 +22,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     }
   }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
+    name : {
+      singular: 'grupo',
+      plural: 'grupos',
+      tableName: 'grupos'
+    },
+    classMethods : {
+      associate : function(models) {
+        Grupo.hasOne(models.Animador)
       }
     }
   });
