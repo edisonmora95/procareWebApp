@@ -1,9 +1,9 @@
 /*
 
-@Descripcion: Modelo de Benefactor
-@Autor: jose alcivar
-@FechaCreacion: 21/06/2017
-@UltimaFechaModificacion: 21/06/2017 @josealcivar
+@Descripcion: Modelo de procariano
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 03/06/2017 @JoseViteri
 
 
 */
@@ -52,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        //Benefactor.belongsTo(models.Persona)
+      //  Benefactor.belongsTo(models.Persona)
         // associations can be defined here
       }
     }

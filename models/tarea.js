@@ -1,3 +1,4 @@
+
 /*
 
 @Descripcion: Modelo tarea, relacionado con Persona
@@ -8,6 +9,9 @@
 
 */
 var bcrypt = require('bcryptjs');
+
+
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Tarea = sequelize.define('Tarea', {
@@ -31,7 +35,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     },
     estado: {
+
       type : DataTypes.STRING,
+
+      type : DataTypes.STRING(1),
+
       allowNull : false
 		},
     descripcion : {

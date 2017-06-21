@@ -1,3 +1,4 @@
+
 /*
 
 @Descripcion: Modelo Evento, relacionado con Persona quien va quedar encargado del evento
@@ -8,6 +9,7 @@
 
 */
 var bcrypt = require('bcryptjs');
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Evento = sequelize.define('Evento', {
@@ -36,10 +38,16 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.DECIMAL(10,2)
     },
     estado: {
+
       type : DataTypes.STRING,
       allowNull : false
 		}
   }, {
+
+      type : DataTypes.STRING(1),
+      allowNull : false
+		},{
+
     classMethods: {
 			associate: function(models) {
         Evento.belongsTo(models.Persona)
