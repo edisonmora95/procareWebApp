@@ -5,7 +5,7 @@ const babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 
-gulp.task('default', ['browser-sync'], function(){
+gulp.task('default', ['browser-sync'],function(){
 	//runSequence('babel', 'vueify', 'browser-sync');
 });
 

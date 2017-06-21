@@ -1,13 +1,30 @@
+/*
+@Descripcion: utils, lugar donde existen las funciones que estandarizan el codigo
+@Autor: Jose Viteri
+@FechaCreacion: 20/05/2017
+@UltimaEdicion: 05/06/2017 (agregado generarJsonProcariano)
+
+*/
+
+
+
 var bcrypt = require('bcryptjs');
 
 
 /*
 EXPORTACIONES
 */
+/*
+@Descripcion: genera el hash para la contrasenna
+@Autor: Jose Viteri
+@FechaCreacion: 31/05/2017
+
+*/
+
 module.exports.generarHash = function(req,res, next){
 
 	bcrypt.genSalt(10, function(err, salt) {
-	    bcrypt.hash(hacerId(), salt, function(err, hash) {
+	    bcrypt.hash('posi', salt, function(err, hash) {
 	    	console.log(hash);
 	    	req.body.contrasenna = hash;
 	    	next();
@@ -20,6 +37,14 @@ module.exports.generarHash = function(req,res, next){
 FUNCIONES
 */
 
+
+/*
+@Descripcion: genera una contrasenna aleatoria
+@Autor: Jose Viteri
+@FechaCreacion: 05/06/2017
+
+*/
+
 function hacerId()
 {
     var text = "";
@@ -30,6 +55,15 @@ function hacerId()
     console.log(text);
     return text;
 }
+
+
+/*
+@Descripcion: pone en un formato adecuado los campos para buscar procariano
+@Autor: Jose Viteri
+@FechaCreacion: 05/06/2017
+
+*/
+
 
 module.exports.generarJsonProcariano = function(procariano){
 	var respuesta = {};
@@ -53,6 +87,9 @@ module.exports.generarJsonProcariano = function(procariano){
 	}
 	return respuesta;
 }
+
+
+
 
 
 

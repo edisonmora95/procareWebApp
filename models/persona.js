@@ -1,4 +1,15 @@
 
+/*
+
+@Descripcion: Modelo de persona
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 18/06/2017 @JoseViteri (se agrego la funcion de clase compararContrasenna)
+
+
+*/
+
+var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Persona = sequelize.define('Persona', {
@@ -51,8 +62,22 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
         // associations can be defined here
-      }
+      },
+      compararContrasenna :  function(candidatePassword, hash, done, user){
+        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+            if(err) throw err;
+            if (isMatch){
+              return done(null,user, {status : true , message : "logueado correcatmente"});
+            }
+            else{
+              return done(null, false , { status : false ,  message : "Contraseña inválida"});
+            }
+        });
+      },
+
+
     }/*, hooks : {
       beforeCreate : (persona, options) => {
          bcrypt.hash(persona.contrasenna, salt, function(err, hash) {

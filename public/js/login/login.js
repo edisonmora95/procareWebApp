@@ -7,22 +7,36 @@ var appLogin = new Vue({
 	},
 	data: {
 		correo: '',
-		contrasenna: ''
+		contrasenna: '',
+		fallaLogin: false
 	},
 	methods: {
 		login(){
-			var urlRuta = '/grupos/';
-			if( this.correo === 'personal@hotmail.com' && this.contrasenna === ''){
-				console.log('dasfsda');
-				/*$.ajax({
-					type: 'GET',
-					url: urlRuta,
-					success: function(){
-
+			let self = this;
+			var url = "/login/";
+			let obj = {
+				correo : $('#UserName').val(),
+				password : $('#Password').val()
+			}
+			$.ajax({
+				type : 'POST',
+				data : obj,
+				success(res){
+					console.log(res);
+					if(res.status){
+						window.location.href = '/';
 					}
-				});*/
-				window.location.href = '/grupos/';
+					else{
+						self.fallaLogin = true;
+						console.log(self.fallaLogin);
+					}
+				},
+				error(res){
+					self.fallaLogin = true;
+					console.log(self.fallaLogin);
+				}
+			});
+			
 			}
 		}
-	}
-});
+	});
