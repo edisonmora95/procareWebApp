@@ -6,12 +6,12 @@ var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 
 gulp.task('default', ['browser-sync'],function(){
-	runSequence('babel', 'vueify', 'browser-sync');
+	//runSequence('babel', 'vueify', 'browser-sync');
 });
 
 gulp.task('browser-sync', ['nodemon'], function(){
 	browserSync.init(null, {
-		proxy: "http://localhost/login",
+		proxy: "http://localhost/",
     files: ["public/**/*.*"],
     browser: "default",
     port: 3001,

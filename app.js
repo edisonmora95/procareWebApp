@@ -55,12 +55,12 @@ app.use(flash());
 
 
 //Rutas de las ventanas
-app.use('/', index);
+app.use('/home', index);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
-app.use('/login',login);
+app.use('/',login);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
