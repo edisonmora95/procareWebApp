@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecss-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- Compiled and minified CSS -->
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/buscarGrupoStyles.css">
+	</head>
+	<body>
+		<div id="BuscarGrupoApp">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<section id="section-busqueda" class="card large">
+					<div class="row" id="row-busqueda">
+						<form class="çol s12">
+							<div class="row">
+								<div class="input-field col s4">
+									<v-select name="genero" id="genero" select-text="Procare/Procare Mujeres" v-model="grupo.genero">
+										<option value="Procare">Procare</option>
+										<option value="Procare Mujeres">Procare Mujeres</option>
+									</v-select>
+									<label for="genero">Procare/Procare Mujeres</label>
+								</div>
+								<div class="input-field col s8">
+									<input type="text" name="animador" v-model="grupo.animador">
+									<label for="animador">Nombre del animador</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s10">
+									<select id="etapaSelect">
+										<option value="" disabled selected></option>
+										<option value="iniciacion">Iniciación</option>
+										<option value="primera">Primera etapa</option>
+										<option value="segunda">Segunda etapa</option>
+										<option value="tercera">Tercera etapa</option>
+										<option value="cuarta">Cuarta etapa</option>
+										<option value="quinta">Quinta etapa</option>
+										<option value="graduados">Graduados</option>
+									</select>
+									<label>Etapa</label>
+								</div>
+								<div class="input-field col s2">
+									<input type="number" name="anio" v-model="grupo.anio">
+									<label for="anio">Año</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s12">
+									<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</section>
+				<section id="section-resultados" class="card large">
+					<div class="row" id="row-resultados">
+						<table class="stripped bordered responsive-table centered highlight">
+							<thead>
+								<th>Nombre</th>
+								<th>Etapa</th>
+								<th>Año</th>
+								<th>Animador</th>
+							</thead>
+							<tbody>
+								<tr v-for="grupo in grupos">
+									<td>{{grupo.nombre}}</td>
+									<td>{{grupo.etapa}}</td>
+									<td>{{grupo.anio}}</td>
+									<td>{{grupo.animador}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+	<script src='https://unpkg.com/vue@2.3.3'></script>
+	<script src='/build/grupo/buscarGrupoScript.js'></script>
+</html>

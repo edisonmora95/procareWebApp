@@ -1,0 +1,26 @@
+body{
+	background-color: #d3dbdb;
+}
+
+main{
+	padding: 0 3%;
+	margin: 3% 0;
+}
+
+.row{
+	margin-top: 3%;
+	background-color: white;
+	padding: 2% 3%;
+}
+
+.card{
+	padding: 5%;
+}
+
+#calendar{
+	padding: 3%;
+}
+
+span{
+	font-weight: bold;
+}

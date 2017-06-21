@@ -20,16 +20,16 @@ module.exports = {
         type : DataTypes.STRING,
         allowNull : true
       },
-      fecha_ordenacion: {
+      fechaOrdenacion: {
         type : DataTypes.DATE,
         allowNull : true
       },
       estado: {
-        type : DataTypes.BOOLEAN,
+        type : DataTypes.STRING,
         allowNull : true
       },
-      hace_participacion_estudiantil: {
-        type : DataTypes.BOOLEAN,
+      haceParticipacionEstudiantil: {
+        type : DataTypes.INTEGER,
         allowNull : true
       },
       createdAt: {

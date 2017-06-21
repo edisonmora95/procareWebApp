@@ -1,3 +1,16 @@
+/*
+	@Descripción: Controlador de la vista de ingresarProcariano.ejs
+	@Autor: @edisonmora95
+	@FechaCreación: 31/04/2017
+*/
+/*globals Vue:false */
+/*globals $:false */
+/*globals VeeValidate:false */
+'use strict';
+
+import Navbar from './../../components/navbar.vue';
+Vue.component('navbar', Navbar); 
+
 Vue.use(VeeValidate);
 //Validaciones. Cambio de mensajes de error
 const dictionary = {
@@ -47,13 +60,16 @@ var main = new Vue({
 		this.crearSelectGrupo('select-grupo-formacion', this.grupoFormacionEscogido, 'div-select-grupo-formacion', this.gruposFormacion);
 		this.crearSelectGrupo('select-grupo-caminantes', this.grupoCaminantesEscogido, 'div-select-grupo-caminantes', this.gruposCaminantes);
 		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
-		this.formarNavbar();
 	},
 	data: {
+		errorObj: {
+			campo: '',
+			msj: ''
+		},
 		usuario: '',		//tipo de usuario conectado
 		procariano: {
-			nombre: '',
-			apellido: '',
+			nombres: '',
+			apellidos: '',
 			fechaNacimiento: '',
 			cedula: '',
 			direccion: '',
@@ -128,52 +144,6 @@ var main = new Vue({
 		}
 	},
 	methods: {
-		prueba: function(){
-			var $input = $('#fecha-nacimiento').pickadate();
-			var picker = $input.pickadate('picker');
-			var fecha = picker.get('view', 'yyyy/mm/dd');
-			console.log(fecha);
-		},
-		formarNavbar: function(){
-			/*
-				Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
-			*/
-			var usuario = 'personal';
-			if(usuario === 'personal'){
-				this.crearDropdownPA();
-				this.crearDropdownPF();
-			}
-		},
-		crearDropdownPA: function(){
-			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
-			var liParalelos = $('<li>')
-			var aParalelos = $('<a>').html('Paralelos');
-			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
-			var liNinos = $('<li>');
-			var aNinos = $('<a>').html('Niños');
-			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
-		crearDropdownPF: function(){
-			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareFormacion').append(liAsistencias);
-			var liGrupos = $('<li>')
-			var aGrupos = $('<a>').html('Grupos');
-			liGrupos.append(aGrupos);
-			$('#ulProcareFormacion').append(liGrupos);
-			var liProcarianos = $('<li>');
-			var aProcarianos = $('<a>').html('Procarianos');
-			liProcarianos.append(aProcarianos);
-			$('#ulProcareFormacion').append(liProcarianos);
-		},
 		crearSelectGrupo: function(idSelect, grupoEscogido, idDivSelect, grupos){
 			/*
 				Parámetros:
@@ -213,14 +183,47 @@ var main = new Vue({
 			divSelect.append(select);
 		},
 		validateBeforeSubmit: function() {
+			var self = this;
       this.$validator.validateAll().then(() => {
-          // eslint-disable-next-line
-          $('#modalProcarianoCreado').modal('open');
+        // eslint-disable-next-line
+        console.log('Se va a enviar: ');
+        console.log(self.procariano);
+        var urlApi = '/api/procarianos/';
+        $.ajax({
+        	type:'POST',
+        	url: urlApi,
+        	data: self.procariano,
+        	success: function(res){
+        		console.log(res);
+        		if(res.mensaje === 'Se pudo crear correctamente'){
+        			$('#modalProcarianoCreado').modal('open');
+        		}else{
+        			alert('Error al ingresar en la base de datos');
+        		}
+        	}
+        });
+        
       }).catch(() => {
           // eslint-disable-next-line
-          alert('Correct them errors!');
+          self.errorObj.campo = self.errors.errors[0].field;
+          self.errorObj.msj = self.errors.errors[0].msg;
+          $('#modalError').modal('open');
       });
-    }
+    },/*
+    llenarBaseDeDatos(){
+    	var self = this;
+    	var urlApi = '/api/procarianos/';
+    	$.each(self.temp, function(index, procariano){
+    		$.ajax({
+    			type: 'POST',
+    			url: urlApi,
+    			data: procariano,
+    			success(res){
+    				console.log(res);
+    			}
+    		})
+    	});
+    }*/
 	}
 });
 // 2 way data binding de los selects
@@ -229,7 +232,7 @@ $('#select-tipo-procariano').change(function(){
 	main.$data.procariano.tipo = tipoProcariano;
 });
 $('#select-genero').change(function(){
-	var generoProcariano = $('#select-genero option:selected').text();
+	var generoProcariano = $('#select-genero option:selected').val();
 	main.$data.procariano.genero = generoProcariano;
 });
 //2 way data binding de los date pickers

@@ -1,9 +1,17 @@
+/*
+	@Descripción: Controlador de la vista de verProcaeriano.ejs
+	@Autor: @edisonmora95
+	@FechaCreación: 31/04/2017
+*/
+
+import Navbar from './../../components/navbar.vue';
+Vue.component('navbar', Navbar); 
+
 var main = new Vue({
 	el: '#main',
 	mounted: function(){
 		$('.modal').modal();
 		$(".button-collapse").sideNav();
-		this.formarNavbar();
 	},
 	data: {
 		checkboxesAux: [
@@ -77,7 +85,7 @@ var main = new Vue({
 			}
 		],
 		checkboxes: ['Nombre'],
-		procarianos: [
+		/*procarianos: [
 			{
 				nombre: 'Edison',
 				apellido: 'Mora',
@@ -116,10 +124,10 @@ var main = new Vue({
 				estado: 'Activo',
 				grupo: ''
 			}
-		],
+		],*/
 		procariano: {
-			nombre: '',
-			apellido: '',
+			nombres: '',
+			apellidos: '',
 			cedula: '',
 			direccion: '',
 			fechaNacimiento: '',
@@ -136,6 +144,7 @@ var main = new Vue({
 			estado: '',
 			grupo: ''
 		},
+		procarianos: [],
 		resultados: [],
 		usuario: 'personal'
 	},
@@ -158,58 +167,32 @@ var main = new Vue({
 			return flag;
 		},
 		buscar: function(){
-			console.log(self.procariano)
+			var self = this;
+			self.procarianos = [];
+			console.log(self.procariano);
+			console.log('Mira Erick que no se recarga la página.')
+			var urlApi = '/api/procarianos/';
+			$.ajax({
+				type: 'GET',
+				url: urlApi,
+				data: self.procariano,
+				success: function(res){
+					console.log(res);
+					$.each(res, function(index, procarianoEncontrado){
+						self.procarianos.push(procarianoEncontrado);
+					});
+				}
+			})
 			
 		},
-		formarNavbar: function(){
-			/*
-				@Descripción: Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var usuario = 'personal';
-			if(usuario === 'personal'){
-				this.crearDropdownPA();
-				this.crearDropdownPF();
-			}
-		},
-		crearDropdownPA: function(){
-			/*
-				@Descripción: Esta función crea las pestañas del dropdown de Procare Acción del navbar.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
-			var liParalelos = $('<li>')
-			var aParalelos = $('<a>').html('Paralelos');
-			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
-			var liNinos = $('<li>');
-			var aNinos = $('<a>').html('Niños');
-			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
-		crearDropdownPF: function(){
-			/*
-				@Descripción: Esta función crea las pestañas del dropdown de Procare Formación del navbar.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareFormacion').append(liAsistencias);
-			var liGrupos = $('<li>')
-			var aGrupos = $('<a>').html('Grupos');
-			liGrupos.append(aGrupos);
-			$('#ulProcareFormacion').append(liGrupos);
-			var liProcarianos = $('<li>');
-			var aProcarianos = $('<a>').html('Procarianos');
-			liProcarianos.append(aProcarianos);
-			$('#ulProcareFormacion').append(liProcarianos);
+		irAPerfil(procariano){
+			let urlApi = '/procarianos/perfil/' + procariano.cedula;
+			/*$.ajax({
+				type: 'GET',
+				url: urlApi
+
+			})*/
+			window.location.href = '/procarianos/perfil/' + procariano.personaId;
 		}
 	}
 });
