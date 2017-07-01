@@ -15,7 +15,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var modelos = require('../../models');
 
 
-//estartegia local, compara contraseña y usuario, ademas genera el req.user
+//estrategia local, compara contraseña y usuario, ademas genera el req.user
 passport.use(new LocalStrategy({
 	usernameField : 'correo',
 	passwordField : 'password'

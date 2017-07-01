@@ -12,7 +12,7 @@ const crearTarea = (req, res, next) => {
   estado = 'activo';
 
   modelo.Tarea.create({
-    id_responsable : req.body.nombre,
+    id_responsable : req.body.responsable,
     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
     fecha_limite : req.body.fecha_limite,

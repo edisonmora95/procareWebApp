@@ -28,11 +28,15 @@ module.exports = function(sequelize, DataTypes) {
     observacion: {
       type : DataTypes.STRING,
       allowNull : true
+    },
+    estado: {
+      type : DataTypes.STRING,
+      allowNull : false
     }
   }, {
     classMethods: {
       associate: function(models) {
-        //Benefactor.belongsTo(models.Persona)
+        Donacion.belongsTo(models.Benefactor)
         // associations can be defined here
       }
     }

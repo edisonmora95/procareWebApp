@@ -1,11 +1,8 @@
 /*
-
 @Descripcion: Modelo de procariano
-@Autor: jose viteri
-@FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 03/06/2017 @JoseViteri
-
-
+@Autor: jose Alcivar
+@FechaCreacion: 29/06/2017
+@UltimaFechaModificacion: 29/06/2017 @josealcivar
 */
 
 
