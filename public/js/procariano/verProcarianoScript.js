@@ -1,14 +1,28 @@
+/*
+	@Descripción: Controlador de la vista de verProcaeriano.ejs
+	@Autor: @edisonmora95
+	@FechaCreación: 31/04/2017
+*/
+
+import Navbar from './../../components/navbar.vue';
+import FormProcariano from './../../components/formProcariano.vue';
+Vue.component('navbar', Navbar); 
+Vue.component('editar', FormProcariano);
+
 var app = new Vue({
 	el: '#app',
+	created(){
+		this.obtenerProcarianoPorId();
+	},
 	mounted: function(){
-		$(".button-collapse").sideNav();
 		$('.tooltipped').tooltip({delay: 50});
-		this.formarNavbar();
+		$('.modal').modal();
 	},
 	data: {
-		procariano:{
-			nombres: 'Edison',
-			apellidos: 'Mora',
+		id: 0,
+		/*procariano:{
+			nombres: 'Edison André',
+			apellidos: 'Mora Cazar',
 			cedula: '0927102848',
 			direccion: 'Cdla. Coviem',
 			fechaNacimiento: '27/06/1995',
@@ -24,67 +38,65 @@ var app = new Vue({
 			fechaOrdenacion: '',
 			estado: 'Activo',
 			grupo: ''
-		}
+		},*/
+		procariano: {},
+		habilitaredicion: false
 	},
 	methods: {
-		formarNavbar: function(){
-			/*
-				@Descripción: Esta función crea el navbar dependiendo tel tipo de usuario que está loggeado.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var usuario = 'personal';
-			if(usuario === 'personal'){
-				this.crearDropdownPA();
-				this.crearDropdownPF();
-			}
-		},
-		crearDropdownPA: function(){
-			/*
-				@Descripción: Esta función crea las pestañas del dropdown de Procare Acción del navbar.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
-			var liParalelos = $('<li>')
-			var aParalelos = $('<a>').html('Paralelos');
-			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
-			var liNinos = $('<li>');
-			var aNinos = $('<a>').html('Niños');
-			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
-		crearDropdownPF: function(){
-			/*
-				@Descripción: Esta función crea las pestañas del dropdown de Procare Formación del navbar.
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
-			var liAsistencias = $('<li>');
-			var aAsistencias = $('<a>').html('Asistencias');
-			liAsistencias.append(aAsistencias);
-			$('#ulProcareFormacion').append(liAsistencias);
-			var liGrupos = $('<li>')
-			var aGrupos = $('<a>').html('Grupos');
-			liGrupos.append(aGrupos);
-			$('#ulProcareFormacion').append(liGrupos);
-			var liProcarianos = $('<li>');
-			var aProcarianos = $('<a>').html('Procarianos');
-			liProcarianos.append(aProcarianos);
-			$('#ulProcareFormacion').append(liProcarianos);
+		 moment: function (date) {
+      return moment(date);
+    },
+    date: function (date) {
+      var es = moment().locale('es');
+      // es.localeData().months(date)
+      // return moment(date).format('DD/MM hh:mm:ss');
+      if (date == undefined || date == '') {
+        return '----'
+      }
+      // var hora = moment(date).format('hh')
+      // if ( parseInt(hora) < 5) {
+      //   return moment(date).add(8,'h').tz("America/Guayaquil").format('DD MMMM hh:mm');
+      // }
+      return moment(date).format('DD MMMM HH:mm');
+    },
+		obtenerProcarianoPorId(){
+			var self = this;
+			var path = window.location.pathname;
+			self.id = path.split('/')[3];
+			var urlApi = '/api/procarianos/' + self.id;
+			$.ajax({
+				type: 'GET',
+				url: urlApi,
+				success: function(res){
+					self.procariano = res[0];
+				}
+			})
 		},
 		eliminar: function(){
 			/*
 				@Autor: @edisonmora95
 				@FechaCreación: 20-05-2017
 			*/
-			//Llamada a la api para eliminar al procariano
-			this.procariano.estado = 'inactivo';
-			Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded')
+			var self = this;
+			var urlApi= '/api/procarianos/' + self.id;
+			$.ajax({
+				type: 'DELETE',
+				url: urlApi,
+				success: function(res){
+					if (res.status) {
+						//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
+						self.procariano.estado = 'inactivo';
+						//window.location.href = '/procarianos/';	
+						$('#modalExitoEliminar').modal('open');
+					}else{
+						$('#modalErrorEliminar').modal('open');
+						console.log(res);
+					}
+				}
+			});
+		},
+		habilitarEditar(){
+			this.habilitaredicion = true;
 		}
 	}
 });

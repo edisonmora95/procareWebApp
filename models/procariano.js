@@ -1,3 +1,15 @@
+/*
+
+@Descripcion: Modelo de procariano
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 03/06/2017 @JoseViteri 
+
+
+*/
+
+
+var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Procariano = sequelize.define('Procariano', {
@@ -13,15 +25,18 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : true
     },
-    fecha_ordenacion: {
-      type : DataTypes.DATE,
+    fechaOrdenacion: {
+      type : DataTypes.DATEONLY,
       allowNull : true
     },
     estado: {
-      type : DataTypes.BOOLEAN,
-      allowNull : true
+      type : DataTypes.STRING,
+      allowNull : false,
+      /*validate : {
+        isIn : ['activo', 'inactivo' ]
+      }*/
     },
-    hace_participacion_estudiantil: {
+    haceParticipacionEstudiantil: {
       type : DataTypes.BOOLEAN,
       allowNull : true
     }
@@ -32,6 +47,8 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     }
+
   });
   return Procariano;
 };
+

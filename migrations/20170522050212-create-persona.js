@@ -11,7 +11,7 @@ module.exports = {
       cedula: {
         type : DataTypes.STRING,
         unique : true,
-        allowNull : false,
+        allowNull : false
       },
       nombres: {
         type : DataTypes.STRING,

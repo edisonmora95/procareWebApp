@@ -6,7 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!--Materializecss-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<!-- Compiled and minified CSS -->
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/grupoStyles.css">
 	</head>
 	<body>
@@ -19,15 +20,16 @@
 					<div class="row">
 						<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
 					</div>
-					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event"></crear-grupo-1>
-					<escoger-chicos v-if="!flag"></escoger-chicos>
+					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" :grupo="grupo"></crear-grupo-1>
+					<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
 				</div>
 			</main>
 		</div>
-		
 	</body>
-	<script src='/bower_components/jquery/dist/jquery.js'></script>
-	<script src='/bower_components/materialize/bin/materialize.js'></script>
-	<script src='/bower_components/vue/dist/vue.js'></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+	<script src='https://unpkg.com/vue@2.3.3'></script>
+	<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 	<script src='/build/grupo/crearGrupoScript.js'></script>
 </html>

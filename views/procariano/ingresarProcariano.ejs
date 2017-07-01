@@ -6,216 +6,201 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!--Materializecs-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href='/bower_components/materialize/bin/materialize.css'>
+		<!-- Compiled and minified CSS -->
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/ingresarProcarianoStyles.css">
 	</head>
 	<body>
-		<header>
-			<nav>
-				<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
-				<a href="" class="brand-logo">Procare</a>
-				<ul id="slide-out" class="side-nav">
-			    <li>
-			    	<div class="userView">
-				      
-				    </div>
-			    </li>
-			    <li class="no-padding">
-			    	<ul class="collapsible collapsible-accordion">
-			    		<li>
-			    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
-			    			<div class="collapsible-body">
-			            <ul id="ulProcareFormacion">
-			            </ul>
-			          </div>
-			    		</li>
-			    	</ul>
-			    </li>
-			    <li class="no-padding">
-			    	<ul class="collapsible collapsible-accordion">
-			    		<li>
-			    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
-			    			<div class="collapsible-body">
-			            <ul id="ulProcareAccion">
-			            </ul>
-			          </div>
-			    		</li>
-			    	</ul>
-			    </li>
-			    <li><a href="#">Salir</a></li>
-			  </ul>
-			</nav>
-		</header>
-		<main class="container" id="main">
-			<div class="row" id="row-form">
-				<h2 class="center-align titulo">Ingresar procariano</h2>
-				<form class="col s12" @submit.prevent="validateBeforeSubmit">
-					<!--Row nombres y apellidos-->
-					<div class="row row-nombres-apellidos">
-						<div class="input-field col s6">
-							<input type="text" name="nombres" id="nombres" v-model="procariano.nombre" v-validate="'required|alpha_spaces'">
-							<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
-							<label for="nombres">Nombres</label>
+		<div id="main">
+			<header>
+				<navbar></navbar>
+			</header>
+			<!--<button @click="llenarBaseDeDatos">Llenar base</button>-->
+			<main class="container">
+				<div class="row" id="row-form">
+					<h2 class="center-align titulo">Ingresar procariano</h2>
+					<form class="col s12" @submit.prevent="validateBeforeSubmit">
+						<!--Row nombres y apellidos-->
+						<div class="row row-nombres-apellidos">
+							<div class="input-field col s6">
+								<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
+								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+								<label for="nombres">Nombres</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'">
+								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
+								<label for="apellidos">Apellidos</label>
+							</div>
 						</div>
-						<div class="input-field col s6">
-							<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellido" v-validate="'required|alpha_spaces'">
-							<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
-							<label for="apellidos">Apellidos</label>
+						<!--Row cedula y fecha nacimiento-->
+						<div class="row row-cedula-fecha">
+							<div class="input-field col s6">
+								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
+								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
+								<label for="fecha-nacimiento">Fecha de nacimiento</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
+								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+								<label for="cedula">Cédula</label>
+							</div>
 						</div>
-					</div>
-					<!--Row cedula y fecha nacimiento-->
-					<div class="row row-cedula-fecha">
-						<div class="input-field col s6">
-							<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
-							<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-							<label for="fecha-nacimiento">Fecha de nacimiento</label>
+						<!--Row direccion y email-->
+						<div class="row row-direccion-email">
+							<div class="input-field col s6">
+								<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
+								<label for="direccion">Dirección</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="email" name="email" id="email" v-model="procariano.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
+								<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
+								<label for="email">Email</label>
+							</div>
 						</div>
-						<div class="input-field col s6">
-							<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
-							<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
-							<label for="cedula">Cédula</label>
+						<!--Row celular y convencional-->
+						<div class="row row-celular-convencional">
+							<div class="input-field col s6">
+								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
+								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
+								<label for="celular">Celular</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
+								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
+								<label for="convencional">Convencional</label>
+							</div>
 						</div>
-					</div>
-					<!--Row direccion y email-->
-					<div class="row row-direccion-email">
-						<div class="input-field col s6">
-							<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
-							<label for="direccion">Dirección</label>
+						<!--Row genero y tipo-->
+						<div class="row row-genero-tipo">
+							<div class="input-field col s6">
+								<select id="select-genero">
+									<option value="" disabled selected></option>	
+									<option value="masculino">Masculino</option>
+									<option value="femenino">Femenino</option>
+								</select>
+								<label>Género</label>
+							</div>
+							<div class="input-field col s6">
+								<select id="select-tipo-procariano">
+									<option value="" disabled selected></option>	
+									<option value="1">Chico de Formación</option>
+									<option value="2">Caminante</option>
+									<option value="3">Pescador</option>
+									<option value="4">Pescador consagrado</option>
+									<option value="5">Sacerdote</option>
+								</select>
+								<label>Tipo</label>
+							</div>
 						</div>
-						<div class="input-field col s6">
-							<input type="email" name="email" id="email" v-model="procariano.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
-							<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
-							<label for="email">Email</label>
+						<!--Chico formacion-->
+						<div class="row row-chico-formacion" v-show="procariano.tipo=='Chico de Formación'">
+							<div class="input-field col s6">
+								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
+								<label for="colegio">Colegio</label>
+							</div>
+							<div class="input-field col s6" id="div-select-grupo-formacion">
+								
+								<label class="active">Grupo de Formación</label>
+							</div>
 						</div>
-					</div>
-					<!--Row celular y convencional-->
-					<div class="row row-celular-convencional">
-						<div class="input-field col s6">
-							<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
-							<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
-							<label for="celular">Celular</label>
+						<!--Caminante-->
+						<div class="row row-caminante" v-show="procariano.tipo=='Caminante'">
+							<div class="input-field col s6">
+								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
+								<label for="colegio">Colegio</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
+								<label for="universidad">Universidad</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
+								<label for="trabajo">Trabajo</label>
+							</div>
+							<div class="input-field col s6" id="div-select-grupo-caminantes">
+								
+								<label class="active">Grupo de caminantes</label>
+							</div>
 						</div>
-						<div class="input-field col s6">
-							<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
-							<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
-							<label for="convencional">Convencional</label>
+						<!--Pescador-->
+						<div class="row row-pescador" v-show="procariano.tipo=='Pescador'||procariano.tipo==='Pescador consagrado'">
+							<div class="input-field col s6">
+								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
+								<label for="colegio">Colegio</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
+								<label for="universidad">Universidad</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
+								<label for="trabajo">Trabajo</label>
+							</div>
+							<div class="input-field col s6" id="div-select-grupo-pescadores">
+								
+								<label class="active">Grupo de pescadores</label>
+							</div>
 						</div>
-					</div>
-					<!--Row genero y tipo-->
-					<div class="row row-genero-tipo">
-						<div class="input-field col s6">
-							<select id="select-genero">
-								<option value="" disabled selected></option>	
-								<option value="1">Masculino</option>
-								<option value="2">Femenino</option>
-							</select>
-							<label>Género</label>
+						<!--Sacerdote-->
+						<div class="row row-sacerdote" v-show="procariano.tipo=='Sacerdote'">
+							<div class="input-field col s6">
+								<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('parroquia')" class="help is-danger">{{ errors.first('parroquia') }}</span>
+								<label for="parroquia">Parroquia</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="date" name="fecha-ordenacion" id="fecha-ordenacion" class="datepicker" v-model="procariano.fechaOrdenacion">
+								<label for="fecha-ordenacion">Fecha de ordenación</label>
+							</div>
 						</div>
-						<div class="input-field col s6">
-							<select id="select-tipo-procariano">
-								<option value="" disabled selected></option>	
-								<option value="1">Chico de Formación</option>
-								<option value="2">Caminante</option>
-								<option value="3">Pescador</option>
-								<option value="4">Pescador consagrado</option>
-								<option value="5">Sacerdote</option>
-							</select>
-							<label>Tipo</label>
+						<!--Botones-->
+						<div class="row row-botones">
+							<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action">Cancelar<a>
+							<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="validateBeforeSubmit">Crear<a>
 						</div>
-					</div>
-					<!--Chico formacion-->
-					<div class="row row-chico-formacion" v-show="procariano.tipo=='Chico de Formación'">
-						<div class="input-field col s6">
-							<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
-							<label for="colegio">Colegio</label>
-						</div>
-						<div class="input-field col s6" id="div-select-grupo-formacion">
-							
-							<label class="active">Grupo de Formación</label>
-						</div>
-					</div>
-					<!--Caminante-->
-					<div class="row row-caminante" v-show="procariano.tipo=='Caminante'">
-						<div class="input-field col s6">
-							<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
-							<label for="colegio">Colegio</label>
-						</div>
-						<div class="input-field col s6">
-							<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
-							<label for="universidad">Universidad</label>
-						</div>
-						<div class="input-field col s6">
-							<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
-							<label for="trabajo">Trabajo</label>
-						</div>
-						<div class="input-field col s6" id="div-select-grupo-caminantes">
-							
-							<label class="active">Grupo de caminantes</label>
-						</div>
-					</div>
-					<!--Pescador-->
-					<div class="row row-pescador" v-show="procariano.tipo=='Pescador'||procariano.tipo==='Pescador consagrado'">
-						<div class="input-field col s6">
-							<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
-							<label for="colegio">Colegio</label>
-						</div>
-						<div class="input-field col s6">
-							<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
-							<label for="universidad">Universidad</label>
-						</div>
-						<div class="input-field col s6">
-							<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
-							<label for="trabajo">Trabajo</label>
-						</div>
-						<div class="input-field col s6" id="div-select-grupo-pescadores">
-							
-							<label class="active">Grupo de pescadores</label>
-						</div>
-					</div>
-					<!--Sacerdote-->
-					<div class="row row-sacerdote" v-show="procariano.tipo=='Sacerdote'">
-						<div class="input-field col s6">
-							<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
-							<span v-show="errors.has('parroquia')" class="help is-danger">{{ errors.first('parroquia') }}</span>
-							<label for="parroquia">Parroquia</label>
-						</div>
-						<div class="input-field col s6">
-							<input type="date" name="fecha-ordenacion" id="fecha-ordenacion" class="datepicker" v-model="procariano.fechaOrdenacion">
-							<label for="fecha-ordenacion">Fecha de ordenación</label>
-						</div>
-					</div>
-					<!--Botones-->
-					<div class="row row-botones">
-						<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action">Cancelar<a>
-						<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="validateBeforeSubmit">Crear<a>
-					</div>
-				</form>
-			</div>
+					</form>
+				</div>
+				<!-- Modal Structure -->
+			  <div id="modalProcarianoCreado" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align modal-text">Procariano creado correctamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
+			</main>
 			<!-- Modal Structure -->
-		  <div id="modalProcarianoCreado" class="modal">
+		  <div id="modalError" class="modal">
 		    <div class="modal-content">
-		      <p class="center-align modal-text">Procariano creado correctamente.</p>
+		      <h4 class="center-align">Formulario con errores.</h4>
+		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+		      <p class="center-align">Con el siguiente mensaje de error: </p>
+		      <p class="center-align">"{{errorObj.msj}}"</p>
 		    </div>
 		    <div class="modal-footer">
 		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 		    </div>
 		  </div>
-		</main>
-		<footer>
-			<script src='/bower_components/jquery/dist/jquery.js'></script>
-			<script src='/bower_components/materialize/bin/materialize.js'></script>
-			<script src='/bower_components/vue/dist/vue.js'></script>
-			<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>
-			<script src="/js/procariano/ingresarProcarianoScript.js"></script>
-		</footer>
+		</div>
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<!-- Compiled and minified JavaScript -->
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
+			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+			<script src="/build/procariano/ingresarProcarianoScript.js"></script>
+		</div>
 	</body>
 </html>
