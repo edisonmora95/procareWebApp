@@ -67,7 +67,7 @@ describe('Etapas', function() {
 		});
 	});
 	describe('DELETE', () => {
-		it('Id no enviado', function(done){
+		it('CP2. Id no enviado', function(done){
 			chai.request(server)
 				.delete('/api/etapa/')
 				.end((err, res) => {
@@ -75,8 +75,25 @@ describe('Etapas', function() {
 					done();
 				});
 		});
-		/*it('Prueba DELETE. Id no encontrado', function(done){
-			//TODO	
+		it('CP3. Id es un número negativo', function(done){
+			chai.request(server)
+				.delete('/api/etapa/-5')	//'/api/etapas/-5'
+				.end((err, res) => {
+					assert.equal(res.status, 200, 'Status incorrecto');
+					assert.equal(res.body.status, true, 'Status incorrecto');
+					//assert.equal(res.body.mensaje, '', 'Mensaje incorrecto');
+					assert.equal(res.body.sequelizeStatus, 0, 'Si eliminó registros');
+					done();
+				});
+		});
+		/*it('CP4. Id es Hola', function(done){
+			chai.request(server)
+				.delete('/api/etapa/Hola')
+				.end((err, res) => {
+					console.log(res.status)
+					console.log(res.body)
+					done();
+				});
 		});*/
 	});
 	describe('GET', () => {
@@ -84,7 +101,6 @@ describe('Etapas', function() {
 			chai.request(server)
 				.get('/api/etapa/')
 				.end((err, res) => {
-					//console.log(res.body);
 					res.should.be.json;
 					res.should.have.status(200);
 					assert.equal(res.body.status, true, 'Status incorrecto');

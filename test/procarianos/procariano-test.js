@@ -14,17 +14,17 @@ describe('Procarianos', function() {
 	    .send({ 'apellidos': 'viteri cuenca' , 'nombres': 'jose antonio'})
 	    .end(function(err, res){
 	    	console.log(res.body);
-	      //res.should.have.status(200);
-	      //res.should.be.json;
-	      //res.body.should.be.a('object');
-	      //res.body.persona.should.have.property('apellidos');
-	      //res.body.persona.should.have.property('nombres');
-	      //res.body.persona.should.have.property('cedula');
-	      //res.body.SUCCESS.name.should.equal('Java');
-	      //res.body.SUCCESS.lastName.should.equal('Script');
+	      res.should.have.status(200);
+	      res.should.be.json;
+	      res.body.should.be.a('object');
+	      res.body.persona.should.have.property('apellidos');
+	      res.body.persona.should.have.property('nombres');
+	      res.body.persona.should.have.property('cedula');
+	      res.body.SUCCESS.name.should.equal('Java');
+	      res.body.SUCCESS.lastName.should.equal('Script');
 	      done();
 	    });
-	});/*
+	});
 	  it('Prueba donde nombres es null, cedula con longitud 10 y apellidos estan presentes' , function(done) {
 	  chai.request(server)
 	    .post('/procarianos/nuevo')
@@ -92,6 +92,6 @@ describe('Procarianos', function() {
 	      //res.body.SUCCESS.lastName.should.equal('Script');
 	      done();
 	    });
-	  });*/
+	  });
 	});
 
