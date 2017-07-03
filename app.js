@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 // Express Session
 app.use(session({
-    secret: 'secreto',
+    secret: 'Ya_ya_posi_Posi',
     saveUninitialized: true,
     resave: true
 }));

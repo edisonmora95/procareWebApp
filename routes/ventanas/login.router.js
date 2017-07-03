@@ -79,7 +79,7 @@ passport.deserializeUser(function(id, done) {
 
 //post del login, manda un json si la autenticacion fue correcta o incorrecta
 router.post('/',
-  passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
+  passport.authenticate('local', {failureRedirect:'/api/login/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
 
     var rols = req.user.Rols;
@@ -113,14 +113,7 @@ router.post('/',
   	*/
 });
 
-//api get para cuando falla la autenticacion (deberia moverese a login.api.router)
-router.get('/api/loginFalla', function(req,res,next){
-	let objeto = {
-		status : false,
-		message : "algo paso"
-	}
-	res.json(objeto);
-})
+
 
 /* GET home page. */
 
