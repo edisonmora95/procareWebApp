@@ -3,7 +3,7 @@
 @Descripcion: Api del login
 @Autor: jose viteri
 @FechaCreacion: 19/06/2017
-@UltimaFechaModificacion: 28/06/2017 //agregado para obtener usuarios
+@UltimaFechaModificacion: 03/07/2017 //solucionado problema sesiones
 
 
 */
@@ -22,24 +22,17 @@ router.get('/loginFalla', function(req,res,next){
 });
 
 router.get('/usuarios', function(req, res, next){
-	console.log("este es el usuario");
-	console.log(req.user.nombres);
-	console.log("estos son los usuarios");
-	/*
-	console.log(req.user.Rols);
-  	var rols = req.user.Rols;
-  	console.log(req.user.Rols[0].nombre)
-  	var rolsJson = [];
-  	for (i = 0 ; i< rols.length ; i++){
-  		rolsJson.push(rols[i].nombre);
-  	}
-  	*/
+  var rolesTemp = req.user[0].dataValues.Rols;
+  var lista = [];
+  for ( var i = 0 ; i < rolesTemp.length ; i++){
+    lista.push(rolesTemp[i].dataValues.nombre);
+  }
   	var json = {
   		status : true,
-  		nombre : req.user.nombres,
-  		apellidos : req.user.apellidos,
-  		correo : req.user.email/*, 
-  		rols : rolsJson*/
+  		nombre : req.user[0].dataValues.nombres,
+  		apellidos : req.user[0].dataValues.apellidos,
+  		correo : req.user[0].dataValues.email, 
+  		roles : lista
   	}
 
   	res.json(json);
