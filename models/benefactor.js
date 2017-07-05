@@ -1,8 +1,14 @@
 /*
 @Descripcion: Modelo de procariano
+
 @Autor: jose Alcivar
 @FechaCreacion: 29/06/2017
 @UltimaFechaModificacion: 29/06/2017 @josealcivar
+
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 03/06/2017 @JoseViteri
+
 */
 
 
@@ -56,4 +62,8 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   return Benefactor;
+
 };
+
+};
+

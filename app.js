@@ -23,6 +23,9 @@ var login = require('./routes/ventanas/login.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
+let apiLogin = require('./routes/api/login.api.router');
+let apiTareas = require('./routes/api/tarea.api.router');
+
 var app = express();
 
 
@@ -41,6 +44,8 @@ app.use('/scripts', express.static(__dirname + '/node_modules/'));
 // Express Session
 app.use(session({
     secret: 'secreto',
+    secret: 'Ya_ya_posi_Posi',
+
     saveUninitialized: true,
     resave: true
 }));
@@ -55,12 +60,22 @@ app.use(flash());
 
 
 //Rutas de las ventanas
+
 app.use('/', index);
+
+app.use('/home', index);
+
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
-app.use('/login',login);
+app.use('/',login);
+
+//Rutas de la api
+app.use('/api/procarianos', apiProcarianos);
+app.use('/api/etapa',apiEtapa);
+app.use('/api/login',apiLogin);
+app.use('/api/tarea',apiTareas);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);

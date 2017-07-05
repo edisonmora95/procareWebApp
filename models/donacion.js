@@ -1,11 +1,17 @@
 /*
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 @Descripcion: Modelo de Benefactor
 @Autor: jose alcivar
 @FechaCreacion: 21/06/2017
 @UltimaFechaModificacion: 21/06/2017 @josealcivar
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 */
 
 
@@ -28,19 +34,30 @@ module.exports = function(sequelize, DataTypes) {
     observacion: {
       type : DataTypes.STRING,
       allowNull : true
+<<<<<<< HEAD
     },
     estado: {
       type : DataTypes.STRING,
       allowNull : false
+=======
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
     }
   }, {
     classMethods: {
       associate: function(models) {
+<<<<<<< HEAD
         Donacion.belongsTo(models.Benefactor)
+=======
+        //Benefactor.belongsTo(models.Persona)
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
         // associations can be defined here
       }
     }
 
   });
   return Donacion;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149

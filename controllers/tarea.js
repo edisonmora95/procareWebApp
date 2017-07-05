@@ -12,7 +12,10 @@ const crearTarea = (req, res, next) => {
   estado = 'activo';
 
   modelo.Tarea.create({
+
     id_responsable : req.body.responsable,
+
+    //id_responsable : req.body.nombre,
     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
     fecha_limite : req.body.fecha_limite,
@@ -44,12 +47,23 @@ const crearTarea = (req, res, next) => {
 
 const eliminarTarea = (req, res, next) => {
    estado = 'inactivo';
+
    modelo.Tarea.update({
     {
       estado: req.body.estado
     }
     where:{
       id: req.params.id
+
+   idTarea = req.params.id;
+   modelo.Tarea.update({
+    
+    estado : estado
+
+  },{
+    where:{
+      id: idTarea
+
     }
   }).then( repuesta => {
     var status = true;
@@ -107,6 +121,8 @@ const editarTarea = (req, res, next) => {
   });
 }
 
+/*
+
 const mostrarTarea = (req,res,next) =>{
   modelo.Tarea.findAll({
 
@@ -130,10 +146,98 @@ const mostrarTarea = (req,res,next) =>{
     res.json(jsonRespuesta);
   });
 }
+<<<<<<< HEAD
+=======
+*/
+const mostrarTareaPorUsuario = (req, res, next) =>{
+  idUsuario = req.params.id;
+  modelo.Tarea.findAll({
+      include: [{
+          model: modelo.Persona
+      }],
+      where : {
+        idResponsable : idUsuario, 
+        estado : "activo"
+      } 
 
+  }).then( tareas => {
+    console.log(tareas);
+    const respuesta = tareas.map( tarea => {
+
+      return Object.assign(
+        {},
+        {
+          id : tarea.id,
+          idUser : tarea.Persona.id,
+          title : tarea.titulo,
+          user : tarea.Persona.nombres + " " + tarea.Persona.apellidos ,
+          start : tarea.fecha_publicacion ,
+          end : tarea.fecha_limite ,
+          description : tarea.descripcion, 
+        });
+    });
+    return res.json({
+      status : true,
+      sequelizeStatus : respuesta
+    })
+  }).catch( error => {
+    var status = false;
+    var mensaje = 'no se pudo eliminar'
+    var jsonRespuesta = {
+      status : status,
+      mensaje : mensaje,
+      sequelizeStatus : error
+    }
+    res.json(JSON.parse(jsonRespuesta));
+  });
+}
+
+const mostrarTareas = (req, res, next) =>{
+    modelo.Tarea.findAll({
+      include: [{
+          model: modelo.Persona
+      }],
+      where : {
+        estado : "activo"
+      } 
+
+  }).then( tareas => {
+    console.log(tareas);
+    const respuesta = tareas.map( tarea => {
+
+      return Object.assign(
+        {},
+        {
+          id : tarea.id,
+          idUser : tarea.Persona.id,
+          title : tarea.titulo,
+          user : tarea.Persona.nombres + " " + tarea.Persona.apellidos ,
+          start : tarea.fecha_publicacion ,
+          end : tarea.fecha_limite ,
+          description : tarea.descripcion, 
+        });
+    });
+    return res.json({
+      status : true,
+      sequelizeStatus : respuesta
+    })
+  }).catch( error => {
+    var status = false;
+    var mensaje = 'no se pudo eliminar'
+    var jsonRespuesta = {
+      status : status,
+      mensaje : mensaje,
+      sequelizeStatus : error
+    }
+    res.json(JSON.parse(jsonRespuesta));
+  });
+}
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 module.exports = {
   crearTarea,
   eliminarTarea,
   editarTarea,
-  mostrarTarea
+   mostrarTareaPorUsuario,
+  mostrarTareas
+
 }

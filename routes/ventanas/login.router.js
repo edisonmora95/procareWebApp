@@ -7,7 +7,12 @@
 
 */
 
+<<<<<<< HEAD
 
+=======
+var controladorLogin = require('../../controllers/login.controller')
+var utils = require('../../utils/utils');
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -15,7 +20,11 @@ var LocalStrategy = require('passport-local').Strategy;
 var modelos = require('../../models');
 
 
+<<<<<<< HEAD
 //estrategia local, compara contraseña y usuario, ademas genera el req.user
+=======
+//estartegia local, compara contraseña y usuario, ademas genera el req.user
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 passport.use(new LocalStrategy({
 	usernameField : 'correo',
 	passwordField : 'password'
@@ -78,6 +87,7 @@ passport.deserializeUser(function(id, done) {
 
 //post del login, manda un json si la autenticacion fue correcta o incorrecta
 router.post('/',
+<<<<<<< HEAD
   passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
   	let objeto = {
@@ -102,10 +112,43 @@ router.post('/',
 
 
   	console.log(json);
+=======
+  passport.authenticate('local', {failureRedirect:'/api/login/loginFalla',failureFlash: true, successFlash : true}),
+  function(req, res) {
+
+    var rols = req.user.Rols;
+    console.log(req.user.Rols[0].nombre)
+    var rolsJson = [];
+    for (i = 0 ; i< rols.length ; i++){
+      rolsJson.push(rols[i].nombre);
+    }
+    var json = {
+      status : true,
+      nombre : req.user.nombres,
+      apellidos : req.user.apellidos,
+      correo : req.user.email, 
+      rols : rolsJson
+    }
+
+  	let objeto = {
+  		status : true , 
+  		message : "logueado correcto",
+      objeto : json
+  	}
+
+
+
+    console.log(json);
+  	res.json(objeto);
+  	
+
+    /*
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
   	res.render("procariano/verProcariano", json)
   	*/
 });
 
+<<<<<<< HEAD
 //api get para cuando falla la autenticacion (deberia moverese a login.api.router)
 router.get('/api/loginFalla', function(req,res,next){
 	let objeto = {
@@ -114,6 +157,9 @@ router.get('/api/loginFalla', function(req,res,next){
 	}
 	res.json(objeto);
 })
+=======
+
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 
 /* GET home page. */
 
@@ -146,6 +192,7 @@ router.get('/logout', function(req, res){
 });
 
 
+<<<<<<< HEAD
 /*
 
 
@@ -180,4 +227,14 @@ router.post('/cambio', function(req, res){
 });
 
 */
+=======
+
+
+
+
+router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
+
+
+
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 module.exports = router;

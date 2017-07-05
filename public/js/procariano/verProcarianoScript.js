@@ -15,11 +15,15 @@ var app = new Vue({
 		this.obtenerProcarianoPorId();
 	},
 	mounted: function(){
+
+		//Inicializadores de Materialize
+
 		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
 	},
 	data: {
 		id: 0,
+
 		/*procariano:{
 			nombres: 'Edison André',
 			apellidos: 'Mora Cazar',
@@ -39,10 +43,12 @@ var app = new Vue({
 			estado: 'Activo',
 			grupo: ''
 		},*/
+
 		procariano: {},
 		habilitaredicion: false
 	},
 	methods: {
+
 		 moment: function (date) {
       return moment(date);
     },
@@ -58,6 +64,18 @@ var app = new Vue({
       //   return moment(date).add(8,'h').tz("America/Guayaquil").format('DD MMMM hh:mm');
       // }
       return moment(date).format('DD MMMM HH:mm');
+
+		//Funciones para editar la forma en la que se muestra la fecha
+		moment(date) {
+      return moment(date);
+    },
+    date(date) {
+      var es = moment().locale('es');
+      if (date == undefined || date == '') {
+        return '----'
+      }
+      return moment(date).format('DD MMMM YYYY');
+
     },
 		obtenerProcarianoPorId(){
 			var self = this;
@@ -73,10 +91,12 @@ var app = new Vue({
 			})
 		},
 		eliminar: function(){
+
 			/*
 				@Autor: @edisonmora95
 				@FechaCreación: 20-05-2017
 			*/
+
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
@@ -84,6 +104,7 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.status) {
+
 						//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
 						self.procariano.estado = 'inactivo';
 						//window.location.href = '/procarianos/';	
@@ -91,6 +112,12 @@ var app = new Vue({
 					}else{
 						$('#modalErrorEliminar').modal('open');
 						console.log(res);
+
+						self.procariano.estado = 'inactivo';
+						$('#modalExitoEliminar').modal('open');
+					}else{
+						$('#modalErrorEliminar').modal('open');
+
 					}
 				}
 			});

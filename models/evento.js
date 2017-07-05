@@ -1,12 +1,18 @@
 
 /*
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 @Descripcion: Modelo Evento, relacionado con Persona quien va quedar encargado del evento
 @Autor: jose alcivar
 @FechaCreacion: 16/06/2017
 @UltimaFechaModificacion: --
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 */
 var bcrypt = require('bcryptjs');
 
@@ -57,4 +63,8 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   return Evento;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149

@@ -11,7 +11,11 @@ gulp.task('default', ['browser-sync'],function(){
 
 gulp.task('browser-sync', ['nodemon'], function(){
 	browserSync.init(null, {
+
 		proxy: "http://localhost/login",
+
+		proxy: "http://localhost/",
+
     files: ["public/**/*.*"],
     browser: "default",
     port: 3001,
