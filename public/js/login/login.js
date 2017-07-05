@@ -22,6 +22,7 @@ var appLogin = new Vue({
 				type : 'POST',
 				data : obj,
 				success(res){
+
 					console.log(res);
 					if(res.status){
 						window.location.href = '/';
@@ -29,11 +30,24 @@ var appLogin = new Vue({
 					else{
 						self.fallaLogin = true;
 						console.log(self.fallaLogin);
+
+					//console.log(res);
+					if(res.status){
+						window.location.href = '/home';
+					}
+					else{
+						self.fallaLogin = true;
+						//console.log(self.fallaLogin);
+
 					}
 				},
 				error(res){
 					self.fallaLogin = true;
+
 					console.log(self.fallaLogin);
+
+					//console.log(self.fallaLogin);
+
 				}
 			});
 			

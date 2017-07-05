@@ -10,17 +10,29 @@ chai.use(chaiHttp);
 describe('Procarianos', function() {
 	 it('Prueba donde cedula es null, nombres y apellidos estan presentes', function(done) {
 	  chai.request(server)
+<<<<<<< HEAD
 	    .post('/procarianos/nuevo')
 	    .send({ 'apellidos': 'viteri cuenca' , 'nombres': 'jose antonio'})
 	    .end(function(err, res){
+=======
+	    .post('/api/procarianos/')
+	    .send({ 'apellidos': 'viteri cuenca' , 'nombres': 'jose antonio'})
+	    .end(function(err, res){
+	    	console.log(res.body);
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 	      res.should.have.status(200);
 	      res.should.be.json;
 	      res.body.should.be.a('object');
 	      res.body.persona.should.have.property('apellidos');
 	      res.body.persona.should.have.property('nombres');
 	      res.body.persona.should.have.property('cedula');
+<<<<<<< HEAD
 	      //res.body.SUCCESS.name.should.equal('Java');
 	      //res.body.SUCCESS.lastName.should.equal('Script');
+=======
+	      res.body.SUCCESS.name.should.equal('Java');
+	      res.body.SUCCESS.lastName.should.equal('Script');
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 	      done();
 	    });
 	});

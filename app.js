@@ -17,12 +17,17 @@ var users = require('./routes/ventanas/users');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
+
 //var login = require('./routes/ventanas/login');
+
+
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
+
+
 var app = express();
 
 
@@ -46,7 +51,6 @@ app.use(session({
 }));
 
 // Passport init
-app
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -55,12 +59,19 @@ app.use(flash());
 
 
 //Rutas de las ventanas
+
 app.use('/', index);
+
+app.use('/home', index);
 app.use('/users', users);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
-app.use('/login',login);
+app.use('/', login);
+
+//Rutas de la api
+app.use('/api/procarianos', apiProcarianos);
+app.use('/api/etapa',apiEtapa);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);

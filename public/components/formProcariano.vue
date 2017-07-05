@@ -21,6 +21,9 @@
 				</div>
 				<div class="col s6 input-field">
 					<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="procariano.fechaNacimiento" v-validate="'required'"></v-date-input>
+
+					<!--<input type="date" class="" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">-->
+
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
@@ -49,7 +52,11 @@
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
 			</v-row>
+
 			<v-row>
+
+			<!--<v-row>
+
 				<div class="col s6 input-field">
 					<v-select name="tipo" id="tipo" v-model="procariano.tipo">
 						<option value="Chico de Formación">Chico de Formación</option>
@@ -64,7 +71,11 @@
 					<v-select name="grupo" id="grupo" v-model="procariano.grupo"></v-select>
 					<label class="active">Grupo</label>
 				</div>
+
 			</v-row>
+
+			</v-row>-->
+
 			<v-row>
 				<div class="col s6 input-field">
 					<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
@@ -159,6 +170,22 @@
 		},
 		mounted(){
 			$('.modal').modal();
+
+
+			/*//Vincular la fecha
+			let input = $('#fechaNacimiento').pickadate();
+			let picker = input.pickadate('picker');
+			picker.set('select', new Date(this.procariano.fechaNacimiento));*/
+			/*
+			console.log(this.procariano);
+			let fecha = new Date(this.procariano.fechaNacimiento);
+			console.log(fecha);
+			$('#fechaNacimiento').val(fecha);*/
+			$('#fechaNacimiento').change(function(){
+				console.log('Holaaaa');
+				console.log($('#fechaNacimiento').val());
+			})
+
 		},
 		methods: {
 			cancelarEdicion(){

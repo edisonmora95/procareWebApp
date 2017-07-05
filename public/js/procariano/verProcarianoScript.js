@@ -15,11 +15,16 @@ var app = new Vue({
 		this.obtenerProcarianoPorId();
 	},
 	mounted: function(){
+<<<<<<< HEAD
+=======
+		//Inicializadores de Materialize
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
 	},
 	data: {
 		id: 0,
+<<<<<<< HEAD
 		/*procariano:{
 			nombres: 'Edison André',
 			apellidos: 'Mora Cazar',
@@ -39,10 +44,13 @@ var app = new Vue({
 			estado: 'Activo',
 			grupo: ''
 		},*/
+=======
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 		procariano: {},
 		habilitaredicion: false
 	},
 	methods: {
+<<<<<<< HEAD
 		 moment: function (date) {
       return moment(date);
     },
@@ -58,6 +66,18 @@ var app = new Vue({
       //   return moment(date).add(8,'h').tz("America/Guayaquil").format('DD MMMM hh:mm');
       // }
       return moment(date).format('DD MMMM HH:mm');
+=======
+		//Funciones para editar la forma en la que se muestra la fecha
+		moment(date) {
+      return moment(date);
+    },
+    date(date) {
+      var es = moment().locale('es');
+      if (date == undefined || date == '') {
+        return '----'
+      }
+      return moment(date).format('DD MMMM YYYY');
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
     },
 		obtenerProcarianoPorId(){
 			var self = this;
@@ -73,10 +93,13 @@ var app = new Vue({
 			})
 		},
 		eliminar: function(){
+<<<<<<< HEAD
 			/*
 				@Autor: @edisonmora95
 				@FechaCreación: 20-05-2017
 			*/
+=======
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
@@ -84,6 +107,7 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.status) {
+<<<<<<< HEAD
 						//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
 						self.procariano.estado = 'inactivo';
 						//window.location.href = '/procarianos/';	
@@ -91,6 +115,12 @@ var app = new Vue({
 					}else{
 						$('#modalErrorEliminar').modal('open');
 						console.log(res);
+=======
+						self.procariano.estado = 'inactivo';
+						$('#modalExitoEliminar').modal('open');
+					}else{
+						$('#modalErrorEliminar').modal('open');
+>>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
 					}
 				}
 			});
