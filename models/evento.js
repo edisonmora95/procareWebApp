@@ -1,29 +1,22 @@
 
 /*
-<<<<<<< HEAD
 
-=======
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 @Descripcion: Modelo Evento, relacionado con Persona quien va quedar encargado del evento
 @Autor: jose alcivar
 @FechaCreacion: 16/06/2017
 @UltimaFechaModificacion: --
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 */
 var bcrypt = require('bcryptjs');
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Evento = sequelize.define('Evento', {
-    id_organizador: {
+    /*id_organizador: {
       type : DataTypes.INTEGER,
       unique : true,
       allowNull : false
-    },
+    },*/
     nombre: {
       type : DataTypes.STRING,
       allowNull : false
@@ -56,15 +49,15 @@ module.exports = function(sequelize, DataTypes) {
 
     classMethods: {
 			associate: function(models) {
-        Evento.belongsTo(models.Persona)
+
+        Evento.belongsTo(models.Persona, {foreignKey: 'id_organizador'})
         // associations can be defined here
       }
     }
 
   });
   return Evento;
-<<<<<<< HEAD
+
 };
-=======
+
 };
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149

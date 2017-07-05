@@ -146,8 +146,7 @@ const mostrarTarea = (req,res,next) =>{
     res.json(jsonRespuesta);
   });
 }
-<<<<<<< HEAD
-=======
+
 */
 const mostrarTareaPorUsuario = (req, res, next) =>{
   idUsuario = req.params.id;
@@ -232,7 +231,7 @@ const mostrarTareas = (req, res, next) =>{
     res.json(JSON.parse(jsonRespuesta));
   });
 }
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+
 module.exports = {
   crearTarea,
   eliminarTarea,
