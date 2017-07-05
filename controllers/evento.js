@@ -12,7 +12,7 @@ const crearEvento = (req, res, next) => {
   estado = 'activo';
 
   modelo.Evento.create({
-    id_organizador : req.body.id_organiador,
+    idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -45,9 +45,10 @@ const crearEvento = (req, res, next) => {
 const eliminarEvento = (req, res, next) => {
    estado = 'inactivo';
    modelo.Evento.update({
-    {
-      estado: req.body.estado
-    }
+    
+    estado : estado
+
+  },{
     where:{
       id: req.params.id
     }
@@ -73,7 +74,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-     id_organizador : req.body.id_organiador,
+     idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -107,21 +108,43 @@ const editarEvento = (req, res, next) => {
   });
 }
 
-const mostrarEvento = (req,res,next) =>{
+const mostrarEventos = (req,res,next) =>{
   modelo.Evento.findAll({
-
-  }).then( repuesta => {
-    var status = true;
-    var mensaje = 'se pudo actualizar correctamente'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : repuesta
+    include: [{
+      model: modelo.Persona
+    }],
+    where : {
+      estado : "activo"
     }
-    res.json(jsonRespuesta)
+
+  }).then( respuesta => {
+    var status = true;
+    var mensaje = 'se pueden mostrar correctamente'
+    const respuesta2 = respuesta.map( evento => {
+
+      return Object.assign(
+        {},
+        {
+          id : evento.id,
+          idUser : evento.Persona.id,
+          title : evento.titulo,
+          user :evento.Persona.nombres + " " + evento.Persona.apellidos ,
+          start : evento.fecha ,
+          description : evento.descripcion, 
+          type : "evento"
+        });
+    });
+     return res.json({
+      status : true,
+      mensaje : mensaje,
+      sequelizeStatus : respuesta2
+    })
+
+
+
   }).catch( error => {
     var status = false;
-    var mensaje = 'no se pudo eliminar'
+    var mensaje = 'no se puede mostrar'
     var jsonRespuesta = {
       status : status,
       mensaje : mensaje,
@@ -135,5 +158,5 @@ module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
-  mostrarEvento
+  mostrarEventos
 }
