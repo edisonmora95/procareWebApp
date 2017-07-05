@@ -24,6 +24,7 @@ var login = require('./routes/ventanas/login.router');
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiLogin = require('./routes/api/login.api.router');
+let apiTareas = require('./routes/api/tarea.api.router');
 var app = express();
 
 
@@ -67,6 +68,7 @@ app.use('/',login);
 app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
 app.use('/api/login',apiLogin);
+app.use('/api/tarea',apiTareas);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
