@@ -215,6 +215,9 @@ var main = new Vue({
         		}else{
         			alert('Error al ingresar en la base de datos');
         		}
+        	},
+        	error : function(err){
+        		console.log(err);
         	}
         });
         

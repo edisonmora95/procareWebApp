@@ -4,7 +4,7 @@
 @FechaCreacion: 26/06/2017
 @UltimaFechaModificacion: 07/06/2017 @JoseViteri (cambios detallados abajo)
 */
-'use strict';
+
 
 var modelo = require('../models');
 var utils = require('../utils/utils')
@@ -15,14 +15,12 @@ Autor : JV
 Creado : 26/06/2017
 Modificado: 07/07/2017
 Por: JV , agregados campos convencional y fecha date
-
 */
 const crearProcariano = (req, res, next) => {
-	console.log('Entró a la función de crearProcariano');
 	//formato fechas : YYYY-MM-DD
 
-	//console.log('REQ.BODY: ');
-	//console.log(req.body);
+	console.log('REQ.BODY: ');
+	console.log(req.body);
 
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
@@ -63,7 +61,6 @@ const crearProcariano = (req, res, next) => {
 
 
 	}).then( persona => {
-		console.log('S1')
 		modelo.Procariano.create({
 			PersonaId : persona.get('id'),
 			colegio : colegio,
@@ -73,7 +70,6 @@ const crearProcariano = (req, res, next) => {
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
-			console.log('S2')
 			var status = true;
 			var json1 = {
 				status : status,
@@ -85,7 +81,6 @@ const crearProcariano = (req, res, next) => {
 
 			res.json(json1);
 		}).catch( error2 => {
-			console.log('E2')
 			var json1 = {
 			status : false,
 			mensaje : 'No se pudo crear este procariano',
@@ -95,7 +90,6 @@ const crearProcariano = (req, res, next) => {
 
 		});
 	}).catch( error => {
-		console.log('E1')
 		var json1 = {
 			status : false,
 			mensaje : 'No se pudo crear esta persona',
