@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     },
     fecha: {
-      type : DataTypes.DATEONLY
+      type : DataTypes.DATE
     },
     descripcion : {
       type : DataTypes.TEXT
