@@ -83,9 +83,21 @@
 				let aAsistencias = $('<a>').html('Asistencias');
 				liAsistencias.append(aAsistencias);
 				$('#ulProcareFormacion').append(liAsistencias);
-				if(this.usuario === 'personal'){
+				if(this.usuario === 'personal' || this.usuario === 'director ejecutivo'){
 					this.crearDropdownGrupos();
 					this.crearDropdownProcarianos();	
+					//Usuarios
+					if(this.usuario === 'director ejecutivo'){
+						let liUsuarios = $('<li>');
+						let aUsuarios = $('<a>')
+																		.html('Usuarios')
+																		.attr({
+																			'href': '/usuarios/',
+																		});
+						liUsuarios.append(aUsuarios);
+						$('#slide-out').append(liUsuarios);
+					}
+					
 				}else{
 					//Grupos
 					let liGrupo = $('<li>');

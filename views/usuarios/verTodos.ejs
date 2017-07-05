@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecss-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- Compiled and minified CSS -->
+ 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
+
+	</head>
+	<body>
+		<div id="main">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				
+				<section id="section-resultados">
+					<table class="tripped bordered responsive-table centered highlight">
+						<thead>
+							<th>Nombres</th>
+							<th>Apellidos</th>
+							<th>Email</th>
+							<th>Rol</th>
+							<th>Acción</th>
+						</thead>
+						<tbody>
+							<tr v-for="usuario in listaUsuarios">
+								<td>{{usuario.nombres}}</td>
+								<td>{{usuario.apellidos}}</td>
+								<td>{{usuario.email}}</td>
+								<td>{{usuario.rolText}}</td>
+								<td>
+									<a href="#modalEditarUsuario" class="waves-effect waves-light">
+										<i class="material-icons" @click="seleccionarUsuario(usuario)">mode_edit</i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</main>
+			<!-- Modal Structure -->
+		  <div id="modalEditarUsuario" class="modal">
+		    <div class="modal-content" id="modal-content">
+		      <h4 class="center-align">Editar usuario</h4>
+		      <p class="center-align">{{usuarioSeleccionado.nombres}} {{usuarioSeleccionado.apellidos}}</p>
+		      <p class="center-align">{{usuarioSeleccionado.email}}</p>
+		      <v-select id="select-rol" name="rol" v-model="usuarioSeleccionado.rolId" :items="roles">
+		      	
+		      </v-select>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Agree</a>
+		    </div>
+		  </div>
+		</div>
+		<div id="scripts">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="/build/usuarios/verTodosScript.js"></script>
+		</div>
+	</body>
+</html>
