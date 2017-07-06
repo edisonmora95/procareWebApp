@@ -73,7 +73,7 @@ describe('Procarianos', function() {
 	  it('Prueba donde cedula , nombres y apellidos son diferentes de null y genero es masculino', function(done) {
 	  chai.request(server)
 	    .post('/api/procarianos/')
-	    .send({ 'apellidos': 'viteri cuenca' , 'nombres': 'jose antonio' , 'cedula' : '0987654213' , 'genero' : 'masculino'})
+	    .send({ 'apellidos': 'viteri cuenca' , 'nombres': 'jose antonio' , 'cedula' : '0987659624' , 'genero' : 'masculino'})
 	    .end(function(err, res){
 	      res.should.have.status(200);
 	      res.should.be.json;
