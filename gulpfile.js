@@ -79,7 +79,7 @@ gulp.task('set-prod-node-env', function(){
 
 //TASK DE MOCHA
 gulp.task('mocha', function(){
-	gulp.src('./test/etapa/etapa.test.js', {read: false})
+	gulp.src('./test/procarianos/procariano-test.js', {read: false})
 		.pipe(mocha())
 });
 

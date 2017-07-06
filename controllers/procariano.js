@@ -19,8 +19,8 @@ Por: JV , agregados campos convencional y fecha date
 const crearProcariano = (req, res, next) => {
 	//formato fechas : YYYY-MM-DD
 
-	console.log('REQ.BODY: ');
-	console.log(req.body);
+	//console.log('REQ.BODY: ');
+	//console.log(req.body);
 
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
