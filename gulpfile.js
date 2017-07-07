@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var browserSync = require('browser-sync').create();
@@ -6,10 +8,20 @@ var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 const mocha = require('gulp-mocha');
 
+//CORRER LA APLICACIÓN PARA DEVELOPMENT
 gulp.task('default', function(){
 		//Por default, el environment será el de development
 		runSequence('set-dev-node-env', 'browser-sync');
+});
 
+//CORRER LA APLICACIÓN PARA TESTING
+gulp.task('build-test', function(){
+	runSequence('set-test-node-env', 'browser-sync');
+});
+
+//CORRER LA APLICACIÓN PARA PRODUCCIÓN
+gulp.task('build-prod', function(){
+	runSequence('set-prod-node-env', 'browser-sync');
 });
 
 //TASKS INICIALIZACIONES
@@ -23,7 +35,6 @@ gulp.task('browser-sync', ['nodemon'], function(){
 });
 gulp.task('nodemon', function(cb){
 	var started = false;
-
 	return nodemon({
 		script: './bin/www'
 	})
@@ -32,7 +43,7 @@ gulp.task('nodemon', function(cb){
 			cb();
 			started = true;
 		}
-	})
+	});
 });
 
 //TASKS CONVERSIONES DE ES6
@@ -47,14 +58,11 @@ gulp.task('babel', function(){
 });
 gulp.task('vueify', function(){
 	console.log('Importando los módulos con Vueify');
-	var src = './public/dist/**/*.js'
-	var build = './public/build/'
+	var src = './public/dist/**/*.js';
+	var build = './public/build/';
 	gulp.src(src, { read: false })
 			.pipe(browserify({
-				//debug: false,
 				transform: ['vueify'], //anterior
-				//transform: [babelify, [{_flags: {debug: true}}, vueify]], internte
-				//transform: [{_flags: {debug: false}}, 'vueify'], //mia
 			}))
 			.pipe(gulp.dest(build));
 });
@@ -79,8 +87,8 @@ gulp.task('set-prod-node-env', function(){
 
 //TASK DE MOCHA
 gulp.task('mocha', function(){
-	gulp.src('./test/procarianos/procariano-test.js', {read: false})
-		.pipe(mocha())
+	gulp.src('./test/**/*.js', {read: false})
+		.pipe(mocha());
 });
 
 //SCRIPT PARA CORRER TESTS
@@ -88,12 +96,3 @@ gulp.task('test', function(){
 	runSequence('set-test-node-env', 'mocha');
 });
 
-//TESTING
-gulp.task('build-test', function(){
-	runSequence('set-test-node-env', 'browser-sync');
-});
-
-//PRODUCTION
-gulp.task('build-prod', function(){
-	runSequence('set-prod-node-env', 'browser-sync');
-});

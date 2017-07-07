@@ -160,20 +160,10 @@
 		},
 		mounted(){
 			$('.modal').modal();
-
-			/*//Vincular la fecha
-			let input = $('#fechaNacimiento').pickadate();
-			let picker = input.pickadate('picker');
-			picker.set('select', new Date(this.procariano.fechaNacimiento));*/
-			/*
-			console.log(this.procariano);
-			let fecha = new Date(this.procariano.fechaNacimiento);
-			console.log(fecha);
-			$('#fechaNacimiento').val(fecha);*/
 			$('#fechaNacimiento').change(function(){
 				console.log('Holaaaa');
 				console.log($('#fechaNacimiento').val());
-			})
+			});
 		},
 		methods: {
 			cancelarEdicion(){
