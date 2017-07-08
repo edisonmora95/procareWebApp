@@ -12,7 +12,11 @@ const crearEvento = (req, res, next) => {
   estado = 'activo';
 
   modelo.Evento.create({
+<<<<<<< HEAD
     id_organizador : req.body.id_organiador,
+=======
+    idOrganizador : req.body.id_organiador,
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -45,9 +49,16 @@ const crearEvento = (req, res, next) => {
 const eliminarEvento = (req, res, next) => {
    estado = 'inactivo';
    modelo.Evento.update({
+<<<<<<< HEAD
     {
       estado: req.body.estado
     }
+=======
+    
+    estado : estado
+
+  },{
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     where:{
       id: req.params.id
     }
@@ -73,7 +84,11 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
+<<<<<<< HEAD
      id_organizador : req.body.id_organiador,
+=======
+     idOrganizador : req.body.id_organiador,
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -107,6 +122,7 @@ const editarEvento = (req, res, next) => {
   });
 }
 
+<<<<<<< HEAD
 const mostrarEvento = (req,res,next) =>{
   modelo.Evento.findAll({
 
@@ -122,6 +138,45 @@ const mostrarEvento = (req,res,next) =>{
   }).catch( error => {
     var status = false;
     var mensaje = 'no se pudo eliminar'
+=======
+const mostrarEventos = (req,res,next) =>{
+  modelo.Evento.findAll({
+    include: [{
+      model: modelo.Persona
+    }],
+    where : {
+      estado : "activo"
+    }
+
+  }).then( respuesta => {
+    var status = true;
+    var mensaje = 'se pueden mostrar correctamente'
+    const respuesta2 = respuesta.map( evento => {
+
+      return Object.assign(
+        {},
+        {
+          id : evento.id,
+          idUser : evento.Persona.id,
+          title : evento.titulo,
+          user :evento.Persona.nombres + " " + evento.Persona.apellidos ,
+          start : evento.fecha ,
+          description : evento.descripcion, 
+          type : "evento"
+        });
+    });
+     return res.json({
+      status : true,
+      mensaje : mensaje,
+      sequelizeStatus : respuesta2
+    })
+
+
+
+  }).catch( error => {
+    var status = false;
+    var mensaje = 'no se puede mostrar'
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     var jsonRespuesta = {
       status : status,
       mensaje : mensaje,
@@ -135,5 +190,9 @@ module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
+<<<<<<< HEAD
   mostrarEvento
+=======
+  mostrarEventos
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 }

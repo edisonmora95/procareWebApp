@@ -158,6 +158,10 @@ const mostrarTareaPorUsuario = (req, res, next) =>{
           start : tarea.fecha_publicacion ,
           end : tarea.fecha_limite ,
           description : tarea.descripcion, 
+<<<<<<< HEAD
+=======
+          type : "tarea"
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
         });
     });
     return res.json({
@@ -199,6 +203,10 @@ const mostrarTareas = (req, res, next) =>{
           start : tarea.fecha_publicacion ,
           end : tarea.fecha_limite ,
           description : tarea.descripcion, 
+<<<<<<< HEAD
+=======
+          type : "tarea"
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
         });
     });
     return res.json({

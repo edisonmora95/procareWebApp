@@ -172,6 +172,7 @@
 			$('.modal').modal();
 
 
+
 			/*//Vincular la fecha
 			let input = $('#fechaNacimiento').pickadate();
 			let picker = input.pickadate('picker');
@@ -185,6 +186,12 @@
 				console.log('Holaaaa');
 				console.log($('#fechaNacimiento').val());
 			})
+
+
+			$('#fechaNacimiento').change(function(){
+				console.log('Holaaaa');
+				console.log($('#fechaNacimiento').val());
+			});
 
 		},
 		methods: {

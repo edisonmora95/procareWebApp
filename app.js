@@ -29,7 +29,11 @@ let apiEtapa = require('./routes/api/etapa.api.router');
 
 let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
+<<<<<<< HEAD
 
+=======
+let apiEventos = require('./routes/api/evento.api.router.js');
+>>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 var app = express();
 
 
@@ -74,6 +78,9 @@ app.use('/', login);
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
+app.use('/api/login',apiLogin);
+app.use('/api/tarea',apiTareas);
+app.use('/api/evento', apiEventos);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);

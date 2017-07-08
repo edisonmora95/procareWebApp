@@ -22,7 +22,6 @@ var appLogin = new Vue({
 				type : 'POST',
 				data : obj,
 				success(res){
-<<<<<<< HEAD
 
 					console.log(res);
 					if(res.status){
@@ -33,9 +32,12 @@ var appLogin = new Vue({
 						console.log(self.fallaLogin);
 
 					//console.log(res);
-=======
+
 					console.log(res);
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+
+
+					console.log(res);
+
 					if(res.status){
 						window.location.href = '/home';
 					}

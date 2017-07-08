@@ -10,17 +10,25 @@ var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Evento = sequelize.define('Evento', {
+<<<<<<< HEAD
     id_organizador: {
       type : DataTypes.INTEGER,
       unique : true,
       allowNull : false
     },
+
+
+
     nombre: {
       type : DataTypes.STRING,
       allowNull : false
     },
     fecha: {
+
       type : DataTypes.DATEONLY
+
+      type : DataTypes.DATE
+
     },
     descripcion : {
       type : DataTypes.TEXT
@@ -39,6 +47,7 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : false
 		}
+
   }, {
 
       type : DataTypes.STRING(1),
@@ -48,6 +57,12 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
 			associate: function(models) {
         Evento.belongsTo(models.Persona)
+
+  },{
+    classMethods: {
+			associate: function(models) {
+        Evento.belongsTo(models.Persona, {foreignKey: 'idOrganizador'})
+
         // associations can be defined here
       }
     }

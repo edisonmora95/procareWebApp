@@ -4,6 +4,8 @@
 	@FechaCreación: 31/04/2017
 */
 
+'use strict';
+
 import Navbar from './../../components/navbar.vue';
 Vue.component('navbar', Navbar); 
 
@@ -83,7 +85,7 @@ var main = new Vue({
 				value: 'Grupo',
 				id: 'grupo'
 			}
-<<<<<<< HEAD
+
 		],
 		checkboxes: ['Nombre'],
 		/*procarianos: [
@@ -126,10 +128,10 @@ var main = new Vue({
 				grupo: ''
 			}
 		],*/
-=======
+
 		],		//Campos que el usuario puede seleccionar para realizar la búsqueda
 		checkboxes: ['Nombre'],		//Campo por default que se encuentra en la búsqueda
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
 		procariano: {
 			nombres: '',
 			apellidos: '',
@@ -148,61 +150,64 @@ var main = new Vue({
 			fechaOrdenacion: '',
 			estado: '',
 			grupo: ''
-<<<<<<< HEAD
+
 		},
 		procarianos: [],
 		resultados: [],
-=======
+
 		},												//Objeto que va a almacenar al procariano a buscar
 		procarianos: [],					//Array en el que se almacenarán los resultados de la búsqueda
+
 		//resultados: [],
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
+
+
 		usuario: 'personal'
 	},
 	methods: {
+		/*
+			@Descripción: Función utilizada para mostrar los campos de búsqueda según los campos que se encuentran en el array checkboxes
+			@Autor: @edisonmora95
+			@FechaCreacion: 20-05-2017
+		*/
 		checkArray: function(nombre){
-			/*
-				@Descripción: Función utilizada para mostrar los campos de búsqueda según los campos que se encuentran en el array checkboxes
-				@Autor: @edisonmora95
-				@FechaCreacion: 20-05-2017
-			*/
 			var self = this;
-			var flag = false;
+			var variableEnCheckboxes = false;
 			$.each(self.checkboxes, function(index, element){
-				if(element==nombre){
-					flag = true;
+				if(element===nombre){
+					variableEnCheckboxes = true;
 				}
 			});
-			return flag;
+			return variableEnCheckboxes;
 		},
 		buscar: function(){
 			var self = this;
-<<<<<<< HEAD
+
 			self.procarianos = [];
 			console.log(self.procariano);
 			console.log('Mira Erick que no se recarga la página.')
-=======
+
 			self.procarianos = [];		//Primero se vacía el array de resultados
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
 			var urlApi = '/api/procarianos/';
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				data: self.procariano,
 				success: function(res){
-<<<<<<< HEAD
+
 					console.log(res);
-=======
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
+
 					$.each(res, function(index, procarianoEncontrado){
 						self.procarianos.push(procarianoEncontrado);
 					});
 				}
-			})
+			});
 			
 		},
 		irAPerfil(procariano){
-<<<<<<< HEAD
+
 			let urlApi = '/procarianos/perfil/' + procariano.cedula;
 			/*$.ajax({
 				type: 'GET',
@@ -211,7 +216,7 @@ var main = new Vue({
 			})*/
 			window.location.href = '/procarianos/perfil/' + procariano.personaId;
 		}
-=======
+
 			window.location.href = '/procarianos/perfil/' + procariano.personaId;
 		},
 		//Funciones para editar la forma en la que se muestra la fecha
@@ -220,11 +225,11 @@ var main = new Vue({
     },
     date: function (date) {
       var es = moment().locale('es');
-      if (date == undefined || date == '') {
-        return '----'
+      if (date === undefined || date === '') {
+        return '----';
       }
       return moment(date).format('DD MMMM YYYY');
     }
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
 	}
 });

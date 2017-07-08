@@ -4,6 +4,8 @@
 	@FechaCreación: 31/04/2017
 */
 
+'use strict';
+
 import Navbar from './../../components/navbar.vue';
 import FormProcariano from './../../components/formProcariano.vue';
 Vue.component('navbar', Navbar); 
@@ -73,8 +75,8 @@ var app = new Vue({
     },
     date(date) {
       var es = moment().locale('es');
-      if (date == undefined || date == '') {
-        return '----'
+      if (date === undefined || date === '') {
+        return '----';
       }
       return moment(date).format('DD MMMM YYYY');
 >>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
@@ -90,7 +92,7 @@ var app = new Vue({
 				success: function(res){
 					self.procariano = res[0];
 				}
-			})
+			});
 		},
 		eliminar: function(){
 <<<<<<< HEAD

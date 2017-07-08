@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-benefactor
-=======
+ 
 /*
 @Descripcion: Modelo de procariano
 @Autor: jose viteri
@@ -59,5 +57,8 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   return Benefactor;
+ 
 };
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+ 
+};
+ 
