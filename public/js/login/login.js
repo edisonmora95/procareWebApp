@@ -24,16 +24,17 @@ var appLogin = new Vue({
 				success(res){
 					console.log(res);
 					if(res.status){
-						window.location.href = '/';
+						window.location.href = '/home';
 					}
 					else{
 						self.fallaLogin = true;
-						console.log(self.fallaLogin);
+						//console.log(self.fallaLogin);
 					}
+					
 				},
 				error(res){
 					self.fallaLogin = true;
-					console.log(self.fallaLogin);
+					//console.log(self.fallaLogin);
 				}
 			});
 			

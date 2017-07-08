@@ -1,3 +1,11 @@
+/*
+@Descripcion: Clase controladora de todos los procarianos
+@Autor: Jose Viteri
+@FechaCreacion: 26/06/2017
+@UltimaFechaModificacion: 07/06/2017 @JoseViteri (cambios detallados abajo)
+*/
+
+
 var modelo = require('../models');
 var utils = require('../utils/utils')
 
@@ -7,13 +15,12 @@ Autor : JV
 Creado : 26/06/2017
 Modificado: 07/07/2017
 Por: JV , agregados campos convencional y fecha date
-
 */
 const crearProcariano = (req, res, next) => {
 	//formato fechas : YYYY-MM-DD
 
-	console.log('REQ.BODY: ');
-	console.log(req.body);
+	//console.log('REQ.BODY: ');
+	//console.log(req.body);
 
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
