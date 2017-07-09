@@ -20,10 +20,13 @@ var app = new Vue({
 		//Inicializadores de Materialize
 		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
+		//this.procariano.fechaNacimiento = new Date(this.procariano.fechaNacimiento)
+		
 	},
 	data: {
 		id: 0,
 		procariano: {},
+		fechaNacimiento: '',
 		habilitaredicion: false
 	},
 	methods: {
@@ -48,6 +51,8 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					self.procariano = res[0];
+					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
+					console.log(self.fechaNacimiento)
 				}
 			});
 		},

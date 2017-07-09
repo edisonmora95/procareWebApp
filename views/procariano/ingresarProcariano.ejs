@@ -18,7 +18,6 @@
 			</header>
 			<!--<button @click="llenarBaseDeDatos">Llenar base</button>-->
 			<main class="container">
-			{{procariano}}
 				<div class="row" id="row-form">
 					<h2 class="center-align titulo">Ingresar procariano</h2>
 					<form class="col s12" @submit.prevent="validateBeforeSubmit">
@@ -65,7 +64,7 @@
 						<!--Row celular y convencional-->
 						<div class="row row-celular-convencional">
 							<div class="input-field col s6">
-								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'digits:11|numeric'">
+								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 								<label for="celular">Celular</label>
 							</div>
@@ -84,7 +83,6 @@
 									<option value="femenino">Femenino</option>
 								</v-select>
 								<label for="selectGenero">Género</label>
-								{{procariano.genero}}
 							</div>
 							<div class="input-field col s6">
 								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="">
@@ -96,7 +94,6 @@
 									<option value="5">Sacerdote</option>
 								</v-select>
 								<label for="selectTipo">Tipo</label>
-								{{procariano.tipo}}
 							</div>
 						</div>
 						<!--Chico formacion-->

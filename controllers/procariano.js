@@ -18,33 +18,26 @@ Por: JV , agregados campos convencional y fecha date
 */
 const crearProcariano = (req, res, next) => {
 	//formato fechas : YYYY-MM-DD
-
-	//console.log('REQ.BODY: ');
-	//console.log(req.body);
-
+	//Atributos de Persona
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
 	apellidos = req.body.apellidos;
 	direccion = req.body.direccion;
 	fechaNacimiento = new Date(req.body.fechaNacimiento);
+	genero = req.body.genero;
 	contrasenna = req.body.contrasenna;
-	
 	email =  req.body.email;
+	convencional = req.body.convencional;
 	celular = req.body.celular;
 	trabajo = req.body.trabajo;
-	convencional = req.body.convencional;
-	genero = req.body.genero;
 
-
-
+	//Atributos de Procariano	
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	
+	fechaOrdenacion = new Date(req.body.fechaOrdenacion);
 	estado = 'activo';
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
-
-
 
 	modelo.Persona.create({
 		cedula : cedula,
@@ -58,15 +51,13 @@ const crearProcariano = (req, res, next) => {
 		celular : celular,
 		trabajo : trabajo,
 		convencional : convencional
-
-
 	}).then( persona => {
 		modelo.Procariano.create({
 			PersonaId : persona.get('id'),
 			colegio : colegio,
 			universidad : universidad,
 			parroquia : parroquia,
-			//fechaOrdenacion : fechaOrdenacion,
+			fechaOrdenacion : fechaOrdenacion,
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
@@ -128,7 +119,7 @@ const buscarProcariano = (req, res , next) => {
 					colegio : procariano.colegio ,
 					universidad : procariano.universidad ,
 					parroquia : procariano.parroquia ,
-					fechaOrdenacion : procariano.fecha_ordenacion ,
+					fechaOrdenacion : procariano.fechaOrdenacion ,
 					haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
 					cedula : procariano.Persona.cedula ,
 					nombres : procariano.Persona.nombres ,
@@ -208,8 +199,6 @@ por : JV , agregado date a datos date
 */
 
 const editarProcariano = (req, res, next) => {
-	console.log('REQ.BODY')
-	console.log(req.body)
 	var id = req.body.id;
 	modelo.Persona.update({
 		cedula : req.body.cedula,
@@ -221,8 +210,8 @@ const editarProcariano = (req, res, next) => {
 		email :  req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
-		convencional : req.body.convencional
-	  
+		convencional : req.body.convencional,
+	  fechaOrdenacion : new Date(req.body.fechaOrdenacion),
 	}, {
 	  where: {
 	    id : id
@@ -232,7 +221,7 @@ const editarProcariano = (req, res, next) => {
 			colegio : req.body.colegio,
 			universidad : req.body.universidad,
 			parroquia : req.body.parroquia,
-			//fechaOrdenacion : new Date(req.body.fechaOrdenacion),
+			fechaOrdenacion : fechaOrdenacion,
 			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
 		}, { 
 			where : {
