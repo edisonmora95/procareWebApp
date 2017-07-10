@@ -1,0 +1,11 @@
+{
+	"undef": true,
+	"curly": true,
+	"eqeqeq": true,
+	"node": true,
+	"globals": {
+		"Vue": true,
+		"$": true,
+		"devel": true
+	}
+}

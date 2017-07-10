@@ -1,3 +1,11 @@
+/*
+@Descripcion: Api del procariano
+@Autor: jose viteri
+@FechaCreacion: 25/05/2017
+@UltimaFechaModificacion: 05/06/2017 @EdisonMora (se lo puso bonito)
+*/
+
+
 /* jshint node: true */
 'use strict';
 
