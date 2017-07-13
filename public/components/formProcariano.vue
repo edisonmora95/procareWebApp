@@ -39,12 +39,12 @@
 			</v-row>
 			<v-row>
 				<div class="col s6 input-field">
-					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'required|numeric'">
+					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 					<label for="celular" class="active">Celular</label>
 				</div>
 				<div class="col s6 input-field">
-					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'required|numeric'">
+					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
 					<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
@@ -166,27 +166,56 @@
 			},
 			aceptarEdicion(){
 				var self = this;
-				//Verifica las validaciones de los campos.
-	      this.$validator.validateAll().then(() => {
-	        // eslint-disable-next-line
-	        self.flag = false;
-	      	self.procariano.id = self.procarianoId;
-	      	var urlApi = '/api/procarianos/' + self.procarianoId;
-	      	$.ajax({
-	      		type: 'PUT',
-	      		data: self.procariano,
-	      		url: urlApi,
-	      		success: function(res){
-	      			location.reload();
-	      		} 
-	      	});
-	      }).catch(() => {
-          // eslint-disable-next-line
-          self.errorObj.campo = self.errors.errors[0].field;
-          self.errorObj.msj = self.errors.errors[0].msg;
-          $('#modalError').modal('open');
-	      });
-			}
+				if(self.validarFechaNacimiento()){
+		      this.$validator.validateAll().then(() => {
+		        self.editarProcariano();
+		      }).catch(() => {
+	          self.abrirModalError(self.errors.errors[0].field, self.errors.errors[0].msg);
+		      });
+				}
+			},
+			editarProcariano(){
+				let self = this;
+				var path = window.location.pathname;
+				let id = path.split('/')[3];
+				self.flag = false;
+      	//self.procariano.id = self.procarianoId;
+      	var urlApi = '/api/procarianos/' + id;
+      	$.ajax({
+      		type: 'PUT',
+      		data: self.procariano,
+      		url: urlApi,
+      		success: function(res){
+      			location.reload();
+      		} 
+      	});
+			},
+			bindFechaNacimiento(){
+				let self = this;
+				let year = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let month = $('#fechaNacimiento').pickadate('picker').get('highlight', 'mm');
+				let day = $('#fechaNacimiento').pickadate('picker').get('highlight', 'dd');
+				if(self.validarFechaNacimiento()){
+					let fechaSeleccionada = year + '/' + month + '/' + day;
+					self.procariano.fechaNacimiento = fechaSeleccionada;				
+				}
+			},
+			validarFechaNacimiento(){
+	    	let self = this;
+	    	let yearSelected = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let actualYear = new Date().getFullYear();
+				let diferencia = actualYear - yearSelected;
+				if(diferencia < 11){
+					self.abrirModalError('Fecha de nacimiento', 'No puede ingresar a alguien con menos de 11 años.');
+					return false;
+				}
+				return true;
+	    },
+	    abrirModalError(campo, mensaje){
+	    	self.errorObj.campo = campo;
+        self.errorObj.msj = mensaje;
+        $('#modalError').modal('open');
+	    }
 		}
 	}
 </script>

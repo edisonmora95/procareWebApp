@@ -23,17 +23,12 @@ const crearProcariano = (req, res, next) => {
 	estado = false
 	haceParticipacionEstudiantil = true
 	*/
-
-	console.log('REQ.BODY: ');
-	console.log(req.body);
-
 	cedula = req.body.cedula;
 	nombres = req.body.nombres;
 	apellidos = req.body.apellidos;
 	direccion = req.body.direccion;
 	fechaNacimiento = new Date(req.body.fechaNacimiento);
 	contrasenna = req.body.contrasenna;
-	
 	email =  req.body.email;
 	celular = req.body.celular;
 	trabajo = req.body.trabajo;
@@ -45,19 +40,13 @@ const crearProcariano = (req, res, next) => {
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	/*if(req.body.fechaOrdenacion != ''){
-		console.log('La fecha de ordenación NO está vacía!');
-		fechaOrdenacion = new Date(req.body.fechaOrdenacion);
+	if(req.body.fechaOrdenacion == ''){
+		fechaOrdenacion = null;
 	}else{
-		console.log('LA FECHA DE ORDENACIÓN ESTÁ VACÍA!')
-		//fechaOrdenacion = '';		
-	}*/
-	//fechaOrdenacion = new Date(req.body.fechaOrdenacion);
-	
-	estado = req.body.estado;
+		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+	}
+	estado = 'activo';
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
-
-
 
 	modelo.Persona.create({
 		cedula : cedula,
@@ -209,9 +198,12 @@ const buscarProcarianoPorId = (req, res, next) => {
 };
 
 const editarProcariano = (req, res, next) => {
-	console.log('REQ.BODY')
-	console.log(req.body)
-	var id = req.body.id;
+	var id = req.params.id;
+	if(req.body.fechaOrdenacion == '' || req.body.fechaOrdenacion == null){
+		fechaDeOrdenacion = null;
+	}else{
+		fechaDeOrdenacion = new Date(req.body.fechaOrdenacion);	
+	}
 	modelo.Persona.update({
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -222,8 +214,7 @@ const editarProcariano = (req, res, next) => {
 		email :  req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
-		convencional : req.body.convencional
-	  
+		convencional : req.body.convencional,
 	}, {
 	  where: {
 	    id : id
@@ -233,7 +224,7 @@ const editarProcariano = (req, res, next) => {
 			colegio : req.body.colegio,
 			universidad : req.body.universidad,
 			parroquia : req.body.parroquia,
-			//fechaOrdenacion : new Date(req.body.fechaOrdenacion),
+			fechaOrdenacion : fechaDeOrdenacion,
 			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
 		}, { 
 			where : {
@@ -250,7 +241,7 @@ const editarProcariano = (req, res, next) => {
 			res.json(jsonRespuesta)
 		}).catch( err2 => {
 			var status = false;
-			var mensaje = 'no se pudo actualizar'
+			var mensaje = 'no se pudo actualizar 2'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
@@ -261,7 +252,7 @@ const editarProcariano = (req, res, next) => {
 
 	}).catch( err => {
 			var status = false;
-			var mensaje = 'no se pudo actualizar'
+			var mensaje = 'no se pudo actualizar 1'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
