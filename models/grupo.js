@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     },
     tipo : {
-      type : DataTypes.BOOLEAN,
+      type : DataTypes.STRING,
       allowNull : false
     },
     cantidadChicos : {
