@@ -16,6 +16,7 @@ const crearTarea = (req, res, next) => {
     nombre : req.body.nombre,
     fecha_publicacion : new Date(req.body.fechaPublicacion),
     fecha_limite : new Date(req.body.fechaLimite),
+
     prioridad : req.body.prioridad,
     estado: req.body.estado,
     descripcion : req.body.descripcion,

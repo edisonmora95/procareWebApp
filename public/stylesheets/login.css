@@ -104,10 +104,10 @@ h1 {
 }
 
 .alert {
-  display: none;
   font-size: 12px;
   color: #f00;
   float: left;
+  margin-bottom: 5%;
 }
 
 @-moz-keyframes wrong-log {

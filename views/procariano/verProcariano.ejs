@@ -28,7 +28,7 @@
 									</div>
 									<p class="center-align">Estado: {{procariano.estado}}</p>
 								</div>-->
-								<p class="center-align">Estado: {{procariano.estado}}</p>
+								<p class="center-align"><span class="tag">Estado: </span>{{procariano.estado}}</p>
 								<!--Nombres-->
 								<div class="row rowVer" id="rowVerNombres">
 									<div class="col s6" id="verNombre">
@@ -48,7 +48,7 @@
 									</div>
 									<div class="col s6" id="verFecha">
 										<label>Fecha de nacimiento</label>
-										<p>{{date(procariano.fechaNacimiento)}}</p>
+										<p>{{date(fechaNacimiento)}}</p>
 									</div>
 								</div>
 								<!--Direccion-email-->
@@ -148,6 +148,7 @@
 			<script src='https://unpkg.com/vue@2.3.3'></script>
 			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/scripts/moment/moment.js"></script>
+			<script src="/scripts/moment/locale/es.js"></script>
 			<script src="/build/procariano/verProcarianoScript.js"></script>
 		</div>
 	</body>

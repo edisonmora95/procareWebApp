@@ -62,7 +62,7 @@ let indexApp = new Vue({
 				success(res){
 					console.log(res)
 				}
-			})
+			});
 			/*$.getJSON('/api/tarea/', function(data){
 				console.log(data)
 				self.eventos = data.sequelizeStatus;

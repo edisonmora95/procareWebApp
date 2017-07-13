@@ -20,7 +20,8 @@
 					<label for="cedula" class="active">Cédula</label>
 				</div>
 				<div class="col s6 input-field">
-					<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="procariano.fechaNacimiento" v-validate="'required'"></v-date-input>
+					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
+					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
@@ -49,7 +50,7 @@
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
 			</v-row>
-			<v-row>
+			<!--<v-row>
 				<div class="col s6 input-field">
 					<v-select name="tipo" id="tipo" v-model="procariano.tipo">
 						<option value="Chico de Formación">Chico de Formación</option>
@@ -64,7 +65,7 @@
 					<v-select name="grupo" id="grupo" v-model="procariano.grupo"></v-select>
 					<label class="active">Grupo</label>
 				</div>
-			</v-row>
+			</v-row>-->
 			<v-row>
 				<div class="col s6 input-field">
 					<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
@@ -109,7 +110,7 @@
 		@Autor: @edisonmora95
 		@FechaCreación: /-06-2017
 	*/
-	'use strict';
+	'use strict'; 
 
 	import Materials from 'vue-materials';
 	//import VeeValidate from 'vee-validate';
@@ -158,9 +159,24 @@
 			}
 		},
 		mounted(){
-			$('.modal').modal();
+			let self = this;
+			self.inicializarMaterialize();
 		},
 		methods: {
+			inicializarMaterialize(){
+				let self = this;
+				$('.modal').modal();
+				$('.datepicker').pickadate({
+					selectMonths: true, // Creates a dropdown to control month
+					selectYears: 100 // Creates a dropdown of 15 years to control year
+				});
+				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
+				let picker = datePickerFechaNacimiento.pickadate('picker');
+				picker.set('select', self.procariano.fechaNacimiento, { format: 'yyyy-mm-dd'});
+				$('#fechaNacimiento').change(function(){
+					self.bindFechaNacimiento();
+				});
+			},
 			cancelarEdicion(){
 				location.reload();
 			},
