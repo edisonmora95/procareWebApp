@@ -23,13 +23,15 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     name : {
-      singular: 'grupo',
-      plural: 'grupos',
+      singular: 'Grupo',
+      plural: 'Grupos',
       tableName: 'grupos'
     },
     classMethods : {
       associate : function(models) {
         Grupo.hasOne(models.Animador)
+        Grupo.hasMany(models.Reunion, {as : 'Reuniones'})
+        Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'});
       }
     }
   });

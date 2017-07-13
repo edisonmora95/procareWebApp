@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS procare_db;
-USE procare_db;
+CREATE DATABASE IF NOT EXISTS procare_db2;
+USE procare_db2;
 
 CREATE TABLE IF NOT EXISTS benefactor (
 	id_benefactor INT(10) AUTO_INCREMENT NOT NULL UNIQUE,
