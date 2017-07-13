@@ -3,23 +3,26 @@
 		<a href="#" @click="regresar"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
 		<form>
 	  	<v-row>
-	  		<div class="col s6">
+	  		<div class="col s12">
 	  			<label for="nombre">Nombre</label>	
 	  			<v-text-input name="nombre" id="nombre" v-model="tareaNueva.nombre"></v-text-input>
-	  			
-	  		</div>
-	  		
-	  	</v-row>
-	  	<v-row>
-	  		<div class="col s6">
-	  			<label for="fechaLimite">Fecha de realización</label>
-		      <v-date-input id="fechaLimite" name="fechaLimite"></v-date-input>	
 	  		</div>
 	  	</v-row>
 	  	<v-row>
 	  		<div class="col s12">
 	  			<label for="descripcion">Descripción</label>
 		  		<v-text-area name="descripcion" id="descripcion" v-model="tareaNueva.descripcion"></v-text-area>	
+	  		</div>
+	  	</v-row>
+	  	<v-row>
+	  		<div class="col s6">
+	  			<label for="fechaInicio">Fecha de inicio</label>
+		      <v-date-input id="fechaInicio" name="fechaInicio"></v-date-input>	
+	  		</div>
+	  		<div class="col s6">
+	  			<label for="fechaFin">Fecha de fin</label>
+	  			<input class="c-datepicker-input" />
+		      <!--<v-date-input id="fechaFin" name="fechaFin"></v-date-input>	-->
 	  		</div>
 	  	</v-row>
 	  	<v-row>
@@ -98,6 +101,7 @@
 </style>
 <script>
 	import Materials from 'vue-materials';
+	import MaterialDateTimePicker from 'material-datetime-picker';
 	Vue.use(Materials);
 
 	module.exports = {
@@ -106,7 +110,8 @@
 			
 		},
 		mounted(){
-			$('.modal').modal();
+			this.inicializarMaterialize();
+        
 		},
 		data(){
 			return{
@@ -115,7 +120,8 @@
 					nombre: '',
 					descripcion: '',
 					fechaPublicacion: '',
-					fechaLimite: '',
+					fechaInicio: '',
+					fechaFin: '',
 					prioridad: '',
 					estado: '1',
 					categoria: '',
@@ -166,6 +172,17 @@
 			}
 		},
 		methods: {
+			inicializarMaterialize(){
+				$('.modal').modal();
+				const input = document.querySelector('.c-datepicker-input');
+				const picker = new MaterialDateTimePicker()
+				    .on('submit', (val) => {
+				      input.value = val.format("DD/MM/YYYY");
+				    });
+
+				input.addEventListener('focus', () => picker.open());      
+			  
+			},
 			regresar(){
 				this.limpiarTareaNueva();
 				this.$emit('flagchanged', true);	
@@ -188,7 +205,11 @@
 				let self = this;
 				self.bindFechaPublicacion();
 				self.obtenerIdProcarianoResponsable();
-				if(self.bindFechaLimite()){
+				
+				let bindFechaInicio = self.bindFecha('#fechaInicio', self.tareaNueva.fechaInicio);
+				let bindFechaFin = self.bindFecha('#fechaFin', self.tareaNueva.fechaFin);
+				
+				if(bindFechaInicio&&bindFechaFin){
 					self.llamadaApi(self.tareaNueva);
 				}else{
 					$('#modalFechaIncorrecta').modal('open');
@@ -196,6 +217,7 @@
 				
 			},
 			llamadaApi(tareaNueva){
+				console.log(tareaNueva)
 				let urlApi = '/api/tarea/nuevo';
 				$.ajax({
 					type: 'POST',
@@ -223,21 +245,21 @@
 				self.responsable = '';
 			},
 			/*
-				@Descripción: Vincula el valor de la fecha límite seleccionada con el valor de fecha de self.tareaNueva
+				@Descripción: Vincula la fecha indicada en el atributo indicado
 				@Return:
-					true si se pudo vincular correctamente
-					false si no se pudo vincular porque la fecha fue incorrecta
+					true -> Si se pudo vincular correctamente
+					flase -> Si no se pudo vincular porque la fecha fue incorrecta
 			*/
-			bindFechaLimite(){
+			bindFecha(idDatePicker, atributoAVincular){
 				let self = this;
-				let year = $('#fechaLimite').pickadate('picker').get('highlight', 'yyyy');
-				let month = $('#fechaLimite').pickadate('picker').get('highlight', 'mm');
-				let day = $('#fechaLimite').pickadate('picker').get('highlight', 'dd');
+				let year = $(idDatePicker).pickadate('picker').get('highlight', 'yyyy');
+				let month = $(idDatePicker).pickadate('picker').get('highlight', 'mm');
+				let day = $(idDatePicker).pickadate('picker').get('highlight', 'dd');
 				if(self.validarFecha(year)){
-					self.tareaNueva.fechaLimite = year + '/' + month + '/' + day;
+					atributoAVincular = year + '/' + month + '/' + day;
 					return true;
 				}else{
-					//TODO
+					//Fecha no válida
 					return false;
 				}
 			},

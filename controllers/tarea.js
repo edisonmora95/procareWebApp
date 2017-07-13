@@ -8,15 +8,32 @@
 var modelo = require('../models');
 
 const crearTarea = (req, res, next) => {
-
-  estado = 'activo';
+  //Validar fecha de inicio
+  if(req.body.fechaInicio === ''){
+    let fechaInicio = null;
+  }else{
+    let fechaInicio = new Date(req.body.fechaInicio)
+  }
+  //Validar fecha de fin
+  if(req.body.fechaFin === ''){
+    let fechaFin = null;
+  }else{
+    let fechaFin = new Date(req.body.fechaFin)
+  }
+  //Validar fecha de publicacion
+  if(req.body.fechaPublicacion === ''){
+    let fechaPublicacion = null;
+  }else{
+    let fechaPublicacion = new Date(req.body.fechaPublicacion)
+  }
+  
 
   modelo.Tarea.create({
     idResponsable : req.body.responsable,
     nombre : req.body.nombre,
-    fecha_publicacion : new Date(req.body.fechaPublicacion),
-    fecha_limite : new Date(req.body.fechaLimite),
-
+    fechaPublicacion : fechaPublicacion,
+    fechaInicio : fechaInicio,
+    fechaFin : fechaFin,
     prioridad : req.body.prioridad,
     estado: req.body.estado,
     descripcion : req.body.descripcion,
