@@ -20,8 +20,8 @@
 					<label for="cedula" class="active">Cédula</label>
 				</div>
 				<div class="col s6 input-field">
-					<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="procariano.fechaNacimiento" v-validate="'required'"></v-date-input>
-					<!--<input type="date" class="" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">-->
+					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
+					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
@@ -110,7 +110,7 @@
 		@Autor: @edisonmora95
 		@FechaCreación: /-06-2017
 	*/
-	'use strict';
+	'use strict'; 
 
 	import Materials from 'vue-materials';
 	//import VeeValidate from 'vee-validate';
@@ -159,39 +159,77 @@
 			}
 		},
 		mounted(){
-			$('.modal').modal();
-			$('#fechaNacimiento').change(function(){
-				console.log('Holaaaa');
-				console.log($('#fechaNacimiento').val());
-			});
+			let self = this;
+			self.inicializarMaterialize();
 		},
 		methods: {
+			inicializarMaterialize(){
+				let self = this;
+				$('.modal').modal();
+				$('.datepicker').pickadate({
+					selectMonths: true, // Creates a dropdown to control month
+					selectYears: 100 // Creates a dropdown of 15 years to control year
+				});
+				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
+				let picker = datePickerFechaNacimiento.pickadate('picker');
+				picker.set('select', self.procariano.fechaNacimiento, { format: 'yyyy-mm-dd'});
+				$('#fechaNacimiento').change(function(){
+					self.bindFechaNacimiento();
+				});
+			},
 			cancelarEdicion(){
 				location.reload();
 			},
 			aceptarEdicion(){
 				var self = this;
-				//Verifica las validaciones de los campos.
-	      this.$validator.validateAll().then(() => {
-	        // eslint-disable-next-line
-	        self.flag = false;
-	      	self.procariano.id = self.procarianoId;
-	      	var urlApi = '/api/procarianos/' + self.procarianoId;
-	      	$.ajax({
-	      		type: 'PUT',
-	      		data: self.procariano,
-	      		url: urlApi,
-	      		success: function(res){
-	      			location.reload();
-	      		} 
-	      	});
-	      }).catch(() => {
-          // eslint-disable-next-line
-          self.errorObj.campo = self.errors.errors[0].field;
-          self.errorObj.msj = self.errors.errors[0].msg;
-          $('#modalError').modal('open');
-	      });
-			}
+				if(self.validarFechaNacimiento()){
+		      this.$validator.validateAll().then(() => {
+		        self.editarProcariano();
+		      }).catch(() => {
+	          self.abrirModalError(self.errors.errors[0].field, self.errors.errors[0].msg);
+		      });
+				}
+			},
+			editarProcariano(){
+				let self = this;
+				self.flag = false;
+      	self.procariano.id = self.procarianoId;
+      	var urlApi = '/api/procarianos/' + self.procarianoId;
+      	$.ajax({
+      		type: 'PUT',
+      		data: self.procariano,
+      		url: urlApi,
+      		success: function(res){
+      			location.reload();
+      		} 
+      	});
+			},
+			bindFechaNacimiento(){
+				let self = this;
+				let year = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let month = $('#fechaNacimiento').pickadate('picker').get('highlight', 'mm');
+				let day = $('#fechaNacimiento').pickadate('picker').get('highlight', 'dd');
+				if(self.validarFechaNacimiento()){
+					let fechaSeleccionada = year + '/' + month + '/' + day;
+					self.procariano.fechaNacimiento = fechaSeleccionada;				
+				}
+			},
+			validarFechaNacimiento(){
+	    	let self = this;
+	    	let yearSelected = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let actualYear = new Date().getFullYear();
+				let diferencia = actualYear - yearSelected;
+				if(diferencia < 11){
+					self.abrirModalError('Fecha de nacimiento', 'No puede ingresar a alguien con menos de 11 años.');
+					return false;
+				}
+				return true;
+	    },
+	    abrirModalError(campo, mensaje){
+	    	self.errorObj.campo = campo;
+        self.errorObj.msj = mensaje;
+        $('#modalError').modal('open');
+	    }
 		}
 	}
 </script>
