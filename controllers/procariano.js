@@ -61,23 +61,48 @@ const crearProcariano = (req, res, next) => {
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
-			var status = true;
-			var json1 = {
-				status : status,
-				mensaje : 'Se pudo crear correctamente',
-				//para motivos de debug
-				persona : persona,
-				procariano : procariano
-			};
 
-			res.json(json1);
+			if(req.body.grupo !== '' || req.body.grupo !== null){
+				modelo.ProcarianoGrupo.create({
+					GrupoId: req.body.grupo,
+					ProcarianoId: procariano.get('id'),
+					fechaInicio: procariano.get('createdAt')
+				}).then( procarianogrupo => {
+					var status = true;
+					var json1 = {
+						status : status,
+						mensaje : 'Se pudo crear correctamente',
+						persona : persona,
+						procariano : procariano,
+						procarianogrupo: procarianogrupo
+					};
+					res.json(json1);
+				}).catch( error3 => {
+					var json1 = {
+						status : false,
+						mensaje : 'No se pudo añadir al grupo',
+						error : error3
+						}
+					res.send(json1);
+				});
+			}else{
+				var status = true;
+				var json1 = {
+					status : status,
+					mensaje : 'Se pudo crear correctamente',
+					persona : persona,
+					procariano : procariano,
+				};
+				res.json(json1);
+			}
+			
 		}).catch( error2 => {
 			var json1 = {
-			status : false,
-			mensaje : 'No se pudo crear este procariano',
-			error : error2
-			}
-		res.send(json1);
+				status : false,
+				mensaje : 'No se pudo crear este procariano',
+				error : error2
+				}
+			res.send(json1);
 
 		});
 	}).catch( error => {

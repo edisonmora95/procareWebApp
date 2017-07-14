@@ -45,6 +45,9 @@ VeeValidate.Validator.updateDictionary(dictionary);
 
 var main = new Vue({
 	el: '#main',
+	created(){
+		this.obtenerTodosLosGrupos();
+	},
 	mounted: function(){
 		this.inicializarMaterialize();
 	},
@@ -54,7 +57,6 @@ var main = new Vue({
 			campo: '',
 			msj: ''
 		},
-		usuario: '',		//tipo de usuario conectado
 		procariano: {
 			nombres: '',
 			apellidos: '',
@@ -75,46 +77,11 @@ var main = new Vue({
 			fechaOrdenacion: ''
 		},
 		src: '',
-		gruposCaminantes: [
-			{
-				nombre: 'Grupo del Chino',
-				id: '7'
-			},
-			{
-				nombre: 'Grupo de Caminantes Viejos',
-				id: '8'
-			}
-		],
+		gruposCaminantes: [],
 		grupoCaminantesSel: '',
-		gruposFormacion: [
-			{
-				nombre: 'Grupo de Luis',
-				id: '1'
-			},
-			{
-				nombre: 'Grupo de Mario',
-				id: '2'
-			},
-			{
-				nombre: 'Grupo de Fernando',
-				id: '3'
-			}
-		],
+		gruposFormacion: [],
 		grupoFormacionSel: '',
-		gruposPescadores: [
-			{
-				nombre: 'Grupo de Pescadores 1',
-				id: '4'
-			},
-			{
-				nombre: 'Grupo de Pescadores 2',
-				id: '5'
-			},
-			{
-				nombre: 'Grupo de Pescadores 3',
-				id: '6'
-			}
-		],
+		gruposPescadores: [],
 		grupoPescadoresSel: '',
 		gruposMayores: [],
 		grupoMayoresSel: ''
@@ -186,6 +153,42 @@ var main = new Vue({
       		console.log(err);
       	}
       });
+    },
+    obtenerTodosLosGrupos(){
+    	let self = this;
+    	$.ajax({
+    		type: 'GET',
+    		url: '/api/grupos/',
+    		success(res){
+    			self.armarArraysGrupos(res.sequelizeStatus);
+    		},
+    		error(){
+
+    		}
+    	});
+    },
+    /*
+			@Descripción: Arma los arrays de grupos obtenidos de la base de datos
+			@Params:
+				grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
+    */
+    armarArraysGrupos(grupos){
+    	let self = this;
+    	$.each(grupos, function(index, grupo){
+    		let grupoObj = {
+  				id: grupo.id,
+  				text: grupo.nombre
+  			};
+    		if(grupo.tipo === 'Formación'){
+    			self.gruposFormacion.push(grupoObj);
+    		}else if(grupo.tipo === 'Caminantes'){
+    			self.gruposCaminantes.push(grupoObj);
+    		}else if(grupo.tipo === 'Pescadores'){
+    			self.gruposPescadores.push(grupoObj);
+    		}else if(grupo.tipo === 'Mayores'){
+    			self.gruposMayores.push(grupoObj);
+    		}
+    	});
     },
     /*
 			@Descripción: 

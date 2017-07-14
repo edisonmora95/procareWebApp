@@ -8,11 +8,11 @@
 var modelo = require('../models');
 
 module.exports.crearGrupo = (req, res, next) => {
-	nombre = req.body.nombre
-	tipo = req.body.tipo
-	cantidadChicos = 0
-	numeroReuniones = 0
-	genero = req.body.genero
+	nombre = req.body.nombre;
+	tipo = req.body.tipo;
+	cantidadChicos = req.body.cantidadChicos;
+	numeroReuniones = req.body.numeroReuniones;
+	genero = req.body.genero;
 
 	modelo.Grupo.create({
 		nombre : nombre,
