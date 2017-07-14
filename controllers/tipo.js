@@ -101,13 +101,15 @@ const mostrarTipo = (req,res,next) =>{
 }
 
 const asignarTipo = (req, res, next) => {
-	modelo.ProcarinoTipo.findOrCreate({
+	modelo.ProcarinoTipo.findOne({
 		where: {
 			ProcarianoId: req.body.procarianoId
 		}
-	}).then(()=>actualizarTipo(req,res))
-	.spread(agregarNuevoTipo = (req,res))
-	.catch( error => {
+	}).then( respuesta =>{
+		actualizarTipo(req,res)		
+	}).else(
+		agregarNuevoTipo(req,res)
+	).catch( error => {
 		var status = false;
 		var mensaje = 'no existe asignacion'
 		var jsonRespuesta = {
@@ -117,7 +119,6 @@ const asignarTipo = (req, res, next) => {
 		}
 		res.json(jsonRespuesta);
 	})
-	
 }
 
 /*
