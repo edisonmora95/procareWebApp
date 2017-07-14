@@ -106,10 +106,12 @@ const asignarTipo = (req, res, next) => {
 			ProcarianoId: req.body.procarianoId
 		}
 	}).then( respuesta =>{
-		actualizarTipo(req,res)		
-	}).else(
-		agregarNuevoTipo(req,res)
-	).catch( error => {
+		if(respuesta!=null){
+			actualizarTipo(req,res)	
+		}else{
+			agregarNuevoTipo(req,res)
+		}
+	}).catch( error => {
 		var status = false;
 		var mensaje = 'no existe asignacion'
 		var jsonRespuesta = {
