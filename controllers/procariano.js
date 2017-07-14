@@ -35,7 +35,11 @@ const crearProcariano = (req, res, next) => {
 	colegio = req.body.colegio;
 	universidad = req.body.universidad;
 	parroquia = req.body.parroquia;
-	fechaOrdenacion = new Date(req.body.fechaOrdenacion);
+	if(req.body.fechaOrdenacion == ''){
+		fechaOrdenacion = null;
+	}else{
+		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+	}
 	estado = 'activo';
 	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
 
@@ -224,7 +228,12 @@ por : JV , agregado date a datos date
 */
 
 const editarProcariano = (req, res, next) => {
-	var id = req.body.id;
+	var id = req.params.id;
+	if(req.body.fechaOrdenacion == '' || req.body.fechaOrdenacion == null){
+		fechaDeOrdenacion = null;
+	}else{
+		fechaDeOrdenacion = new Date(req.body.fechaOrdenacion);	
+	}
 	modelo.Persona.update({
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -246,7 +255,7 @@ const editarProcariano = (req, res, next) => {
 			colegio : req.body.colegio,
 			universidad : req.body.universidad,
 			parroquia : req.body.parroquia,
-			fechaOrdenacion : fechaOrdenacion,
+			fechaOrdenacion : fechaDeOrdenacion,
 			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
 		}, { 
 			where : {
@@ -263,7 +272,7 @@ const editarProcariano = (req, res, next) => {
 			res.json(jsonRespuesta)
 		}).catch( err2 => {
 			var status = false;
-			var mensaje = 'no se pudo actualizar'
+			var mensaje = 'no se pudo actualizar 2'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
@@ -274,7 +283,7 @@ const editarProcariano = (req, res, next) => {
 
 	}).catch( err => {
 			var status = false;
-			var mensaje = 'no se pudo actualizar'
+			var mensaje = 'no se pudo actualizar 1'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,

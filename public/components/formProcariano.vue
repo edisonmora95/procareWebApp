@@ -40,12 +40,12 @@
 			</v-row>
 			<v-row>
 				<div class="col s6 input-field">
-					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'required|numeric'">
+					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 					<label for="celular" class="active">Celular</label>
 				</div>
 				<div class="col s6 input-field">
-					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'required|numeric'">
+					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
 					<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
@@ -192,9 +192,11 @@
 			},
 			editarProcariano(){
 				let self = this;
+				var path = window.location.pathname;
+				let id = path.split('/')[3];
 				self.flag = false;
-      	self.procariano.id = self.procarianoId;
-      	var urlApi = '/api/procarianos/' + self.procarianoId;
+      	//self.procariano.id = self.procarianoId;
+      	var urlApi = '/api/procarianos/' + id;
       	$.ajax({
       		type: 'PUT',
       		data: self.procariano,
