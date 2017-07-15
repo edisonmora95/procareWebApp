@@ -7,88 +7,131 @@
 
 var modelo = require('../models');
 
-const crearGrupo = (req, res, next) => {
-
-	/*
-	cedula = '0990218506';
-	nombres = 'Jose Antonio'
-	apellidos = 'Viteri Cuenca'
-	direccion = 'esta es una direccion'
-	fechaNacimiento = '25-08-1995'
-	genero = 'masculino'
-	contrasenna = '12345'
-	email = 'jose@hotmail.com'
-	celular = '0951698554'
-	trabajo = 'no te importa'
-
-	colegio = 'esto es colegio'
-	universidad = 'ESPOL'
-	parroquia = 'Ximena'
-	fechaOrdenacion = '23-04-2000'
-	estado = false
-	haceParticipacionEstudiantil = true
-	*/
-
-	cedula = req.body.cedula;
-	nombres = req.body.nombres;
-	apellidos = req.body.apellidos
-	direccion = req.body.direccion
-	fechaNacimiento = req.body.fechaNacimiento
-	genero = req.body.genero
-	contrasenna = req.body.contrasenna
-	email =  req.body.email
-	celular = req.body.celular
-	trabajo = req.body.trabajo
-
-	colegio = req.body.colegio
-	universidad = req.body.universidad
-	parroquia = req.body.parroquia
-	fechaOrdenacion = req.body.fechaOrdenacion
-	estado = req.body.estado
-	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil
-
+module.exports.crearGrupo = (req, res, next) => {
+	nombre = req.body.nombre;
+	tipo = req.body.tipo;
+	cantidadChicos = req.body.cantidadChicos;
+	numeroReuniones = req.body.numeroReuniones;
+	genero = req.body.genero;
 
 	modelo.Grupo.create({
-		cedula : cedula,
-		nombres : nombres,
-		apellidos : apellidos,
-		direccion : direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero : genero,
-		contrasenna : contrasenna,
-		email : email,
-		celular : celular,
-		trabajo : trabajo
-
-
+		nombre : nombre,
+		tipo : tipo,
+		cantidadChicos : cantidadChicos,
+		numeroReuniones : numeroReuniones,
+		genero : genero
 	}).then( grupo => {
-		console.log("se creo una grupo");
-		modelo.Grupo.create({
-			GrupoId : grupo.get('id'),
-			colegio : colegio,
-			universidad : universidad,
-			parroquia : parroquia,
-			fechaOrdenacion : fechaOrdenacion,
-			estado : estado,
-			haceParticipacionEstudiantil : haceParticipacionEstudiantil
-		}).then( grupo => {
-			var json1 = {
-				grupo : grupo,
-				grupo : grupo,
-				mensaje : 'exito'
-			}
-
-			res.json(json1);
-		});
-	}).catch( error => {
-		var json1 = {
-			esteEsElError : error,
-			esteEsElbody : req.body
+		var rjson = {
+			status : true,
+			mensaje : 'Grupo creado exitosamente',
+			sequelizeStatus : grupo
 		}
-		res.send(json1);
+		res.json(rjson);
+	}).catch( error => {
+		var rjson = {
+			status : false,
+			mensaje : 'No se pudo crear grupo',
+			sequelizeStatus : error
+		}
+		res.json(rjson);
 	});
 }
 
-module.exports = {
-	crearGrupo
+module.exports.editarGrupo = (req, res, next) => {
+	var id = req.body.id;
+	modelo.Grupo.update({
+		nombre : req.body.nombre,
+		tipo : req.body.tipo,
+		cantidadChicos : req.body.cantidadChicos,
+		numeroReuniones : req.body.numeroReuniones,
+		genero : req.body.genero
+	}, {
+	  where: {
+	    id : id
+	  }
+	}).then( grupo => {
+		var rjson = {
+			status : true,
+			mensaje : 'Grupo actualizado exitosamente',
+			sequelizeStatus : grupo
+		}
+		res.json(rjson)
+	}).catch( err => {
+		var rjson = {
+			status : false,
+			mensaje : 'No se pudo actualizar el Grupo',
+			sequelizeStatus : error
+		}
+		res.json(rjson);
+	});
+};
+
+module.exports.eliminarGrupo = (req, res, next) => {
+	var id = req.body.id;
+	modelo.Grupo.destroy({
+	  	where: {
+	    	id : id
+	  	}
+	}).then( resultado => {
+		var rjson = {
+			status : true,
+			mensaje : 'Grupo eliminado exitosamente',
+			sequelizeStatus : resultado
+		}
+		res.json(rjson)
+	}).catch( err => {
+		var rjson = {
+			status : false,
+			mensaje : 'No se pudo eliminar el Grupo',
+			sequelizeStatus : error
+		}
+		res.json(rjson);
+	});
+};
+
+module.exports.mostrarGrupos = (req, res, next) => {
+	modelo.Grupo.findAll().then( grupos => {
+		var status = true;
+		var mensaje = 'Se obtuvieron los grupos correctamente'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : grupos
+		}
+		res.json(jsonRespuesta)
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se pudieron obtener los grupos'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	});
+};
+
+module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) => {
+	modelo.ProcarianoGrupo.create({
+		GrupoId: req.body.grupo,
+		ProcarianoId: procariano.get('id'),
+		fechaInicio: procariano.get('createdAt')
+	}).then( procarianogrupo => {
+		var status = true;
+		var json1 = {
+			status : status,
+			mensaje : 'Se pudo crear correctamente',
+			persona : persona,
+			procariano : procariano,
+			procarianogrupo: procarianogrupo
+		};
+		res.json(json1);
+	}).catch( errorIngresarGrupo => {
+		var json1 = {
+			status : false,
+			mensaje : 'No se pudo añadir al grupo',
+			error : errorIngresarGrupo
+			}
+		res.send(json1);
+	});
 }

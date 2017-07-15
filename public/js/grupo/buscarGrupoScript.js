@@ -79,18 +79,11 @@ let BuscarGrupoApp = new Vue({
 		//Eventos
 		buscar(){
 			let self = this;
-			let campoLleno = false;	//Bandera que indicará si hay por lo menos un campo de búsqueda lleno.
 			self.grupos = [];	//Lo vacío por si acaso...
-			console.log(self.grupo);
-			//Primero revisa si por lo menos un campo está lleno
-			$.each(self.grupo, (property, value) => {
-				if(value !== ''){
-					campoLleno = true;
-					return false;
-				}
-			});
+			let campoLleno = self.revisarUnCampoLleno();
 			if(campoLleno){
 				//Llamada a la api...
+
 				$.each(self.aux, (index, grupo) => {
 					self.grupos.push(grupo);
 				});
@@ -98,6 +91,22 @@ let BuscarGrupoApp = new Vue({
 				Materialize.toast('Llene por lo menos un campo de búsqueda.', 3000, 'rounded');
 			}
 			
+		},
+		revisarUnCampoLleno(){
+			$.each(self.grupo, (property, value) => {
+				if(value !== ''){
+					return true;
+				}
+			});
+		},
+		realizarBusqueda(){
+			$.ajax({
+				type: 'GET',
+				url: '/api/grupos/',
+				success(res){
+					
+				}
+			})
 		}
 	}
 });

@@ -104,8 +104,7 @@
 								<label for="colegio">Colegio</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-formacion">
-								<v-select id="selectGrupoFormacion" name="selectGrupoFormacion" v-model="grupoFormacionSel" select-text="">
-									<option v-for="grupo in gruposFormacion" :value="grupo.id">{{grupo.nombre}}</option>
+								<v-select id="selectGrupoFormacion" name="selectGrupoFormacion" v-model="grupoFormacionSel" select-text="" :items="gruposFormacion">
 								</v-select>
 								<label class="active" for="selectGrupoFormacion">Grupo de Formación</label>
 							</div>
@@ -128,8 +127,7 @@
 								<label for="trabajo">Trabajo</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-caminantes">
-								<v-select id="selectGrupoCaminantes" name="selectGrupoCaminantes" v-model="grupoCaminantesSel" select-text="">
-									<option v-for="grupo in gruposCaminantes" :value="grupo.id">{{grupo.nombre}}</option>
+								<v-select id="selectGrupoCaminantes" name="selectGrupoCaminantes" v-model="grupoCaminantesSel" select-text="" :items="gruposCaminantes">
 								</v-select>
 								<label class="active" for="selectGrupoCaminantes">Grupo de caminantes</label>
 							</div>
@@ -152,8 +150,7 @@
 								<label for="trabajo">Trabajo</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-pescadores">
-								<v-select id="selectGrupoPescadores" name="selectGrupoPescadores" v-model="grupoPescadoresSel" select-text="">
-									<option v-for="grupo in gruposPescadores" :value="grupo.id">{{grupo.nombre}}</option>
+								<v-select id="selectGrupoPescadores" name="selectGrupoPescadores" v-model="grupoPescadoresSel" select-text="" :items="gruposPescadores">
 								</v-select>
 								<label class="active">Grupo de pescadores</label>
 							</div>

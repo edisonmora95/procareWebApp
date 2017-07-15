@@ -1,13 +1,9 @@
 /*
-
 @Descripcion: Modelo de procariano
 @Autor: jose viteri
 @FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 03/06/2017 @JoseViteri 
-
-
+@UltimaFechaModificacion: 03/06/2017 @JoseViteri
 */
-
 
 var bcrypt = require('bcryptjs');
 'use strict';
@@ -45,7 +41,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Procariano.belongsTo(models.Persona)
         Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
-        // associations can be defined here
+        Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
+        Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
       }
     }
 
