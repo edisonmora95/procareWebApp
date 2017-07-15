@@ -23,6 +23,7 @@ var login = require('./routes/ventanas/login.router');
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiGrupos = require('./routes/api/grupos.api.router');
+let apiProcarianosGrupos = require('./routes/api/procarianogrupo.api.router');
 let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
@@ -71,6 +72,7 @@ app.use('/api/login',apiLogin);
 app.use('/api/tarea',apiTareas);
 app.use('/api/evento', apiEventos);
 app.use('/api/grupos', apiGrupos);
+app.use('/api/pg', apiProcarianosGrupos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

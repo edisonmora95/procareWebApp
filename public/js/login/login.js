@@ -13,7 +13,7 @@ var appLogin = new Vue({
 	methods: {
 		login(){
 			let self = this;
-			var url = "/login/";
+			var url = "/";
 			let obj = {
 				correo : $('#UserName').val(),
 				password : $('#Password').val()

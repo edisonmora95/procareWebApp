@@ -7,7 +7,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     tipo : {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      validate : {
+        isIn : [['Formación', 'Caminantes', 'Pescadores', 'Mayores']]
+      }
     },
     cantidadChicos : {
       type: DataTypes.INTEGER,
@@ -19,7 +22,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     genero : {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      validate : {
+        isIn : [['Procare', 'Procare Mujeres']]
+      }
     }
   }, {
     name : {

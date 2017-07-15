@@ -8,107 +8,36 @@
 
 var modelo = require('../models');
 var utils = require('../utils/utils')
+var ControladorGrupo = require('../controllers/grupo');
 
 
 /*
 Autor : JV
 Creado : 26/06/2017
 Modificado: 07/07/2017
-Por: JV , agregados campos convencional y fecha date
+Por: @edanmora95	separados en dos funciones para entender mejor
 */
 const crearProcariano = (req, res, next) => {
-	//formato fechas : YYYY-MM-DD
-	//Atributos de Persona
-	cedula = req.body.cedula;
-	nombres = req.body.nombres;
-	apellidos = req.body.apellidos;
-	direccion = req.body.direccion;
-	fechaNacimiento = new Date(req.body.fechaNacimiento);
-	genero = req.body.genero;
-	contrasenna = req.body.contrasenna;
-	email =  req.body.email;
-	convencional = req.body.convencional;
-	celular = req.body.celular;
-	trabajo = req.body.trabajo;
-
-	//Atributos de Procariano	
-	colegio = req.body.colegio;
-	universidad = req.body.universidad;
-	parroquia = req.body.parroquia;
-	if(req.body.fechaOrdenacion == ''){
-		fechaOrdenacion = null;
+	if(req.body.fechaNacimiento == ''){
+		fechaNacimiento = null;
 	}else{
-		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+		fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
-	estado = 'activo';
-	haceParticipacionEstudiantil = req.body.haceParticipacionEstudiantil;
 
 	modelo.Persona.create({
-		cedula : cedula,
-		nombres : nombres,
-		apellidos : apellidos,
-		direccion : direccion,
+		cedula : req.body.cedula,
+		nombres : req.body.nombres,
+		apellidos : req.body.apellidos,
+		direccion : req.body.direccion,
 		fechaNacimiento : fechaNacimiento,
-		genero : genero,
-		contrasenna : contrasenna,
-		email : email,
-		celular : celular,
-		trabajo : trabajo,
-		convencional : convencional
+		genero : req.body.genero,
+		contrasenna : req.body.contrasenna,
+		email : req.body.email,
+		celular : req.body.celular,
+		trabajo : req.body.trabajo,
+		convencional : req.body.convencional
 	}).then( persona => {
-		modelo.Procariano.create({
-			PersonaId : persona.get('id'),
-			colegio : colegio,
-			universidad : universidad,
-			parroquia : parroquia,
-			fechaOrdenacion : fechaOrdenacion,
-			estado : estado,
-			haceParticipacionEstudiantil : haceParticipacionEstudiantil
-		}).then( procariano => {
-
-			if(req.body.grupo !== '' || req.body.grupo !== null){
-				modelo.ProcarianoGrupo.create({
-					GrupoId: req.body.grupo,
-					ProcarianoId: procariano.get('id'),
-					fechaInicio: procariano.get('createdAt')
-				}).then( procarianogrupo => {
-					var status = true;
-					var json1 = {
-						status : status,
-						mensaje : 'Se pudo crear correctamente',
-						persona : persona,
-						procariano : procariano,
-						procarianogrupo: procarianogrupo
-					};
-					res.json(json1);
-				}).catch( error3 => {
-					var json1 = {
-						status : false,
-						mensaje : 'No se pudo añadir al grupo',
-						error : error3
-						}
-					res.send(json1);
-				});
-			}else{
-				var status = true;
-				var json1 = {
-					status : status,
-					mensaje : 'Se pudo crear correctamente',
-					persona : persona,
-					procariano : procariano,
-				};
-				res.json(json1);
-			}
-			
-		}).catch( error2 => {
-			var json1 = {
-				status : false,
-				mensaje : 'No se pudo crear este procariano',
-				error : error2
-				}
-			res.send(json1);
-
-		});
+		ingresarProcariano(req, res, next, persona);
 	}).catch( error => {
 		var json1 = {
 			status : false,
@@ -331,8 +260,51 @@ const eliminarProcariano = (req, res, next) => {
 	});
 };
 
+/*
+	@Autor: @edanmora95
+	@FechaCreación: 14/07/2017
+	@Descripción: Ingresa al procariano a la base de datos y luego lo ingresa al grupo indicado
+*/
+ingresarProcariano = (req, res, next, persona) => {
+	if(req.body.fechaOrdenacion == ''){
+		fechaOrdenacion = null;
+	}else{
+		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+	}
 
+	modelo.Procariano.create({
+		PersonaId : persona.get('id'),
+		colegio : req.body.colegio,
+		universidad : req.body.universidad,
+		parroquia : req.body.parroquia,
+		fechaOrdenacion : fechaOrdenacion,
+		estado : req.body.estado,
+		haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
+	}).then( procariano => {
+		let grupoIngresado = (req.body.grupo !== '');
+		if(grupoIngresado){
+			ControladorGrupo.anadirProcarianoAGrupo(req, res, next, persona, procariano);
+		}else{
+			var status = true;
+			var json1 = {
+				status : status,
+				mensaje : 'Se pudo crear correctamente',
+				persona : persona,
+				procariano : procariano,
+			};
+			res.json(json1);
+		}
+		
+	}).catch( error2 => {
+		var json1 = {
+			status : false,
+			mensaje : 'No se pudo crear este procariano',
+			error : error2
+			}
+		res.send(json1);
 
+	});
+}
 
 module.exports = {
 	crearProcariano,

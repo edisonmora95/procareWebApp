@@ -16,7 +16,7 @@
 			</div>
 			<div class="col s12" id="col-btn">
 				<a class="waves-effect waves-light btn" id="btnCancelar" @click="cancelar">Cancelar</a>
-				<a class="waves-effect waves-light btn pull right" id="btnContinuar" v-modal:mensajeGrupoCreado>Aceptar</a>
+				<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
 			</div>
 		</div>
 		<v-modal id="mensajeGrupoCreado">
@@ -81,8 +81,11 @@
 			},
 			aceptar(){
 				//Llamada a la api
-				console.log('afdsadsa')
+				let self = this;
 				$('#mensajeGrupoCreado').modal('open');
+				console.log('-----------')
+				console.log(self.conGrupo)
+				
 			},
 			anadir(chico){
 				//Añade al chico seleccionado al grupo

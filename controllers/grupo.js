@@ -110,3 +110,28 @@ module.exports.mostrarGrupos = (req, res, next) => {
 		res.json(jsonRespuesta);
 	});
 };
+
+module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) => {
+	modelo.ProcarianoGrupo.create({
+		GrupoId: req.body.grupo,
+		ProcarianoId: procariano.get('id'),
+		fechaInicio: procariano.get('createdAt')
+	}).then( procarianogrupo => {
+		var status = true;
+		var json1 = {
+			status : status,
+			mensaje : 'Se pudo crear correctamente',
+			persona : persona,
+			procariano : procariano,
+			procarianogrupo: procarianogrupo
+		};
+		res.json(json1);
+	}).catch( errorIngresarGrupo => {
+		var json1 = {
+			status : false,
+			mensaje : 'No se pudo añadir al grupo',
+			error : errorIngresarGrupo
+			}
+		res.send(json1);
+	});
+}
