@@ -149,6 +149,7 @@ actualizarTipo = (req, res) => {
 		fechaFin : new Date()
 	},{
 		where: {
+			FechaFin : null,
 			ProcarianoId: req.body.procarianoId
 		}
 	}).then(Tipo => {
@@ -214,4 +215,3 @@ module.exports = {
 	mostrarTipo,
 	asignarTipo
 }
-
