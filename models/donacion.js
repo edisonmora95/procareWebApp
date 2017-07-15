@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
 
-        Donacion.belongsTo(models.Benefactor {foreignKey: 'id_benefactor'})
+        //Donacion.belongsTo(models.Benefactor {foreignKey: 'id_benefactor'})
 
         //Benefactor.belongsTo(models.Persona id_benefactor)
 
@@ -51,5 +51,5 @@ module.exports = function(sequelize, DataTypes) {
 
 };
 
-};
+
 

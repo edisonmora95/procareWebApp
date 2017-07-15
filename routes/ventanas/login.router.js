@@ -7,9 +7,7 @@
 
 */
 
-<<<<<<< HEAD
 
-=======
 var controladorLogin = require('../../controllers/login.controller')
 var utils = require('../../utils/utils');
 >>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
@@ -20,11 +18,11 @@ var LocalStrategy = require('passport-local').Strategy;
 var modelos = require('../../models');
 
 
-<<<<<<< HEAD
+
 //estrategia local, compara contraseña y usuario, ademas genera el req.user
-=======
+
 //estartegia local, compara contraseña y usuario, ademas genera el req.user
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+
 passport.use(new LocalStrategy({
 	usernameField : 'correo',
 	passwordField : 'password'
@@ -87,7 +85,7 @@ passport.deserializeUser(function(id, done) {
 
 //post del login, manda un json si la autenticacion fue correcta o incorrecta
 router.post('/',
-<<<<<<< HEAD
+
   passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
   	let objeto = {
@@ -148,7 +146,7 @@ router.post('/',
   	*/
 });
 
-<<<<<<< HEAD
+
 //api get para cuando falla la autenticacion (deberia moverese a login.api.router)
 router.get('/api/loginFalla', function(req,res,next){
 	let objeto = {
@@ -157,9 +155,6 @@ router.get('/api/loginFalla', function(req,res,next){
 	}
 	res.json(objeto);
 })
-=======
-
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
 
 /* GET home page. */
 
@@ -192,7 +187,7 @@ router.get('/logout', function(req, res){
 });
 
 
-<<<<<<< HEAD
+
 /*
 
 
@@ -227,7 +222,6 @@ router.post('/cambio', function(req, res){
 });
 
 */
-=======
 
 
 
@@ -236,5 +230,5 @@ router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controlador
 
 
 
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+
 module.exports = router;
