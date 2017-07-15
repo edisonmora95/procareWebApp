@@ -101,13 +101,13 @@ const mostrarTipo = (req,res,next) =>{
 }
 
 const asignarTipo = (req, res, next) => {
-	modelo.ProcarinoTipo.findOne({
+	modelo.ProcarianoTipo.findOne({
 		where: {
 			ProcarianoId: req.body.procarianoId
 		}
 	}).then( respuesta =>{
 		if(respuesta!=null){
-			actualizarTipo(req,res)	
+			actualizarTipo(req,res)
 		}else{
 			agregarNuevoTipo(req,res)
 		}
@@ -145,12 +145,11 @@ validarRequestCrearTipo = (req, res) => {
 }
 
 actualizarTipo = (req, res) => {
-	modelo.ProcarinoTipo.update({
+	modelo.ProcarianoTipo.update({
 		fechaFin : new Date()
 	},{
 		where: {
-			ProcarianoId: req.body.procarianoId,
-			fechaFin : null
+			ProcarianoId: req.body.procarianoId
 		}
 	}).then(Tipo => {
 		agregarNuevoTipo(req,res)
@@ -183,7 +182,7 @@ agregarNuevoTipo = (req,res) => {
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : repuesta2
+				sequelizeStatus : repuesta
 			}
 			res.json(jsonRespuesta)
 		}).catch( error2 => {
@@ -215,3 +214,4 @@ module.exports = {
 	mostrarTipo,
 	asignarTipo
 }
+
