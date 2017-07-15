@@ -206,6 +206,7 @@
 					data: self.grupo,
 					success(res){
 						if(res.status === true && res.mensaje === 'Grupo creado exitosamente'){
+							self.grupo.id = res.sequelizeStatus.id;
 							self.flagVue = false;
 							self.$emit('flagchanged', self.flagVue);		
 						}
