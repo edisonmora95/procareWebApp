@@ -85,6 +85,53 @@ module.exports.generarJsonProcariano = function(procariano){
 }
 
 /*
+@Descripcion: pone en un formato adecuado los campos para buscar los grupos
+@Autor: Jose Viteri
+@FechaCreacion: 15/07/2017
+*/
+
+
+module.exports.generarJsonGrupo = function(grupo){
+    var respuesta = {};
+    respuesta['persona'] = {};
+    respuesta['grupo'] = {};
+    respuesta['animador'] = {};
+    respuesta['etapa'] = {};
+
+    for (var clave in grupo) {
+        if (grupo.hasOwnProperty(clave)) {
+            if ( ( (clave == 'genero') ) && ( procariano[clave] != '' ) ) {
+
+                respuesta['grupo'][clave] = {
+                    $like : '%' + grupo[clave] + '%'
+                }
+            }
+            if ( ( (clave == 'nombre') || (clave == 'apellido') ) && ( procariano[clave] != '' )) {
+                respuesta['persona'][clave] = {
+                    $like : '%' + grupo[clave] + '%'
+                }
+            }
+
+            if ( ( (clave == 'fechaInicio')) && ( procariano[clave] != '' ) ) {
+
+                respuesta['animador'][clave] = {
+                    $like : '%' + grupo[clave] + '%'
+                }
+            }
+
+            if ( ( (clave == 'etapa')) && ( procariano[clave] != '' ) ) {
+
+                respuesta['etapa'][clave] = {
+                    $like : '%' + grupo[clave] + '%'
+                }
+            }
+
+        }
+    }
+    return respuesta;
+}
+
+/*
 @Descripcion: genera el hash para la nueva contrasenna
 @Autor: Jose Viteri
 @FechaCreacion: 29/06/2017
