@@ -74,7 +74,6 @@ app.use('/api/tarea',apiTareas);
 app.use('/api/evento', apiEventos);
 app.use('/api/tipo', apiTipo);
 
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
