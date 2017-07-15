@@ -15,5 +15,5 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-  return tipo;
+  return Tipo;
 };
