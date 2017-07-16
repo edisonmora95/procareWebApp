@@ -61,12 +61,26 @@ let indexApp = new Vue({
 		obtenerEventos(){
 			let self = this;
 			//console.log('hol.a');
+<<<<<<< HEAD
 			$.getJSON('/scripts/eventos.json', function(data){
 				//console.log(data);
 				self.eventos = data;
 				/*$.each(data, function(index, evento){
 					self.eventos.push(evento);
 				})*/
+=======
+			//'/scripts/eventos.json'
+			$.getJSON('/api/tarea/', function(data){
+				console.log(data);
+				console.log(data.sequelizeStatus);
+				self.eventos = data.sequelizeStatus;
+				$.each(data.sequelizeStatus, function(index, evento){
+					//console.log("este es el evento " + evento[0]);
+					//console.log("este es el evento 0 " + evento[0][0]);
+					//console.log("este es el evento 1 " + evento[0][1]);
+					self.eventos.push(evento);
+				})
+>>>>>>> 0ade0d7ca6e482b50084cb1ad035654c58a31ed9
 			})
 		}
 	},

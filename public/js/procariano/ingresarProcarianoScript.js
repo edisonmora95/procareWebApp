@@ -1,18 +1,22 @@
 /*
 	@Descripción: Controlador de la vista de ingresarProcariano.ejs
 	@Autor: @edisonmora95
+/*
+	@Descripción: Controlador de la vista de ingresarProcariano.ejs
+	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
+	@ÚltimaModificación: 7/07/2017 @edanmora95 Refactorización
 */
-/*globals Vue:false */
-/*globals $:false */
-/*globals VeeValidate:false */
 'use strict';
 
 import Navbar from './../../components/navbar.vue';
+import Materials from 'vue-materials';
 Vue.component('navbar', Navbar); 
-
+Vue.use(Materials);
 Vue.use(VeeValidate);
-//Validaciones. Cambio de mensajes de error
+/*
+	Validaciones. Cambio de mensajes de error
+*/
 const dictionary = {
 	en: {
 		messages: {
@@ -45,23 +49,10 @@ VeeValidate.Validator.updateDictionary(dictionary);
 var main = new Vue({
 	el: '#main',
 	mounted: function(){
-		//Inicializadores de Materializecss
-		$('.datepicker').pickadate({
-			selectMonths: true, // Creates a dropdown to control month
-			selectYears: 100 // Creates a dropdown of 15 years to control year
-		});
-		$('#select-tipo-procariano').material_select();
-		$('#select-genero').material_select();
-		$('#select-grupo-formacion').material_select();
-		$('#select-grupo-caminante').material_select();
-		$(".button-collapse").sideNav();
-		$('.modal').modal();
-		//Creación dinámica de los selects
-		this.crearSelectGrupo('select-grupo-formacion', this.grupoFormacionEscogido, 'div-select-grupo-formacion', this.gruposFormacion);
-		this.crearSelectGrupo('select-grupo-caminantes', this.grupoCaminantesEscogido, 'div-select-grupo-caminantes', this.gruposCaminantes);
-		this.crearSelectGrupo('select-grupo-pescadores', this.grupoPescadoresEscogido, 'div-select-grupo-pescadores', this.gruposPescadores);
+		this.inicializarMaterialize();
 	},
 	data: {
+		fechaIncorrecta: false,
 		errorObj: {
 			campo: '',
 			msj: ''
@@ -90,17 +81,14 @@ var main = new Vue({
 		gruposCaminantes: [
 			{
 				nombre: 'Grupo del Chino',
-				id: '1'
+				id: '7'
 			},
 			{
 				nombre: 'Grupo de Caminantes Viejos',
-				id: '2'
+				id: '8'
 			}
 		],
-		grupoCaminantesEscogido: {
-			nombre: '',
-			id: ''
-		},
+		grupoCaminantesSel: '',
 		gruposFormacion: [
 			{
 				nombre: 'Grupo de Luis',
@@ -115,131 +103,122 @@ var main = new Vue({
 				id: '3'
 			}
 		],
-		grupoFormacionEscogido: {
-			nombre: '',
-			id: ''
-		},
+		grupoFormacionSel: '',
 		gruposPescadores: [
 			{
 				nombre: 'Grupo de Pescadores 1',
-				id: '1'
+				id: '4'
 			},
 			{
 				nombre: 'Grupo de Pescadores 2',
-				id: '2'
+				id: '5'
 			},
 			{
 				nombre: 'Grupo de Pescadores 3',
-				id: '3'
+				id: '6'
 			}
 		],
-		grupoPescadoresEscogido: {
-			nombre: '',
-			id: ''
-		},
+		grupoPescadoresSel: '',
 		gruposMayores: [],
-		grupoMayoresEscogido: {
-			nombre: '',
-			id: ''
-		}
+		grupoMayoresSel: ''
 	},
 	methods: {
-		crearSelectGrupo: function(idSelect, grupoEscogido, idDivSelect, grupos){
-			/*
-				Parámetros:
-					idSelect -> id del elemento select que se va a crear en esta función para contener a los grupos deseados. Ejemplo: select-grupo-formacion
-					grupoEscogido ->  Elemento de data con el cual se hará el 2 way data binding. Almacenará el grupo escogido del select
-					idDivSelect -> id del div que contendrá al elemento select que se va a crear
-					grupos -> Los grupos que se van a mostrar en el select
-			*/
-			//Todos los parametros de id vienen sin el #
-			var self = this;
-			var select = $('<select>').attr({"id":idSelect});
-			var optionSelectedAux = '#' + idSelect + ' option:selected';
-			select.change(function(){
-				grupoEscogido.id = $(optionSelectedAux).val();
-				grupoEscogido.nombre = $(optionSelectedAux).text();
-				self.procariano.grupo = $(optionSelectedAux).text();
-			});
-			var idDivSelectAux = '#' + idDivSelect;
-			var divSelect = $(idDivSelectAux);
-			self.crearSelectOptions(select, grupos, divSelect);
-			divSelect.append(select);
-			select.material_select();
-		},	
-		crearSelectOptions: function(select, grupos, divSelect){
-			/*
-				Parámetros:
-					select -> elemento select creado en la función crearSelectGrupo que mostrará a los grupos deseados
-					grupos -> los grupos que se mostrarán como opciones dentro del select
-					divSelect -> elemento div que contendrá al select
-			*/
-			var optionDisabled = $('<option>').val("").text("");
-			select.append(optionDisabled);
-			$.each(grupos, function(index, grupo){
-				var option = $('<option>').val(grupo.id).text(grupo.nombre);
-				select.append(option);
-			});
-			divSelect.append(select);
-		},
-		validateBeforeSubmit: function() {
-			var self = this;
-      this.$validator.validateAll().then(() => {
-        // eslint-disable-next-line
-        console.log('Se va a enviar: ');
-        console.log(self.procariano);
-        var urlApi = '/api/procarianos/';
-        $.ajax({
-        	type:'POST',
-        	url: urlApi,
-        	data: self.procariano,
-        	success: function(res){
-        		console.log(res);
-        		if(res.mensaje === 'Se pudo crear correctamente'){
-        			$('#modalProcarianoCreado').modal('open');
-        		}else{
-        			alert('Error al ingresar en la base de datos');
-        		}
-        	}
-        });
-        
-      }).catch(() => {
-          // eslint-disable-next-line
-          self.errorObj.campo = self.errors.errors[0].field;
-          self.errorObj.msj = self.errors.errors[0].msg;
-          $('#modalError').modal('open');
+		validateBeforeSubmit() {
+			let self = this;
+			if(self.validarFechaNacimiento()){
+				self.bindGrupoSeleccionado();
+				this.$validator.validateAll().then(() => {
+					self.ingresarProcariano();	        
+	      }).catch(() => {
+	          self.errorObj.campo = self.errors.errors[0].field;
+	          self.errorObj.msj = self.errors.errors[0].msg;
+	          $('#modalError').modal('open');
+	      });
+			}
+    },
+    /*
+			@Descripción: Valida que la fecha de nacimiento ingresada no sea de alguien menor a 11 años.
+			@Return:
+				True si es una fecha válida (>11)
+				False si es inválida
+    */
+    validarFechaNacimiento(){
+    	let self = this;
+    	let year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
+			let actualYear = new Date().getFullYear();
+			let diferencia = actualYear - year;
+			if(diferencia < 11){
+				self.errorObj.campo = 'Fecha de nacimiento';
+				self.errorObj.msj = 'No puede ingresar a alguien con menos de 11 años.';
+				$('#modalError').modal('open');
+				return false;
+			}
+			return true;
+    },
+    /*
+			@Descripción:
+				Dependiendo del tipo de procariano seleccionado, se hace el binding con el grupo seleccionado.
+    */
+    bindGrupoSeleccionado(){
+    	let self = this;
+    	let tipoProcariano = self.procariano.tipo;
+    	if(tipoProcariano === '1'){
+    		self.procariano.grupo = self.grupoFormacionSel;
+    	}else if(tipoProcariano === '2'){
+    		self.procariano.grupo = self.grupoCaminantesSel;
+    	}else if(tipoProcariano === '3'){
+    		self.procariano.grupo = self.grupoPescadoresSel;
+    	}
+    },
+    ingresarProcariano(){
+    	let self = this;
+    	console.log(self.procariano);
+    	let urlApi = '/api/procarianos/';
+    	$.ajax({
+      	type:'POST',
+      	url: urlApi,
+      	data: self.procariano,
+      	success: function(res){
+      		if(res.mensaje === 'Se pudo crear correctamente'){
+      			$('#modalProcarianoCreado').modal('open');
+      		}else{
+      			alert('Error al ingresar en la base de datos');
+      		}
+      	},
+      	error : function(err){
+      		console.log(err);
+      	}
       });
-    },/*
-    llenarBaseDeDatos(){
-    	var self = this;
-    	var urlApi = '/api/procarianos/';
-    	$.each(self.temp, function(index, procariano){
-    		$.ajax({
-    			type: 'POST',
-    			url: urlApi,
-    			data: procariano,
-    			success(res){
-    				console.log(res);
-    			}
-    		})
-    	});
-    }*/
+    },
+    /*
+			@Descripción: 
+				Inicializa los elementos de Materialize que se van a usar en el formulario.
+    */
+    inicializarMaterialize(){
+    	$('.datepicker').pickadate({
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 100 // Creates a dropdown of 15 years to control year
+			});
+			$(".button-collapse").sideNav();
+			$('.modal').modal();
+    }
 	}
 });
-// 2 way data binding de los selects
-$('#select-tipo-procariano').change(function(){
-	var tipoProcariano = $('#select-tipo-procariano option:selected').text();
-	main.$data.procariano.tipo = tipoProcariano;
-});
-$('#select-genero').change(function(){
-	var generoProcariano = $('#select-genero option:selected').val();
-	main.$data.procariano.genero = generoProcariano;
-});
+
 //2 way data binding de los date pickers
 $('#fecha-nacimiento').change(function(){
 	var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
 	var day = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'mm');
+	//Primero valida que la fecha ingresada no sea de alguien menor a 11 años
+	let actualYear = new Date().getFullYear();
+	let diferencia = actualYear - year;
+	if(diferencia < 11){
+		main.$data.fechaIncorrecta = true;
+	}else{
+		main.$data.fechaIncorrecta = false;
+	}
+
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaNacimiento = fecha;
 });

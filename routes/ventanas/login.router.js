@@ -8,6 +8,9 @@
 */
 
 
+var controladorLogin = require('../../controllers/login.controller')
+var utils = require('../../utils/utils');
+
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -78,6 +81,7 @@ passport.deserializeUser(function(id, done) {
 
 //post del login, manda un json si la autenticacion fue correcta o incorrecta
 router.post('/',
+
   passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
   	let objeto = {
@@ -102,9 +106,42 @@ router.post('/',
 
 
   	console.log(json);
+=======
+  passport.authenticate('local', {failureRedirect:'/api/login/loginFalla',failureFlash: true, successFlash : true}),
+  function(req, res) {
+
+    var rols = req.user.Rols;
+    console.log(req.user.Rols[0].nombre)
+    var rolsJson = [];
+    for (i = 0 ; i< rols.length ; i++){
+      rolsJson.push(rols[i].nombre);
+    }
+    var json = {
+      status : true,
+      nombre : req.user.nombres,
+      apellidos : req.user.apellidos,
+      correo : req.user.email, 
+      rols : rolsJson
+    }
+
+  	let objeto = {
+  		status : true , 
+  		message : "logueado correcto",
+      objeto : json
+  	}
+
+
+
+    console.log(json);
+  	res.json(objeto);
+  	
+
+    /*
+>>>>>>> 0ade0d7ca6e482b50084cb1ad035654c58a31ed9
   	res.render("procariano/verProcariano", json)
   	*/
 });
+
 
 //api get para cuando falla la autenticacion (deberia moverese a login.api.router)
 router.get('/api/loginFalla', function(req,res,next){
@@ -114,6 +151,7 @@ router.get('/api/loginFalla', function(req,res,next){
 	}
 	res.json(objeto);
 })
+
 
 /* GET home page. */
 
@@ -144,6 +182,7 @@ router.get('/logout', function(req, res){
 
 	res.redirect('/');
 });
+
 
 
 /*
@@ -180,4 +219,10 @@ router.post('/cambio', function(req, res){
 });
 
 */
+
+
+
+router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
+
+
 module.exports = router;

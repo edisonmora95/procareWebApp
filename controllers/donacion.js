@@ -1,28 +1,26 @@
 /*
-@Descripcion: CRUD de Eventos.
+@Descripcion: Creacion de Donacion.
 @Autor: Jose Alcivar Garcia
-@FechaCreacion: 17/06/2017
-@UltimaFechaModificacion: 17/06/2017 @josealcivar
+@FechaCreacion: 21/06/2017
+@UltimaFechaModificacion: 21/06/2017 @josealcivar
 */
 
 var modelo = require('../models');
 
-const crearEvento = (req, res, next) => {
+const Donacion = (req, res, next) => {
 
   estado = 'activo';
 
-  modelo.Evento.create({
-
-    id_organizador : req.body.id_organiador,
-    idOrganizador : req.body.id_organiador,
+  modelo.Donacion.create({
+    id_responsable : req.body.nombre,
     nombre : req.body.nombre,
-    fecha : req.body.fecha,
+    fecha_publicacion : req.body.fecha_publicacion,
+    fecha_limite : req.body.fecha_limite,
+    prioridad : req.body.prioridad,
+    estado: req.body.estado,
     descripcion : req.body.descripcion,
-    lugar : req.body.lugar,
-    gastos: req.body.gastos,
-    ingresos : req.body.ingresos,
-    estado : req.body.estado
-    
+    categoria : req.body.categoria
+
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -44,19 +42,12 @@ const crearEvento = (req, res, next) => {
   });
 }
 
-const eliminarEvento = (req, res, next) => {
+const eliminarDonacion = (req, res, next) => {
    estado = 'inactivo';
-   modelo.Evento.update({
-
+   modelo.Donacion.update({
     {
       estado: req.body.estado
     }
-
-    
-    estado : estado
-
-  },{
-
     where:{
       id: req.params.id
     }
@@ -72,28 +63,24 @@ const eliminarEvento = (req, res, next) => {
   }).catch( error => {
     var json1 = {
       status : false,
-      mensaje: 'No se puede eliminar la Evento',
+      mensaje: 'No se puede eliminar la Tarea',
       error : error
       }
     res.send(json1);
   });
 }
 
-const editarEvento = (req, res, next) => {
-  modelo.Evento.update({
-    
+const editarDonacion = (req, res, next) => {
+  modelo.Donacion.update({
 
-     id_organizador : req.body.id_organiador,
-
-     idOrganizador : req.body.id_organiador,
-
+     id_responsable : req.body.nombre,
     nombre : req.body.nombre,
-    fecha : req.body.fecha,
+    fecha_publicacion : req.body.fecha_publicacion,
+    fecha_limite : req.body.fecha_limite,
+    prioridad : req.body.prioridad,
+    estado: req.body.estado,
     descripcion : req.body.descripcion,
-    lugar : req.body.lugar,
-    gastos: req.body.gastos,
-    ingresos : req.body.ingresos,
-    estado : req.body.estado
+    categoria : req.body.categoria
 
   },{
     where:{
@@ -120,9 +107,8 @@ const editarEvento = (req, res, next) => {
   });
 }
 
-
-const mostrarEvento = (req,res,next) =>{
-  modelo.Evento.findAll({
+const mostrarDonacion = (req,res,next) =>{
+  modelo.Donacion.findAll({
 
   }).then( repuesta => {
     var status = true;
@@ -136,44 +122,6 @@ const mostrarEvento = (req,res,next) =>{
   }).catch( error => {
     var status = false;
     var mensaje = 'no se pudo eliminar'
-
-const mostrarEventos = (req,res,next) =>{
-  modelo.Evento.findAll({
-    include: [{
-      model: modelo.Persona
-    }],
-    where : {
-      estado : "activo"
-    }
-
-  }).then( respuesta => {
-    var status = true;
-    var mensaje = 'se pueden mostrar correctamente'
-    const respuesta2 = respuesta.map( evento => {
-
-      return Object.assign(
-        {},
-        {
-          id : evento.id,
-          idUser : evento.Persona.id,
-          title : evento.titulo,
-          user :evento.Persona.nombres + " " + evento.Persona.apellidos ,
-          start : evento.fecha ,
-          description : evento.descripcion, 
-          type : "evento"
-        });
-    });
-     return res.json({
-      status : true,
-      mensaje : mensaje,
-      sequelizeStatus : respuesta2
-    })
-
-
-
-  }).catch( error => {
-    var status = false;
-    var mensaje = 'no se puede mostrar'
     var jsonRespuesta = {
       status : status,
       mensaje : mensaje,
@@ -184,10 +132,8 @@ const mostrarEventos = (req,res,next) =>{
 }
 
 module.exports = {
-  crearEvento,
-  eliminarEvento,
-  editarEvento,
-  mostrarEvento,
-  mostrarEventos
-
+  crearDonacion,
+  eliminarDonacion,
+  editarDonacion,
+  mostrarDonacion
 }

@@ -1,25 +1,19 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Etapa = sequelize.define('Etapa', {
-
-    nombre: DataTypes.STRING,
-    programa: DataTypes.STRING
-
+  var Tipo = sequelize.define('Tipo', {
     nombre:{
       type: DataTypes.STRING,
       allowNull: false,
       unique: true  ,
-      values: ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa']
+      values: ['Chico Formación', 'Caminante', 'Pescador', 'Pescador Consagrado', 'Sacerdote']
     } 
-    
-    //programa: DataTypes.STRING
-
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        Tipo.belongsToMany(models.Procariano, {through: 'ProcarianoTipo'});
       }
     }
   });
-  return Etapa;
+  return Tipo;
 };

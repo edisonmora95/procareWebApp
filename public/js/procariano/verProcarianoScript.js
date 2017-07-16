@@ -4,6 +4,9 @@
 	@FechaCreación: 31/04/2017
 */
 
+
+'use strict';
+
 import Navbar from './../../components/navbar.vue';
 import FormProcariano from './../../components/formProcariano.vue';
 Vue.component('navbar', Navbar); 
@@ -15,6 +18,7 @@ var app = new Vue({
 		this.obtenerProcarianoPorId();
 	},
 	mounted: function(){
+
 		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
 	},
@@ -58,6 +62,31 @@ var app = new Vue({
       //   return moment(date).add(8,'h').tz("America/Guayaquil").format('DD MMMM hh:mm');
       // }
       return moment(date).format('DD MMMM HH:mm');
+
+		//Inicializadores de Materialize
+		$('.tooltipped').tooltip({delay: 50});
+		$('.modal').modal();
+		//this.procariano.fechaNacimiento = new Date(this.procariano.fechaNacimiento)
+		
+	},
+	data: {
+		id: 0,
+		procariano: {},
+		fechaNacimiento: '',
+		habilitaredicion: false
+	},
+	methods: {
+		//Funciones para editar la forma en la que se muestra la fecha
+		moment(date) {
+      return moment(date);
+    },
+    date(date) {
+      var es = moment().locale('es');
+      if (date === undefined || date === '') {
+        return '----';
+      }
+      return moment(date).format('DD MMMM YYYY');
+
     },
 		obtenerProcarianoPorId(){
 			var self = this;
@@ -69,6 +98,7 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					self.procariano = res[0];
+
 				}
 			})
 		},
@@ -77,6 +107,14 @@ var app = new Vue({
 				@Autor: @edisonmora95
 				@FechaCreación: 20-05-2017
 			*/
+
+					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
+					console.log(self.fechaNacimiento)
+				}
+			});
+		},
+		eliminar: function(){
+
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
@@ -84,6 +122,7 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.status) {
+
 						//Materialize.toast('Procariano cambiado a estado inactivo', 2000, 'rounded');
 						self.procariano.estado = 'inactivo';
 						//window.location.href = '/procarianos/';	
@@ -91,6 +130,12 @@ var app = new Vue({
 					}else{
 						$('#modalErrorEliminar').modal('open');
 						console.log(res);
+
+						self.procariano.estado = 'inactivo';
+						$('#modalExitoEliminar').modal('open');
+					}else{
+						$('#modalErrorEliminar').modal('open');
+
 					}
 				}
 			});
