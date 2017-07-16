@@ -1,6 +1,9 @@
 /*
 	@Descripción: Controlador de la vista de ingresarProcariano.ejs
 	@Autor: @edisonmora95
+/*
+	@Descripción: Controlador de la vista de ingresarProcariano.ejs
+	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 	@ÚltimaModificación: 7/07/2017 @edanmora95 Refactorización
 */

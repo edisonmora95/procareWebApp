@@ -12,11 +12,7 @@ const crearEvento = (req, res, next) => {
   estado = 'activo';
 
   modelo.Evento.create({
- 
-    id_organizador : req.body.id_organiador,
- 
     idOrganizador : req.body.id_organiador,
-
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -49,15 +45,10 @@ const crearEvento = (req, res, next) => {
 const eliminarEvento = (req, res, next) => {
    estado = 'inactivo';
    modelo.Evento.update({
-
-    {
-      estado: req.body.estado
-    }
-
+    
     estado : estado
 
   },{
-
     where:{
       id: req.params.id
     }
@@ -83,11 +74,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-
-     id_organizador : req.body.id_organiador,
-
      idOrganizador : req.body.id_organiador,
-
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -120,23 +107,6 @@ const editarEvento = (req, res, next) => {
     res.json(jsonRespuesta);
   });
 }
-
-
-const mostrarEvento = (req,res,next) =>{
-  modelo.Evento.findAll({
-
-  }).then( repuesta => {
-    var status = true;
-    var mensaje = 'se pudo actualizar correctamente'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : repuesta
-    }
-    res.json(jsonRespuesta)
-  }).catch( error => {
-    var status = false;
-    var mensaje = 'no se pudo eliminar'
 
 const mostrarEventos = (req,res,next) =>{
   modelo.Evento.findAll({
@@ -175,7 +145,6 @@ const mostrarEventos = (req,res,next) =>{
   }).catch( error => {
     var status = false;
     var mensaje = 'no se puede mostrar'
-
     var jsonRespuesta = {
       status : status,
       mensaje : mensaje,
@@ -189,9 +158,5 @@ module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
-
-  mostrarEvento
-
   mostrarEventos
-
 }

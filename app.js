@@ -17,11 +17,15 @@ var users = require('./routes/ventanas/users');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
+
+//var login = require('./routes/ventanas/login');
+
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
+
 let apiTipo = require('./routes/api/tipo.api.router');
 let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
@@ -49,7 +53,12 @@ app.use('/scripts', express.static(__dirname + '/node_modules/'));
 app.use(session({
 
     secret: 'secreto',
+<<<<<<< .merge_file_a14772
     secret: 'Ya_ya_posi_Posi',
+
+
+    secret: 'Ya_ya_posi_Posi',
+
 
 
     secret: 'Ya_ya_posi_Posi',
@@ -59,6 +68,7 @@ app.use(session({
 }));
 
 // Passport init
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -67,6 +77,10 @@ app.use(flash());
 
 
 //Rutas de las ventanas
+
+
+app.use('/', index);
+
 
 app.use('/', index);
 
@@ -88,11 +102,16 @@ app.use('/api/evento', apiEventos);
 app.use('/api/tipo', apiTipo);
 
 
-
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
 app.use('/api/evento', apiEventos);
+
+//Rutas de la api
+app.use('/api/procarianos', apiProcarianos);
+app.use('/api/etapa',apiEtapa);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

@@ -92,17 +92,6 @@ module.exports.generarJsonProcariano = function(procariano){
 
 module.exports.generarHashNuevaContrasenna = function(req,res, next){
 
-
-/*
-@Descripcion: genera el hash para la nueva contrasenna
-@Autor: Jose Viteri
-@FechaCreacion: 29/06/2017
-
-*/
-
-module.exports.generarHashNuevaContrasenna = function(req,res, next){
-
-
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(req.body.nuevaContrasenna, salt, function(err, hash) {
             console.log(hash);
@@ -112,10 +101,3 @@ module.exports.generarHashNuevaContrasenna = function(req,res, next){
         });
     });
 };
-
-
-
-
-
-
-
