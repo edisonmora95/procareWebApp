@@ -1,9 +1,6 @@
 /*
 	@Descripción: Controlador de la vista de ingresarProcariano.ejs
 	@Autor: @edisonmora95
-/*
-	@Descripción: Controlador de la vista de ingresarProcariano.ejs
-	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 	@ÚltimaModificación: 7/07/2017 @edanmora95 Refactorización
 */
@@ -52,9 +49,7 @@ var main = new Vue({
 		this.inicializarMaterialize();
 	},
 	data: {
-
 		fechaIncorrecta: false,
-
 		errorObj: {
 			campo: '',
 			msj: ''
@@ -125,56 +120,6 @@ var main = new Vue({
 		grupoMayoresSel: ''
 	},
 	methods: {
-
-		crearSelectGrupo: function(idSelect, grupoEscogido, idDivSelect, grupos){
-			/*
-				Parámetros:
-					idSelect -> id del elemento select que se va a crear en esta función para contener a los grupos deseados. Ejemplo: select-grupo-formacion
-					grupoEscogido ->  Elemento de data con el cual se hará el 2 way data binding. Almacenará el grupo escogido del select
-					idDivSelect -> id del div que contendrá al elemento select que se va a crear
-					grupos -> Los grupos que se van a mostrar en el select
-			*/
-			//Todos los parametros de id vienen sin el #
-			var self = this;
-			var select = $('<select>').attr({"id":idSelect});
-			var optionSelectedAux = '#' + idSelect + ' option:selected';
-			select.change(function(){
-				grupoEscogido.id = $(optionSelectedAux).val();
-				grupoEscogido.nombre = $(optionSelectedAux).text();
-				self.procariano.grupo = $(optionSelectedAux).text();
-			});
-			var idDivSelectAux = '#' + idDivSelect;
-			var divSelect = $(idDivSelectAux);
-			self.crearSelectOptions(select, grupos, divSelect);
-			divSelect.append(select);
-			select.material_select();
-		},	
-		crearSelectOptions: function(select, grupos, divSelect){
-			/*
-				Parámetros:
-					select -> elemento select creado en la función crearSelectGrupo que mostrará a los grupos deseados
-					grupos -> los grupos que se mostrarán como opciones dentro del select
-					divSelect -> elemento div que contendrá al select
-			*/
-			var optionDisabled = $('<option>').val("").text("");
-			select.append(optionDisabled);
-			$.each(grupos, function(index, grupo){
-				var option = $('<option>').val(grupo.id).text(grupo.nombre);
-				select.append(option);
-			});
-			divSelect.append(select);
-		},
-		validateBeforeSubmit: function() {
-			var self = this;
-
-      this.$validator.validateAll().then(() => {
-        // eslint-disable-next-line
-        console.log('Se va a enviar: ');
-        console.log(self.procariano);
-
-			//Primero valida que la fecha ingresada no sea de alguien menor a 11 años
-			var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
-
 		validateBeforeSubmit() {
 			let self = this;
 			if(self.validarFechaNacimiento()){
@@ -197,7 +142,6 @@ var main = new Vue({
     validarFechaNacimiento(){
     	let self = this;
     	let year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
-
 			let actualYear = new Date().getFullYear();
 			let diferencia = actualYear - year;
 			if(diferencia < 11){
@@ -206,38 +150,6 @@ var main = new Vue({
 				$('#modalError').modal('open');
 				return false;
 			}
-
-
-      this.$validator.validateAll().then(() => {
-        // eslint-disable-next-line
-        //console.log('Se va a enviar: ');
-        //console.log(self.procariano);
-
-        var urlApi = '/api/procarianos/';
-        $.ajax({
-        	type:'POST',
-        	url: urlApi,
-        	data: self.procariano,
-        	success: function(res){
-
-        		console.log(res);
-
-        		//console.log(res);
-
-        		if(res.mensaje === 'Se pudo crear correctamente'){
-        			$('#modalProcarianoCreado').modal('open');
-        		}else{
-        			alert('Error al ingresar en la base de datos');
-        		}
-        	}
-        });
-        
-      }).catch(() => {
-          // eslint-disable-next-line
-          self.errorObj.campo = self.errors.errors[0].field;
-          self.errorObj.msj = self.errors.errors[0].msg;
-          $('#modalError').modal('open');
-
 			return true;
     },
     /*
@@ -273,7 +185,6 @@ var main = new Vue({
       	error : function(err){
       		console.log(err);
       	}
-
       });
     },
     /*
