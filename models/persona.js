@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.TEXT
     },
     fechaNacimiento: {
-      type : DataTypes.DATEONLY
+      type : DataTypes.DATE
     },
     genero : {
       type : DataTypes.STRING,

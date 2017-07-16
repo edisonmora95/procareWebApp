@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : true
     },
     fechaOrdenacion: {
-      type : DataTypes.DATEONLY,
+      type : DataTypes.DATE,
       allowNull : true
     },
     estado: {
@@ -40,14 +40,12 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Procariano.belongsTo(models.Persona)
-        Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'});
-        Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
-        Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
-        Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
-
+        Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'})
+        Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'})
+        Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'})
+        Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'})
       }
     }
-
   });
   return Procariano;
 };
