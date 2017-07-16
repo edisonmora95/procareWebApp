@@ -8,9 +8,11 @@
 */
 
 
+
 var controladorLogin = require('../../controllers/login.controller')
 var utils = require('../../utils/utils');
->>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+var controladorLogin = require('../../controllers/login.controller')
+var utils = require('../../utils/utils');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -87,30 +89,34 @@ passport.deserializeUser(function(id, done) {
 router.post('/',
 
   passport.authenticate('local', {failureRedirect:'/api/loginFalla',failureFlash: true, successFlash : true}),
+
+  passport.authenticate('local', {failureRedirect:'/api/login/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
+
+    var rols = req.user.Rols;
+    console.log(req.user.Rols[0].nombre)
+    var rolsJson = [];
+    for (i = 0 ; i< rols.length ; i++){
+      rolsJson.push(rols[i].nombre);
+    }
+    var json = {
+      status : true,
+      nombre : req.user.nombres,
+      apellidos : req.user.apellidos,
+      correo : req.user.email, 
+      rols : rolsJson
+    }
+
   	let objeto = {
   		status : true , 
-  		message : "logueado correcto"
+  		message : "logueado correcto",
+      objeto : json
   	}
-  	res.json(objeto);
-  	/*
-  	var rols = req.user.Rols;
-  	console.log(req.user.Rols[0].nombre)
-  	var rolsJson = [];
-  	for (i = 0 ; i< rols.length ; i++){
-  		rolsJson.push(rols[i].nombre);
-  	}
-  	var json = {
-  		status : true,
-  		nombre : req.user.nombres,
-  		apellidos : req.user.apellidos,
-  		correo : req.user.email, 
-  		rols : rolsJson
-  	}
+
 
 
   	console.log(json);
-=======
+
   passport.authenticate('local', {failureRedirect:'/api/login/loginFalla',failureFlash: true, successFlash : true}),
   function(req, res) {
 
@@ -141,7 +147,10 @@ router.post('/',
   	
 
     /*
+<<<<<<< HEAD
 >>>>>>> 2bc1d58b9be44010fd39109b3dbe1fb6faa16149
+=======
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
   	res.render("procariano/verProcariano", json)
   	*/
 });
@@ -155,6 +164,7 @@ router.get('/api/loginFalla', function(req,res,next){
 	}
 	res.json(objeto);
 })
+
 
 /* GET home page. */
 
@@ -188,40 +198,10 @@ router.get('/logout', function(req, res){
 
 
 
+
 /*
-
-
-//cambio password, no implemnetado del todo
-router.post('/cambio', function(req, res){
-
-  Usuario.getUsuarioByCorreo(req.body.correo, function(err, user){
-    if(err) throw err;
-    if(!user){
-      var data = { type : "error" , message : "usuario no existe" };
-      res.json(data);
-      
-    }
-
-    Usuario.comparePassword(req.body.oldPassword, user.password, function(err, isMatch){
-      if(err) throw err;
-      if(isMatch){
-        var id = user._id;
-        Usuario.cambiarPassword(id, req.body.newPassword, function(err){
-          if (err) throw err;
-          var data = {type : "success" , message : "cambio Contraseña exitoso"};
-          res.json(data);
-        })
-        
-      } else {
-        var data = {type : "error" , message : "Contraseña no valida"};
-        res.json(data);
-      }
-    });
-   });
-
-});
-
-*/
+=======
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
 
 
 
@@ -229,6 +209,14 @@ router.post('/cambio', function(req, res){
 router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
 
 
+
+<<<<<<< HEAD
+*/
+
+
+
+
+router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
 
 
 module.exports = router;

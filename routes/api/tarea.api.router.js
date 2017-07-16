@@ -10,13 +10,13 @@ router.post('/nuevo', controladorTarea.crearTarea);
 
 //Read Tareas
 
+
 router.get('/', controladorTarea.mostrarTarea);
 
 
 /*
 router.get('/', controladorTarea.mostrarTarea);
 */
-
 
 //Update Tareas
 router.put('/:id', controladorTarea.editarTarea);
@@ -27,11 +27,16 @@ router.delete('/:id', controladorTarea.eliminarTarea);
 
 module.exports = router;
 
+
 //mostrar tareas de todos (para el personal)
 router.get('/', controladorTarea.mostrarTareas);
 
 //mostrar tareas del usuario
 router.get('/:id', controladorTarea.mostrarTareaPorUsuario);
+
+
+module.exports = router;
+
 
 module.exports = router;
 

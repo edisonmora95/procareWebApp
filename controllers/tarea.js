@@ -12,11 +12,14 @@ const crearTarea = (req, res, next) => {
   estado = 'activo';
 
   modelo.Tarea.create({
+ 
 
     id_responsable : req.body.responsable,
 
     //id_responsable : req.body.nombre,
-    nombre : req.body.nombre,
+ 
+    id_responsable : req.body.nombre,
+     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
     fecha_limite : req.body.fecha_limite,
     prioridad : req.body.prioridad,
@@ -48,12 +51,14 @@ const crearTarea = (req, res, next) => {
 const eliminarTarea = (req, res, next) => {
    estado = 'inactivo';
 
+
    modelo.Tarea.update({
     {
       estado: req.body.estado
     }
     where:{
       id: req.params.id
+
 
    idTarea = req.params.id;
    modelo.Tarea.update({
@@ -121,8 +126,12 @@ const editarTarea = (req, res, next) => {
   });
 }
 
+
 /*
 
+=======
+/*
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
 const mostrarTarea = (req,res,next) =>{
   modelo.Tarea.findAll({
 
@@ -146,7 +155,10 @@ const mostrarTarea = (req,res,next) =>{
     res.json(jsonRespuesta);
   });
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
 */
 const mostrarTareaPorUsuario = (req, res, next) =>{
   idUsuario = req.params.id;
@@ -173,6 +185,10 @@ const mostrarTareaPorUsuario = (req, res, next) =>{
           start : tarea.fecha_publicacion ,
           end : tarea.fecha_limite ,
           description : tarea.descripcion, 
+
+
+          type : "tarea"
+
         });
     });
     return res.json({
@@ -214,6 +230,9 @@ const mostrarTareas = (req, res, next) =>{
           start : tarea.fecha_publicacion ,
           end : tarea.fecha_limite ,
           description : tarea.descripcion, 
+
+        type : "tarea"
+
         });
     });
     return res.json({
@@ -236,7 +255,12 @@ module.exports = {
   crearTarea,
   eliminarTarea,
   editarTarea,
+<<<<<<< HEAD
    mostrarTareaPorUsuario,
   mostrarTareas
 
+
+  mostrarTareaPorUsuario,
+  mostrarTareas
+ 
 }

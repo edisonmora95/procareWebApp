@@ -4,6 +4,8 @@
 	@FechaCreación: 31/04/2017
 */
 
+'use strict';
+
 import Navbar from './../../components/navbar.vue';
 import FormProcariano from './../../components/formProcariano.vue';
 Vue.component('navbar', Navbar); 
@@ -20,6 +22,8 @@ var app = new Vue({
 
 		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
+		//this.procariano.fechaNacimiento = new Date(this.procariano.fechaNacimiento)
+		
 	},
 	data: {
 		id: 0,
@@ -45,6 +49,7 @@ var app = new Vue({
 		},*/
 
 		procariano: {},
+		fechaNacimiento: '',
 		habilitaredicion: false
 	},
 	methods: {
@@ -71,8 +76,8 @@ var app = new Vue({
     },
     date(date) {
       var es = moment().locale('es');
-      if (date == undefined || date == '') {
-        return '----'
+      if (date === undefined || date === '') {
+        return '----';
       }
       return moment(date).format('DD MMMM YYYY');
 
@@ -87,8 +92,10 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					self.procariano = res[0];
+					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
+					console.log(self.fechaNacimiento)
 				}
-			})
+			});
 		},
 		eliminar: function(){
 

@@ -4,10 +4,14 @@
 @Autor: jose viteri
 @FechaCreacion: 19/06/2017
 <<<<<<< HEAD
+<<<<<<< HEAD
 @UltimaFechaModificacion: --
 =======
 @UltimaFechaModificacion: 03/07/2017 //solucionado problema sesiones
 
+=======
+@UltimaFechaModificacion: 03/07/2017 //solucionado problema sesiones
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
 
 
 */
@@ -18,7 +22,11 @@ var router = express.Router();
 var modelos = require('../../models');
 
 
+
 router.get('/api/loginFalla', function(req,res,next){
+router.get('/loginFalla', function(req,res,next){
+
+
 router.get('/loginFalla', function(req,res,next){
 
 	let objeto = {
@@ -27,10 +35,15 @@ router.get('/loginFalla', function(req,res,next){
 	}
 	res.json(objeto);
 
+
 })
 
 
 });
+
+
+});
+
 
 router.get('/usuarios', function(req, res, next){
   var rolesTemp = req.user[0].dataValues.Rols;
@@ -48,6 +61,10 @@ router.get('/usuarios', function(req, res, next){
 
   	res.json(json);
 });
+
+
+module.exports = router;
+
 
 module.exports = router;
 

@@ -7,6 +7,7 @@
 
 var modelo = require('../models');
 
+ 
 
 const CrearDonacion = (req, res, next) => {
 
@@ -23,6 +24,13 @@ const Donacion = (req, res, next) => {
     observacion : req.body.observacion,
     estado : req.body.estado
 
+ 
+const Donacion = (req, res, next) => {
+
+  estado = 'activo';
+
+  modelo.Donacion.create({
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
     id_responsable : req.body.nombre,
     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
@@ -31,7 +39,6 @@ const Donacion = (req, res, next) => {
     estado: req.body.estado,
     descripcion : req.body.descripcion,
     categoria : req.body.categoria
-
 
   }).then( repuesta => {
     var status = true;
@@ -85,12 +92,14 @@ const eliminarDonacion = (req, res, next) => {
 const editarDonacion = (req, res, next) => {
   modelo.Donacion.update({
 
+<<<<<<< HEAD
 
     id_benefactor : req.body.id_benefactor,
     cantidad_donada : req.body.cantidad_donada,
     fecha_donacion : req.body.fecha_donacion,
     observacion : req.body.observacion,
     estado : req.body.estado
+
      id_responsable : req.body.nombre,
     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
@@ -99,7 +108,6 @@ const editarDonacion = (req, res, next) => {
     estado: req.body.estado,
     descripcion : req.body.descripcion,
     categoria : req.body.categoria
-
 
   },{
     where:{
@@ -155,5 +163,7 @@ module.exports = {
   eliminarDonacion,
   editarDonacion,
   mostrarDonacion
+<<<<<<< HEAD
 }
 
+}

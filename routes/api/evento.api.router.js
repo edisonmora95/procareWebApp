@@ -11,6 +11,8 @@ router.post('/nuevo', controladorEvento.crearEvento);
 //Read Evento
 router.get('/', controladorEvento.mostrarEvento);
 
+router.get('/', controladorEvento.mostrarEventos);
+
 
 //Update Evento
 router.put('/:id', controladorEvento.editarEvento);
@@ -19,7 +21,9 @@ router.put('/:id', controladorEvento.editarEvento);
 router.delete('/:id', controladorEvento.eliminarEvento);
 
 
-module.exports = router;
 
 module.exports = router;
 
+module.exports = router;
+
+module.exports = router;

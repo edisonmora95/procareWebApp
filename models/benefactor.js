@@ -1,5 +1,6 @@
 /*
 @Descripcion: Modelo de procariano
+<<<<<<< HEAD
 
 @Autor: jose Alcivar
 @FechaCreacion: 29/06/2017
@@ -9,6 +10,11 @@
 @FechaCreacion: 20/05/2017
 @UltimaFechaModificacion: 03/06/2017 @JoseViteri
 
+=======
+@Autor: jose viteri
+@FechaCreacion: 20/05/2017
+@UltimaFechaModificacion: 03/06/2017 @JoseViteri
+>>>>>>> d1aba19f25bbe92b0dbcbd0f516fa2bc7511a9d5
 */
 
 
@@ -55,7 +61,11 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+
         Benefactor.belongsTo(models.Persona , {through: 'benefactor_persona'})
+
+      //  Benefactor.belongsTo(models.Persona)
+
         // associations can be defined here
       }
     }
@@ -63,6 +73,8 @@ module.exports = function(sequelize, DataTypes) {
   });
   return Benefactor;
 
+
 };
 
 
+};
