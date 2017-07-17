@@ -100,7 +100,15 @@ const mostrarTicket = (req,res,next) =>{
 	});
 }
 
+/*
 
+const eliminarNoGanadores = (req,res,next) =>{
+	var ganador;
+	modelo.Ticket.findAll({
+	});
+}
+
+*/
 
 module.exports = {
 	crearTicket,
