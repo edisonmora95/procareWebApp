@@ -5,23 +5,19 @@
 */
 
 import Navbar from './../../components/navbar.vue';
-//import 'vue-event-calendar/dist/style.css'; //^1.1.10, CSS has been extracted as one file, so you can easily update it.
-//import vueEventCalendar from 'vue-event-calendar';
-//Vue.use(vueEventCalendar, {locale: 'en'}) //locale can be 'zh' , 'en' , 'es', 'pt-br', 'ja'
-//Vue.use(require('vue-full-calendar'));
-//import VueFullCalendar from 'vue-full-calendar';
-//Vue.component('vue-full-calendar', VueFullCalendar);
+import Tarea from './../../components/tareaNueva.vue';
 
 Vue.component('navbar', Navbar); 
-//Vue.component('vue-event-calendar', vueEventCalendar);
+Vue.component('tarea', Tarea); 
 
 let indexApp = new Vue({
 	el: '#indexApp',
 	created(){
-
+		this.obtenerProcarianos();
 	},
 	mounted(){
 		let self = this;
+		$('.modal').modal();
 		$.when($.ajax(self.obtenerEventos())).then(function(){
 			$('#calendar').fullCalendar({
 	      //Atributos
@@ -55,16 +51,20 @@ let indexApp = new Vue({
 	    	}
 	    });	
 		});
-		
+
 	},
 	methods:{
 		obtenerEventos(){
 			let self = this;
-			//console.log('hol.a');
-			//'/scripts/eventos.json'
-			$.getJSON('/api/tarea/', function(data){
-				console.log(data);
-				console.log(data.sequelizeStatus);
+			$.ajax({
+				type: 'GET',
+				url: '/api/tarea/',
+				success(res){
+					console.log(res)
+				}
+			});
+			/*$.getJSON('/api/tarea/', function(data){
+				console.log(data)
 				self.eventos = data.sequelizeStatus;
 				$.each(data.sequelizeStatus, function(index, evento){
 					//console.log("este es el evento " + evento[0]);
@@ -72,11 +72,46 @@ let indexApp = new Vue({
 					//console.log("este es el evento 1 " + evento[0][1]);
 					self.eventos.push(evento);
 				})
-			})
+			})*/
+		},
+		obtenerProcarianos(){
+			let self = this;
+			let urlAPi = '/api/procarianos/';
+			$.ajax({
+				type: 'GET',
+				url: urlAPi,
+				success(res){
+					self.procarianos = res;
+				}
+			});
+		},
+		crearTarea(){
+			this.flag = false;
 		}
 	},
 	data: {
+		flag: true,
 		eventos: [],
-		eventoSeleccionado: {}
+		eventoSeleccionado: {},
+		procarianos: []
 	}
+
 });
+
+});
+
+
+
+//Por alguna razón, esto no funciona dentro de la instancia de Vue... 
+	$(document).ready(function(){
+		console.log('sdaf')
+		let datos = {};
+		$.each(indexApp.$data.procarianos, function(index, procariano){
+			let nombreCompleto = procariano.nombres + ' ' + procariano.apellidos;
+			datos[nombreCompleto] = null;
+		});
+	  $('input.autocomplete').autocomplete({
+	     data: datos
+	   });
+	});
+

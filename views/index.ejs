@@ -9,6 +9,7 @@
  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
  		<!--<link rel="stylesheet" type="text/css" href="/scripts/vue-event-calendar/dist/style.css">-->
  		<link rel='stylesheet' href='/scripts/fullcalendar/dist/fullcalendar.min.css' />
+ 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  		<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
 	</head>
 	<body>
@@ -17,7 +18,7 @@
 				<navbar></navbar>
 			</header>
 			<main>
-			  <div class="row">
+			  <div class="row" v-show="flag">
 			  	<div id='calendar' class="col l8 s12"></div>	
 			  	<div id="tareas" class="col l4 s12">
 			  		<div class="card">
@@ -28,15 +29,18 @@
 			  			<p><span>Hora de inicio: </span>{{eventoSeleccionado.start}}</p>
 			  			<p><span>Hora de salida: </span>{{eventoSeleccionado.end}}</p>
 			  		</div>
+			  		 <a class="btn-floating btn-large waves-effect waves-light red" @click="crearTarea"><i class="material-icons">add</i></a>
 			  	</div>
 			  </div>
 			</main>
+			<tarea v-show="!flag" @flagchanged="flag = $event" :procarianos="procarianos"></tarea>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 		<script src='https://unpkg.com/vue@2.3.3'></script>
 		<script src="/scripts/moment/min/moment.min.js"></script>
 		<script src='scripts/fullcalendar/dist/fullcalendar.min.js'></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.js"></script>
 		<script src="/build/index/indexScript.js"></script>
 	</body>
 </html>

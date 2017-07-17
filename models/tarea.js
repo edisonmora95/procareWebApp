@@ -12,10 +12,13 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : false
     },
-    fecha_publicacion: {
+    fechaPublicacion: {
       type : DataTypes.DATE
     },
-    fecha_limite: {
+    fechaInicio: {
+      type : DataTypes.DATE
+    },
+    fechaFin: {
       type : DataTypes.DATE
     },
     prioridad : {
@@ -23,10 +26,8 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     },
     estado: {
-
       type : DataTypes.STRING,
       allowNull : false/*,
-      
       validate : {
         isIn : ['activo','inactivo']
       }
