@@ -12,6 +12,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Etapa.belongsToMany(models.Grupo , {through: 'GrupoEtapa'})
         // associations can be defined here
       }
     }
