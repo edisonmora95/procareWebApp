@@ -8,29 +8,25 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
    var Ticket = sequelize.define('Ticket', {
-    fecha_compra : {
+    fechaCompra : {
       type : DataTypes.DATE,
       allowNull : false
     },
-    id_procariano : {
-      type : DataTypes.INTEGER,
-      allowNull : false
-    },
     valor : {
-      type : DataTypes.DECIMAL(2,2),
+      type : DataTypes.DOUBLE,
       allowNull : false
     },
-    es_ganador : {
+    esGanador : {
       type : DataTypes.STRING,
       allowNull : false,
       validate : {
-        isIn : ['si','no']
+        isIn : [['si', 'no']]
       }
     }
   }, {
     classMethods : {
       associate : function(models) {
-	//Procariano.belongsTo(models.Procariano)
+        Ticket.belongsTo(models.Procariano)
         // associations can be defined here
       }
     }

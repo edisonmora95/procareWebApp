@@ -2,36 +2,34 @@
 @Descripcion: Controlador de Club por Ti.
 @Autor: Luis Lainez
 @FechaCreacion: 14/07/2017
-@UltimaFechaModificacion: 16/07/2017
+@UltimaFechaModificacion: 16/07/2017 erialper
 */
 
 var modelo = require('../models');
 
 let jsonRespuesta = {};
 
-const crearTicket = (req, res, next) => {
-	if(validarRequestCrearTicket(req, res)){
-		modelo.TicketClubPorTi.create({
-			ProcarianoId : procariano.get('id'),
-			fechaCompra : new Date(req.body.fechaCompra),
-			valor : req.body.valor,
-			esGanador : req.body.esGanador
-		}).then( respuesta => {
-			jsonRespuesta.status = true;
-			jsonRespuesta.mensaje = 'Se pudo crear correctamente';
-			jsonRespuesta.sequelizeStatus = respuesta;
-			res.status(200).json(jsonRespuesta)
-		}).catch( error => {
-			jsonRespuesta.status = false;
-			jsonRespuesta.mensaje = 'No se pudo crear';
-			jsonRespuesta.sequelizeStatus = error;
-			res.status(422).json(jsonRespuesta);
-		});
-	}
+const crearTicket = (req, res, next) => {	
+	modelo.Ticket.create({
+		ProcarianoId : req.body.procarianoId,
+		fechaCompra : new Date(req.body.fechaCompra),
+		valor : req.body.valor,
+		esGanador : req.body.esGanador
+	}).then( respuesta => {
+		jsonRespuesta.status = true;
+		jsonRespuesta.mensaje = 'Se pudo crear correctamente';
+		jsonRespuesta.sequelizeStatus = respuesta;
+		res.status(200).json(jsonRespuesta)
+	}).catch( error => {
+		jsonRespuesta.status = false;
+		jsonRespuesta.mensaje = 'No se pudo crear';
+		jsonRespuesta.sequelizeStatus = error;
+		res.status(422).json(jsonRespuesta);
+	});
 }
 
 const eliminarTicket = (req, res, next) => {
-	modelo.TicketClubPorTi.destroy({
+	modelo.Ticket.destroy({
 		where:{
 			id: req.params.id
 		}
@@ -49,7 +47,7 @@ const eliminarTicket = (req, res, next) => {
 }
 
 const editarTicket = (req, res, next) => {
-	modelo.TicketClubPorTi.update({
+	modelo.Ticket.update({
 		fechaCompra : new Date(req.body.fechaCompra),
 		valor : req.body.valor,
 		esGanador : req.body.esGanador
@@ -79,7 +77,7 @@ const editarTicket = (req, res, next) => {
 }
 
 const mostrarTicket = (req,res,next) =>{
-	modelo.TicketClubPorTi.findAll({
+	modelo.Ticket.findAll({
 
 	}).then( repuesta => {
 		var status = true;
