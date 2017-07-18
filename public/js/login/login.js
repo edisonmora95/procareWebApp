@@ -3,7 +3,7 @@
 var appLogin = new Vue({
 	el: '#appLogin',
 	mounted(){
-
+		
 	},
 	data: {
 		correo: '',
@@ -13,14 +13,15 @@ var appLogin = new Vue({
 	methods: {
 		login(){
 			let self = this;
-			var url = "/login/";
+			var url = "/";
 			let obj = {
 				correo : $('#UserName').val(),
 				password : $('#Password').val()
-			}
+			};
 			$.ajax({
 				type : 'POST',
 				data : obj,
+				url: url,
 				success(res){
 					console.log(res);
 					if(res.status){
@@ -40,4 +41,10 @@ var appLogin = new Vue({
 			
 			}
 		}
-	});
+});
+
+$(document).keypress(function(e) {
+  if(e.which === 13) {
+    appLogin.login();
+  }
+});

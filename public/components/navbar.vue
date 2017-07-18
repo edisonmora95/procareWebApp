@@ -1,6 +1,6 @@
 <template>
 	<div id="template">
-		<nav>
+		<nav class="orange darken-1">
 			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
 			<a href="/" class="brand-logo">Procare</a>
 			<ul id="slide-out" class="side-nav">
@@ -41,20 +41,31 @@
 <script>
 	module.exports = {
 		created(){
-			
+			this.obtenerUsuarioLogeado();
 		},
 		mounted(){
 			$(".button-collapse").sideNav();
 			$(".dropdown-button").dropdown();
-			this.formarNavbar();
+			//this.formarNavbar();
 		},
 		data: function() {
 			return{
-				greeting: 'Hello',
-				usuario: 'personal'
+				usuario: {}
 			}
 		},
 		methods: {
+			obtenerUsuarioLogeado(){
+				let self = this;
+				$.ajax({
+					type: 'GET',
+					url: '/api/login/usuarios',
+					success(res){
+						self.usuario = res;
+						console.log(self.usuario)
+						self.formarNavbar();
+					}
+				});
+			},
 			formarNavbar() {
 				/*
 			   	Esta función crea el navbar dependiendo del tipo de usuario que está loggeado.
@@ -83,7 +94,9 @@
 				let aAsistencias = $('<a>').html('Asistencias');
 				liAsistencias.append(aAsistencias);
 				$('#ulProcareFormacion').append(liAsistencias);
-				if(this.usuario === 'personal' || this.usuario === 'director ejecutivo'){
+
+
+				if($.inArray('Personal', this.usuario.roles) >= 0){
 					this.crearDropdownGrupos();
 					this.crearDropdownProcarianos();	
 					//Usuarios

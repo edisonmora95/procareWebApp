@@ -10,6 +10,7 @@ body{
 }
 
 .col-chicos{
+	margin-top: 2%;
 	border: 1px solid #d3dbdb;
 	border-radius: 3%;
 	padding: 0 !important;

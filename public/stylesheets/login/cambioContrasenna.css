@@ -1,0 +1,24 @@
+.container {
+	margin-top: 5%;
+	margin-bottom: 5%;
+	background-color: white;
+	padding: 6%;
+	border-radius: 2%;
+
+}
+
+#modal1 {
+	height: 27%;
+	width: 40%;
+	border-radius: 2%;
+
+}
+
+.alert{
+	color: red;
+	font-size: 1.2em;
+}
+
+body {
+	background-color: rgba(245,145,29,0.7);;
+}

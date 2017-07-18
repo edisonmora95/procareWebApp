@@ -74,16 +74,15 @@
 									</div>
 								</div>
 								<!--Tipo-grupo-->
-								<!--<div class="row rowVer" id="rowVerTipoGrupo">
+								<div class="row rowVer" id="rowVerTipoGrupo">
 									<div class="col s6" id="verTipo">
 										<label>Tipo</label>
-										<p>{{procariano.tipo}}</p>
 									</div>
 									<div class="col s6" id="verGrupo">
 										<label>Grupo</label>
-										<p>{{procariano.grupo}}</p>
+										<p>{{grupoprocariano.text}}</p>
 									</div>
-								</div>-->
+								</div>
 								<!--Colegio-Universidad-->
 								<div class="row rowVer" id="rowVerEducacion">
 									<div class="col s6" id="verColegio">
@@ -107,7 +106,7 @@
 				<!--End row ver procariano-->
 				<div class="card" id="rowEditar" v-if="habilitaredicion">
 					<div class="card-content">
-						<editar :procariano="procariano" :habilitaredicion="habilitaredicion" @edicionchanged="habilitaredicion"></editar>	
+						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
 			</main>
