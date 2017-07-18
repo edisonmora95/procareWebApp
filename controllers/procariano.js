@@ -260,6 +260,9 @@ const eliminarProcariano = (req, res, next) => {
 	});
 };
 
+
+//FUNCIONES INTERNAS
+
 /*
 	@Autor: @edanmora95
 	@FechaCreación: 14/07/2017
