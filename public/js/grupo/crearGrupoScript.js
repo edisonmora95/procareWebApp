@@ -25,7 +25,10 @@ var app = new Vue({
 			nombre: '',
 			animador: '',
 			genero: '',
-			etapa: ''
+			etapa: '',
+			tipo: 'Formación',
+			cantidadChicos: 0,
+			numeroReuniones: 0
 		}
 	},
 	methods: {

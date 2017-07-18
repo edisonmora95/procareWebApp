@@ -41,20 +41,31 @@
 <script>
 	module.exports = {
 		created(){
-			
+			this.obtenerUsuarioLogeado();
 		},
 		mounted(){
 			$(".button-collapse").sideNav();
 			$(".dropdown-button").dropdown();
-			this.formarNavbar();
+			//this.formarNavbar();
 		},
 		data: function() {
 			return{
-				greeting: 'Hello',
-				usuario: 'personal'
+				usuario: {}
 			}
 		},
 		methods: {
+			obtenerUsuarioLogeado(){
+				let self = this;
+				$.ajax({
+					type: 'GET',
+					url: '/api/login/usuarios',
+					success(res){
+						self.usuario = res;
+						console.log(self.usuario)
+						self.formarNavbar();
+					}
+				});
+			},
 			formarNavbar() {
 				/*
 			   	Esta función crea el navbar dependiendo del tipo de usuario que está loggeado.
@@ -83,7 +94,8 @@
 				let aAsistencias = $('<a>').html('Asistencias');
 				liAsistencias.append(aAsistencias);
 				$('#ulProcareFormacion').append(liAsistencias);
-				if(this.usuario === 'personal'){
+
+				if($.inArray('Personal', this.usuario.roles) >= 0){
 					this.crearDropdownGrupos();
 					this.crearDropdownProcarianos();	
 				}else{
