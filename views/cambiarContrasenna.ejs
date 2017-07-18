@@ -55,9 +55,10 @@
 				          <label for="nuevaContrasenna2">Ingrese su nueva contraseña</label>
 				        </div>
 				      </div>
-				      <p v-if="fallaCambio" > {{msg}} </p>
-				      <div class="row">
 
+							<p class="alert" v-if="fallaCambio" > {{msg}} </p>
+			      	
+				      <div class="row">
 				      	<div class="col s4 offset-s2">
 				      		<a class="waves-effect waves-light btn" @click="cancelar"  > <i class="material-icons left">not_interested</i>Cancelar</a>
 				      	</div>
@@ -69,8 +70,8 @@
 				  </div>
 				  <div id="modal1" class="modal modal-fixed-footer">
 				    <div class="modal-content">
-				      <h4>¡Cambio exitoso!</h4>
-				      <p> Sera redirigido a la pantalla de inicio de sesión</p>
+				      <h4 class="center-align">¡Cambio exitoso!</h4>
+				      <p class="center-align"> Sera redirigido a la pantalla de inicio de sesión</p>
 				    </div>
 				  </div>
 			  </div>
