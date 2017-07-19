@@ -40,17 +40,17 @@
 			</v-row>
 			<v-row>
 				<div class="col s6 input-field">
-					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'required|numeric'">
+					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 					<label for="celular" class="active">Celular</label>
 				</div>
 				<div class="col s6 input-field">
-					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'required|numeric'">
+					<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
 					<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
 			</v-row>
-			<!--<v-row>
+			<v-row>
 				<div class="col s6 input-field">
 					<v-select name="tipo" id="tipo" v-model="procariano.tipo">
 						<option value="Chico de Formación">Chico de Formación</option>
@@ -62,10 +62,13 @@
 					<label class="active">Tipo</label>
 				</div>
 				<div class="col s6 input-field">
-					<v-select name="grupo" id="grupo" v-model="procariano.grupo"></v-select>
+					<v-select name="grupo" id="grupoSelect" v-model="grupoprocariano.id" :items="grupos" select-text="">
+						
+					</v-select>
+						
 					<label class="active">Grupo</label>
 				</div>
-			</v-row>-->
+			</v-row>
 			<v-row>
 				<div class="col s6 input-field">
 					<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
@@ -99,6 +102,16 @@
 	    </div>
 	    <div class="modal-footer">
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	    </div>
+	  </div>
+	  <div id="modalCambioGrupo" class="modal">
+	    <div class="modal-content">
+	      <h4 class="center-align">Cambio de grupo</h4>
+	      <p class="center-align">¿Seguro que desea cambiar el grupo del procariano seleccionado a: {{grupoprocariano.text}} ?</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cambiarDeGrupo">Si</a>
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cancelarCambioDeGrupo">No</a>
 	    </div>
 	  </div>
 	</div>
@@ -147,16 +160,23 @@
 	VeeValidate.Validator.updateDictionary(dictionary);
 
 	module.exports = {
-		props: ['procariano', 'habilitaredicion'],
+		props: ['procariano', 'habilitaredicion', 'grupoprocariano'],
 		data(){
 			return{
 				flag: true,
-				procarianoId: 1,
 				errorObj: {
 					campo: '',
 					msj: ''
-				}
+				},
+				grupos: [],
+				grupoPrevio: {
+					id: '',
+					text: ''
+				},
 			}
+		},
+		created(){
+			this.obtenerTodosLosGrupos(this);
 		},
 		mounted(){
 			let self = this;
@@ -176,6 +196,38 @@
 				$('#fechaNacimiento').change(function(){
 					self.bindFechaNacimiento();
 				});
+
+				const aux = self.grupoprocariano.id;
+				self.grupoPrevio.id = aux
+
+
+				$('#grupoSelect').change(function(){
+					self.abrirModalCambioGrupo();
+				});
+				
+			},
+			obtenerTodosLosGrupos(self){
+				self.grupos = [];
+				let generoGrupo = (self.procariano.genero === 'masculino') ? 'Procare' : 'Procare Mujeres';
+				$.get('/api/grupos/', function(res){
+					let conexionExitosa = (res.status === true && res.mensaje === 'Se obtuvieron los grupos correctamente');
+					if(conexionExitosa){
+						//IMPORTANTE
+						//CAMBIAR EL ÚLTIMO PARÁMETRO CUANDO TENGA LA TABLA TIPO
+						self.filtrarGrupos(self, res.sequelizeStatus, generoGrupo, 'Formación');
+					}
+				});
+			},
+			filtrarGrupos(self, array, genero, tipo){
+				$.each(array, function(index, grupo){
+					if(grupo.genero === genero && grupo.tipo === tipo){
+						let obj = {
+							id: grupo.id,
+							text: grupo.nombre
+						};
+						self.grupos.push(obj);
+					}
+				});
 			},
 			cancelarEdicion(){
 				location.reload();
@@ -192,9 +244,10 @@
 			},
 			editarProcariano(){
 				let self = this;
+				var path = window.location.pathname;
+				let id = path.split('/')[3];
 				self.flag = false;
-      	self.procariano.id = self.procarianoId;
-      	var urlApi = '/api/procarianos/' + self.procarianoId;
+      	var urlApi = '/api/procarianos/' + id;
       	$.ajax({
       		type: 'PUT',
       		data: self.procariano,
@@ -229,7 +282,69 @@
 	    	self.errorObj.campo = campo;
         self.errorObj.msj = mensaje;
         $('#modalError').modal('open');
+	    },
+	    abrirModalCambioGrupo(){
+	    	let self = this;
+	    	let select = $('#grupoSelect');
+	    	let optionSelectedText = $('#grupoSelect option:selected').text();
+	    	let optionSelectedVal = $('#grupoSelect option:selected').val();
+
+	    	self.grupoprocariano.text = optionSelectedText;
+	    	self.grupoprocariano.id = optionSelectedVal;
+
+	    	$('#modalCambioGrupo').modal('open');
+	    },
+	    cambiarDeGrupo(){
+	    	let self = this;
+	    	let dataObj = {
+	    		idGrupoPrev: self.grupoPrevio.id,
+	    		idGrupoNuevo: self.grupoprocariano.id
+	    	};
+	    	$.ajax({
+	    		type: 'PUT',
+	    		url: '/api/pg/' + self.procariano.procarianoID,
+	    		data: dataObj,
+	    		success(res){
+	    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
+	    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
+
+	    			if(res.status === true){
+	    				const auxId = self.grupoprocariano.id;
+	    				const auxText = self.grupoprocariano.text;
+	    				self.grupoPrevio.id = auxId;
+	    				self.grupoPrevio.text = auxText;
+	    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
+	    			}else if(res.status === false && res.mensaje === msjErrorEditar){
+	    				const auxId = self.grupoPrevio.id;
+	    				const auxText = self.grupoPrevio.text;
+	    				self.grupoprocariano.id = auxId;
+	    				self.grupoprocariano.text = auxText;
+	    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
+	    			}else if(res.status === false && res.mensaje === msjErrorCrear){
+	    				const auxId = self.grupoPrevio.id;
+	    				const auxText = self.grupoPrevio.text;
+	    				self.grupoprocariano.id = auxId;
+	    				self.grupoprocariano.text = auxText;
+	    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
+	    			}
+	    		},
+	    		error(err){
+	    			console.log(err)
+	    		}
+	    	});
+	    },
+	    cancelarCambioDeGrupo(){
+
 	    }
 		}
 	}
 </script>
+
+<style>
+	.tooltip-error{
+		background-color: red;
+	}
+	a{
+		color: black;
+	}
+</style>

@@ -27,7 +27,11 @@ var app = new Vue({
 		id: 0,
 		procariano: {},
 		fechaNacimiento: '',
-		habilitaredicion: false
+		habilitaredicion: false,
+		grupoprocariano: {
+			id: '',
+			text: ''
+		}
 	},
 	methods: {
 		//Funciones para editar la forma en la que se muestra la fecha
@@ -51,8 +55,29 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					self.procariano = res[0];
+					let grupo = {
+						id: '',
+						text: ''
+					};
+					self.procariano.grupo = '';
+					console.log(self.procariano)
 					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
 					console.log(self.fechaNacimiento)
+					self.obtenerGrupoDeProcariano();
+				}
+			});
+		},
+		obtenerGrupoDeProcariano(){
+			let self = this;
+			let urlApi = '/api/pg/' + self.procariano.procarianoID;
+			console.log(urlApi)
+			$.ajax({
+				type: 'GET',
+				url: urlApi,
+				success(res){
+					console.log(res)
+					self.grupoprocariano.id = res.grupo.id;
+					self.grupoprocariano.text = res.grupo.nombre;
 				}
 			});
 		},

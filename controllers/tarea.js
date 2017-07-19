@@ -8,14 +8,32 @@
 var modelo = require('../models');
 
 const crearTarea = (req, res, next) => {
-
-  estado = 'activo';
+  //Validar fecha de inicio
+  if(req.body.fechaInicio === ''){
+    let fechaInicio = null;
+  }else{
+    let fechaInicio = new Date(req.body.fechaInicio)
+  }
+  //Validar fecha de fin
+  if(req.body.fechaFin === ''){
+    let fechaFin = null;
+  }else{
+    let fechaFin = new Date(req.body.fechaFin)
+  }
+  //Validar fecha de publicacion
+  if(req.body.fechaPublicacion === ''){
+    let fechaPublicacion = null;
+  }else{
+    let fechaPublicacion = new Date(req.body.fechaPublicacion)
+  }
+  
 
   modelo.Tarea.create({
-    id_responsable : req.body.nombre,
+    idResponsable : req.body.responsable,
     nombre : req.body.nombre,
-    fecha_publicacion : req.body.fecha_publicacion,
-    fecha_limite : req.body.fecha_limite,
+    fechaPublicacion : fechaPublicacion,
+    fechaInicio : fechaInicio,
+    fechaFin : fechaFin,
     prioridad : req.body.prioridad,
     estado: req.body.estado,
     descripcion : req.body.descripcion,
@@ -178,28 +196,25 @@ const mostrarTareaPorUsuario = (req, res, next) =>{
 }
 
 const mostrarTareas = (req, res, next) =>{
-    modelo.Tarea.findAll({
-      include: [{
-          model: modelo.Persona
-      }],
-      where : {
-        estado : "activo"
-      } 
-
+  modelo.Tarea.findAll({
+    include: [{
+      model: modelo.Persona
+    }]
   }).then( tareas => {
-    console.log(tareas);
     const respuesta = tareas.map( tarea => {
 
       return Object.assign(
         {},
         {
           id : tarea.id,
-          idUser : tarea.Persona.id,
-          title : tarea.titulo,
-          user : tarea.Persona.nombres + " " + tarea.Persona.apellidos ,
+          title : tarea.nombre,         
           start : tarea.fecha_publicacion ,
           end : tarea.fecha_limite ,
           description : tarea.descripcion, 
+          estado: tarea.estado,
+          categoria: tarea.categoria,
+          prioridad: tarea. prioridad,
+          responsable: tarea.Persona.nombres + ' ' + tarea.Persona.apellidos,
           type : "tarea"
         });
     });

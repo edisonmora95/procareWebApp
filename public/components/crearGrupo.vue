@@ -42,6 +42,15 @@
 				<v-btn-link class="pull-right" waves-light modal flat>Aceptar</v-btn-link>
 			</div>
 		</v-modal>
+		<v-modal id="modalErrorAjax">
+			<div slot="content">
+				<h4 class="center-align">¡Error!</h4>
+				<p class="center-align">No se pudo conectar con el servidor. Recargue la página.</p>
+			</div>
+			<div slot="footer">
+				<v-btn-link class="pull-right" waves-light modal flat>Aceptar</v-btn-link>
+			</div>
+		</v-modal>
 	</div>
 	
 </template>
@@ -162,8 +171,7 @@
 			continuar(){
 				//Lleva al siguiente componente, para escoger a los chicos
 				if(this.formCompleto()){
-					this.flagVue = false;
-					this.$emit('flagchanged', this.flagVue);	
+					this.crearRegistroGrupo();
 				}else{
 					$('#modalCamposIncompletos').modal('open');
 				}
@@ -189,6 +197,24 @@
 				else{
 					return true;	
 				}
+			},
+			crearRegistroGrupo(){
+				let self = this;
+				$.ajax({
+					type: 'POST',
+					url: '/api/grupos/',
+					data: self.grupo,
+					success(res){
+						if(res.status === true && res.mensaje === 'Grupo creado exitosamente'){
+							self.grupo.id = res.sequelizeStatus.id;
+							self.flagVue = false;
+							self.$emit('flagchanged', self.flagVue);		
+						}
+					},
+					error(jqXHR, textStatus, error){
+						$('#modalErrorAjax').modal('open');
+					}
+				})
 			}
 		}
 	}
