@@ -1,6 +1,6 @@
 <template>
 	<div id="template">
-		<nav>
+		<nav class="orange darken-1">
 			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
 			<a href="/" class="brand-logo">Procare</a>
 			<ul id="slide-out" class="side-nav">

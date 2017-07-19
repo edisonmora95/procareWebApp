@@ -16,7 +16,8 @@ const cambioContrasenna = (req, res , next) => {
 	}).then( persona => {
 		modelo.Persona.compararContrasenna2(viejaContrasenna, persona.contrasenna, function(err, isMatch){
 			if(err) throw err;
-			console.log(isMatch)
+			console.log(isMatch);
+			console.log("nueva contrasenna es " + nuevaContrasenna);
 			if (isMatch){
 				modelo.Persona.update({
 					contrasenna : nuevaContrasenna
