@@ -10,8 +10,7 @@ router.post('/nuevo', controladorTarea.crearTarea);
 
 //Read Tareas
 
-
-router.get('/', controladorTarea.mostrarTarea);
+//router.get('/', controladorTarea.mostrarTareas);
 
 
 /*
@@ -36,7 +35,3 @@ router.get('/:id', controladorTarea.mostrarTareaPorUsuario);
 
 
 module.exports = router;
-
-
-module.exports = router;
-

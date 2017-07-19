@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : true
     },
     cantidadNinios: {
-      type : DataTypes.INT,
+      type : DataTypes.INTEGER,
       allowNull : true
     },
     estado: {

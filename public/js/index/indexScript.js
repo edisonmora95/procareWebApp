@@ -98,7 +98,6 @@ let indexApp = new Vue({
 
 });
 
-});
 
 
 

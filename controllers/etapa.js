@@ -2,43 +2,11 @@
 @Descripcion: Controlador de las etapas.
 @Autor: Erick Pérez
 @FechaCreacion: 17/06/2017
-<<<<<<< HEAD
-@UltimaFechaModificacion: 17/06/2017 @erialper
-=======
 @UltimaFechaModificacion: 24/06/2017 @edanmora
->>>>>>> 0ade0d7ca6e482b50084cb1ad035654c58a31ed9
 */
 
 var modelo = require('../models');
 
- 
-const crearEtapa = (req, res, next) => {
-	modelo.Etapa.create({
-		nombre : req.body.nombre,
-		programas : ""
-	}).then( repuesta => {
-		var status = true;
-		var mensaje = 'se pudo crear correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : repuesta
-		}
-		res.json(jsonRespuesta)
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'no se pudo eliminar'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	});
-}
-
-const eliminarEtapa = (req, res, next) => {
- 
 let jsonRespuesta = {};
 
 let etapasPermitidas = ["Iniciación", "Primera etapa", "Segunda etapa", "Tercera etapa", "Cuarta etapa", "Quinta etapa"];
@@ -72,29 +40,10 @@ const eliminarEtapa = (req, res, next) => {
 		@ÚltimaModificación: 24/06/2017 @edanmora
 		@Razón: Modificados mensajes de respuestas
 	*/
- 
 	modelo.Etapa.destroy({
 		where:{
 			id: req.params.id
 		}
- 
-	}).then( repuesta => {
-		var status = true;
-		var mensaje = 'se pudo eliminar correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : repuesta
-		}
-		res.json(jsonRespuesta)
-	}).catch( error => {
-		var json1 = {
-			status : false,
-			mensaje: 'No se puede eliminar la etapa',
-			error : error
-			}
-		res.send(json1);
- 
 	}).then( respuesta => {
 		jsonRespuesta.status = true;
 		jsonRespuesta.mensaje = 'Se pudo eliminar correctamente';
@@ -105,7 +54,6 @@ const eliminarEtapa = (req, res, next) => {
 		jsonRespuesta.mensaje = 'No se puede eliminar la etapa';
 		jsonRespuesta.sequelizeStatus = error;
 		res.status(404).send(jsonRespuesta);
- 
 	});
 }
 
@@ -128,7 +76,7 @@ const editarEtapa = (req, res, next) => {
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se pudo editar'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -139,21 +87,15 @@ const editarEtapa = (req, res, next) => {
 }
 
 const mostrarEtapa = (req,res,next) =>{
- 
- 
 	/*
 		@ÚltimaModificación: 24/06/2017 @edanmora
 		@Razón: Modificados mensajes de respuestas
 	*/
-
 	modelo.Etapa.findAll({
 
 	}).then( repuesta => {
 		var status = true;
-
-		var mensaje = 'se pudo actualizar correctamente'
 		var mensaje = 'Se obtuvieron las etapas correctamente'
-
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -162,11 +104,7 @@ const mostrarEtapa = (req,res,next) =>{
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-
-		var mensaje = 'no se pudo eliminar'
-
 		var mensaje = 'No se pudieron obtener las etapas'
-
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -176,10 +114,93 @@ const mostrarEtapa = (req,res,next) =>{
 	});
 }
 
+const asignarEtapa = (req, res, next) => {
+	modelo.GrupoEtapa.findOne({
+		where: {
+			GrupoId: req.body.grupoId
+		}
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarEtapa(req,res)
+		}else{
+			agregarNuevaEtapa(req,res)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'error en la asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
 
-/*
-	FUNCIONES DE VALIDACIÓN
-*/
+actualizarEtapa = (req, res) => {
+	modelo.GrupoEtapa.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			FechaFin : null,
+			GrupoId: req.body.grupoId
+		}
+	}).then(respuesta1 => {
+		agregarNuevaEtapa(req,res)
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
+agregarNuevaEtapa = (req,res) => {
+	modelo.Etapa.findOne({
+		where: {
+			nombre: req.body.nombre
+		}
+	}).then(Tipo => {
+		modelo.GrupoEtapa.create({
+			EtapaId : Tipo.get('id'),
+			GrupoId : req.body.grupoId,
+			fechaInicio : new Date(),
+			fechaFin : null
+		}).then( repuesta2 => {
+			var status = true;
+			var mensaje = 'Asignado correctamente'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : repuesta2
+			}
+			res.json(jsonRespuesta)
+		}).catch( error2 => {
+			var status = false;
+			var mensaje = 'no se pudo asignar'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : error2
+			}
+			res.json(jsonRespuesta);
+		});
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe Etapa'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 validarRequestCrearEtapa = (req, res) => {
 	//Validación etapa no enviada
 	if(typeof req.body.nombre === 'undefined' || req.body.nombre == null){
@@ -198,10 +219,10 @@ validarRequestCrearEtapa = (req, res) => {
 	return true;
 }
 
-
 module.exports = {
 	crearEtapa,
 	eliminarEtapa,
 	editarEtapa,
-	mostrarEtapa
+	mostrarEtapa,
+	asignarEtapa
 }
