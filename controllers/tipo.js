@@ -100,6 +100,7 @@ const mostrarTipo = (req,res,next) =>{
 	});
 }
 
+/*
 const asignarTipo = (req, res, next) => {
 	modelo.ProcarianoTipo.findOne({
 		where: {
@@ -122,6 +123,7 @@ const asignarTipo = (req, res, next) => {
 		res.json(jsonRespuesta);
 	})
 }
+*/
 
 /*
 	FUNCIONES DE VALIDACIÓN
@@ -143,12 +145,13 @@ validarRequestCrearTipo = (req, res) => {
 	}
 	return true;
 }
-
+/*
 actualizarTipo = (req, res) => {
 	modelo.ProcarianoTipo.update({
 		fechaFin : new Date()
 	},{
 		where: {
+			FechaFin : null,
 			ProcarianoId: req.body.procarianoId
 		}
 	}).then(Tipo => {
@@ -206,12 +209,11 @@ agregarNuevoTipo = (req,res) => {
 		res.json(jsonRespuesta);
 	});
 }
+*/
 
 module.exports = {
 	crearTipo,
 	eliminarTipo,
 	editarTipo,
-	mostrarTipo,
-	asignarTipo
+	mostrarTipo
 }
-

@@ -24,6 +24,7 @@ let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.ro
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
+let apiCargo = require('./routes/api/cargo.api.router');
 let apiGrupos = require('./routes/api/grupos.api.router');
 let apiProcarianosGrupos = require('./routes/api/procarianogrupo.api.router');
 let apiLogin = require('./routes/api/login.api.router');
@@ -71,6 +72,7 @@ app.use('/', login);
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
+app.use('/api/cargo',apiCargo);
 app.use('/api/login',apiLogin);
 app.use('/api/tarea',apiTareas);
 app.use('/api/evento', apiEventos);

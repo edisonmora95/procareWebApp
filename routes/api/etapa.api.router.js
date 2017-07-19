@@ -5,17 +5,21 @@ var controladorEtapa = require('../../controllers/etapa')
 var express = require('express');
 var router = express.Router();
 
-//Post de la etapa
+//Crear las etapas
 router.post('/nuevo', controladorEtapa.crearEtapa);
 
-//Read etapa
+//Ver las etapas
 router.get('/', controladorEtapa.mostrarEtapa);
 
 
-//Update etapa
+//Modificar una etapa
 router.put('/:id', controladorEtapa.editarEtapa);
 
-//Delete etapa
+//Eliminar una etapa
 router.delete('/:id', controladorEtapa.eliminarEtapa);
+
+//Asignar etapa
+router.post('/asignar', controladorEtapa.asignarEtapa);
+
 
 module.exports = router;

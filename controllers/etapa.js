@@ -76,7 +76,7 @@ const editarEtapa = (req, res, next) => {
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se pudo editar'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -114,10 +114,93 @@ const mostrarEtapa = (req,res,next) =>{
 	});
 }
 
+const asignarEtapa = (req, res, next) => {
+	modelo.GrupoEtapa.findOne({
+		where: {
+			GrupoId: req.body.grupoId
+		}
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarEtapa(req,res)
+		}else{
+			agregarNuevaEtapa(req,res)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'error en la asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
 
-/*
-	FUNCIONES DE VALIDACIÓN
-*/
+actualizarEtapa = (req, res) => {
+	modelo.GrupoEtapa.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			FechaFin : null,
+			GrupoId: req.body.grupoId
+		}
+	}).then(respuesta1 => {
+		agregarNuevaEtapa(req,res)
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
+agregarNuevaEtapa = (req,res) => {
+	modelo.Etapa.findOne({
+		where: {
+			nombre: req.body.nombre
+		}
+	}).then(Tipo => {
+		modelo.GrupoEtapa.create({
+			EtapaId : Tipo.get('id'),
+			GrupoId : req.body.grupoId,
+			fechaInicio : new Date(),
+			fechaFin : null
+		}).then( repuesta2 => {
+			var status = true;
+			var mensaje = 'Asignado correctamente'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : repuesta2
+			}
+			res.json(jsonRespuesta)
+		}).catch( error2 => {
+			var status = false;
+			var mensaje = 'no se pudo asignar'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : error2
+			}
+			res.json(jsonRespuesta);
+		});
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe Etapa'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 validarRequestCrearEtapa = (req, res) => {
 	//Validación etapa no enviada
 	if(typeof req.body.nombre === 'undefined' || req.body.nombre == null){
@@ -140,5 +223,6 @@ module.exports = {
 	crearEtapa,
 	eliminarEtapa,
 	editarEtapa,
-	mostrarEtapa
+	mostrarEtapa,
+	asignarEtapa
 }

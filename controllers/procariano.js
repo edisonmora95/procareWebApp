@@ -191,6 +191,7 @@ const editarProcariano = (req, res, next) => {
 				PersonaId : id
 			}
 		}).then ( result2 => {
+			asignarTipo(req,res,procariano);
 			var status = true;
 			var mensaje = 'se pudo actualizar correctamente'
 			var jsonRespuesta = {
@@ -297,7 +298,7 @@ ingresarProcariano = (req, res, next, persona) => {
 			};
 			res.json(json1);
 		}
-		
+		asignarTipo(req,res,procariano);
 	}).catch( error2 => {
 		var json1 = {
 			status : false,
@@ -308,6 +309,79 @@ ingresarProcariano = (req, res, next, persona) => {
 
 	});
 }
+
+asignarTipo = (req, res, procariano) => {
+	modelo.ProcarianoTipo.findOne({
+		where: {
+			ProcarianoId: procariano.get('id')
+		}
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarTipo(req,res,procariano)
+		}else{
+			agregarNuevoTipo(req,res,procariano)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+actualizarTipo = (req,res,procariano) => {
+	modelo.ProcarianoTipo.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			FechaFin : null,
+			ProcarianoId: procariano.get('id')
+		}
+	}).then(Tipo => {
+		agregarNuevoTipo(req,res)
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
+agregarNuevoTipo = (req,res,procariano) => {
+	modelo.ProcarianoTipo.create({
+		TipoId : req.body.tipoId,
+		ProcarianoId : procariano.get('id'),
+		fechaInicio : new Date(),
+		fechaFin : null
+	}).then( repuesta => {
+		var status = true;
+		var mensaje = 'Asignado correctamente'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : repuesta
+		}
+		res.json(jsonRespuesta)
+	}).catch( error2 => {
+		var status = false;
+		var mensaje = 'no se pudo asignar'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error2
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 
 module.exports = {
 	crearProcariano,

@@ -1,12 +1,18 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('PersonaRol', {
+    return queryInterface.createTable('PersonaCargoFundacions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      fechaInicio: {
+        type: Sequelize.DATE
+      },
+      fechaFin: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -19,6 +25,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('PersonaRols');
+    return queryInterface.dropTable('PersonaCargoFundacions');
   }
 };
