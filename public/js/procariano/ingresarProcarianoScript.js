@@ -47,6 +47,7 @@ var main = new Vue({
 	el: '#main',
 	created(){
 		this.obtenerTodosLosGrupos();
+		this.obtenerTiposProcariano();
 	},
 	mounted: function(){
 		this.inicializarMaterialize();
@@ -84,7 +85,8 @@ var main = new Vue({
 		gruposPescadores: [],
 		grupoPescadoresSel: '',
 		gruposMayores: [],
-		grupoMayoresSel: ''
+		grupoMayoresSel: '',
+		tipos: []
 	},
 	methods: {
 		validateBeforeSubmit() {
@@ -154,13 +156,18 @@ var main = new Vue({
       	}
       });
     },
+    /*
+			@Descripción:
+				Obtiene todos los grupos existentes en la base de datos.
+				Los almacena en self.grupos.
+    */
     obtenerTodosLosGrupos(){
     	let self = this;
     	$.ajax({
     		type: 'GET',
     		url: '/api/grupos/',
     		success(res){
-    			self.armarArraysGrupos(res.sequelizeStatus);
+    			self.armarArraysGrupos(res.sequelizeStatus, self);
     		},
     		error(){
 
@@ -172,8 +179,7 @@ var main = new Vue({
 			@Params:
 				grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
     */
-    armarArraysGrupos(grupos){
-    	let self = this;
+    armarArraysGrupos(grupos, self){
     	$.each(grupos, function(index, grupo){
     		let grupoObj = {
   				id: grupo.id,
@@ -188,6 +194,36 @@ var main = new Vue({
     		}else if(grupo.tipo === 'Mayores'){
     			self.gruposMayores.push(grupoObj);
     		}
+    	});
+    },
+    /*
+			@Descripción:
+				Obtiene todos los tipos de procarianos de la base de datos
+				Los almacena dentro de self.tipos
+    */
+    obtenerTiposProcariano(){
+    	let self = this;
+    	$.ajax({
+    		type: 'GET',
+    		url: '/api/tipo/',
+    		success(res){
+    			self.armarArrayTipos(res.sequelizeStatus, self);
+    		}
+    	});
+    },
+    /*
+			@Descripción:
+				Arma el array de tipos obtenidos de la base de datos
+			@Params:
+				tipos -> tipos obtenidos de la base de datos
+    */
+    armarArrayTipos(tipos, self){
+    	$.each(tipos, function(index, tipo){
+    		let tipoObj = {
+    			id: tipo.id,
+    			text: tipo.nombre
+    		};
+    		self.tipos.push(tipoObj);
     	});
     },
     /*

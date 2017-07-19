@@ -85,13 +85,8 @@
 								<label for="selectGenero">Género</label>
 							</div>
 							<div class="input-field col s6">
-								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="">
+								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="" :items="tipos">
 									<option value="" disabled selected></option>	
-									<option value="1">Chico de Formación</option>
-									<option value="2">Caminante</option>
-									<option value="3">Pescador</option>
-									<option value="4">Pescador consagrado</option>
-									<option value="5">Sacerdote</option>
 								</v-select>
 								<label for="selectTipo">Tipo</label>
 							</div>
