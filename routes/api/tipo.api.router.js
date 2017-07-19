@@ -19,6 +19,6 @@ router.put('/:id', controladorTipo.editarTipo);
 router.delete('/:id', controladorTipo.eliminarTipo);
 
 //Asignar etapa
-router.post('/asignar', controladorTipo.asignarTipo);
+//router.post('/asignar', controladorTipo.asignarTipo);
 
 module.exports = router;
