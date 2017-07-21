@@ -81,23 +81,24 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 
 module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
 	modelo.Tipo.findOne({
-		where: {nombre: 'Chico Formación'} 
+		where: {nombre: 'Chico Formación'}
 	}).then(tipo => {
 		modelo.ProcarianoTipo.findAll({
 			include : [{
-		        model: modelo.Procariano,
-			        include : [{
-			        model: modelo.Persona			        
-			    }]
-		    }],
+        model: modelo.Procariano,
+        required : true/*
+        include : [{
+	        model: modelo.Persona			        
+		    }]*/
+	    }],
 		    where : {
-		    	TipoId : tipo.id
+		    	TipoId : { $not: tipo.id }
 		    }
 		}).then(result => {
 			var rjson = {
 				status : true,
 				mensaje : 'Se obtuvieron los Posibles Animadores correctamente',
-				sequelizeStatus : procarianos
+				sequelizeStatus : result
 			}
 			res.json(rjson)
 		}).catch( error => {
@@ -108,4 +109,5 @@ module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
 			}
 			res.json(rjson);
 		});
+	});
 }
