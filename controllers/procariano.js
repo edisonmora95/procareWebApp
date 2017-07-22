@@ -93,8 +93,7 @@ const buscarProcariano = (req, res , next) => {
 				});
 		});
 		return res.json(respuesta);
-	});
-	
+	});	
 };
 
 
@@ -108,7 +107,6 @@ Por : JV , para que modifique por ID
 const buscarProcarianoPorId = (req, res, next) => {
 	//tener cuidado xq cualquiera podra ver este id
 	var id = req.params.id;
-
 	modelo.Procariano.findAll({
 	    include: [{
 	        model: modelo.Persona ,
@@ -173,8 +171,7 @@ const editarProcariano = (req, res, next) => {
 		email :  req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
-		convencional : req.body.convencional,
-	  fechaOrdenacion : new Date(req.body.fechaOrdenacion),
+		convencional : req.body.convencional
 	}, {
 	  where: {
 	    id : id
@@ -191,15 +188,13 @@ const editarProcariano = (req, res, next) => {
 				PersonaId : id
 			}
 		}).then ( result2 => {
-			asignarTipo(req,res,procariano);
-			var status = true;
-			var mensaje = 'se pudo actualizar correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : result2
-			}
-			res.json(jsonRespuesta)
+			modelo.Procariano.findOne({
+				where: {
+					PersonaId: id
+				}
+			}).then( procariano =>{
+				asignarTipo(req,res,procariano)
+			});
 		}).catch( err2 => {
 			var status = false;
 			var mensaje = 'no se pudo actualizar 2'
@@ -298,7 +293,6 @@ ingresarProcariano = (req, res, next, persona) => {
 			};
 			res.json(json1);
 		}
-		asignarTipo(req,res,procariano);
 	}).catch( error2 => {
 		var json1 = {
 			status : false,
@@ -310,29 +304,6 @@ ingresarProcariano = (req, res, next, persona) => {
 	});
 }
 
-asignarTipo = (req, res, procariano) => {
-	modelo.ProcarianoTipo.findOne({
-		where: {
-			ProcarianoId: procariano.get('id')
-		}
-	}).then( respuesta =>{
-		if(respuesta!=null){
-			actualizarTipo(req,res,procariano)
-		}else{
-			agregarNuevoTipo(req,res,procariano)
-		}
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'no existe asignacion'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	})
-}
-
 actualizarTipo = (req,res,procariano) => {
 	modelo.ProcarianoTipo.update({
 		fechaFin : new Date()
@@ -342,7 +313,7 @@ actualizarTipo = (req,res,procariano) => {
 			ProcarianoId: procariano.get('id')
 		}
 	}).then(Tipo => {
-		agregarNuevoTipo(req,res)
+		agregarNuevoTipo(req,res,procariano)
 	}).catch( error1 => {
 		var status = false;
 		var mensaje = 'no existe asignacion'
@@ -382,7 +353,6 @@ agregarNuevoTipo = (req,res,procariano) => {
 	});
 }
 
-
 module.exports = {
 	crearProcariano,
 	buscarProcariano,
@@ -390,4 +360,3 @@ module.exports = {
 	editarProcariano,
 	eliminarProcariano
 };
-
