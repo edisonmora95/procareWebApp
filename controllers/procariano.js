@@ -94,7 +94,6 @@ const buscarProcariano = (req, res , next) => {
 		});
 		return res.json(respuesta);
 	});
-	
 };
 
 
@@ -192,14 +191,6 @@ const editarProcariano = (req, res, next) => {
 			}
 		}).then ( result2 => {
 			asignarTipo(req,res,procariano);
-			var status = true;
-			var mensaje = 'se pudo actualizar correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : result2
-			}
-			res.json(jsonRespuesta)
 		}).catch( err2 => {
 			var status = false;
 			var mensaje = 'no se pudo actualizar 2'
@@ -241,14 +232,33 @@ const eliminarProcariano = (req, res, next) => {
 	    PersonaId : id
 	  }
 	}).then( result => {
+		modelo.ProcarianoTipo.update({
+			fechaFin : new Date()
+		},{
+			where: {
+				FechaFin : null,
+				PersonaId : id
+			}
+		}).then(tipo => {
 			var status = true;
 			var mensaje = 'eliminado correctamente'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : result
+				procariano : result,
+				tipo : tipo
 			}
 			res.json(jsonRespuesta);
+		}).catch( error1 => {
+			var status = false;
+			var mensaje = 'no existe asignacion'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : error1
+			}
+			res.json(jsonRespuesta);
+		});
 	}).catch( err => {
 			var status = false;
 			var mensaje = 'no se pudo eliminar'
@@ -275,7 +285,6 @@ ingresarProcariano = (req, res, next, persona) => {
 	}else{
 		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
 	}
-
 	modelo.Procariano.create({
 		PersonaId : persona.get('id'),
 		colegio : req.body.colegio,
@@ -298,7 +307,6 @@ ingresarProcariano = (req, res, next, persona) => {
 			};
 			res.json(json1);
 		}
-		asignarTipo(req,res,procariano);
 	}).catch( error2 => {
 		var json1 = {
 			status : false,
@@ -342,7 +350,7 @@ actualizarTipo = (req,res,procariano) => {
 			ProcarianoId: procariano.get('id')
 		}
 	}).then(Tipo => {
-		agregarNuevoTipo(req,res)
+		agregarNuevoTipo(req,res,procariano)
 	}).catch( error1 => {
 		var status = false;
 		var mensaje = 'no existe asignacion'
@@ -382,7 +390,6 @@ agregarNuevoTipo = (req,res,procariano) => {
 	});
 }
 
-
 module.exports = {
 	crearProcariano,
 	buscarProcariano,
@@ -390,4 +397,3 @@ module.exports = {
 	editarProcariano,
 	eliminarProcariano
 };
-
