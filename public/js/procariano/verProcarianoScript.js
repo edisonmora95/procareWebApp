@@ -31,6 +31,10 @@ var app = new Vue({
 		grupoprocariano: {
 			id: '',
 			text: ''
+		},
+		tipoprocariano: {
+			id: '',
+			text: ''
 		}
 	},
 	methods: {

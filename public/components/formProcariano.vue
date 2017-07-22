@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<form>
-			<v-row>
+			<v-row id="rowNombresApellidos">
 				<div class="col s6 input-field">
 					<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
 					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
@@ -13,7 +13,7 @@
 					<label for="apellidos" class="active">Apellidos</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowCedulaFechaNacimiento">
 				<div class="col s6 input-field">
 					<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
 					 <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
@@ -26,7 +26,7 @@
 					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowDirEmail">
 				<div class="col s6 input-field">
 					<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
@@ -38,7 +38,7 @@
 					<label for="email" class="active">Email</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowTelefonos">
 				<div class="col s6 input-field">
 					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
@@ -50,26 +50,18 @@
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
 			</v-row>
-			<v-row>
+			<v-row id="rowTipo">
 				<div class="col s6 input-field">
-					<v-select name="tipo" id="tipo" v-model="procariano.tipo">
-						<option value="Chico de Formación">Chico de Formación</option>
-						<option value="Caminante">Caminante</option>
-						<option value="Pescador">Pescador</option>
-						<option value="Pescador consagrado">Pescador consagrado</option>
-						<option value="Sacerdote">Sacerdote</option>
-					</v-select>
+					<v-select name="tipo" id="tipoSelect" v-model="procariano.tipo" select-text="" :items="tipos"></v-select>
 					<label class="active">Tipo</label>
 				</div>
 				<div class="col s6 input-field">
 					<v-select name="grupo" id="grupoSelect" v-model="grupoprocariano.id" :items="grupos" select-text="">
-						
 					</v-select>
-						
 					<label class="active">Grupo</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowColegioUniversidad">
 				<div class="col s6 input-field">
 					<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
@@ -81,18 +73,19 @@
 					<label for="universidad" class="active">Universidad</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowTrabajo">
 				<div class="col s12 input-field">
 					<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
 					<label for="trabajo" class="active">Trabajo</label>
 				</div>
 			</v-row>
-			<v-row>
+			<v-row id="rowBotones">
 				<a class="waves-effect waves-light btn" @click="cancelarEdicion">Cancelar</a>
 				<a class="waves-effect waves-light btn pull right" @click="aceptarEdicion">Aceptar</a>
 			</v-row>
 		</form>
+		<!--Modal de mensaje de error-->
 		<div id="modalError" class="modal">
 	    <div class="modal-content">
 	      <h4 class="center-align">Formulario con errores.</h4>
@@ -104,6 +97,7 @@
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 	    </div>
 	  </div>
+	  <!--Modal de cambio de grupo-->
 	  <div id="modalCambioGrupo" class="modal">
 	    <div class="modal-content">
 	      <h4 class="center-align">Cambio de grupo</h4>
@@ -114,6 +108,17 @@
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cancelarCambioDeGrupo">No</a>
 	    </div>
 	  </div>
+	  <!--Modal de cambio de tipo-->
+	  <div id="modalCambioTipo" class="modal">
+	    <div class="modal-content">
+	      <h4 class="center-align">Cambio de tipo</h4>
+	      <p class="center-align">¿Seguro que desea cambiar el tipo del procariano seleccionado a: {{tipoprocariano.text}} ?</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cambiarDeTipo">Si</a>
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+	    </div>
+	  </div>
 	</div>
 	
 </template>
@@ -121,7 +126,7 @@
 <script>
 	/*
 		@Autor: @edisonmora95
-		@FechaCreación: /-06-2017
+		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
 
@@ -160,7 +165,7 @@
 	VeeValidate.Validator.updateDictionary(dictionary);
 
 	module.exports = {
-		props: ['procariano', 'habilitaredicion', 'grupoprocariano'],
+		props: ['procariano', 'habilitaredicion', 'grupoprocariano', 'tipoprocariano'],
 		data(){
 			return{
 				flag: true,
@@ -169,22 +174,27 @@
 					msj: ''
 				},
 				grupos: [],
-				grupoPrevio: {
+				tempGrupoPrevio: {
 					id: '',
 					text: ''
 				},
+				tempTipoPrevio: {
+					id: '',
+					text: ''
+				},
+				tipos: []
 			}
 		},
 		created(){
 			this.obtenerTodosLosGrupos(this);
+			this.obtenerTiposProcariano(this);
 		},
 		mounted(){
 			let self = this;
-			self.inicializarMaterialize();
+			self.inicializarMaterialize(self);
 		},
 		methods: {
-			inicializarMaterialize(){
-				let self = this;
+			inicializarMaterialize(self){
 				$('.modal').modal();
 				$('.datepicker').pickadate({
 					selectMonths: true, // Creates a dropdown to control month
@@ -193,18 +203,30 @@
 				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
 				let picker = datePickerFechaNacimiento.pickadate('picker');
 				picker.set('select', self.procariano.fechaNacimiento, { format: 'yyyy-mm-dd'});
+				//2 way data binding
 				$('#fechaNacimiento').change(function(){
 					self.bindFechaNacimiento();
 				});
 
-				const aux = self.grupoprocariano.id;
-				self.grupoPrevio.id = aux
+				//Asignación de temporales de grupo previo
+				const tempGrupoProcarianoId = self.grupoprocariano.id;
+				const tempGrupoProcarianoText = self.grupoprocariano.text;
+				self.tempGrupoPrevio.id = tempGrupoProcarianoId;
+				self.tempGrupoPrevio.text = tempGrupoProcarianoText;
+				//Asignación de temporales de tipo previo
+				const tempTipoProcarianoId = self.tipoprocariano.id;
+				const tempTipoPrevioText = self.tipoprocariano.text;
+				self.tempTipoPrevio.id = tempGrupoProcarianoId;
+				self.tempTipoPrevio.text = tempTipoPrevioText;
 
-
+				//Habilidar cambio de grupo
 				$('#grupoSelect').change(function(){
-					self.abrirModalCambioGrupo();
+					self.abrirModalCambioGrupo(self);
 				});
-				
+				//Habilitar cambio de tipo
+				$('#tipoSelect').change(function(){
+					self.abrirModalCambioTipo(self);
+				})
 			},
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
@@ -218,6 +240,10 @@
 					}
 				});
 			},
+			/*
+				@Descripción:
+					Filtra los grupos por el género y el tipo del procariano
+			*/
 			filtrarGrupos(self, array, genero, tipo){
 				$.each(array, function(index, grupo){
 					if(grupo.genero === genero && grupo.tipo === tipo){
@@ -229,6 +255,37 @@
 					}
 				});
 			},
+			/*
+				@Descripción:
+					Obtiene todos los tipos de procarianos de la base de datos
+					Los almacena dentro de self.tipos
+	    */
+			obtenerTiposProcariano(self){
+				self.tipos = [];
+	    	$.ajax({
+	    		type: 'GET',
+	    		url: '/api/tipo/',
+	    		success(res){
+	    			self.armarArrayTipos(res.sequelizeStatus, self);
+	    		}
+	    	});
+			},
+			/*
+				@Descripción:
+					Arma el array de tipos obtenidos de la base de datos
+				@Params:
+					tipos -> tipos obtenidos de la base de datos
+	    */
+			armarArrayTipos(tipos, self){
+				$.each(tipos, function(index, tipo){
+	    		let tipoObj = {
+	    			id: tipo.id,
+	    			text: tipo.nombre
+	    		};
+	    		self.tipos.push(tipoObj);
+	    	});
+			},
+			//EVENTOS BOTONES
 			cancelarEdicion(){
 				location.reload();
 			},
@@ -283,23 +340,19 @@
         self.errorObj.msj = mensaje;
         $('#modalError').modal('open');
 	    },
-	    abrirModalCambioGrupo(){
-	    	let self = this;
-	    	let select = $('#grupoSelect');
-	    	let optionSelectedText = $('#grupoSelect option:selected').text();
-	    	let optionSelectedVal = $('#grupoSelect option:selected').val();
-
-	    	self.grupoprocariano.text = optionSelectedText;
-	    	self.grupoprocariano.id = optionSelectedVal;
+	    abrirModalCambioGrupo(self){
+	    	self.grupoprocariano.text = $('#grupoSelect option:selected').text();
+	    	self.grupoprocariano.id = $('#grupoSelect option:selected').val();
 
 	    	$('#modalCambioGrupo').modal('open');
 	    },
 	    cambiarDeGrupo(){
 	    	let self = this;
 	    	let dataObj = {
-	    		idGrupoPrev: self.grupoPrevio.id,
+	    		idGrupoPrev: self.tempGrupoPrevio.id,
 	    		idGrupoNuevo: self.grupoprocariano.id
 	    	};
+	    	console.log(dataObj)
 	    	$.ajax({
 	    		type: 'PUT',
 	    		url: '/api/pg/' + self.procariano.procarianoID,
@@ -308,23 +361,26 @@
 	    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
 	    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
 
-	    			if(res.status === true){
+	    			if(res.status){
+	    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
 	    				const auxId = self.grupoprocariano.id;
 	    				const auxText = self.grupoprocariano.text;
-	    				self.grupoPrevio.id = auxId;
-	    				self.grupoPrevio.text = auxText;
+	    				self.tempGrupoPrevio.id = auxId;
+	    				self.tempGrupoPrevio.text = auxText;
 	    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
-	    			}else if(res.status === false && res.mensaje === msjErrorEditar){
-	    				const auxId = self.grupoPrevio.id;
-	    				const auxText = self.grupoPrevio.text;
-	    				self.grupoprocariano.id = auxId;
-	    				self.grupoprocariano.text = auxText;
+	    			}else if( !res.status && res.mensaje === msjErrorEditar ){
+	    				//Regresa al valor previo ya que no se pudo realizar el cambio
+	    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+	    				self.grupoprocariano.id = tempGrupoPrevioId;
+	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
-	    			}else if(res.status === false && res.mensaje === msjErrorCrear){
-	    				const auxId = self.grupoPrevio.id;
-	    				const auxText = self.grupoPrevio.text;
-	    				self.grupoprocariano.id = auxId;
-	    				self.grupoprocariano.text = auxText;
+	    			}else if( !res.status && res.mensaje === msjErrorCrear ){
+	    				//Regresa al valor previo ya que no se pudo realizar el cambio
+	    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+	    				self.grupoprocariano.id = tempGrupoPrevioId;
+	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 	    			}
 	    		},
@@ -334,7 +390,44 @@
 	    	});
 	    },
 	    cancelarCambioDeGrupo(){
+	    	let self = this;
+	    	const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+				self.grupoprocariano.id = tempGrupoPrevioId;
+				self.grupoprocariano.text = tempGrupoPrevioText;
+	    },
+	    abrirModalCambioTipo(self){
+	    	let select = $('#tipoSelect');
+	    	let optionSelectedText = $('#tipoSelect option:selected').text();
+	    	let optionSelectedVal = $('#tipoSelect option:selected').val();
 
+	    	self.tipoprocariano.text = optionSelectedText;		//Nombre del tipo seleccionado a mostrar en el modal
+	    	self.tipoprocariano.id = optionSelectedVal;
+
+	    	$('#modalCambioTipo').modal('open');
+	    },
+	    cambiarDeTipo(){
+	    	let self = this; 
+	    	let dataObj = {
+	    		idTipoPrev: self.tempTipoPrevio,
+	    		idTipoNuevo: self.tipoprocariano.id
+	    	};
+	    	$.ajax({
+	    		type: 'PUT',
+	    		url: '/api/tipoprocariano/' + self.procariano.procarianoID,
+	    		data: dataObj,
+	    		success(res){
+	    			if(res.status){
+	    				Materialize.toast('Nuevo tipo asignado. Debe cambiarlo de grupo', 4000, 'rounded');
+	    			}else{
+	    				Materialize.toast('Error al cambiar de tipo.', 4000, 'rounded tooltip-error');
+	    			}
+	    		},
+	    		error(err){
+	    			console.log(err);
+	    			Materialize.toast('Error conexión con la api.', 4000, 'rounded tooltip-error');
+	    		}
+	    	});
 	    }
 		}
 	}
