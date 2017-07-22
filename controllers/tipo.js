@@ -42,7 +42,7 @@ const eliminarTipo = (req, res, next) => {
 		res.status(200).json(jsonRespuesta);
 	}).catch( error => {
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'No se puede eliminar la etapa';
+		jsonRespuesta.mensaje = 'No se puede eliminar el tipo';
 		jsonRespuesta.sequelizeStatus = error;
 		res.status(404).send(jsonRespuesta);
 	});
@@ -81,7 +81,7 @@ const mostrarTipo = (req,res,next) =>{
 
 	}).then( repuesta => {
 		var status = true;
-		var mensaje = 'Se obtuvieron las etapas correctamente'
+		var mensaje = 'Se obtuvieron los tipos correctamente'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -90,7 +90,7 @@ const mostrarTipo = (req,res,next) =>{
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'No se pudieron obtener las etapas'
+		var mensaje = 'No se pudieron obtener los tipos'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
