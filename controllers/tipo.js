@@ -9,7 +9,7 @@ var modelo = require('../models');
 
 let jsonRespuesta = {};
 
-let tiposPermitidos = ['Chico Formación', 'Caminante', 'Pescador', 'Pescador Consagrado', 'Sacerdote'];
+let tiposPermitidos = ['Chico Formación', 'Caminante', 'Pescador', 'Pescador Consagrado', 'Sacerdote', 'Mayor'];
 
 const crearTipo = (req, res, next) => {
 	let nombre = req.body.nombre;
@@ -129,17 +129,17 @@ const asignarTipo = (req, res, next) => {
 	FUNCIONES DE VALIDACIÓN
 */
 validarRequestCrearTipo = (req, res) => {
-	//Validación etapa no enviada
+	//Validación tipo no enviada
 	if(typeof req.body.nombre === 'undefined' || req.body.nombre == null){
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'Tipo no enviada';
+		jsonRespuesta.mensaje = 'Tipo no enviado';
 		res.status(422).json(jsonRespuesta);
 		return false;
 	}
-	//Validación etapa no aceptada
+	//Validación tipo no aceptada
 	if(!tiposPermitidos.includes(req.body.nombre)){
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'Tipo no aceptada';
+		jsonRespuesta.mensaje = 'Tipo no aceptado';
 		res.status(422).json(jsonRespuesta);
 		return false;
 	}

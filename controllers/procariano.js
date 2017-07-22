@@ -15,7 +15,7 @@ var ControladorGrupo = require('../controllers/grupo');
 Autor : JV
 Creado : 26/06/2017
 Modificado: 07/07/2017
-Por: @edanmora95	separados en dos funciones para entender mejor
+Por: @edanmora95	pasé las funciones a los modelos
 */
 const crearProcariano = (req, res, next) => {
 	if(req.body.fechaNacimiento == ''){
@@ -23,8 +23,8 @@ const crearProcariano = (req, res, next) => {
 	}else{
 		fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
-
-	modelo.Persona.create({
+	
+	let persona = {
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
 		apellidos : req.body.apellidos,
@@ -36,16 +36,94 @@ const crearProcariano = (req, res, next) => {
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
 		convencional : req.body.convencional
-	}).then( persona => {
-		ingresarProcariano(req, res, next, persona);
-	}).catch( error => {
-		var json1 = {
-			status : false,
-			mensaje : 'No se pudo crear esta persona',
-			error : error
+	};
+	modelo.Persona.crearPersona(persona, (persona) => {
+		if(req.body.fechaOrdenacion == ''){
+			fechaOrdenacion = null;
+		}else{
+			fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+		}
+		let procariano = {
+			PersonaId : persona.get('id'),
+			colegio : req.body.colegio,
+			universidad : req.body.universidad,
+			parroquia : req.body.parroquia,
+			fechaOrdenacion : fechaOrdenacion,
+			estado : req.body.estado,
+			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
+		}
+		modelo.Procariano.crearProcariano1(procariano, (procariano) => {
+			let grupo = req.body.grupo;
+			let tipo = req.body.tipo;
+			if(grupo !== ''){									//SI SE INGRESÓ UN GRUPO
+				modelo.ProcarianoGrupo.anadirProcarianoAGrupo(req.body.grupo, procariano.get('id'), procariano.get('createdAt'), (procarianoGrupo) => {
+					if(tipo !== ''){							//SI SE INGRESÓ UN TIPO
+						modelo.ProcarianoTipo.anadirTipoProcariano(req.body.tipo, procariano.get('id'), procariano.get('createdAt'), (procarianoTipo) => {
+							return res.status(200).json({
+								estado: true,
+								persona: persona,
+								procariano: procariano,
+								procarianoGrupo: procarianoGrupo,
+								procarianoTipo: procarianoTipo
+							});
+						}, (errorProcarianoTipo) => {
+							return res.status(400).json({
+								estado: false,
+								errorProcarianoTipo: errorProcarianoTipo
+							});
+						});
+					}else{												//SI SE INGRESÓ GRUPO PERO NO TIPO
+						//Se crea persona, procariano y procarianogrupo
+						return res.status(200).json({
+							status: true,
+							persona: persona,
+							procariano: procariano,
+							procarianogrupo: procarianogrupo
+						});
+					}
+					
+				}, (errorProcarianoGrupo) => {
+					return res.status(400).json({
+						estado: false,
+						errorProcarianoGrupo: errorProcarianoGrupo
+					});
+				});
+			}else if(tipo !== ''){						//SI NO SE INGRESÓ UN GRUPO PERO SE INGRESÓ UN TIPO
+				modelo.ProcarianoTipo.anadirTipoProcariano(req.body.tipo, procariano.get('id'), procariano.get('createdAt'), (procarianoTipo) => {
+					return res.status(200).json({
+						estado: true,
+						persona: persona,
+						procariano: procariano,
+						procarianoTipo: procarianoTipo
+					});
+				}, (errorProcarianoTipo) => {
+					return res.status(400).json({
+						estado: false,
+						errorProcarianoTipo: errorProcarianoTipo
+					});
+				});
 			}
-		res.send(json1);
+			else{															//SI NO SE INGRESÓ NI TIPO NI GRUPO
+				return res.status(200).json({
+					status: true,
+					persona: persona,
+					procariano: procariano,
+				});
+			}
+			
+		}, (errorProcariano) => {
+			return res.status(400).json({
+					estado: false,
+					errorProcariano: errorProcariano
+				});
+		});
+	}, (errorPersona) => {
+		return res.status(400).json({
+					estado: false,
+					errorPersona: errorPersona
+				});
 	});
+
 }
 
 

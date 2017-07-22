@@ -17,7 +17,7 @@ const crearEtapa = (req, res, next) => {
 		@Razón: Añadidas validaciones de backend y status en respuestas
 	*/
 	let nombre = req.body.nombre;
-	if(validarRequestCrearEtapa(req, res)){
+	/*if(validarRequestCrearEtapa(req, res)){
 		modelo.Etapa.create({
 			nombre : nombre,
 			programas : ""
@@ -32,7 +32,13 @@ const crearEtapa = (req, res, next) => {
 			jsonRespuesta.sequelizeStatus = error;
 			res.status(422).json(jsonRespuesta);
 		});
-	}
+	*/
+	modelo.Etapa.crearEtapa(nombre, (etapa) => {
+		//if(err) return res.status(400).json({estado: false, error: err});
+		return res.status(200).json({estado: true, datos: etapa});
+	}, (err) => {
+		return res.status(400).json({estado: false, error: err});
+	});
 }
 
 const eliminarEtapa = (req, res, next) => {
@@ -91,8 +97,11 @@ const mostrarEtapa = (req,res,next) =>{
 		@ÚltimaModificación: 24/06/2017 @edanmora
 		@Razón: Modificados mensajes de respuestas
 	*/
+	/*
 	modelo.Etapa.findAll({
-
+		where: {
+			id: 500
+		}
 	}).then( repuesta => {
 		var status = true;
 		var mensaje = 'Se obtuvieron las etapas correctamente'
@@ -111,6 +120,12 @@ const mostrarEtapa = (req,res,next) =>{
 			sequelizeStatus : error
 		}
 		res.json(jsonRespuesta);
+	});*/
+	
+	modelo.Etapa.obtenerEtapa( (etapas) => {
+		return res.status(200).json({estado: true, datos: etapas});
+	}, (error) => {
+		return res.status(400).json({estado: false, error: error});
 	});
 }
 

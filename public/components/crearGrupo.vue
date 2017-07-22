@@ -85,6 +85,9 @@
 
 	module.exports = {
 		props: ['flag', 'grupo'],
+		mounted(){
+			this.obtenerEtapas(this);
+		},
 		data() {
 			return{
 				/*grupo: {
@@ -135,41 +138,46 @@
 						text: 'Procare Mujeres'
 					}
 				],
-				etapasGrupo: [
-					{
-						id: 'Iniciación',
-						text: 'Iniciación'
-					},
-					{
-						id: 'Primera etapa',
-						text: 'Primera etapa'
-					},
-					{
-						id: 'Segunda etapa',
-						text: 'Segunda etapa'
-					},
-					{
-						id: 'Tercera etapa',
-						text: 'Tercera etapa'
-					},
-					{
-						id: 'Cuarta etapa',
-						text: 'Cuarta etapa'
-					},
-					{
-						id: 'Quinta etapa',
-						text: 'Quinta etapa'
-					}
-				]
+				etapasGrupo: []
 			}
 		},
 		methods: {
+			/*
+				@Descripción: Obtiene todas las etapas de la base de datos y las añade al aray para mostrarlas en el <select>
+			*/
+			obtenerEtapas(self){
+				$.ajax({
+					type: 'GET',
+					url: '/api/etapa/',
+					success(res){
+						let busquedaExitosa = (res.status && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						if(busquedaExitosa){
+							self.armarArrayEtapas(self, res.sequelizeStatus);
+						}else{
+							alert('Error al buscar etapas en la base de datos');
+						}
+					}
+				});
+			},
+			armarArrayEtapas(self, etapas){
+				$.each(etapas, function(index, etapa){
+					let etapaObj = {
+						id: etapa.id,
+						text: etapa.nombre
+					};
+					self.etapasGrupo.push(etapaObj);
+				});
+			},
 			//Eventos de botones
 			cancelar(){
 				//Regresar al menú principal
+				window.location.href = '/home';
 			},
+			/*
+				@Descripción:
+					Lleva al siguiente componente para escoger a los integrantes luego de crear el grupo en la base de datos
+			*/
 			continuar(){
-				//Lleva al siguiente componente, para escoger a los chicos
 				if(this.formCompleto()){
 					this.crearRegistroGrupo();
 				}else{

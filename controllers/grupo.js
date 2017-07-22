@@ -117,21 +117,20 @@ module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) =>
 		ProcarianoId: procariano.get('id'),
 		fechaInicio: procariano.get('createdAt')
 	}).then( procarianogrupo => {
-		var status = true;
-		var json1 = {
-			status : status,
-			mensaje : 'Se pudo crear correctamente',
+		var rjson = {
+			status : true,
+			mensaje : 'Se pudo añadir el Procariano correctamente al Grupo',
 			persona : persona,
 			procariano : procariano,
 			procarianogrupo: procarianogrupo
 		};
-		res.json(json1);
-	}).catch( errorIngresarGrupo => {
-		var json1 = {
+		res.json(rjson);
+	}).catch( error => {
+		var rjson = {
 			status : false,
-			mensaje : 'No se pudo añadir al grupo',
-			error : errorIngresarGrupo
+			mensaje : 'No se pudo añadir Procariano al grupo',
+			error : error
 			}
-		res.send(json1);
+		res.json(rjson);
 	});
 }
