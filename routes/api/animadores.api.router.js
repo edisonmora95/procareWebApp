@@ -4,6 +4,6 @@ var router = express.Router();
 
 router.post('/', controlador.crearAnimadorAPartirDeProcarianoYAgregarAGrupo);
 router.get('/', controlador.mostrarProcarianosPosiblesAnimadores);
-router.get('/', controlador.mostrarAnimadores);
+//router.get('/', controlador.mostrarAnimadores);
 
 module.exports = router;

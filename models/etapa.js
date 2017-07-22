@@ -1,11 +1,13 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Etapa = sequelize.define('Etapa', {
+  const Etapa = sequelize.define('Etapa', {
     nombre:{
       type: DataTypes.STRING,
       allowNull: false,
       unique: true  ,
-      values: ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa']
+      validate: {
+        isIn: [ ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa'] ]
+      }
     } 
     
     //programa: DataTypes.STRING
@@ -14,8 +16,23 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Etapa.belongsToMany(models.Grupo , {through: 'GrupoEtapa'})
         // associations can be defined here
+      },
+      obtenerEtapa: function(callback){
+        this.findOne({
+          where: {
+            id: 500
+          }
+        }).then(callback);
+      },
+      crearEtapa: function(nomrbeEtapa, callback, error){
+        this.create({
+          nombre: nomrbeEtapa,
+          programas: ""
+        }).then(callback).catch(error);
       }
+
     }
   });
+
   return Etapa;
 };
