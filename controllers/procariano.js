@@ -2,9 +2,7 @@
 @Descripcion: Clase controladora de todos los procarianos
 @Autor: Jose Viteri
 @FechaCreacion: 26/06/2017
-@UltimaFechaModificacion: 07/06/2017 @JoseViteri (cambios detallados abajo)
 */
-
 
 var modelo = require('../models');
 var utils = require('../utils/utils')
@@ -14,8 +12,7 @@ var ControladorGrupo = require('../controllers/grupo');
 /*
 Autor : JV
 Creado : 26/06/2017
-Modificado: 07/07/2017
-Por: @edanmora95	pasé las funciones a los modelos
+Modificado: 21/07/2017 @edanmora95	agrega un procariano a un grupo y se coloca su tipo
 */
 const crearProcariano = (req, res, next) => {
 	if(req.body.fechaNacimiento == ''){
@@ -123,15 +120,14 @@ const crearProcariano = (req, res, next) => {
 					errorPersona: errorPersona
 				});
 	});
-
 }
 
 
 /*
 Autor : JV
 Creado : 28/05/2017
-Modificado: 07/07/2017
-Por : Jv , agregado meyodo generar JsonProcariano
+Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
+			21/07/2017 @erialper, agrego la excepción de busquedad
 */
 
 const buscarProcariano = (req, res , next) => {
@@ -171,16 +167,24 @@ const buscarProcariano = (req, res , next) => {
 				});
 		});
 		return res.json(respuesta);
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se obtuvieron procarianos'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			errorProcariano : error
+		}
+		res.json(jsonRespuesta);
 	});
-	
 };
 
 
 /*
 Autor : JV
 Creado : 28/05/2017
-Modificad8: 07/07/2017
-Por : JV , para que modifique por ID
+Modificado: 07/07/2017 @JV , para que modifique por ID
+			21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad	
 */
 
 const buscarProcarianoPorId = (req, res, next) => {
@@ -192,46 +196,90 @@ const buscarProcarianoPorId = (req, res, next) => {
 	        model: modelo.Persona ,
 	        where: {
 	        	id  : id
-	         }
+	        }
 	    }],
 	    where : {
 	    	PersonaId : id
 	    }  
 	}).then( procarianos => {
-		const respuesta = procarianos.map( procariano => {
-
-			return Object.assign(
-				{},
-				{
-					personaId : procariano.Persona.id,
-					procarianoID : procariano.id ,
-					colegio : procariano.colegio ,
-					universidad : procariano.universidad ,
-					parroquia : procariano.parroquia ,
-					fechaOrdenacion : procariano.fecha_ordenacion ,
-					haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
-					cedula : procariano.Persona.cedula ,
-					nombres : procariano.Persona.nombres ,
-					apellidos : procariano.Persona.apellidos ,
-					direccion : procariano.Persona.direccion ,
-					genero : procariano.Persona.genero ,
-					fechaNacimiento : procariano.Persona.fechaNacimiento ,
-					convencional : procariano.Persona.convencional ,
-					celular : procariano.Persona.celular ,
-					trabajo : procariano.Persona.trabajo ,
-					email: procariano.Persona.email,
-					estado: procariano.estado
+		modelo.ProcarianoTipo.findOne({
+			where: {
+				fechaFin: null,
+				ProcarianoId : procarianos[0].id
+			}
+		}).then( tipo =>{
+			if(tipo==null){
+				const respuesta = procarianos.map( procariano => {
+					return Object.assign(
+						{},
+						{
+							personaId : procariano.Persona.id,
+							procarianoID : procariano.id ,
+							colegio : procariano.colegio ,
+							universidad : procariano.universidad ,
+							parroquia : procariano.parroquia ,
+							fechaOrdenacion : procariano.fecha_ordenacion ,
+							haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
+							cedula : procariano.Persona.cedula ,
+							nombres : procariano.Persona.nombres ,
+							apellidos : procariano.Persona.apellidos ,
+							direccion : procariano.Persona.direccion ,
+							genero : procariano.Persona.genero ,
+							fechaNacimiento : procariano.Persona.fechaNacimiento ,
+							convencional : procariano.Persona.convencional ,
+							celular : procariano.Persona.celular ,
+							trabajo : procariano.Persona.trabajo ,
+							email : procariano.Persona.email,
+							estado : procariano.estado
+						});
 				});
+				return res.json(respuesta);
+			}else{
+				const respuesta = procarianos.map( procariano => {
+					return Object.assign(
+						{},
+						{
+							personaId : procariano.Persona.id,
+							procarianoID : procariano.id ,
+							colegio : procariano.colegio ,
+							universidad : procariano.universidad ,
+							parroquia : procariano.parroquia ,
+							fechaOrdenacion : procariano.fecha_ordenacion ,
+							haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
+							cedula : procariano.Persona.cedula ,
+							nombres : procariano.Persona.nombres ,
+							apellidos : procariano.Persona.apellidos ,
+							direccion : procariano.Persona.direccion ,
+							genero : procariano.Persona.genero ,
+							fechaNacimiento : procariano.Persona.fechaNacimiento ,
+							convencional : procariano.Persona.convencional ,
+							celular : procariano.Persona.celular ,
+							trabajo : procariano.Persona.trabajo ,
+							email : procariano.Persona.email,
+							estado : procariano.estado,
+							tipoId : tipo.TipoId
+						});
+				});
+				return res.json(respuesta);
+			}
 		});
-		return res.json(respuesta);
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se obtuvieron procarianos'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			errorProcariano : error
+		}
+		res.json(jsonRespuesta);
 	});
 };
 
 /*
 Autor : JV
 Creado : 28/05/2017
-Modificad8: 07/07/2017
-por : JV , agregado date a datos date
+Modificado: 07/07/2017 @JV , agregado date a datos date
+			22/07/2017 @erialper, agregado el cambio de tipo
 */
 
 const editarProcariano = (req, res, next) => {
@@ -251,8 +299,7 @@ const editarProcariano = (req, res, next) => {
 		email :  req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
-		convencional : req.body.convencional,
-	  fechaOrdenacion : new Date(req.body.fechaOrdenacion),
+		convencional : req.body.convencional
 	}, {
 	  where: {
 	    id : id
@@ -269,33 +316,66 @@ const editarProcariano = (req, res, next) => {
 				PersonaId : id
 			}
 		}).then ( result2 => {
-			asignarTipo(req,res,procariano);
-			var status = true;
-			var mensaje = 'se pudo actualizar correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : result2
-			}
-			res.json(jsonRespuesta)
-		}).catch( err2 => {
+			//cambiar tipo
+			modelo.Procariano.findOne({where:{PersonaId : id}}).then(procariano =>{
+				modelo.ProcarianoTipo.findOne({
+					where: {
+						fechaFin : null,
+						ProcarianoId: procariano.get('id')
+					}
+				}).then( respuesta =>{
+					if(respuesta!=null){
+						var tipoActual = respuesta.TipoId
+						var tipoNuevo = parseInt(req.body.tipoId)
+						if(tipoNuevo == 6 || (tipoActual==tipoNuevo-1 && tipoNuevo!=5)){
+							//Asigna como sacerdote o Asciende un nivel, menos a tipo mayor
+							actualizarTipo(req,res,procariano)
+						}else{
+							//Salto de tipo
+							var status = true;
+							var mensaje = 'Se modifico la información del procariano, no se permite cambiar el tipo'
+							var jsonRespuesta = {
+								status : status,
+								mensaje : mensaje,
+								persona : result,
+								procariano : result2
+							}
+							res.json(jsonRespuesta);
+						}
+					}else{
+						//Si no tiene ningun tipo asignado
+						agregarNuevoTipo(req,res,procariano)
+					}
+				}).catch( error => {
+					var status = false;
+					var mensaje = 'no se realizo la busquedad'
+					var jsonRespuesta = {
+						status : status,
+						mensaje : mensaje,
+						errorProcariano : error
+					}
+					res.json(jsonRespuesta);
+				})
+			})
+		}).catch( error2 => {
 			var status = false;
 			var mensaje = 'no se pudo actualizar 2'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : err2
+				persona : result,
+				errorProcariano : error2
 			}
 			res.json(jsonRespuesta);
 		});
 
-	}).catch( err => {
+	}).catch( error1 => {
 			var status = false;
 			var mensaje = 'no se pudo actualizar 1'
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : err
+				errorPersona : error1
 			}
 			res.json(jsonRespuesta);
 	});
@@ -304,8 +384,7 @@ const editarProcariano = (req, res, next) => {
 /*
 Autor : JV
 Creado : 28/05/2017
-Modificad8: 07/07/2017
-por : JV , agregado date a datos date
+Modificado: 21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 */
 
 const eliminarProcariano = (req, res, next) => {
@@ -319,21 +398,68 @@ const eliminarProcariano = (req, res, next) => {
 	    PersonaId : id
 	  }
 	}).then( result => {
-			var status = true;
-			var mensaje = 'eliminado correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : result
+		modelo.Procariano.findOne({
+			where: {
+				PersonaId : id
 			}
-			res.json(jsonRespuesta);
-	}).catch( err => {
+		}).then( procariano =>{
+			modelo.ProcarianoTipo.update({
+				fechaFin : new Date()
+			},{
+				where: {
+					fechaFin : null,
+					ProcarianoId: procariano.get('id')
+				}
+			}).then(tipo => {
+				modelo.ProcarianoGrupo.update({
+					fechaFin : new Date()
+				},{
+					where: {
+						fechaFin : null,
+						ProcarianoId: procariano.get('id')
+					}
+				}).then(grupo => {
+					var status = true;
+					var mensaje = 'eliminado correctamente';
+					var jsonRespuesta = {
+						status : status,
+						mensaje : mensaje,
+						procariano : result,
+						tipo : tipo,
+						grupo : grupo
+					}
+					res.json(jsonRespuesta);
+				}).catch( error2 => {
+					var status = true;
+					var mensaje = 'Elimino procariano no esta en un grupo';
+					var jsonRespuesta = {
+						status : status,
+						mensaje : mensaje,
+						procariano : result,
+						tipo : tipo,
+						errorgrupo : error2
+					}
+					res.json(jsonRespuesta);
+				});
+			}).catch( error1 => {
+				var status = true;
+				var mensaje = 'Elimino procariano no tiene un tipo';
+				var jsonRespuesta = {
+					status : status,
+					mensaje : mensaje,
+					procariano: result,
+					errortipo : error1
+				}
+				res.json(jsonRespuesta);
+			});
+		});
+	}).catch( error => {
 			var status = false;
-			var mensaje = 'no se pudo eliminar'
+			var mensaje = 'no se pudo eliminar';
 			var jsonRespuesta = {
 				status : status,
 				mensaje : mensaje,
-				sequelizeStatus : err
+				errorProcariano : error
 			}
 			res.json(jsonRespuesta);
 	});
@@ -341,98 +467,38 @@ const eliminarProcariano = (req, res, next) => {
 
 
 //FUNCIONES INTERNAS
-
 /*
-	@Autor: @edanmora95
-	@FechaCreación: 14/07/2017
-	@Descripción: Ingresa al procariano a la base de datos y luego lo ingresa al grupo indicado
+	@Autor: @erialper
+	@FechaCreación: 22/07/2017
+	@Descripción: Cierra el periodo que tuvo dentro de su actual tipo y asigna uno nuevo.
 */
-ingresarProcariano = (req, res, next, persona) => {
-	if(req.body.fechaOrdenacion == ''){
-		fechaOrdenacion = null;
-	}else{
-		fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
-	}
-
-	modelo.Procariano.create({
-		PersonaId : persona.get('id'),
-		colegio : req.body.colegio,
-		universidad : req.body.universidad,
-		parroquia : req.body.parroquia,
-		fechaOrdenacion : fechaOrdenacion,
-		estado : req.body.estado,
-		haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
-	}).then( procariano => {
-		let grupoIngresado = (req.body.grupo !== '');
-		if(grupoIngresado){
-			ControladorGrupo.anadirProcarianoAGrupo(req, res, next, persona, procariano);
-		}else{
-			var status = true;
-			var json1 = {
-				status : status,
-				mensaje : 'Se pudo crear correctamente',
-				persona : persona,
-				procariano : procariano,
-			};
-			res.json(json1);
-		}
-		asignarTipo(req,res,procariano);
-	}).catch( error2 => {
-		var json1 = {
-			status : false,
-			mensaje : 'No se pudo crear este procariano',
-			error : error2
-			}
-		res.send(json1);
-
-	});
-}
-
-asignarTipo = (req, res, procariano) => {
-	modelo.ProcarianoTipo.findOne({
-		where: {
-			ProcarianoId: procariano.get('id')
-		}
-	}).then( respuesta =>{
-		if(respuesta!=null){
-			actualizarTipo(req,res,procariano)
-		}else{
-			agregarNuevoTipo(req,res,procariano)
-		}
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'no existe asignacion'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	})
-}
-
 actualizarTipo = (req,res,procariano) => {
 	modelo.ProcarianoTipo.update({
 		fechaFin : new Date()
 	},{
 		where: {
-			FechaFin : null,
+			fechaFin : null,
 			ProcarianoId: procariano.get('id')
 		}
-	}).then(Tipo => {
-		agregarNuevoTipo(req,res)
+	}).then(respuesta => {
+		agregarNuevoTipo(req,res,procariano)
 	}).catch( error1 => {
 		var status = false;
-		var mensaje = 'no existe asignacion'
+		var mensaje = 'no se pudo actualizar'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
-			sequelizeStatus : error1
+			errorTipo : error1
 		}
 		res.json(jsonRespuesta);
 	});
 }
 
+/*
+	@Autor: @erialper
+	@FechaCreación: 22/07/2017
+	@Descripción: Arranca un nuevo periodo en un tipo.
+*/
 agregarNuevoTipo = (req,res,procariano) => {
 	modelo.ProcarianoTipo.create({
 		TipoId : req.body.tipoId,
@@ -445,21 +511,20 @@ agregarNuevoTipo = (req,res,procariano) => {
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
-			sequelizeStatus : repuesta
+			tipo : repuesta
 		}
 		res.json(jsonRespuesta)
 	}).catch( error2 => {
 		var status = false;
-		var mensaje = 'no se pudo asignar'
+		var mensaje = 'no se pudo asignar tipo, se modifico información'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
-			sequelizeStatus : error2
+			errorTipo : error2
 		}
 		res.json(jsonRespuesta);
 	});
 }
-
 
 module.exports = {
 	crearProcariano,
@@ -468,4 +533,3 @@ module.exports = {
 	editarProcariano,
 	eliminarProcariano
 };
-
