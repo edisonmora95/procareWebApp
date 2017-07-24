@@ -29,7 +29,7 @@
 					      <div class="table-header">
 					        <span class="table-title">Tabla de Cargos</span>
 					        <div class="actions">
-					          <a href="#add_users" class="modal-trigger waves-effect btn-flat no-uppercase"> {{valorBotonFormacion}}</a>
+					          <a href="#modalFormacion" class="modal-trigger waves-effect btn-flat no-uppercase"> {{valorBotonFormacion}}</a>
 					          <!--<a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>-->
 					        </div>
 					      </div>
@@ -86,6 +86,31 @@
 		    </div>
 		    <div class="modal-footer">
 		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Agree</a>
+		    </div>
+		  </div>
+
+		  <div id="modalFormacion" class="modal">
+		    <div class="modal-content" id="modal-content">
+		      <h4 class="center-align">Asignación de directores de formación </h4>
+					<form action="">
+						<div class="row">
+							  <div class="input-field col s6">							  
+							    <select >
+							      <option  v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'masculino' " :value="usuario.id">{{usuario.nombres}} {{usuario.apellidos}}</option>
+							    </select>
+							    <label>Hombres</label>
+							  </div>
+								<div class="input-field col s6">
+							    <select >
+							      <option v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'femenino' " :value="usuario.id">  {{usuario.nombres}} {{usuario.apellidos}}</option>
+							    </select>
+							    <label>Mujeres</label>
+							  </div>
+						</div>
+					</form>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Aceptar</a>
 		    </div>
 		  </div>
 		</div>
