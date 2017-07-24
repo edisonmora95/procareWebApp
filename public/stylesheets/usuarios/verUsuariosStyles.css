@@ -1,0 +1,28 @@
+#section-busqueda, #section-resultados{
+	padding: 1% 2%;
+}
+.container{
+	margin-top: 5%;
+	background-color: white;
+	padding: 3%;
+	border-radius: 1%;
+}
+
+.no-uppercase {
+     text-transform: none;
+}
+/*
+#table1_length .dataTables_length{
+	display: none;
+}
+/*
+#table1_filter {
+	position: relative;
+	left: -66%;
+}
+
+#table1_filter > label {
+	float: left;
+	display:inline-block;
+}
+*/

@@ -223,11 +223,9 @@ const mostrarTareas = (req, res, next) =>{
       sequelizeStatus : respuesta
     })
   }).catch( error => {
-    var status = false;
-    var mensaje = 'no se pudo eliminar'
     var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
+      status : false,
+      mensaje :'no se pudo eliminar',
       sequelizeStatus : error
     }
     res.json(JSON.parse(jsonRespuesta));
