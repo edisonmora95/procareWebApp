@@ -60,44 +60,50 @@ let BuscarGrupoApp = new Vue({
 	},
 	methods: {
 		obtenerUsuario(){
-			//Codigo para obtener el usuario loggeado
 			let self = this;
-			self.usuario = {
-				nombre: '',
-				tipo: 'director formacion',
-				grupo: '',
-				genero: 'masculino'
-			};
-			if(self.usuario.tipo === 'director formacion'){
-				if(self.usuario.genero === 'masculino'){
-					self.grupo.genero = 'Procare';
-				}else if(self.usuario.genero === 'femenino'){
-					self.grupo.genero = 'Procare Mujeres';
+			$.ajax({
+				type: 'GET',
+				url: '/api/login/usuarios',
+				success(res){
+					self.usuario = res;
+					if(self.usuario.tipo === 'director formacion'){
+						if(self.usuario.genero === 'masculino'){
+							self.grupo.genero = 'Procare';
+						}else if(self.usuario.genero === 'femenino'){
+							self.grupo.genero = 'Procare Mujeres';
+						}
+					}
 				}
-			}
+			});
 		},
 		//Eventos
 		buscar(){
 			let self = this;
 			self.grupos = [];	//Lo vacío por si acaso...
-			let campoLleno = self.revisarUnCampoLleno();
-			if(campoLleno){
-				//Llamada a la api...
-
-				$.each(self.aux, (index, grupo) => {
-					self.grupos.push(grupo);
+			if(self.revisarUnCampoLleno(self)){
+				//Llamada a la api
+				$.ajax({
+					type: 'GET',
+					url: '/api/grupos/',
+					data: self.grupo,
+					success(res){
+						console.log(res);
+					}
 				});
 			}else{
 				Materialize.toast('Llene por lo menos un campo de búsqueda.', 3000, 'rounded');
 			}
 			
 		},
-		revisarUnCampoLleno(){
+		revisarUnCampoLleno(self){
+			let flag = false;
 			$.each(self.grupo, (property, value) => {
 				if(value !== ''){
+					flag = true;
 					return true;
 				}
 			});
+			return flag;
 		},
 		realizarBusqueda(){
 			$.ajax({

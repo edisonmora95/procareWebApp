@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : true
     },
     fechaOrdenacion: {
-      type : DataTypes.DATEONLY,
+      type : DataTypes.DATE,
       allowNull : true
     },
     estado: {
@@ -39,13 +39,24 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Procariano.belongsTo(models.Persona)
+        Procariano.belongsTo(models.Persona);
+        Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'});
         Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
         Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
+      },
+      crearProcariano1: function(procariano, callback, errorCallback){
+        this.create({
+          PersonaId: procariano.PersonaId,
+          colegio: procariano.colegio,
+          universidad: procariano.universidad,
+          parroquia: procariano.parroquia,
+          fechaOrdenacion: procariano.fechaOrdenacion,
+          estado: procariano.estado,
+          haceParticipacionEstudiantil: procariano.haceParticipacionEstudiantil
+        }).then(callback).catch(errorCallback);
       }
     }
-
   });
   return Procariano;
 };

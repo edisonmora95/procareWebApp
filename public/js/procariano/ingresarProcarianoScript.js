@@ -46,10 +46,11 @@ VeeValidate.Validator.updateDictionary(dictionary);
 var main = new Vue({
 	el: '#main',
 	created(){
-		this.obtenerTodosLosGrupos();
+		this.obtenerTodosLosGrupos(this);
+		this.obtenerTiposProcariano(this);
 	},
 	mounted: function(){
-		this.inicializarMaterialize();
+		this.inicializarMaterialize(this);
 	},
 	data: {
 		fechaIncorrecta: false,
@@ -77,6 +78,7 @@ var main = new Vue({
 			fechaOrdenacion: ''
 		},
 		src: '',
+		gruposObtenidos: [],
 		gruposCaminantes: [],
 		grupoCaminantesSel: '',
 		gruposFormacion: [],
@@ -84,7 +86,8 @@ var main = new Vue({
 		gruposPescadores: [],
 		grupoPescadoresSel: '',
 		gruposMayores: [],
-		grupoMayoresSel: ''
+		grupoMayoresSel: '',
+		tipos: []
 	},
 	methods: {
 		validateBeforeSubmit() {
@@ -143,7 +146,8 @@ var main = new Vue({
       	url: urlApi,
       	data: self.procariano,
       	success: function(res){
-      		if(res.mensaje === 'Se pudo crear correctamente'){
+      		console.log(res)
+      		if(res.status){
       			$('#modalProcarianoCreado').modal('open');
       		}else{
       			alert('Error al ingresar en la base de datos');
@@ -154,13 +158,18 @@ var main = new Vue({
       	}
       });
     },
-    obtenerTodosLosGrupos(){
-    	let self = this;
+    /*
+			@Descripción:
+				Obtiene todos los grupos existentes en la base de datos.
+				Los almacena en self.grupos.
+    */
+    obtenerTodosLosGrupos(self){
     	$.ajax({
     		type: 'GET',
     		url: '/api/grupos/',
     		success(res){
-    			self.armarArraysGrupos(res.sequelizeStatus);
+    			self.gruposObtenidos = res.sequelizeStatus;
+    			self.armarArraysGrupos(self.gruposObtenidos, self);
     		},
     		error(){
 
@@ -172,12 +181,18 @@ var main = new Vue({
 			@Params:
 				grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
     */
-    armarArraysGrupos(grupos){
-    	let self = this;
+    armarArraysGrupos(grupos, self){
+    	//No borrar esto. Sirve cuando se eejcuta este método dentro del filtro de grupos
+    	self.gruposFormacion = [];
+    	self.gruposCaminantes = [];
+    	self.gruposPescadores = [];
+    	self.gruposMayores = [];
+
     	$.each(grupos, function(index, grupo){
     		let grupoObj = {
   				id: grupo.id,
-  				text: grupo.nombre
+  				text: grupo.nombre,
+  				genero: grupo.genero
   			};
     		if(grupo.tipo === 'Formación'){
     			self.gruposFormacion.push(grupoObj);
@@ -191,16 +206,80 @@ var main = new Vue({
     	});
     },
     /*
+			@Descripción:
+				Obtiene todos los tipos de procarianos de la base de datos
+				Los almacena dentro de self.tipos
+    */
+    obtenerTiposProcariano(self){
+    	$.ajax({
+    		type: 'GET',
+    		url: '/api/tipo/',
+    		success(res){
+    			self.armarArrayTipos(res.sequelizeStatus, self);
+    		}
+    	});
+    },
+    /*
+			@Descripción:
+				Arma el array de tipos obtenidos de la base de datos
+			@Params:
+				tipos -> tipos obtenidos de la base de datos
+    */
+    armarArrayTipos(tipos, self){
+    	$.each(tipos, function(index, tipo){
+    		let tipoObj = {
+    			id: tipo.id,
+    			text: tipo.nombre
+    		};
+    		self.tipos.push(tipoObj);
+    	});
+    	console.log('Array de tipos de procarianos: ');
+    	console.log(self.tipos);
+    },
+    /*
+			@Descripción:
+				Se ejecuta cuando el usuario selecciona un género del procariano a ingresar.
+				Filtra todos los grupos a mostrar dependiendo del género seleccionado
+    */
+    filtrarGruposPorGenero(self, generoSeleccionado){
+    	//Primero hay que volver a armar los arrays de los grupos
+    	self.armarArraysGrupos(self.gruposObtenidos, self);
+    	let generoGrupoSeleccionado = '';
+    	if(generoSeleccionado!==''){
+    		if(generoSeleccionado == 'masculino'){
+    			generoGrupoSeleccionado = 'Procare';
+    		}else{
+    			generoGrupoSeleccionado = 'Procare Mujeres';
+    		}
+    		self.gruposFormacion = $.grep(self.gruposFormacion, function(grupo, index){
+    			return grupo.genero === generoGrupoSeleccionado;
+    		});
+    		self.gruposCaminantes = $.grep(self.gruposCaminantes, function(grupo, index){
+    			return grupo.genero === generoGrupoSeleccionado;
+    		});
+    		self.gruposPescadores = $.grep(self.gruposPescadores, function(grupo, index){
+    			return grupo.genero === generoGrupoSeleccionado;
+    		});
+    		self.gruposMayores = $.grep(self.gruposMayores, function(grupo, index){
+    			return grupo.genero === generoGrupoSeleccionado;
+    		});
+    	}
+    },
+    /*
 			@Descripción: 
 				Inicializa los elementos de Materialize que se van a usar en el formulario.
     */
-    inicializarMaterialize(){
+    inicializarMaterialize(self){
     	$('.datepicker').pickadate({
 				selectMonths: true, // Creates a dropdown to control month
 				selectYears: 100 // Creates a dropdown of 15 years to control year
 			});
 			$(".button-collapse").sideNav();
 			$('.modal').modal();
+			$('#selectGenero').change(function(){
+				let generoSeleccionado = $('#selectGenero option:selected').val();
+				self.filtrarGruposPorGenero(self, generoSeleccionado);
+			});
     }
 	}
 });

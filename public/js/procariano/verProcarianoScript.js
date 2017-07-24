@@ -14,7 +14,9 @@ Vue.component('editar', FormProcariano);
 var app = new Vue({
 	el: '#app',
 	created(){
-		this.obtenerProcarianoPorId();
+		var path = window.location.pathname;
+		this.idProcariano = path.split('/')[3];
+		this.obtenerProcarianoPorId(this, this.idProcariano);
 	},
 	mounted: function(){
 		//Inicializadores de Materialize
@@ -24,11 +26,15 @@ var app = new Vue({
 		
 	},
 	data: {
-		id: 0,
+		idProcariano: 0,
 		procariano: {},
 		fechaNacimiento: '',
 		habilitaredicion: false,
 		grupoprocariano: {
+			id: '',
+			text: ''
+		},
+		tipoprocariano: {
 			id: '',
 			text: ''
 		}
@@ -45,11 +51,8 @@ var app = new Vue({
       }
       return moment(date).format('DD MMMM YYYY');
     },
-		obtenerProcarianoPorId(){
-			var self = this;
-			var path = window.location.pathname;
-			self.id = path.split('/')[3];
-			var urlApi = '/api/procarianos/' + self.id;
+		obtenerProcarianoPorId(self, id){
+			var urlApi = '/api/procarianos/' + id;
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
@@ -60,22 +63,20 @@ var app = new Vue({
 						text: ''
 					};
 					self.procariano.grupo = '';
-					console.log(self.procariano)
+					//self.procariano.tipoId = 0;
+					self.tipoprocariano.id = res[0].tipoId;
+					self.tipoprocariano.text = res[0].tipoNombre;
 					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
-					console.log(self.fechaNacimiento)
-					self.obtenerGrupoDeProcariano();
+					self.obtenerGrupoDeProcariano(self, self.procariano.procarianoID);
 				}
 			});
 		},
-		obtenerGrupoDeProcariano(){
-			let self = this;
-			let urlApi = '/api/pg/' + self.procariano.procarianoID;
-			console.log(urlApi)
+		obtenerGrupoDeProcariano(self, idProcariano){
+			let urlApi = '/api/pg/' + idProcariano;
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success(res){
-					console.log(res)
 					self.grupoprocariano.id = res.grupo.id;
 					self.grupoprocariano.text = res.grupo.nombre;
 				}

@@ -37,7 +37,8 @@ module.exports = function(sequelize, DataTypes) {
       associate : function(models) {
         Grupo.hasOne(models.Animador)
         Grupo.hasMany(models.Reunion, {as : 'Reuniones'})
-        Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'});
+        Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'})
+        Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'})
       }
     }
   });

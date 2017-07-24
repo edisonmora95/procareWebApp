@@ -16,6 +16,14 @@ module.exports = function(sequelize, DataTypes) {
     classMethods : {
       associate : function(models) {
         
+      },
+      anadirProcarianoAGrupo: function(idGrupo, idProcariano, fechaInicio, callback, errorCallback){
+        this.create({
+          GrupoId: idGrupo,
+          ProcarianoId: idProcariano,
+          fechaInicio: fechaInicio,
+          fechaFin: null
+        }).then(callback).catch(errorCallback);
       }
     }
   });

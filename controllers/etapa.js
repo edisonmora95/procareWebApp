@@ -17,7 +17,7 @@ const crearEtapa = (req, res, next) => {
 		@Razón: Añadidas validaciones de backend y status en respuestas
 	*/
 	let nombre = req.body.nombre;
-	if(validarRequestCrearEtapa(req, res)){
+	/*if(validarRequestCrearEtapa(req, res)){
 		modelo.Etapa.create({
 			nombre : nombre,
 			programas : ""
@@ -32,7 +32,13 @@ const crearEtapa = (req, res, next) => {
 			jsonRespuesta.sequelizeStatus = error;
 			res.status(422).json(jsonRespuesta);
 		});
-	}
+	*/
+	modelo.Etapa.crearEtapa(nombre, (etapa) => {
+		//if(err) return res.status(400).json({estado: false, error: err});
+		return res.status(200).json({estado: true, datos: etapa});
+	}, (err) => {
+		return res.status(400).json({estado: false, error: err});
+	});
 }
 
 const eliminarEtapa = (req, res, next) => {
@@ -76,7 +82,7 @@ const editarEtapa = (req, res, next) => {
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'no se pudo eliminar'
+		var mensaje = 'no se pudo editar'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -91,8 +97,11 @@ const mostrarEtapa = (req,res,next) =>{
 		@ÚltimaModificación: 24/06/2017 @edanmora
 		@Razón: Modificados mensajes de respuestas
 	*/
+	/*
 	modelo.Etapa.findAll({
-
+		where: {
+			id: 500
+		}
 	}).then( repuesta => {
 		var status = true;
 		var mensaje = 'Se obtuvieron las etapas correctamente'
@@ -111,13 +120,102 @@ const mostrarEtapa = (req,res,next) =>{
 			sequelizeStatus : error
 		}
 		res.json(jsonRespuesta);
+	});*/
+	
+	modelo.Etapa.obtenerEtapa( (etapas) => {
+		return res.status(200).json({estado: true, datos: etapas});
+	}, (error) => {
+		return res.status(400).json({estado: false, error: error});
 	});
 }
 
+const asignarEtapa = (req, res, next) => {
+	modelo.GrupoEtapa.findOne({
+		where: {
+			GrupoId: req.body.grupoId
+		}
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarEtapa(req,res)
+		}else{
+			agregarNuevaEtapa(req,res)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'error en la asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
 
-/*
-	FUNCIONES DE VALIDACIÓN
-*/
+actualizarEtapa = (req, res) => {
+	modelo.GrupoEtapa.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			FechaFin : null,
+			GrupoId: req.body.grupoId
+		}
+	}).then(respuesta1 => {
+		agregarNuevaEtapa(req,res)
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
+agregarNuevaEtapa = (req,res) => {
+	modelo.Etapa.findOne({
+		where: {
+			nombre: req.body.nombre
+		}
+	}).then(Tipo => {
+		modelo.GrupoEtapa.create({
+			EtapaId : Tipo.get('id'),
+			GrupoId : req.body.grupoId,
+			fechaInicio : new Date(),
+			fechaFin : null
+		}).then( repuesta2 => {
+			var status = true;
+			var mensaje = 'Asignado correctamente'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : repuesta2
+			}
+			res.json(jsonRespuesta)
+		}).catch( error2 => {
+			var status = false;
+			var mensaje = 'no se pudo asignar'
+			var jsonRespuesta = {
+				status : status,
+				mensaje : mensaje,
+				sequelizeStatus : error2
+			}
+			res.json(jsonRespuesta);
+		});
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe Etapa'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 validarRequestCrearEtapa = (req, res) => {
 	//Validación etapa no enviada
 	if(typeof req.body.nombre === 'undefined' || req.body.nombre == null){
@@ -140,5 +238,6 @@ module.exports = {
 	crearEtapa,
 	eliminarEtapa,
 	editarEtapa,
-	mostrarEtapa
+	mostrarEtapa,
+	asignarEtapa
 }

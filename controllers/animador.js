@@ -79,3 +79,35 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 	});
 }
 
+module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
+	modelo.Tipo.findOne({
+		where: {nombre: 'Chico Formación'}
+	}).then(tipo => {
+		modelo.ProcarianoTipo.findAll({
+			include : [{
+        model: modelo.Procariano,
+        required : true/*
+        include : [{
+	        model: modelo.Persona			        
+		    }]*/
+	    }],
+		    where : {
+		    	TipoId : { $not: tipo.id }
+		    }
+		}).then(result => {
+			var rjson = {
+				status : true,
+				mensaje : 'Se obtuvieron los Posibles Animadores correctamente',
+				sequelizeStatus : result
+			}
+			res.json(rjson)
+		}).catch( error => {
+			var rjson = {
+				status : false,
+				mensaje : 'No se pudieron obtener los Posibles Animadores',
+				sequelizeStatus : error
+			}
+			res.json(rjson);
+		});
+	});
+}

@@ -30,7 +30,7 @@
 								</div>-->
 								<p class="center-align"><span class="tag">Estado: </span>{{procariano.estado}}</p>
 								<!--Nombres-->
-								<div class="row rowVer" id="rowVerNombres">
+								<section class="row rowVer" id="rowVerNombres">
 									<div class="col s6" id="verNombre">
 										<label>Nombres</label>
 										<p>{{procariano.nombres}}</p>
@@ -39,9 +39,9 @@
 										<label>Apellidos</label>
 										<p>{{procariano.apellidos}}</p>
 									</div>
-								</div>
+								</section>
 								<!--Cedula-fecha-->
-								<div class="row rowVer" id="rowVerCedulaFecha">
+								<section class="row rowVer" id="rowVerCedulaFecha">
 									<div class="col s6" id="verCedula">
 										<label>Cédula</label>
 										<p>{{procariano.cedula}}</p>
@@ -50,9 +50,9 @@
 										<label>Fecha de nacimiento</label>
 										<p>{{date(fechaNacimiento)}}</p>
 									</div>
-								</div>
+								</section>
 								<!--Direccion-email-->
-								<div class="row rowVer" id="rowVerDireccionEmail">
+								<section class="row rowVer" id="rowVerDireccionEmail">
 									<div class="col s6" id="verDireccion">
 										<label>Dirección</label>
 										<p>{{procariano.direccion}}</p>
@@ -61,9 +61,9 @@
 										<label>Email</label>
 										<p>{{procariano.email}}</p>
 									</div>
-								</div>
+								</section>
 								<!--Celular-convencional-->
-								<div class="row rowVer" id="rowVerTelefonos">
+								<section class="row rowVer" id="rowVerTelefonos">
 									<div class="col s6" id="verConvencional">
 										<label>Convencional</label>
 										<p>{{procariano.convencional}}</p>
@@ -72,19 +72,20 @@
 										<label>Celular</label>
 										<p>{{procariano.celular}}</p>
 									</div>
-								</div>
+								</section>
 								<!--Tipo-grupo-->
-								<div class="row rowVer" id="rowVerTipoGrupo">
+								<section class="row rowVer" id="rowVerTipoGrupo">
 									<div class="col s6" id="verTipo">
 										<label>Tipo</label>
+										<p>{{procariano.tipoNombre}}</p>
 									</div>
 									<div class="col s6" id="verGrupo">
 										<label>Grupo</label>
 										<p>{{grupoprocariano.text}}</p>
 									</div>
-								</div>
-								<!--Colegio-Universidad-->
-								<div class="row rowVer" id="rowVerEducacion">
+								</section>
+								<!--Coelgio-Universidad-->
+								<section class="row rowVer" id="rowVerEducacion">
 									<div class="col s6" id="verColegio">
 										<label>Colegio</label>
 										<p>{{procariano.colegio}}</p>
@@ -93,7 +94,7 @@
 										<label>Universidad</label>
 										<p>{{procariano.universidad}}</p>
 									</div>
-								</div>
+								</section>
 								<!--Botones-->
 								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
 									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
@@ -106,7 +107,7 @@
 				<!--End row ver procariano-->
 				<div class="card" id="rowEditar" v-if="habilitaredicion">
 					<div class="card-content">
-						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" @edicionchanged="habilitaredicion"></editar>	
+						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
 			</main>

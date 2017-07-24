@@ -22,7 +22,7 @@
 					<h2 class="center-align titulo">Ingresar procariano</h2>
 					<form class="col s12" @submit.prevent="validateBeforeSubmit">
 						<!--Row nombres y apellidos-->
-						<div class="row row-nombres-apellidos">
+						<section class="row row-nombres-apellidos">
 							<div class="input-field col s6">
 								<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
 								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
@@ -33,9 +33,9 @@
 								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 								<label for="apellidos">Apellidos</label>
 							</div>
-						</div>
+						</section>
 						<!--Row cedula y fecha nacimiento-->
-						<div class="row row-cedula-fecha">
+						<section class="row row-cedula-fecha">
 							<div class="input-field col s6">
 								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
 								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
@@ -47,9 +47,9 @@
 								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 								<label for="cedula">Cédula</label>
 							</div>
-						</div>
+						</section>
 						<!--Row direccion y email-->
-						<div class="row row-direccion-email">
+						<section class="row row-direccion-email">
 							<div class="input-field col s6">
 								<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
@@ -60,9 +60,9 @@
 								<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
 								<label for="email">Email</label>
 							</div>
-						</div>
+						</section>
 						<!--Row celular y convencional-->
-						<div class="row row-celular-convencional">
+						<section class="row row-celular-convencional">
 							<div class="input-field col s6">
 								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
@@ -73,9 +73,9 @@
 								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 								<label for="convencional">Convencional</label>
 							</div>
-						</div>
+						</section>
 						<!--Row genero y tipo-->
-						<div class="row row-genero-tipo">
+						<section class="row row-genero-tipo">
 							<div class="input-field col s6">
 								<v-select id="selectGenero" name="selectGenero" v-model="procariano.genero" select-text="">
 									<option value="" disabled selected></option>	
@@ -85,17 +85,12 @@
 								<label for="selectGenero">Género</label>
 							</div>
 							<div class="input-field col s6">
-								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="">
+								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="" :items="tipos">
 									<option value="" disabled selected></option>	
-									<option value="1">Chico de Formación</option>
-									<option value="2">Caminante</option>
-									<option value="3">Pescador</option>
-									<option value="4">Pescador consagrado</option>
-									<option value="5">Sacerdote</option>
 								</v-select>
 								<label for="selectTipo">Tipo</label>
 							</div>
-						</div>
+						</section>
 						<!--Chico formacion-->
 						<section class="row row-chico-formacion" v-show="procariano.tipo=='1'">
 							<div class="input-field col s6">
