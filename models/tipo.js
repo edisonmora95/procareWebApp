@@ -12,6 +12,13 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // associations can be defined here
         Tipo.belongsToMany(models.Procariano, {through: 'ProcarianoTipo'});
+      },
+      obtenerTipoPorId: function(idTipo, callback){
+        this.findOne({
+          where: {
+            id: idTipo
+          }
+        }).then(callback);
       }
     }
   });

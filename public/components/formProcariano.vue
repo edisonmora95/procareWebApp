@@ -52,7 +52,7 @@
 			</v-row>
 			<v-row id="rowTipo">
 				<div class="col s6 input-field">
-					<v-select name="tipo" id="tipoSelect" v-model="procariano.tipo" select-text="" :items="tipos"></v-select>
+					<v-select name="tipo" id="tipoSelect" v-model="tipoprocariano.id" select-text="" :items="tipos"></v-select>
 					<label class="active">Tipo</label>
 				</div>
 				<div class="col s6 input-field">
@@ -106,17 +106,6 @@
 	    <div class="modal-footer">
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cambiarDeGrupo">Si</a>
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cancelarCambioDeGrupo">No</a>
-	    </div>
-	  </div>
-	  <!--Modal de cambio de tipo-->
-	  <div id="modalCambioTipo" class="modal">
-	    <div class="modal-content">
-	      <h4 class="center-align">Cambio de tipo</h4>
-	      <p class="center-align">¿Seguro que desea cambiar el tipo del procariano seleccionado a: {{tipoprocariano.text}} ?</p>
-	    </div>
-	    <div class="modal-footer">
-	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cambiarDeTipo">Si</a>
-	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
 	    </div>
 	  </div>
 	</div>
@@ -182,7 +171,12 @@
 					id: '',
 					text: ''
 				},
-				tipos: []
+				tipos: [],
+				gruposObtenidos: [],
+				gruposFormacion: [],
+				gruposCaminantes: [],
+				gruposPescadores: [],
+				gruposMayores: []
 			}
 		},
 		created(){
@@ -216,7 +210,7 @@
 				//Asignación de temporales de tipo previo
 				const tempTipoProcarianoId = self.tipoprocariano.id;
 				const tempTipoPrevioText = self.tipoprocariano.text;
-				self.tempTipoPrevio.id = tempGrupoProcarianoId;
+				self.tempTipoPrevio.id = tempTipoProcarianoId;
 				self.tempTipoPrevio.text = tempTipoPrevioText;
 
 				//Habilidar cambio de grupo
@@ -225,21 +219,70 @@
 				});
 				//Habilitar cambio de tipo
 				$('#tipoSelect').change(function(){
-					self.abrirModalCambioTipo(self);
+		    	let optionSelectedVal = $('#tipoSelect option:selected').val();
+		    	let optionSelectedText = $('#tipoSelect option:selected').text();
+		    	self.tipoprocariano.id = optionSelectedVal;
+		    	self.tipoprocariano.text = optionSelectedText;
+		    	self.procariano.tipoId = optionSelectedVal;
+		    	self.armarArraysGrupos(self.gruposObtenidos, self);
 				})
 			},
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
-				let generoGrupo = (self.procariano.genero === 'masculino') ? 'Procare' : 'Procare Mujeres';
 				$.get('/api/grupos/', function(res){
 					let conexionExitosa = (res.status === true && res.mensaje === 'Se obtuvieron los grupos correctamente');
 					if(conexionExitosa){
-						//IMPORTANTE
-						//CAMBIAR EL ÚLTIMO PARÁMETRO CUANDO TENGA LA TABLA TIPO
-						self.filtrarGrupos(self, res.sequelizeStatus, generoGrupo, 'Formación');
+						self.gruposObtenidos = res.sequelizeStatus;
+						self.armarArraysGrupos(self.gruposObtenidos, self);
 					}
 				});
 			},
+			/*
+				@Descripción: Arma los arrays de grupos obtenidos de la base de datos
+				@Params:
+					grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
+	    */
+	    armarArraysGrupos(grupos, self){
+	    	//No borrar esto. Sirve cuando se eejcuta este método dentro del filtro de grupos
+	    	self.gruposFormacion = [];
+	    	self.gruposCaminantes = [];
+	    	self.gruposPescadores = [];
+	    	self.gruposMayores = [];
+
+	    	$.each(grupos, function(index, grupo){
+	    		let grupoObj = {
+	  				id: grupo.id,
+	  				text: grupo.nombre,
+	  				genero: grupo.genero
+	  			};
+	    		if(grupo.tipo === 'Formación'){
+	    			self.gruposFormacion.push(grupoObj);
+	    		}else if(grupo.tipo === 'Caminantes'){
+	    			self.gruposCaminantes.push(grupoObj);
+	    		}else if(grupo.tipo === 'Pescadores'){
+	    			self.gruposPescadores.push(grupoObj);
+	    		}else if(grupo.tipo === 'Mayores'){
+	    			self.gruposMayores.push(grupoObj);
+	    		}
+	    	});
+	    	self.formarArrayGruposAMostrar(self);
+	    },
+	    /*
+				@Descripción:
+					Selecciona los grupos que se van a presentar en el select dependiendo del tipo de procariano que está seleccionado.
+	    */
+	    formarArrayGruposAMostrar(self){
+	    	let tipoProcariano = self.tipoprocariano.text;
+	    	if(tipoProcariano === 'Chico Formación'){
+	    		self.grupos = self.gruposFormacion;
+	    	}else if(tipoProcariano === 'Caminante'){
+	    		self.grupos = self.gruposCaminantes;
+	    	}else if(tipoProcariano === 'Pescador'){
+	    		self.grupos = self.gruposPescadores;
+	    	}else if(tipoProcariano === 'Mayor'){
+	    		self.grupos = self.gruposMayores;
+	    	}
+	    },
 			/*
 				@Descripción:
 					Filtra los grupos por el género y el tipo del procariano
@@ -352,7 +395,6 @@
 	    		idGrupoPrev: self.tempGrupoPrevio.id,
 	    		idGrupoNuevo: self.grupoprocariano.id
 	    	};
-	    	console.log(dataObj)
 	    	$.ajax({
 	    		type: 'PUT',
 	    		url: '/api/pg/' + self.procariano.procarianoID,
@@ -395,39 +437,6 @@
 				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
 				self.grupoprocariano.id = tempGrupoPrevioId;
 				self.grupoprocariano.text = tempGrupoPrevioText;
-	    },
-	    abrirModalCambioTipo(self){
-	    	let select = $('#tipoSelect');
-	    	let optionSelectedText = $('#tipoSelect option:selected').text();
-	    	let optionSelectedVal = $('#tipoSelect option:selected').val();
-
-	    	self.tipoprocariano.text = optionSelectedText;		//Nombre del tipo seleccionado a mostrar en el modal
-	    	self.tipoprocariano.id = optionSelectedVal;
-
-	    	$('#modalCambioTipo').modal('open');
-	    },
-	    cambiarDeTipo(){
-	    	let self = this; 
-	    	let dataObj = {
-	    		idTipoPrev: self.tempTipoPrevio,
-	    		idTipoNuevo: self.tipoprocariano.id
-	    	};
-	    	$.ajax({
-	    		type: 'PUT',
-	    		url: '/api/tipoprocariano/' + self.procariano.procarianoID,
-	    		data: dataObj,
-	    		success(res){
-	    			if(res.status){
-	    				Materialize.toast('Nuevo tipo asignado. Debe cambiarlo de grupo', 4000, 'rounded');
-	    			}else{
-	    				Materialize.toast('Error al cambiar de tipo.', 4000, 'rounded tooltip-error');
-	    			}
-	    		},
-	    		error(err){
-	    			console.log(err);
-	    			Materialize.toast('Error conexión con la api.', 4000, 'rounded tooltip-error');
-	    		}
-	    	});
 	    }
 		}
 	}

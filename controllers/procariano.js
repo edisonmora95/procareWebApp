@@ -185,6 +185,7 @@ Autor : JV
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , para que modifique por ID
 			21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad	
+			23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
 */
 
 const buscarProcarianoPorId = (req, res, next) => {
@@ -207,8 +208,8 @@ const buscarProcarianoPorId = (req, res, next) => {
 				fechaFin: null,
 				ProcarianoId : procarianos[0].id
 			}
-		}).then( tipo =>{
-			if(tipo==null){
+		}).then( tipoProcariano =>{
+			if(tipoProcariano == null){
 				const respuesta = procarianos.map( procariano => {
 					return Object.assign(
 						{},
@@ -235,32 +236,37 @@ const buscarProcarianoPorId = (req, res, next) => {
 				});
 				return res.json(respuesta);
 			}else{
-				const respuesta = procarianos.map( procariano => {
-					return Object.assign(
-						{},
-						{
-							personaId : procariano.Persona.id,
-							procarianoID : procariano.id ,
-							colegio : procariano.colegio ,
-							universidad : procariano.universidad ,
-							parroquia : procariano.parroquia ,
-							fechaOrdenacion : procariano.fecha_ordenacion ,
-							haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
-							cedula : procariano.Persona.cedula ,
-							nombres : procariano.Persona.nombres ,
-							apellidos : procariano.Persona.apellidos ,
-							direccion : procariano.Persona.direccion ,
-							genero : procariano.Persona.genero ,
-							fechaNacimiento : procariano.Persona.fechaNacimiento ,
-							convencional : procariano.Persona.convencional ,
-							celular : procariano.Persona.celular ,
-							trabajo : procariano.Persona.trabajo ,
-							email : procariano.Persona.email,
-							estado : procariano.estado,
-							tipoId : tipo.TipoId
-						});
+				//Una vez obtenido el id del tipo del procariano, se obtiene el nombre del tipo
+				modelo.Tipo.obtenerTipoPorId(tipoProcariano.TipoId, (tipo) => {
+					const respuesta = procarianos.map( procariano => {
+						return Object.assign(
+							{},
+							{
+								personaId : procariano.Persona.id,
+								procarianoID : procariano.id ,
+								colegio : procariano.colegio ,
+								universidad : procariano.universidad ,
+								parroquia : procariano.parroquia ,
+								fechaOrdenacion : procariano.fecha_ordenacion ,
+								haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
+								cedula : procariano.Persona.cedula ,
+								nombres : procariano.Persona.nombres ,
+								apellidos : procariano.Persona.apellidos ,
+								direccion : procariano.Persona.direccion ,
+								genero : procariano.Persona.genero ,
+								fechaNacimiento : procariano.Persona.fechaNacimiento ,
+								convencional : procariano.Persona.convencional ,
+								celular : procariano.Persona.celular ,
+								trabajo : procariano.Persona.trabajo ,
+								email : procariano.Persona.email,
+								estado : procariano.estado,
+								tipoId : tipoProcariano.TipoId,
+								tipoNombre: tipo.nombre
+							}
+						);
 				});
 				return res.json(respuesta);
+				});
 			}
 		});
 	}).catch( error => {
