@@ -8,10 +8,30 @@ Vue.component('navbar', Navbar);
 let main = new Vue({
 	el: '#main',
 	created(){
-
 	},
 	mounted(){
 		$('.modal').modal();
+
+		var anterior = $('#datatable_previous').text();
+		console.log("anterior es :" + anterior);
+		$('#datatable_next').text('Siguiente');
+		/*
+		$('#datatable').DataTable( {
+        "language": {
+            "lengthMenu": "",
+            "zeroRecords": "Nada para mostrar",
+            "info": "Mostrando _PAGE_ de _PAGES_",
+            "infoEmpty": "Nada encontrado",
+            "infoFiltered": "(filtrado de  _MAX_ registros totales)"
+        }
+    } );
+	*/
+	},
+	updated(){
+		$('#datatable_previous').text('Anterior');
+		$('#datatable_next').text('Siguiente');
+		
+
 	},
 	data: {
 		usuarios: [
@@ -20,71 +40,78 @@ let main = new Vue({
 			  "nombres": "Vernor",
 			  "apellidos": "Crolla",
 			  "email": "vcrolla0@engadget.com",
-			  "rolText": "Geological Engineer",
+			  "rolText": ["Geological Engineer"],
 			  "rolId": 1
 			}, {
 			  "id": 2,
 			  "nombres": "Roxie",
 			  "apellidos": "MacInnes",
 			  "email": "rmacinnes1@cnbc.com",
-			  "rolText": "Cost Accountant",
+			  "rolText": ["Cost Accountant"],
 			  "rolId": 2
 			}, {
 			  "id": 3,
 			  "nombres": "Cooper",
 			  "apellidos": "Robathon",
 			  "email": "crobathon2@slideshare.net",
-			  "rolText": "Developer III",
+			  "rolText": ["Developer III"],
 			  "rolId": 3
 			}, {
 			  "id": 4,
 			  "nombres": "Davita",
 			  "apellidos": "Brobeck",
 			  "email": "dbrobeck3@ihg.com",
-			  "rolText": "Budget/Accounting Analyst III",
+			  "rolText": ["Budget","Accounting Analyst III"],
 			  "rolId": 4
 			}, {
 			  "id": 5,
 			  "nombres": "Lynda",
 			  "apellidos": "Bradburn",
 			  "email": "lbradburn4@live.com",
-			  "rolText": "Editor",
+			  "rolText": ["Editor"],
 			  "rolId": 5
 			}, {
 			  "id": 6,
 			  "nombres": "Feliza",
 			  "apellidos": "Daily",
 			  "email": "fdaily5@ucsd.edu",
-			  "rolText": "Community Outreach Specialist",
+			  "rolText": ["Community Outreach Specialist"],
 			  "rolId": 6
 			}, {
 			  "id": 7,
 			  "nombres": "Fons",
 			  "apellidos": "Luckcuck",
 			  "email": "fluckcuck6@gizmodo.com",
-			  "rolText": "Human Resources Assistant III",
+			  "rolText": ["Human Resources Assistant III"],
 			  "rolId": 7
 			}, {
 			  "id": 8,
 			  "nombres": "Jolee",
 			  "apellidos": "Ormshaw",
 			  "email": "jormshaw7@slashdot.org",
-			  "rolText": "Geologist IV",
+			  "rolText": ["Geologist IV"],
 			  "rolId": 8
 			}, {
 			  "id": 9,
 			  "nombres": "Addy",
 			  "apellidos": "Gwatkin",
 			  "email": "agwatkin8@abc.net.au",
-			  "rolText": "Executive Secretary",
+			  "rolText": ["Executive Secretary"],
 			  "rolId": 9
 			}, {
 			  "id": 10,
 			  "nombres": "Frederik",
 			  "apellidos": "Bulled",
 			  "email": "fbulled9@de.vu",
-			  "rolText": "Desktop Support Technician",
+			  "rolText":[ "Desktop Support Technician"],
 			  "rolId": 10
+			}, {
+			  "id": 11,
+			  "nombres": "Drederik",
+			  "apellidos": "Bulled",
+			  "email": "fbulled9@de.vu",
+			  "rolText":[ "Desktop Support Technician"],
+			  "rolId": 11
 			}
 		],
 		roles: [
@@ -124,7 +151,8 @@ let main = new Vue({
 		rolEscogido: {
 			nombre: '',
 			id: ''
-		}
+		},
+		valorBotonFormacion : "  Agregar director formación"
 	},
 	computed: {
 		listaUsuarios(){
@@ -183,4 +211,11 @@ let main = new Vue({
 			divSelect.append(select);
 		},
 	}
+});
+
+$( document ).ready(function() {
+    $('#datatable_previous').text('Anterior');
+		$('#datatable_next').text('Siguiente');
+
+		//$('.sorting>background-image').destroy();
 });
