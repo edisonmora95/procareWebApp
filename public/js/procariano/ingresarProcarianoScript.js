@@ -139,7 +139,6 @@ var main = new Vue({
     },
     ingresarProcariano(){
     	let self = this;
-    	console.log(self.procariano);
     	let urlApi = '/api/procarianos/';
     	$.ajax({
       	type:'POST',

@@ -24,6 +24,18 @@ module.exports = function(sequelize, DataTypes) {
           fechaInicio: fechaInicio,
           fechaFin: null
         }).then(callback).catch(errorCallback);
+      },
+      /*
+        @Descripción: 
+          Me devuelve a todos los procarianos que pertenezcan a un grupo
+          Si el registro tiene fechaFin null, significa que pertenece a un grupo actualmente
+      */
+      buscarProcarianosConGrupo: function(callback){
+        this.findAll({
+          where: {
+            fechaFin: null
+          }
+        }).then(callback);
       }
     }
   });

@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+      },
+      crearGrupoEtapa: function(idGrupo, idEtapa, successCallback, errorCallback){
+        this.create({
+          EtapaId: idEtapa,
+          GrupoId: idGrupo,
+          fechaInicio: new Date(),
+          fechaFin: null
+        }).then(successCallback).catch(errorCallback);
       }
     },
     freezeTableName: true

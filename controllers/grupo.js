@@ -13,28 +13,51 @@ module.exports.crearGrupo = (req, res, next) => {
 	cantidadChicos = req.body.cantidadChicos;
 	numeroReuniones = req.body.numeroReuniones;
 	genero = req.body.genero;
-
-	modelo.Grupo.create({
-		nombre : nombre,
-		tipo : tipo,
-		cantidadChicos : cantidadChicos,
-		numeroReuniones : numeroReuniones,
-		genero : genero
-	}).then( grupo => {
-		var rjson = {
-			status : true,
-			mensaje : 'Grupo creado exitosamente',
-			sequelizeStatus : grupo
-		}
-		res.json(rjson);
-	}).catch( error => {
+	idEtapa = req.body.etapa;
+	idAnimador = req.body.animador;
+	
+	modelo.Grupo.crearGrupo(nombre, tipo, cantidadChicos, numeroReuniones, genero, (grupo) => {
+		let idGrupo = grupo.get('id');
+		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
+			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
+				var rjson = {
+					status : true,
+					mensaje : 'Grupo creado exitosamente',
+					grupo : grupo,
+					grupoEtapa: grupoEtapa,
+					animador: animador
+				}
+				res.json(rjson);	
+			}, (errorAnimador) => {
+				var rjson = {
+					status : false,
+					mensaje : 'No se pudo añadir el animador',
+					grupo : grupo,
+					grupoEtapa: grupoEtapa,
+					errorAnimador: errorAnimador
+				}
+				res.json(rjson);	
+			});
+			
+		}, (errorGrupoEtapa) => {
+			var rjson = {
+				status : false,
+				mensaje : 'No se pudo añadir a etapa indicada',
+				grupo: grupo,
+				errorGrupoEtapa : errorGrupoEtapa
+			}
+			res.json(rjson);
+		});
+		
+	}, (errorGrupo) => {
 		var rjson = {
 			status : false,
 			mensaje : 'No se pudo crear grupo',
-			sequelizeStatus : error
+			errorGrupo : errorGrupo
 		}
 		res.json(rjson);
 	});
+
 }
 
 module.exports.editarGrupo = (req, res, next) => {

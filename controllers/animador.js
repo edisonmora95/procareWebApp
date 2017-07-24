@@ -78,36 +78,28 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 		res.json(rjson);
 	});
 }
-
+/*
+	@Descripción:
+		Devuelve a todos los procarianos que no sean Chico de Formación
+*/
 module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
-	modelo.Tipo.findOne({
-		where: {nombre: 'Chico Formación'}
-	}).then(tipo => {
-		modelo.ProcarianoTipo.findAll({
-			include : [{
-        model: modelo.Procariano,
-        required : true/*
-        include : [{
-	        model: modelo.Persona			        
-		    }]*/
-	    }],
-		    where : {
-		    	TipoId : { $not: tipo.id }
-		    }
-		}).then(result => {
-			var rjson = {
-				status : true,
-				mensaje : 'Se obtuvieron los Posibles Animadores correctamente',
-				sequelizeStatus : result
+
+	modelo.Procariano.findAll({
+		include: [
+			{
+				model: modelo.Tipo,	
+				where: {id: { $not: 1 }},
+				attributes: [['id', 'tipoId'], 'nombre']
+			},
+			{
+				model: modelo.Persona,
+				attributes: [['id', 'personaId'], 'nombres', 'apellidos']
 			}
-			res.json(rjson)
-		}).catch( error => {
-			var rjson = {
-				status : false,
-				mensaje : 'No se pudieron obtener los Posibles Animadores',
-				sequelizeStatus : error
-			}
-			res.json(rjson);
-		});
+		],
+		attributes: [['id', 'procarianoId']]
+	}).then( result => {
+		return res.status(200).json({status: true, datos: result, mensaje: 'Se pudieron obtener los posibles animadores'});
+	}).catch( error => {
+		return res.status(400).json({status: false, datos: error, mensaje: 'Error en el query'});
 	});
 }

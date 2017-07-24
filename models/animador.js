@@ -16,6 +16,14 @@ module.exports = function(sequelize, DataTypes) {
     classMethods : {
       associate : function(models) {
         Animador.belongsTo(models.Procariano)
+      },
+      agregarAnimadorAGrupo: function(idAnimador, idGrupo, successCallback, errorCallback){
+        this.create({
+          ProcarianoId: idAnimador,
+          GrupoId: idGrupo,
+          fechaInicio: new Date(),
+          fechaFin: null
+        }).then(successCallback).catch(errorCallback);
       }
     }
   });

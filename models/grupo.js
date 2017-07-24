@@ -39,6 +39,15 @@ module.exports = function(sequelize, DataTypes) {
         Grupo.hasMany(models.Reunion, {as : 'Reuniones'})
         Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'})
         Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'})
+      },
+      crearGrupo: function(nombre, tipo, cantidadChicos, numeroReuniones, genero ,callback, errorCallback){
+        this.create({
+          nombre: nombre,
+          tipo: tipo,
+          cantidadChicos: cantidadChicos,
+          numeroReuniones: numeroReuniones,
+          genero: genero
+        }).then(callback).catch(errorCallback);
       }
     }
   });
