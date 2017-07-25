@@ -157,3 +157,31 @@ module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) =>
 		res.json(rjson);
 	});
 }
+
+module.exports.obtenerGrupoPorId = (req, res, next) => {
+	let idGrupo = req.params.id_grupo;
+	modelo.Grupo.obtenerGrupoPorId(idGrupo, (grupo) => {
+		
+		modelo.Procariano.obtenerProcarianosDeGrupo(idGrupo, (procarianos) => {
+
+			modelo.Animador.obtenerAnimadorDeGrupo(idGrupo, (animador) => {
+
+				let idProcariano = animador.get('ProcarianoId');
+				modelo.Procariano.obtenerProcarianoPorId(idProcariano, (procarianoAnimador) => {
+					return res.status(200).json({status: true, grupo: grupo, procarianos: procarianos, animador: animador, procarianoAnimador: procarianoAnimador});
+				}, (errorProcarianoAnimador) => {
+					return res.status(400).json({status: false, procarianos: procarianos, animador: animador, error: errorProcarianoAnimador});
+				});
+				
+			}, (errorAnimador) => {
+				return res.status(400).json({status: false, procarianos: procarianos, error: errorAnimador});
+			});			
+			
+		}, (errorProcarianos) => {
+			return res.status(400).json({status: false, error: errorProcarianos});
+		});
+		
+	}, (errorGrupo) => {
+		return res.status(400).json({status: false, error: errorGrupo});
+	});
+};

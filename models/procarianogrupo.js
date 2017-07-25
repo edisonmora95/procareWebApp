@@ -36,6 +36,13 @@ module.exports = function(sequelize, DataTypes) {
             fechaFin: null
           }
         }).then(callback);
+      },
+      obtenerProcarianosDeGrupo: function(idGrupo, success, error){
+        this.findAll({
+          where: {
+            GrupoId: idGrupo
+          }
+        }).then(success).catch(error);
       }
     }
   });

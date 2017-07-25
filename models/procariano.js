@@ -77,6 +77,41 @@ module.exports = function(sequelize, DataTypes) {
           ],
           attributes: [['id', 'procarianoId'], 'estado']
         }).then(successCallback).catch(errorCallback);
+      },
+      obtenerProcarianosDeGrupo: function(idGrupo, successCallback, errorCallback){
+        const Grupo = sequelize.import("../models/grupo");
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include: [
+            {
+              model: Grupo,
+              where: {
+                id: idGrupo
+              },
+              attributes: [ ['id', 'idGrupo']]
+            },
+            {
+              model: Persona,
+              attributes: [ ['id', 'idPersona'], 'nombres', 'apellidos', ]
+            }
+          ],
+          attributes:[['id', 'idProcariano']]
+        }).then(successCallback).catch(errorCallback);
+      },
+      obtenerProcarianoPorId: function(idProcariano, successCallback, errorCallback){
+        const Persona = sequelize.import("../models/persona");
+        this.findOne({
+          where: {
+            id: idProcariano
+          },
+          include: [
+            {
+              model: Persona,
+              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+            }
+          ],
+          attributes: [['id', 'procarianoId']]
+        }).then(successCallback).catch(errorCallback);
       }
     }
   });

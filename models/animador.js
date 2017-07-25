@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
           fechaInicio: new Date(),
           fechaFin: null
         }).then(successCallback).catch(errorCallback);
+      },
+      obtenerAnimadorDeGrupo: function(idGrupo, successCallback, errorCallback){
+        this.findOne({
+          where: {
+            GrupoId: idGrupo,
+            fechaFin: null
+          }
+        }).then(successCallback).catch(errorCallback);
       }
     }
   });

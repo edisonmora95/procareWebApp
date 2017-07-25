@@ -48,6 +48,19 @@ module.exports = function(sequelize, DataTypes) {
           numeroReuniones: numeroReuniones,
           genero: genero
         }).then(callback).catch(errorCallback);
+      },
+      obtenerGrupoPorId: function(idGrupo, success, error){
+        const Etapa = sequelize.import("../models/etapa");
+        this.findOne({
+          where: {
+            id: idGrupo
+          },
+          include: [
+            {
+              model: Etapa,
+            }
+          ]
+        }).then(success).catch(error);
       }
     }
   });
