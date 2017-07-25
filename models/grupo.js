@@ -61,6 +61,16 @@ module.exports = function(sequelize, DataTypes) {
             }
           ]
         }).then(success).catch(error);
+      },
+      obtenerTodosLosGrupos: function(success, error){
+        const Etapa = sequelize.import("../models/etapa");
+        this.findAll({
+          include: [
+            {
+              model: Etapa
+            }
+          ]
+        }).then(success).catch(error);
       }
     }
   });

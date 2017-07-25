@@ -16,7 +16,7 @@
 				<navbar></navbar>
 			</header>
 			<main class="container">
-				<section id="section-busqueda" class="card large">
+				<!--<section id="section-busqueda" class="card large">
 					<div class="row" id="row-busqueda">
 						<form class="çol s12">
 							<div class="row">
@@ -58,22 +58,24 @@
 							</div>
 						</form>
 					</div>
-				</section>
+				</section>-->
 				<section id="section-resultados" class="card large">
 					<div class="row" id="row-resultados">
 						<table class="stripped bordered responsive-table centered highlight">
 							<thead>
 								<th>Nombre</th>
+								<th>Tipo</th>
 								<th>Etapa</th>
-								<th>Año</th>
-								<th>Animador</th>
+								<th>Género</th>
+								<th>Integrantes</th>
 							</thead>
 							<tbody>
-								<tr v-for="grupo in grupos">
+								<tr v-for="grupo in grupos" @click="irAGrupo(grupo)">
 									<td>{{grupo.nombre}}</td>
-									<td>{{grupo.etapa}}</td>
-									<td>{{grupo.anio}}</td>
-									<td>{{grupo.animador}}</td>
+									<td>{{grupo.tipo}}</td>
+									<td>{{grupo.etapaNombre}}</td>
+									<td>{{grupo.genero}}</td>
+									<td>{{grupo.integrantes}}</td>
 								</tr>
 							</tbody>
 						</table>

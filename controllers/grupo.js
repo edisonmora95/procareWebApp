@@ -113,7 +113,26 @@ module.exports.eliminarGrupo = (req, res, next) => {
 };
 
 module.exports.mostrarGrupos = (req, res, next) => {
-	modelo.Grupo.findAll().then( grupos => {
+	modelo.Grupo.obtenerTodosLosGrupos((success) => {
+		var status = true;
+		var mensaje = 'Se obtuvieron los grupos correctamente'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : success
+		}
+		res.json(jsonRespuesta)
+	}, (error) => {
+		var status = false;
+		var mensaje = 'No se pudieron obtener los grupos'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	});
+	/*modelo.Grupo.findAll().then( grupos => {
 		var status = true;
 		var mensaje = 'Se obtuvieron los grupos correctamente'
 		var jsonRespuesta = {
@@ -131,7 +150,7 @@ module.exports.mostrarGrupos = (req, res, next) => {
 			sequelizeStatus : error
 		}
 		res.json(jsonRespuesta);
-	});
+	});*/
 };
 
 module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) => {
