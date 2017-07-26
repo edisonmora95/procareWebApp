@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procare</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--Materializecs-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- Compiled and minified CSS -->
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
+	</head>
+	<body>
+		<div id="app">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<!--Row ver procariano-->
+				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
+					<div class="col s12">
+						<div class="card">
+							<div class="card-content">
+								<!--<div class="row rowVer" id="rowVerImagen">
+									<div class="col s12 center-align" id="verImagen">
+										<img class="responsive-img circle" src="http://placehold.it/350x150">
+									</div>
+									<p class="center-align">Estado: {{procariano.estado}}</p>
+								</div>-->
+								<p class="center-align"><span class="tag">Estado: </span>{{procariano.estado}}</p>
+								<!--Nombres-->
+								<section class="row rowVer" id="rowVerNombres">
+									<div class="col s6" id="verNombre">
+										<label>Nombres</label>
+										<p>{{procariano.nombres}}</p>
+									</div>
+									<div class="col s6" id="verApellido">
+										<label>Apellidos</label>
+										<p>{{procariano.apellidos}}</p>
+									</div>
+								</section>
+								<!--Cedula-fecha-->
+								<section class="row rowVer" id="rowVerCedulaFecha">
+									<div class="col s6" id="verCedula">
+										<label>Cédula</label>
+										<p>{{procariano.cedula}}</p>
+									</div>
+									<div class="col s6" id="verFecha">
+										<label>Fecha de nacimiento</label>
+										<p>{{date(fechaNacimiento)}}</p>
+									</div>
+								</section>
+								<!--Direccion-email-->
+								<section class="row rowVer" id="rowVerDireccionEmail">
+									<div class="col s6" id="verDireccion">
+										<label>Dirección</label>
+										<p>{{procariano.direccion}}</p>
+									</div>
+									<div class="col s6" id="verEmail">
+										<label>Email</label>
+										<p>{{procariano.email}}</p>
+									</div>
+								</section>
+								<!--Celular-convencional-->
+								<section class="row rowVer" id="rowVerTelefonos">
+									<div class="col s6" id="verConvencional">
+										<label>Convencional</label>
+										<p>{{procariano.convencional}}</p>
+									</div>
+									<div class="col s6" id="verCelular">
+										<label>Celular</label>
+										<p>{{procariano.celular}}</p>
+									</div>
+								</section>
+								<!--Tipo-grupo-->
+								<section class="row rowVer" id="rowVerTipoGrupo">
+									<div class="col s6" id="verTipo">
+										<label>Tipo</label>
+										<p>{{procariano.tipoNombre}}</p>
+									</div>
+									<div class="col s6" id="verGrupo">
+										<label>Grupo</label>
+										<p>{{grupoprocariano.text}}</p>
+									</div>
+								</section>
+								<!--Coelgio-Universidad-->
+								<section class="row rowVer" id="rowVerEducacion">
+									<div class="col s6" id="verColegio">
+										<label>Colegio</label>
+										<p>{{procariano.colegio}}</p>
+									</div>
+									<div class="col s6" id="verUniversidad">
+										<label>Universidad</label>
+										<p>{{procariano.universidad}}</p>
+									</div>
+								</section>
+								<!--Botones-->
+								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
+									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
+									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
+								</div>
+							</div><!--End card content-->
+						</div><!--End card-->
+					</div>
+				</div>
+				<!--End row ver procariano-->
+				<div class="card" id="rowEditar" v-if="habilitaredicion">
+					<div class="card-content">
+						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
+					</div>
+				</div>
+			</main>
+
+			<!-- Modal Structure -->
+		  <div id="modalErrorEliminar" class="modal">
+		    <div class="modal-content">
+		      <h4 class="center-align">¡Error!</h4>
+		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalConfirmarEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">¿Está seguro de que desea eliminar a este procariano de la base de datos?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalExitoEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">Procariano eliminado correctamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		</div>
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+			<script src="/scripts/moment/moment.js"></script>
+			<script src="/scripts/moment/locale/es.js"></script>
+			<script src="/build/procariano/verProcarianoScript.js"></script>
+		</div>
+	</body>
+</html>
