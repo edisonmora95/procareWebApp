@@ -31,7 +31,7 @@
 		    		</li>
 		    	</ul>
 		    </li>
-		    <li><a href="#">Salir</a></li>
+		    <li><a href="/logout">Salir</a></li>
 		  </ul>
 		</nav>
 	</div>

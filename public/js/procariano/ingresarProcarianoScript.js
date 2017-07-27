@@ -146,7 +146,7 @@ var main = new Vue({
       	data: self.procariano,
       	success: function(res){
       		console.log(res)
-      		if(res.status){
+      		if(res.estado){
       			$('#modalProcarianoCreado').modal('open');
       		}else{
       			alert('Error al ingresar en la base de datos');

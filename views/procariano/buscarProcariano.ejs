@@ -153,8 +153,8 @@
 								<th>Universidad</th>
 							</thead>
 							<tbody>
-								<tr v-for="procariano in procarianos">
-									<td @click="irAPerfil(procariano)"><a  class="nombre">{{procariano.nombres}}</a></td>
+								<tr v-for="procariano in procarianos" @click = "irAPerfil(procariano)">
+									<td>{{procariano.nombres}}</td>
 									<td>{{procariano.apellidos}}</td>
 									<td>{{procariano.cedula}}</td>
 									<td>{{date(procariano.fechaNacimiento)}}</td>

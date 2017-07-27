@@ -11,81 +11,78 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/asistencias/subirAsistenciasStyles.css">
 	</head>
 	<body>
-		<header>
-			<nav>
-				<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
-				<a href="" class="brand-logo">Procare</a>
-				<ul id="slide-out" class="side-nav">
-			    <li>
-			    	<div class="userView">
-				      <div class="background">
-				      </div>
-				      <a href="#!user"></a>
-				      <a href="#!name"><span class="white-text name">John Doe</span></a>
-				      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
-				    </div>
-			    </li>
-			    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-			    <li><a href="#!">Second Link</a></li>
-			    <li><div class="divider"></div></li>
-			    <li><a class="subheader">Subheader</a></li>
-			    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-			  </ul>
-			</nav>
-		</header>
-		<main>
-			<div id="app" class="container">
-				<div class="row" id="row-busqueda">
-					<div class="col s6 input-field" id="div-select-grupos">
-						<label class="active">Seleccione un grupo</label>
-					</div>
-					<div class="col s6 input-field">
-						<input type="date" name="fecha-asistencia" id="fecha-asistencia" class="datepicker" v-model="fechaSel">
-						<label for="fecha-asistencia">Seleccione una fecha</label>
-					</div>
-				</div>
-				<div class="row" id="row-resultados" v-if="grupoSel.nombre!=''">
-					<div class="col s7" id="col-chicos">
-						<h5 class="center-align">Lista de chicos</h5>
-						<div id="lista-chicos">
-							<hr>
-							<div class="row row-li" v-for="chico in chicos">
-
-								<div class="col s6 l8 col-nombre valign-wrapper">
-									<p class="nombre">{{chico.nombre}}</p>
-								</div>
-								<div class="col s6 l4 col-radio valign-wrapper">
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
-										<label v-bind:for="'asist-'+chico.id">A</label>
-									</p>
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
-										<label v-bind:for="'falta-'+chico.id">F</label>
-									</p>
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
-										<label v-bind:for="'fj-'+chico.id">FJ</label>
-									</p>
-								</div>
+		<div id="asistenciasApp">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<v-row class="row" id="rowBusqueda">
+					<article class="col s4 input-field">
+						<v-select name="genero" id="genero" select-text="Género" v-model="generoSel">
+							<option value="Procare">Procare</option>
+							<option value="Procare Mujeres">Procare Mujeres</option>
+						</v-select>
+					</article>
+					<article class="col s4 input-field">
+						<v-select name="selectGrupos" id="selectGrupos" :items="grupos" select-text="Grupo">
+						</v-select>
+					</article>
+					<article class="col s4 input-field">
+						<input type="date" name="fechaAsistencia" id="fechaAsistencia" class="datepicker">
+						<label for="fechaAsistencia" class="active">Fecha de asistencia</label>
+					</article>
+				</v-row>
+				<v-row class="row" id="rowResultados">
+						<article class="col s7" id="colChicos">
+							<header>
+								<h5 class="center-align">Lista de integrantes</h5>
+							</header>
+							<main id="listaChicos">
 								<hr>
-							</div>
+								<section class="row row-li" v-for="chico in chicos">
+									
+									<article class="col s6 l8 col-nombre valign-wrapper">
+										<p class="nombre">{{chico.nombre}}</p>
+									</article>
+									
+									<article class="col s6 l4 col-radio valign-wrapper">
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
+											<label v-bind:for="'asist-'+chico.id">A</label>
+										</p>
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
+											<label v-bind:for="'falta-'+chico.id">F</label>
+										</p>
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
+											<label v-bind:for="'fj-'+chico.id">FJ</label>
+										</p>
+									</article>
+									<hr>
+								</section>
+							</main>
+						</article>
+						<article class="col s5" id="colGrupo">
+							<header>
+								<h5 class="center-align">Grupo</h5>
+							</header>
+							<main id="grupo">
+								<h6 class="center-align">{{grupoSel.nombre}}</h6>
+								<p>Total de chicos: {{grupoSel.cantidadChicos}}</p>
+								<p>Asistieron: {{totalAsistieron}}</p>
+								<p>Faltaron: {{totalFaltas}}</p>
+								<p>Justificaron: {{totalJustificados}}</p>
+							</main>
+						</article>
+				</v-row>
+				<v-row id="rowBotones">
+					<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="subirAsistencias" >Subir asistencias<a>
+				</v-row>
+				
 
-						</div>
-					</div>
-					<div class="col s5" id="col-grupo">
-						<h5 class="center-align">Grupo</h5>
-						<div id="grupo">
-							<h6 class="center-align">{{grupoSel.nombre}}</h6>
-							<p>Total de chicos: {{totalChicos}}</p>
-							<p>Asistieron: {{totalAsistieron}}</p>
-							<p>Faltaron: {{totalFaltas}}</p>
-							<p>Justificaron: {{totalJustificados}}</p>
-						</div>
-					</div>
-				</div>
-				<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="subirAsistencias" >Subir asistencias<a>
-
+			</main>
+			<div id="modals">
 				<!-- Modal día incorrecto Structure -->
 			  <div id="modalDia" class="modal">
 			    <div class="modal-content">
@@ -95,8 +92,7 @@
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
 			    </div>
 			  </div>
-
-				<!-- Modal Confirmación Structure -->
+			  <!-- Modal Confirmación Structure -->
 			  <div id="modalConfirmacion" class="modal">
 			    <div class="modal-content">
 			      <p class="center-align">Las asistencias han sido subidas</p>
@@ -105,25 +101,23 @@
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
 			    </div>
 			  </div>
-			</div>
-
-			<!-- Modal Error Structure -->
-			<div id="modalError" class="modal">
-				<div class="modal-content">
-					<p class="center-align">Debe marcar las asistencias de todos los chicos</p>
-				</div>
-				<div class="modal-footer">
-					<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+			  <!-- Modal Error Structure -->
+				<div id="modalError" class="modal">
+					<div class="modal-content">
+						<p class="center-align">Debe marcar las asistencias de todos los chicos</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+					</div>
 				</div>
 			</div>
 		</div>
-		</main>
-		<footer>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
-			<script src='/js/asistencias/subirAsistenciasScript.js'></script>
-		</footer>
 	</body>
+	<footer>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+		<script src='https://unpkg.com/vue@2.3.3'></script>
+		<script src='/build/asistencias/subirAsistenciasScript.js'></script>
+	</footer>
 </html>
