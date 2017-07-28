@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css?family=Merriweather:700');
 
 body{
 	background-color: #d3dbdb;
@@ -36,7 +36,12 @@ li{
 }
 
 h5{
+	margin-top: 5%;	
+}
+
+h3, h4, h5, h6{
 	font-weight: bold;
+	font-family: 'Merriweather', serif;
 }
 
 #row-btns{

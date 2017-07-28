@@ -61,32 +61,70 @@ module.exports.crearGrupo = (req, res, next) => {
 }
 
 module.exports.editarGrupo = (req, res, next) => {
-	var id = req.body.id;
-	modelo.Grupo.update({
-		nombre : req.body.nombre,
-		tipo : req.body.tipo,
-		cantidadChicos : req.body.cantidadChicos,
-		numeroReuniones : req.body.numeroReuniones,
-		genero : req.body.genero
-	}, {
-	  where: {
-	    id : id
-	  }
-	}).then( grupo => {
-		var rjson = {
-			status : true,
-			mensaje : 'Grupo actualizado exitosamente',
-			sequelizeStatus : grupo
+	let grupo = {
+		id: req.params.id_grupo,
+		nombre: req.body.nombre,
+    tipo: req.body.tipo,
+    cantidadChicos: req.body.cantidadChicos,
+    numeroReuniones: req.body.numeroReuniones,
+    genero: req.body.genero,
+    etapaAntigua: req.body.etapaAntigua,
+    etapaNueva: req.body.etapaNueva,
+    animadorAntiguo: req.body.animadorAntiguo,
+    animadorNuevo: req.body.animadorNuevo
+	};
+	modelo.Grupo.editarGrupo(grupo, (successGrupo) => {
+		let cambioEtapa = ( grupo.etapaNueva !== '' && grupo.etapaNueva !== grupo.etapaAntigua && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
+		let cambioAnimador = ( grupo.animadorNuevo !== '' && grupo.animadorNuevo !== grupo.animadorAntiguo && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
+
+		if(cambioEtapa){
+			modelo.GrupoEtapa.cambiarGrupoDeEtapa(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, (successCambioEtapa) => {
+				//Se pudo cambiar al grupo de etapa
+				if(cambioAnimador){
+					modelo.Animador.cambiarAnimadorDeGrupo(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, (successCambioAnimador) => {
+						//Se pudo cambiar al animador
+						return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'Se pudo editar el grupo y cambiar la etapa y el animador'});
+					}, (errorUA) => {
+						//Error al ponerle fechaFin al registro de animador
+						return res.status(400).json({estado : false, datos : errorUA, mensaje: 'Se pudo editar el grupo y cambiar la etapa, no se pudo eliminar el registro antiguo del animador.'});
+					}, (errorCA) => {
+						//Error al crear el registro de animador
+						return res.status(400).json({estado : false, datos : errorCA, mensaje: 'Se pudo editar el grupo, cambiar la etapa y eliminar el registro antiguo de animador, no se pudo crear el registro nuevo del animador.'});
+					});
+				}else{
+					//Se pudo editar el grupo, cambiar la etapa. No se quiso cambiar el animador
+					return res.status(200).json({estado : true, datos : successCambioEtapa, mensaje: 'Se pudo editar el grupo y cambiar la etapa'});
+				}
+			}, (errorUE) => {
+				//Error al ponerle fechaFin al registro de grupoEtapa
+				return res.status(400).json({estado : false, datos : errorUE, mensaje: 'Se pudo editar el grupo, no se pudo eliminar el registro antiguo de la etapa.'});
+			}, (errorCE) => {
+				//Error al crear el registro de grupoetapa
+				return res.status(400).json({estado : false, datos : errorCE, mensaje: 'Se pudo editar el grupo y eliminar el registro antiguo de etapa, no se pudo crear el registro nuevo de la etapa.'});
+			});
+		}else{
+			if(cambioAnimador){
+				modelo.Animador.cambiarAnimadorDeGrupo(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, (successCambioAnimador) => {
+					//Se pudo editar el grupo y se pudo cambiar al animador. No se quiso cambiar de etapa
+					return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'No se pudo editar el grupo y cambiar el animador.'});
+				}, (errorUA) => {
+					//Error al ponerle fechaFin al registro de animador
+					return res.status(400).json({estado : false, datos : errorUA, mensaje: 'Se pudo editar el grupo, no se pudo eliminar el registro antiguo del animador.'});
+				}, (errorCA) => {
+					//Error al crear el registro de animador
+					return res.status(400).json({estado : false, datos : errorCA, mensaje: 'Se pudo editar el grupo y eliminar el registro antiguo de animador, no se pudo crear el registro nuevo del animador.'});
+				});
+			}else{
+				//Se pudo editar el grupo, no se quiso cambiar de etapa ni de animador
+				return res.status(200).json({estado : true, datos : successGrupo, mensaje: 'Se pudo editar el grupo.'});
+			}
+			
 		}
-		res.json(rjson)
-	}).catch( err => {
-		var rjson = {
-			status : false,
-			mensaje : 'No se pudo actualizar el Grupo',
-			sequelizeStatus : error
-		}
-		res.json(rjson);
+	}, (errorGrupo) => {
+		//No se pudo editar el grupo
+		return res.status(400).json({estado : false, datos : errorGrupo, mensaje: 'No se pudo editar el grupo.'});
 	});
+
 };
 
 module.exports.eliminarGrupo = (req, res, next) => {
@@ -204,3 +242,10 @@ module.exports.obtenerGrupoPorId = (req, res, next) => {
 		return res.status(400).json({status: false, error: errorGrupo});
 	});
 };
+
+
+//FUNCIONES INTERNAS
+/*
+cambiarAnimadorDeGrupo(){
+
+}*/

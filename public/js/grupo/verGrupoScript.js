@@ -14,6 +14,7 @@ Vue.component('chicos-grupo', EscogerChicos);
 let verGrupoApp = new Vue({
 	el: '#verGrupoApp',
 	created(){
+		this.obtenerUsuario(this);
 		this.obtenerGrupo(this);
 	},
 	mounted(){
@@ -21,13 +22,7 @@ let verGrupoApp = new Vue({
 	},
 	data: {
 		idGrupo: 0,
-		usuario: 'personal',
-		grupo: {
-			nombre: 'Grupo #1',
-			animador: 'Luis Andino',
-			genero: '1',
-			etapa: 'Quinta etapa'
-		},
+		grupo: {},
 		animador: {},
 		etapa: {
 			id: '',
@@ -35,9 +30,23 @@ let verGrupoApp = new Vue({
 		},
 		integrantes: [],
 		chicoSeleccionado: {},
-		editar: false
+		editar: false,
+		puedeEditar: false
 	},
 	methods: {
+		obtenerUsuario(self){
+			$.ajax({
+				type: 'GET',
+				url: '/api/login/usuarios',
+				success(res){
+					self.usuario = res;
+					let usuarioEsPersonal = self.verificarTipoUsuario(self, 'Personal');
+					if(usuarioEsPersonal){
+						self.puedeEditar = true;
+					}
+				}
+			});
+		},
 		obtenerGrupo(self){
 			let pathname = window.location.pathname;
 			self.idGrupo = pathname.split('/')[2];
@@ -45,13 +54,13 @@ let verGrupoApp = new Vue({
 				type: 'GET',
 				url: '/api/grupos/' + self.idGrupo,
 				success(res){
-					console.log(res)
 					self.grupo = res.grupo;
 					self.armarArrayIntegrantes(self, res.procarianos);
 					let animadorObj = {
 						nombres: res.procarianoAnimador.Persona.nombres + ' ' + res.procarianoAnimador.Persona.apellidos,
 						id: res.procarianoAnimador.procarianoId
 					};
+					self.grupo.animadorId = animadorObj.id;
 					self.animador = animadorObj;	
 					self.obtenerEtapaDeGrupo(self, res.grupo.Etapas);				
 				}
@@ -72,6 +81,7 @@ let verGrupoApp = new Vue({
 			$.each(etapas, function(index, etapa){
 				let fechaFin = etapa.GrupoEtapa.fechaFin;
 				if(fechaFin === null){
+					self.grupo.etapaId = etapa.id;
 					self.etapa.id = etapa.id;
 					self.etapa.text = etapa.nombre;
 					return false;
@@ -83,16 +93,25 @@ let verGrupoApp = new Vue({
 			this.chicoSeleccionado = chico;
 		},
 		habilitarEditar(){
-			if(this.usuario === 'personal'){
-				this.editar = true;
-				$('select').material_select();
-			}
+			this.editar = true;
+			$('select').material_select();
 		},
 		checkIsEmpty(obj){
 			return $.isEmptyObject(obj);
 		},
 		eliminarGrupo(){
 			
+		},
+		verificarTipoUsuario(self, tipo){
+			let roles = self.usuario.roles;
+			let flag = false;
+			$.each(roles, function(index, rol){
+				if(rol === tipo){
+					flag = true;
+					return false;
+				}
+			});
+			return flag;
 		}
 	}
 });

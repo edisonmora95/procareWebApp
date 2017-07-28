@@ -71,7 +71,23 @@ module.exports = function(sequelize, DataTypes) {
             }
           ]
         }).then(success).catch(error);
+      },
+      editarGrupo(grupo, success, error){
+        this.update({
+          nombre: grupo.nombre,
+          tipo: grupo.tipo,
+          cantidadChicos: grupo.cantidadChicos,
+          numeroReuniones: grupo.numeroReuniones,
+          genero: grupo.genero
+        }, {
+          where: {
+            id: grupo.id
+          }
+        }).then(success).catch(error);
       }
+    },
+    hooks : {
+      
     }
   });
   return Grupo;

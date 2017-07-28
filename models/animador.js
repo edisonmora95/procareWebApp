@@ -32,6 +32,23 @@ module.exports = function(sequelize, DataTypes) {
             fechaFin: null
           }
         }).then(successCallback).catch(errorCallback);
+      },
+      cambiarAnimadorDeGrupo: function(idGrupo, idAnimadorAntiguo, idAnimadorNuevo, success, errorUpdate, errorCreate){
+        this.update({
+          fechaFin: new Date()
+        }, {
+          where: {
+            GrupoId: idGrupo,
+            ProcarianoId: idAnimadorAntiguo
+          }
+        }).then((updateSuccess) => {
+          this.create({
+            GrupoId: idGrupo,
+            ProcarianoId: idAnimadorNuevo,
+            fechaInicio: new Date(),
+            fechaFin: null
+          }).then(success).catch(errorCreate);
+        }).catch(errorUpdate);
       }
     }
   });

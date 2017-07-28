@@ -9,4 +9,6 @@ router.get('/', controladorGrupo.mostrarGrupos);
 
 router.get('/:id_grupo', controladorGrupo.obtenerGrupoPorId);
 
+router.put('/:id_grupo', controladorGrupo.editarGrupo);
+
 module.exports = router;

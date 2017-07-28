@@ -29,28 +29,6 @@ let BuscarGrupoApp = new Vue({
 	},
 	data: {
 		grupos: [],
-		aux: [
-			{
-				nombre: 'Grupo de Mario',
-				etapa: 'Quinta etapa',
-				animador: 'Mario Montalván'
-			},
-			{
-				nombre: 'Grupo de Fernando',
-				etapa: 'Quinta etapa',
-				animador: 'Fernando Icaza'
-			},
-			{
-				nombre: 'Grupo de Luis',
-				etapa: 'Quinta etapa',
-				animador: 'Luis Andino'
-			},
-			{
-				nombre: 'Grupo de Bernardo',
-				etapa: 'Quinta etapa',
-				animador: 'Bernardo Meitzner'
-			}
-		],
 		grupo:{
 			nombre: '',
 			anio: new Date().getFullYear(),

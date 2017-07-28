@@ -38,7 +38,7 @@
 							</main>
 						</article>
 					</section>
-					<div class="row" v-if="usuario === 'personal'" id="row-btns">
+					<div class="row" v-if="puedeEditar" id="row-btns">
 						<a class="waves-effect waves-light btn" href="#modalEliminarGrupo">Eliminar</a>
 						<a class="waves-effect waves-light btn pull right" @click="habilitarEditar">Editar</a>
 					</div>
