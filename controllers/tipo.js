@@ -9,7 +9,7 @@ var modelo = require('../models');
 
 let jsonRespuesta = {};
 
-let tiposPermitidos = ['Chico Formación', 'Caminante', 'Pescador', 'Pescador Consagrado', 'Sacerdote'];
+let tiposPermitidos = ['Chico Formación', 'Caminante', 'Pescador', 'Pescador Consagrado', 'Sacerdote', 'Mayor'];
 
 const crearTipo = (req, res, next) => {
 	let nombre = req.body.nombre;
@@ -42,7 +42,7 @@ const eliminarTipo = (req, res, next) => {
 		res.status(200).json(jsonRespuesta);
 	}).catch( error => {
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'No se puede eliminar la etapa';
+		jsonRespuesta.mensaje = 'No se puede eliminar el tipo';
 		jsonRespuesta.sequelizeStatus = error;
 		res.status(404).send(jsonRespuesta);
 	});
@@ -81,7 +81,7 @@ const mostrarTipo = (req,res,next) =>{
 
 	}).then( repuesta => {
 		var status = true;
-		var mensaje = 'Se obtuvieron las etapas correctamente'
+		var mensaje = 'Se obtuvieron los tipos correctamente'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -90,7 +90,7 @@ const mostrarTipo = (req,res,next) =>{
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'No se pudieron obtener las etapas'
+		var mensaje = 'No se pudieron obtener los tipos'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -100,6 +100,7 @@ const mostrarTipo = (req,res,next) =>{
 	});
 }
 
+/*
 const asignarTipo = (req, res, next) => {
 	modelo.ProcarianoTipo.findOne({
 		where: {
@@ -122,33 +123,35 @@ const asignarTipo = (req, res, next) => {
 		res.json(jsonRespuesta);
 	})
 }
+*/
 
 /*
 	FUNCIONES DE VALIDACIÓN
 */
 validarRequestCrearTipo = (req, res) => {
-	//Validación etapa no enviada
+	//Validación tipo no enviada
 	if(typeof req.body.nombre === 'undefined' || req.body.nombre == null){
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'Tipo no enviada';
+		jsonRespuesta.mensaje = 'Tipo no enviado';
 		res.status(422).json(jsonRespuesta);
 		return false;
 	}
-	//Validación etapa no aceptada
+	//Validación tipo no aceptada
 	if(!tiposPermitidos.includes(req.body.nombre)){
 		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'Tipo no aceptada';
+		jsonRespuesta.mensaje = 'Tipo no aceptado';
 		res.status(422).json(jsonRespuesta);
 		return false;
 	}
 	return true;
 }
-
+/*
 actualizarTipo = (req, res) => {
 	modelo.ProcarianoTipo.update({
 		fechaFin : new Date()
 	},{
 		where: {
+			FechaFin : null,
 			ProcarianoId: req.body.procarianoId
 		}
 	}).then(Tipo => {
@@ -206,12 +209,11 @@ agregarNuevoTipo = (req,res) => {
 		res.json(jsonRespuesta);
 	});
 }
+*/
 
 module.exports = {
 	crearTipo,
 	eliminarTipo,
 	editarTipo,
-	mostrarTipo,
-	asignarTipo
+	mostrarTipo
 }
-

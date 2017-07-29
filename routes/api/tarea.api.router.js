@@ -9,6 +9,10 @@ var router = express.Router();
 router.post('/nuevo', controladorTarea.crearTarea);
 
 //Read Tareas
+
+//router.get('/', controladorTarea.mostrarTareas);
+
+
 /*
 router.get('/', controladorTarea.mostrarTarea);
 */
@@ -19,10 +23,15 @@ router.put('/:id', controladorTarea.editarTarea);
 //Delete Tareas
 router.delete('/:id', controladorTarea.eliminarTarea);
 
+
+module.exports = router;
+
+
 //mostrar tareas de todos (para el personal)
 router.get('/', controladorTarea.mostrarTareas);
 
 //mostrar tareas del usuario
 router.get('/:id', controladorTarea.mostrarTareaPorUsuario);
+
 
 module.exports = router;

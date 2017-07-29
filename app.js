@@ -13,23 +13,26 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
 //Ventanas
-var users = require('./routes/ventanas/users');
+var usuarios = require('./routes/ventanas/usuarios.ventanas.router');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
-//Api
+
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTicket = require('./routes/api/ticket_clubporti.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
+let apiCargo = require('./routes/api/cargo.api.router');
 let apiGrupos = require('./routes/api/grupos.api.router');
 let apiProcarianosGrupos = require('./routes/api/procarianogrupo.api.router');
 let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
+let apiAnimadores = require('./routes/api/animadores.api.router.js');
+
 var app = express();
 
 
@@ -62,16 +65,18 @@ app.use(flash());
 
 //Rutas de las ventanas
 app.use('/home', index);
-app.use('/users', users);
+//app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
+
 app.use('/cambioContrasenna',cambioContrasenna);
 app.use('/', login);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
+app.use('/api/cargo',apiCargo);
 app.use('/api/login',apiLogin);
 app.use('/api/tarea',apiTareas);
 app.use('/api/evento', apiEventos);
@@ -79,6 +84,7 @@ app.use('/api/ticket', apiTicket);
 app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
+app.use('/api/animadores', apiAnimadores);
 
 
 // catch 404 and forward to error handler

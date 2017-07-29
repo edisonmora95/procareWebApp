@@ -5,13 +5,12 @@
 @FechaCreacion: 18/05/2017
 @UltimaFechaModificacion: --
 
-
 */
 
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var personaRol = sequelize.define('PersonaRol', {
+  var PersonaRol = sequelize.define('PersonaRol', {
     
   }, {
     classMethods: {
@@ -21,5 +20,5 @@ module.exports = function(sequelize, DataTypes) {
     },
     freezeTableName: true
   });
-  return personaRol;
+  return PersonaRol;
 };
