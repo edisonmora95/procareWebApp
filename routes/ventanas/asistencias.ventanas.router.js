@@ -6,7 +6,7 @@ router.get('/formacion', function(req, res, next){
 });
 
 router.get('/accion', function(req, res, next){
-	res.render('asistencias/accion/subirAsistenciasAccion');
+	res.render('../procareApp/views/asistencias/accion/subirAsistenciasAccion');
 })
 
 module.exports = router;

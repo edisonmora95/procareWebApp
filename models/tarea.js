@@ -1,4 +1,3 @@
-
 /*
 @Descripcion: Modelo tarea, relacionado con Persona
 @Autor: jose alcivar
@@ -33,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
         isIn : ['activo','inactivo']
       }
       */
-		},
+    },
     descripcion : {
       type : DataTypes.TEXT
     },
@@ -42,7 +41,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-			associate: function(models) {
+      associate: function(models) {
         Tarea.belongsTo(models.Persona, {foreignKey: 'idResponsable'})
         // associations can be defined here
       }

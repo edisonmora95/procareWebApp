@@ -1,5 +1,5 @@
 /*
-@Descripcion: Creacion de Tareas.
+@Descripcion: Creacion de Nivel.
 @Autor: Jose Alcivar Garcia
 @FechaCreacion: 17/06/2017
 @UltimaFechaModificacion: 17/06/2017 @josealcivar
@@ -7,37 +7,14 @@
 
 var modelo = require('../models');
 
-const crearTarea = (req, res, next) => {
-  //Validar fecha de inicio
-  if(req.body.fechaInicio === ''){
-    let fechaInicio = null;
-  }else{
-    let fechaInicio = new Date(req.body.fechaInicio)
-  }
-  //Validar fecha de fin
-  if(req.body.fechaFin === ''){
-    let fechaFin = null;
-  }else{
-    let fechaFin = new Date(req.body.fechaFin)
-  }
-  //Validar fecha de publicacion
-  if(req.body.fechaPublicacion === ''){
-    let fechaPublicacion = null;
-  }else{
-    let fechaPublicacion = new Date(req.body.fechaPublicacion)
-  }
-  
+const crearNivel = (req, res, next) => {
 
-  modelo.Tarea.create({
-    idResponsable : req.body.responsable,
+  estado = 'activo';
+
+  modelo.Nivel.create({
     nombre : req.body.nombre,
-    fechaPublicacion : fechaPublicacion,
-    fechaInicio : fechaInicio,
-    fechaFin : fechaFin,
-    prioridad : req.body.prioridad,
-    estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
+    programa : req.body.programa,
+    estado: req.body.estado
     
   }).then( repuesta => {
     var status = true;
@@ -60,16 +37,16 @@ const crearTarea = (req, res, next) => {
   });
 }
 
-const eliminarTarea = (req, res, next) => {
+const eliminarNivel = (req, res, next) => {
    estado = 'inactivo';
-   idTarea = req.params.id;
-   modelo.Tarea.update({
+   idNivel = req.params.id;
+   modelo.Nivel.update({
     
     estado : estado
 
   },{
     where:{
-      id: idTarea
+      id: idNivel
     }
   }).then( repuesta => {
     var status = true;
@@ -83,24 +60,18 @@ const eliminarTarea = (req, res, next) => {
   }).catch( error => {
     var json1 = {
       status : false,
-      mensaje: 'No se puede eliminar la Tarea',
+      mensaje: 'No se puede eliminar la Nivel',
       error : error
       }
     res.send(json1);
   });
 }
 
-const editarTarea = (req, res, next) => {
-  modelo.Tarea.update({
+const editarNivel = (req, res, next) => {
+  modelo.Nivel.update({
     
-     id_responsable : req.body.nombre,
-    nombre : req.body.nombre,
-    fecha_publicacion : req.body.fecha_publicacion,
-    fecha_limite : req.body.fecha_limite,
-    prioridad : req.body.prioridad,
-    estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
+     nombre : req.body.nombre,
+     programa : req.body.programa
 
   },{
     where:{
@@ -150,32 +121,30 @@ const mostrarTarea = (req,res,next) =>{
   });
 }
 */
-const mostrarTareaPorUsuario = (req, res, next) =>{
-  idUsuario = req.params.id;
-  modelo.Tarea.findAll({
-      include: [{
-          model: modelo.Persona
-      }],
+const mostrarNivelPorUsuario = (req, res, next) =>{
+  idNivel = req.params.id;
+  modelo.Nivel.findAll({
+      //include: [{
+       //   model: modelo.Persona
+     // }],
       where : {
-        idResponsable : idUsuario, 
+        idNivel : idNivel, 
         estado : "activo"
       } 
 
-  }).then( tareas => {
-    console.log(tareas);
-    const respuesta = tareas.map( tarea => {
+  }).then( nivels => {
+    console.log(nivels);
+    const respuesta = nivels.map( nivel => {
 
       return Object.assign(
         {},
         {
-          id : tarea.id,
-          idUser : tarea.Persona.id,
-          title : tarea.titulo,
-          user : tarea.Persona.nombres + " " + tarea.Persona.apellidos ,
-          start : tarea.fecha_publicacion ,
-          end : tarea.fecha_limite ,
-          description : tarea.descripcion, 
-          type : "tarea"
+          
+          id : nivel.id,
+         // idUser : centro.Persona.id,
+          name : nivel.nombre,
+          program : nivel.programa,
+          type : "nivel"
         });
     });
     return res.json({
@@ -194,27 +163,27 @@ const mostrarTareaPorUsuario = (req, res, next) =>{
   });
 }
 
-const mostrarTareas = (req, res, next) =>{
-  modelo.Tarea.findAll({
-    include: [{
-      model: modelo.Persona
-    }]
-  }).then( tareas => {
-    const respuesta = tareas.map( tarea => {
+const mostrarNivels = (req, res, next) =>{
+    modelo.Nivel.findAll({
+     // include: [{
+     //     model: modelo.Persona
+   //   }],
+      where : {
+        estado : "activo"
+      } 
+
+  }).then( nivels => {
+    console.log(nivels);
+    const respuesta = nivels.map( nivel => {
 
       return Object.assign(
         {},
         {
-          id : tarea.id,
-          title : tarea.nombre,         
-          start : tarea.fecha_publicacion ,
-          end : tarea.fecha_limite ,
-          description : tarea.descripcion, 
-          estado: tarea.estado,
-          categoria: tarea.categoria,
-          prioridad: tarea. prioridad,
-          responsable: tarea.Persona.nombres + ' ' + tarea.Persona.apellidos,
-          type : "tarea"
+           id : nivel.id,
+         // idUser : centro.Persona.id,
+          name : nivel.nombre,
+          program: nivel.programa, 
+          type : "nivel"
         });
     });
     return res.json({
@@ -222,9 +191,11 @@ const mostrarTareas = (req, res, next) =>{
       sequelizeStatus : respuesta
     })
   }).catch( error => {
+    var status = false;
+    var mensaje = 'no se pudo eliminar'
     var jsonRespuesta = {
-      status : false,
-      mensaje :'no se pudo eliminar',
+      status : status,
+      mensaje : mensaje,
       sequelizeStatus : error
     }
     res.json(JSON.parse(jsonRespuesta));
@@ -232,9 +203,9 @@ const mostrarTareas = (req, res, next) =>{
 }
 
 module.exports = {
-  crearTarea,
-  eliminarTarea,
-  editarTarea,
-  mostrarTareaPorUsuario,
-  mostrarTareas
+  crearNivel,
+  eliminarNivel,
+  editarNivel,
+  mostrarNivelPorUsuario,
+  mostrarNivels
 }

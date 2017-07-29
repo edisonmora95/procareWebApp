@@ -20,7 +20,7 @@ var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
-//Api
+
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
