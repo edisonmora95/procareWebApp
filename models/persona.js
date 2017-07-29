@@ -99,19 +99,7 @@ module.exports = function(sequelize, DataTypes) {
           trabajo: persona.trabajo,
           convencional: persona.convencional
         }).then(callback).catch(errorCallback);
-      }
-
-      compararContrasenna2 :  function(candidatePassword, hash, callback){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
-            return callback(null , isMatch);
-
-        });
       },
-
-
-
-
     }/*, hooks : {
       beforeCreate : (persona, options) => {
          bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
