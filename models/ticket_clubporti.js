@@ -2,7 +2,7 @@
 @Descripcion: Modelo 'Club por ti'
 @Autor: Luis Lainez
 @FechaCreacion: 14/07/2017
-@UltimaFechaModificacion: 16/07/2017
+@UltimaFechaModificacion: 29/07/2017
 */
 
 'use strict';
@@ -28,6 +28,22 @@ module.exports = function(sequelize, DataTypes) {
       associate : function(models) {
         Ticket.belongsTo(models.Procariano)
         // associations can be defined here
+      },
+      crearTicket: function(ticket, callback, errorCallback){
+        this.create({
+          procarianoId: ticket.ProcarianoId,
+          fechaCompra: ticket.fechaCompra,
+          valor: ticket.valor,
+          esGanador: ticket.esGanador
+        }).then(callback).catch(errorCallback);
+      },
+      obtenerGanadores: function(idProcariano, successCallback, errorCallback){
+        this.findAll({
+          where: {
+            id: idProcariano,
+	    esGanador: true
+          }
+        }).then(successCallback).catch(errorCallback);
       }
     }
   });

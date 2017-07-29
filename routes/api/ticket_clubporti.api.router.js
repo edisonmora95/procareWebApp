@@ -1,21 +1,30 @@
 /*
-	CRUD de Club Por Ti
+@Descripcion: Api de Club por ti
+@Autor: Luis Lainez
+@FechaCreacion: 14/07/2017
+@UltimaFechaModificacion: 14/07/2017
+
 */
 var controladorticket= require('../../controllers/ticket_clubporti')
 var express = require('express');
 var router = express.Router();
 
-//Post de la etapa
+//Post de ticket
 router.post('/nuevo', controladorticket.crearTicket);
 
-//Read etapa
+//Read ticket
 router.get('/', controladorticket.mostrarTicket);
 
-
-//Update etapa
+//Update ticket
 router.put('/:id', controladorticket.editarTicket);
 
-//Delete etapa
+//Delete ticket
 router.delete('/:id', controladorticket.eliminarTicket);
+
+//Delete ticket(no ganadores)
+router.delete('/:id', controladorticket.eliminarNoGanadores);
+
+//Read ticket(solo ganadores)
+router.get('/:id', controladorticket.mostrarGanadores);
 
 module.exports = router;

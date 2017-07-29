@@ -2,7 +2,7 @@
 @Descripcion: Controlador de Club por Ti.
 @Autor: Luis Lainez
 @FechaCreacion: 14/07/2017
-@UltimaFechaModificacion: 16/07/2017 erialper
+@UltimaFechaModificacion: 29/07/2017 LuisBSC15
 */
 
 var modelo = require('../models');
@@ -77,8 +77,11 @@ const editarTicket = (req, res, next) => {
 }
 
 const mostrarTicket = (req,res,next) =>{
+	var id = req.params.id;
 	modelo.Ticket.findAll({
-
+	    where : {
+	    	ProcarianoId : id
+	    }
 	}).then( repuesta => {
 		var status = true;
 		var mensaje = 'Se obtuvieron los tickets correctamente'
@@ -100,19 +103,61 @@ const mostrarTicket = (req,res,next) =>{
 	});
 }
 
-/*
 
 const eliminarNoGanadores = (req,res,next) =>{
-	var ganador;
-	modelo.Ticket.findAll({
+	var ganador = false;
+	modelo.Ticket.destroy({
+		where:{
+			ganador: req.params.esGanador
+		}
+	}).then( respuesta => {
+		jsonRespuesta.status = true;
+		jsonRespuesta.mensaje = 'Se pudo eliminar correctamente';
+		jsonRespuesta.sequelizeStatus = respuesta;
+		res.status(200).json(jsonRespuesta);
+	}).catch( error => {
+		jsonRespuesta.status = false;
+		jsonRespuesta.mensaje = 'No se puede eliminar la etapa';
+		jsonRespuesta.sequelizeStatus = error;
+		res.status(404).send(jsonRespuesta);
 	});
 }
 
-*/
+const mostrarGanadores = (req,res,next) =>{
+	var id = req.params.id;
+	var ganador = true;
+	modelo.Ticket.findAll({
+	    where : {
+	    	ProcarianoId : id,
+		ganador: req.params.esGanador
+	    }
+	}).then( repuesta => {
+		var status = true;
+		var mensaje = 'Se obtuvieron los tickets correctamente'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : repuesta
+		}
+		res.json(jsonRespuesta)
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se pudieron obtener los tickets'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 
 module.exports = {
 	crearTicket,
 	eliminarTicket,
 	editarTicket,
-	mostrarTicket
+	mostrarTicket,
+	eliminarNoGanadores,
+	mostrarGanadores
 }
