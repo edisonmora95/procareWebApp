@@ -123,7 +123,7 @@ const mostrarEtapa = (req,res,next) =>{
 	});*/
 	
 	modelo.Etapa.obtenerEtapa( (etapas) => {
-		return res.status(200).json({estado: true, datos: etapas});
+		return res.status(200).json({status: true, datos: etapas, mensaje: 'Se obtuvieron las etapas correctamente'});
 	}, (error) => {
 		return res.status(400).json({estado: false, error: error});
 	});

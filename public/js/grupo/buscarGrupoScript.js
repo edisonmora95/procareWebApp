@@ -9,6 +9,7 @@
 
 import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
+import DataTable from 'vue-materialize-datatable';
 
 Vue.use(Materials);
 Vue.component('navbar', Navbar); 
@@ -17,6 +18,7 @@ let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
 	created: function(){
 		this.obtenerUsuario();
+		this.obtenerGrupos(this);
 	},
 	mounted: function(){
 		//Inicializadores de componentes de Materialize
@@ -27,28 +29,6 @@ let BuscarGrupoApp = new Vue({
 	},
 	data: {
 		grupos: [],
-		aux: [
-			{
-				nombre: 'Grupo de Mario',
-				etapa: 'Quinta etapa',
-				animador: 'Mario Montalván'
-			},
-			{
-				nombre: 'Grupo de Fernando',
-				etapa: 'Quinta etapa',
-				animador: 'Fernando Icaza'
-			},
-			{
-				nombre: 'Grupo de Luis',
-				etapa: 'Quinta etapa',
-				animador: 'Luis Andino'
-			},
-			{
-				nombre: 'Grupo de Bernardo',
-				etapa: 'Quinta etapa',
-				animador: 'Bernardo Meitzner'
-			}
-		],
 		grupo:{
 			nombre: '',
 			anio: new Date().getFullYear(),
@@ -76,7 +56,51 @@ let BuscarGrupoApp = new Vue({
 				}
 			});
 		},
+		obtenerGrupos(self){
+			$.ajax({
+				type: 'GET',
+				url: '/api/grupos/',
+				success(res){
+					console.log(res)
+					self.armarArrayGrupos(self, res.sequelizeStatus);
+				}
+			});
+		},
+		armarArrayGrupos(self, grupos){
+			$.each(grupos, function(index, grupo){
+				let grupoObj = {
+					id: grupo.id,
+					nombre: grupo.nombre,
+					tipo: grupo.tipo,
+					integrantes: grupo.cantidadChicos,
+					genero: grupo.genero,
+					etapaId: '',
+					etapaNombre: ''
+				};
+
+				//Se busca la etapa actual del grupo
+				$.each(grupo.Etapas, function(j, etapa){
+					let fechaFin = etapa.GrupoEtapa.fechaFin;
+					//La etapa actual es aquella que tenga fecha fin null
+					if(fechaFin === null){
+						grupoObj.etapaId = etapa.id;
+						grupoObj.etapaNombre = etapa.nombre;
+					}
+				});
+
+				//Solo se añaden los grupos que pertenezcan actualmente a una etapa
+				if(grupoObj.etapaId !== ''){
+					self.grupos.push(grupoObj);
+				}
+
+
+			});
+		},
 		//Eventos
+		irAGrupo(grupo){
+			let url = '/grupos/' + grupo.id;
+			window.location.href = url;
+		},
 		buscar(){
 			let self = this;
 			self.grupos = [];	//Lo vacío por si acaso...

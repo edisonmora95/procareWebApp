@@ -18,10 +18,8 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       },
       obtenerEtapa: function(callback){
-        this.findOne({
-          where: {
-            id: 500
-          }
+        this.findAll({
+          
         }).then(callback);
       },
       crearEtapa: function(nomrbeEtapa, callback, error){

@@ -63,6 +63,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
+        Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'})
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -76,6 +77,7 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
       },
+
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
@@ -98,6 +100,16 @@ module.exports = function(sequelize, DataTypes) {
           convencional: persona.convencional
         }).then(callback).catch(errorCallback);
       }
+
+      compararContrasenna2 :  function(candidatePassword, hash, callback){
+        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+            if(err) throw err;
+            return callback(null , isMatch);
+
+        });
+      },
+
+
 
 
     }/*, hooks : {

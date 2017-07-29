@@ -1,10 +1,8 @@
-
 /*
 @Descripcion: esta es la ventana del login , implementa passport para hacerlo
 @Autor: jose viteri
 @FechaCreacion: 14/06/2017
 @UltimaFechaModificacion: 16/06/2017 @JoseViteri
-
 */
 
 var controladorLogin = require('../../controllers/login.controller')
@@ -18,34 +16,34 @@ var modelos = require('../../models');
 
 //estartegia local, compara contraseña y usuario, ademas genera el req.user
 passport.use(new LocalStrategy({
-	usernameField : 'correo',
-	passwordField : 'password'
+  usernameField : 'correo',
+  passwordField : 'password'
 },
 function(correo, password, done) {
-	console.log('entra aqui passport');
-	modelos.Persona.find({
-  	  attributes: ['id','contrasenna','nombres','apellidos','email'],
-  	  where : {
-  	  	email : correo
-  	  },
-	  include: [{
-	    model: modelos.Rol,
-	    through: {
-	      attributes: ['RolNombre'],
-	    }
-	  }]
-	}).then( persona => {
-		var roles = persona.Rols
-		console.log({
-			estaPersona : persona,
-			roles : roles
-		})
-		isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
-	}).catch( err => {
-		console.log('no existe usuario')
-		console.log(err);
-		return done(null, false, { status : false , message : "usuario no existe"});
-	})
+  console.log('entra aqui passport');
+  modelos.Persona.find({
+      attributes: ['id','contrasenna','nombres','apellidos','email'],
+      where : {
+        email : correo
+      },
+    include: [{
+      model: modelos.Rol,
+      through: {
+        attributes: ['RolNombre'],
+      }
+    }]
+  }).then( persona => {
+    var roles = persona.Rols
+    console.log({
+      estaPersona : persona,
+      roles : roles
+    })
+    isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
+  }).catch( err => {
+    console.log('no existe usuario')
+    console.log(err);
+    return done(null, false, { status : false , message : "usuario no existe"});
+  })
  }));
 
 
@@ -58,21 +56,21 @@ passport.serializeUser(function(persona, done) {
 //desarializador de passport
 passport.deserializeUser(function(id, done) {
   modelos.Persona.findAll({
-  	  attributes: ['id','nombres','apellidos','email'],
-  	  where : {
-  	  	id : id
-  	  },
-	  include: [{
-	    model: modelos.Rol,
-	    through: {
-	      attributes: ['RolNombre'],
-	    }
-	  }]
+      attributes: ['id','nombres','apellidos','email'],
+      where : {
+        id : id
+      },
+    include: [{
+      model: modelos.Rol,
+      through: {
+        attributes: ['RolNombre'],
+      }
+    }]
   }).then( persona => {
 
-  	done(null, persona);
+    done(null, persona);
   }).catch( err => {
-  	done(err, null);
+    done(err, null);
   })
 });
 
@@ -96,21 +94,21 @@ router.post('/',
       rols : rolsJson
     }
 
-  	let objeto = {
-  		status : true , 
-  		message : "logueado correcto",
+    let objeto = {
+      status : true , 
+      message : "logueado correcto",
       objeto : json
-  	}
+    }
 
 
 
     console.log(json);
-  	res.json(objeto);
-  	
+    res.json(objeto);
+    
 
     /*
-  	res.render("procariano/verProcariano", json)
-  	*/
+    res.render("procariano/verProcariano", json)
+    */
 });
 
 
@@ -138,11 +136,11 @@ router.get("/loggedin", function(req, res) {
 //logout
 //deslogea la sesion
 router.get('/logout', function(req, res){
-	req.logout();
+  req.logout();
 
-	req.flash('success_msg', 'You are logged out');
+  req.flash('success_msg', 'You are logged out');
 
-	res.redirect('/');
+  res.redirect('/');
 });
 
 

@@ -13,14 +13,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
 //Ventanas
-var users = require('./routes/ventanas/users');
+var usuarios = require('./routes/ventanas/usuarios.ventanas.router');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
-//Api
+
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
@@ -64,10 +64,11 @@ app.use(flash());
 
 //Rutas de las ventanas
 app.use('/home', index);
-app.use('/users', users);
+//app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
+
 app.use('/cambioContrasenna',cambioContrasenna);
 app.use('/', login);
 

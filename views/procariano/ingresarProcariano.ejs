@@ -22,7 +22,7 @@
 					<h2 class="center-align titulo">Ingresar procariano</h2>
 					<form class="col s12" @submit.prevent="validateBeforeSubmit">
 						<!--Row nombres y apellidos-->
-						<div class="row row-nombres-apellidos">
+						<section class="row row-nombres-apellidos">
 							<div class="input-field col s6">
 								<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
 								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
@@ -33,13 +33,15 @@
 								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 								<label for="apellidos">Apellidos</label>
 							</div>
-						</div>
+						</section>
 						<!--Row cedula y fecha nacimiento-->
-						<div class="row row-cedula-fecha">
+						<section class="row row-cedula-fecha">
 							<div class="input-field col s6">
 								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
 								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
+
 								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
+
 								<label for="fecha-nacimiento">Fecha de nacimiento</label>
 							</div>
 							<div class="input-field col s6">
@@ -47,11 +49,15 @@
 								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 								<label for="cedula">Cédula</label>
 							</div>
-						</div>
+						</section>
 						<!--Row direccion y email-->
-						<div class="row row-direccion-email">
+						<section class="row row-direccion-email">
 							<div class="input-field col s6">
+
+								<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+
 								<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+
 								<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
 								<label for="direccion">Dirección</label>
 							</div>
@@ -60,9 +66,9 @@
 								<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
 								<label for="email">Email</label>
 							</div>
-						</div>
+						</section>
 						<!--Row celular y convencional-->
-						<div class="row row-celular-convencional">
+						<section class="row row-celular-convencional">
 							<div class="input-field col s6">
 								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
@@ -73,10 +79,21 @@
 								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 								<label for="convencional">Convencional</label>
 							</div>
-						</div>
+						</section>
 						<!--Row genero y tipo-->
-						<div class="row row-genero-tipo">
+						<section class="row row-genero-tipo">
 							<div class="input-field col s6">
+
+								<select id="select-genero">
+									<option value="" disabled selected></option>	
+									<option value="masculino">Masculino</option>
+									<option value="femenino">Femenino</option>
+								</select>
+								<label>Género</label>
+							</div>
+							<div class="input-field col s6">
+								<select id="select-tipo-procariano">
+
 								<v-select id="selectGenero" name="selectGenero" v-model="procariano.genero" select-text="">
 									<option value="" disabled selected></option>	
 									<option value="masculino">Masculino</option>
@@ -85,27 +102,54 @@
 								<label for="selectGenero">Género</label>
 							</div>
 							<div class="input-field col s6">
-								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="" :items="tipos">
+								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="">
+
 									<option value="" disabled selected></option>	
-								</v-select>
-								<label for="selectTipo">Tipo</label>
+									<option value="1">Chico de Formación</option>
+									<option value="2">Caminante</option>
+									<option value="3">Pescador</option>
+									<option value="4">Pescador consagrado</option>
+									<option value="5">Sacerdote</option>
+
+								</select>
+								<label>Tipo</label>
 							</div>
 						</div>
 						<!--Chico formacion-->
+						<div class="row row-chico-formacion" v-show="procariano.tipo=='Chico de Formación'">
+								</v-select>
+								<label for="selectTipo">Tipo</label>
+							</div>
+						</section>
+						<!--Chico formacion-->
 						<section class="row row-chico-formacion" v-show="procariano.tipo=='1'">
+
 							<div class="input-field col s6">
 								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
 								<label for="colegio">Colegio</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-formacion">
+
+					
+								<label class="active">Grupo de Formación</label>
+							</div>
+						</div>
+						<!--Caminante-->
+						<div class="row row-caminante" v-show="procariano.tipo=='Caminante'">
+
+								<v-select id="selectGrupoFormacion" name="selectGrupoFormacion" v-model="grupoFormacionSel" select-text="">
+									<option v-for="grupo in gruposFormacion" :value="grupo.id">{{grupo.nombre}}</option>
+
 								<v-select id="selectGrupoFormacion" name="selectGrupoFormacion" v-model="grupoFormacionSel" select-text="" :items="gruposFormacion">
+
 								</v-select>
 								<label class="active" for="selectGrupoFormacion">Grupo de Formación</label>
 							</div>
 						</section>
 						<!--Caminante-->
 						<section class="row row-caminante" v-show="procariano.tipo=='2'">
+
 							<div class="input-field col s6">
 								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
@@ -122,13 +166,26 @@
 								<label for="trabajo">Trabajo</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-caminantes">
+
+								
+								<label class="active">Grupo de caminantes</label>
+							</div>
+						</div>
+						<!--Pescador-->
+						<div class="row row-pescador" v-show="procariano.tipo=='Pescador'||procariano.tipo==='Pescador consagrado'">
+
+								<v-select id="selectGrupoCaminantes" name="selectGrupoCaminantes" v-model="grupoCaminantesSel" select-text="">
+									<option v-for="grupo in gruposCaminantes" :value="grupo.id">{{grupo.nombre}}</option>
+
 								<v-select id="selectGrupoCaminantes" name="selectGrupoCaminantes" v-model="grupoCaminantesSel" select-text="" :items="gruposCaminantes">
+
 								</v-select>
 								<label class="active" for="selectGrupoCaminantes">Grupo de caminantes</label>
 							</div>
 						</section>
 						<!--Pescador-->
 						<section class="row row-pescador" v-show="procariano.tipo=='3'||procariano.tipo==='4'">
+
 							<div class="input-field col s6">
 								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
@@ -145,13 +202,27 @@
 								<label for="trabajo">Trabajo</label>
 							</div>
 							<div class="input-field col s6" id="div-select-grupo-pescadores">
+
+
+								
+								<label class="active">Grupo de pescadores</label>
+							</div>
+						</div>
+						<!--Sacerdote-->
+						<div class="row row-sacerdote" v-show="procariano.tipo=='Sacerdote'">
+
+								<v-select id="selectGrupoPescadores" name="selectGrupoPescadores" v-model="grupoPescadoresSel" select-text="">
+									<option v-for="grupo in gruposPescadores" :value="grupo.id">{{grupo.nombre}}</option>
+
 								<v-select id="selectGrupoPescadores" name="selectGrupoPescadores" v-model="grupoPescadoresSel" select-text="" :items="gruposPescadores">
+
 								</v-select>
 								<label class="active">Grupo de pescadores</label>
 							</div>
 						</section>
 						<!--Sacerdote-->
 						<section class="row row-sacerdote" v-show="procariano.tipo=='5'">
+
 							<div class="input-field col s6">
 								<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('parroquia')" class="help is-danger">{{ errors.first('parroquia') }}</span>
@@ -161,6 +232,9 @@
 								<input type="date" name="fecha-ordenacion" id="fecha-ordenacion" class="datepicker" v-model="procariano.fechaOrdenacion">
 								<label for="fecha-ordenacion">Fecha de ordenación</label>
 							</div>
+
+						</div>
+
 						</section>
 						<!--Botones-->
 						<div class="row row-botones">

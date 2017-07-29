@@ -5,6 +5,7 @@
 */
 
 import Navbar from './../../components/navbar.vue';
+
 import Tarea from './../../components/tareaNueva.vue';
 
 Vue.component('navbar', Navbar); 
@@ -38,16 +39,7 @@ let indexApp = new Vue({
 	            window.open(event.url);
 	            return false;
 	        }
-	        console.log(calEvent);
-	        console.log(calEvent.start);
 	        self.eventoSeleccionado = calEvent;
-	        /*alert('Event: ' + calEvent.title);
-	        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-	        alert('View: ' + view.name);*/
-
-	        // change the border color just for fun
-	        //$(this).css('border-color', 'red');
-
 	    	}
 	    });	
 		});
@@ -72,6 +64,10 @@ let indexApp = new Vue({
 					//console.log("este es el evento 1 " + evento[0][1]);
 					self.eventos.push(evento);
 				})
+<<<<<<< HEAD
+			})
+
+=======
 			})*/
 		},
 		obtenerProcarianos(){
@@ -95,7 +91,9 @@ let indexApp = new Vue({
 		eventoSeleccionado: {},
 		procarianos: []
 	}
+
 });
+
 
 
 
@@ -111,3 +109,4 @@ let indexApp = new Vue({
 	     data: datos
 	   });
 	});
+

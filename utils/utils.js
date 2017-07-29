@@ -148,11 +148,3 @@ module.exports.generarHashNuevaContrasenna = function(req,res, next){
         });
     });
 };
-
-
-
-
-
-
-
-
