@@ -77,7 +77,6 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
       },
-
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
@@ -101,13 +100,6 @@ module.exports = function(sequelize, DataTypes) {
         }).then(callback).catch(errorCallback);
       }
 
-      compararContrasenna2 :  function(candidatePassword, hash, callback){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
-            return callback(null , isMatch);
-
-        });
-      },
 
 
 
