@@ -211,8 +211,9 @@
 					url: '/api/grupos/',
 					data: self.grupo,
 					success(res){
-						if(res.status && res.mensaje === 'Grupo creado exitosamente'){
-							self.grupo.id = res.grupo.id;
+						console.log(res)
+						if(res.estado){
+							self.grupo.id = res.datos.grupo.id;
 							self.flagVue = false;
 							self.$emit('flagchanged', self.flagVue);		
 						}

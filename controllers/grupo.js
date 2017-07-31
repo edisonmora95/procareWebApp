@@ -4,61 +4,53 @@
 @FechaCreacion: 31/05/2017
 @UltimaFechaModificacion: 31/05/2017 @GustavoTotoy
 */
-
+'use strict';
 var modelo = require('../models');
+let respuesta = require('../utils/respuestas');
+
 
 module.exports.crearGrupo = (req, res, next) => {
-	nombre = req.body.nombre;
-	tipo = req.body.tipo;
-	cantidadChicos = req.body.cantidadChicos;
-	numeroReuniones = req.body.numeroReuniones;
-	genero = req.body.genero;
-	idEtapa = req.body.etapa;
-	idAnimador = req.body.animador;
+	let grupoObj = {
+		nombre : req.body.nombre,
+		tipo : req.body.tipo,
+		cantidadChicos : req.body.cantidadChicos,
+		numeroReuniones:  req.body.numeroReuniones,
+		genero : req.body.genero,
+	};
+	let idEtapa = req.body.etapa;
+	let idAnimador = req.body.animador;
 	
-	modelo.Grupo.crearGrupo(nombre, tipo, cantidadChicos, numeroReuniones, genero, (grupo) => {
+	modelo.Grupo.crearGrupo(grupoObj, (grupo) => {
 		let idGrupo = grupo.get('id');
 		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
 			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
-				var rjson = {
-					status : true,
-					mensaje : 'Grupo creado exitosamente',
+				let datos = {
 					grupo : grupo,
 					grupoEtapa: grupoEtapa,
 					animador: animador
-				}
-				res.json(rjson);	
+				};
+				return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
 			}, (errorAnimador) => {
-				var rjson = {
-					status : false,
-					mensaje : 'No se pudo añadir el animador',
+				let datos = {
 					grupo : grupo,
 					grupoEtapa: grupoEtapa,
 					errorAnimador: errorAnimador
-				}
-				res.json(rjson);	
+				};
+				return respuesta.error(res, 'No se pudo añadir el animador', datos);
 			});
-			
 		}, (errorGrupoEtapa) => {
-			var rjson = {
-				status : false,
-				mensaje : 'No se pudo añadir a etapa indicada',
+			let datos = {
 				grupo: grupo,
 				errorGrupoEtapa : errorGrupoEtapa
-			}
-			res.json(rjson);
+			};
+			return respuesta.error(res, 'No se pudo añadir a la etapa', datos);
 		});
-		
 	}, (errorGrupo) => {
-		var rjson = {
-			status : false,
-			mensaje : 'No se pudo crear grupo',
-			errorGrupo : errorGrupo
-		}
-		res.json(rjson);
+		let mensajeError = errorGrupo.errors[0].message;
+		return respuesta.error(res, 'No se pudo crear el grupo', mensajeError, errorGrupo);
 	});
 
-}
+};
 
 module.exports.editarGrupo = (req, res, next) => {
 	let grupo = {
@@ -149,46 +141,15 @@ module.exports.eliminarGrupo = (req, res, next) => {
 		res.json(rjson);
 	});
 };
-
+/*
+	@Descripción: Devuelve todos los grupos de la base de datos. Con su etapa.
+*/
 module.exports.mostrarGrupos = (req, res, next) => {
 	modelo.Grupo.obtenerTodosLosGrupos((success) => {
-		var status = true;
-		var mensaje = 'Se obtuvieron los grupos correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : success
-		}
-		res.json(jsonRespuesta)
+		return respuesta.okGet(res, 'Se obtuvieron los grupos', success);
 	}, (error) => {
-		var status = false;
-		var mensaje = 'No se pudieron obtener los grupos'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
+		return respuesta.error(res, 'No se pudieron obtener los grupos', error);
 	});
-	/*modelo.Grupo.findAll().then( grupos => {
-		var status = true;
-		var mensaje = 'Se obtuvieron los grupos correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : grupos
-		}
-		res.json(jsonRespuesta)
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'No se pudieron obtener los grupos'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	});*/
 };
 
 module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) => {

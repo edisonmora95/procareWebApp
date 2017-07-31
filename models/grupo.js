@@ -3,28 +3,72 @@ module.exports = function(sequelize, DataTypes) {
   var Grupo = sequelize.define('Grupo', {
     nombre : {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      validate: {
+        notEmpty: true
+      }
     },
     tipo : {
       type : DataTypes.STRING,
       allowNull : false,
       validate : {
-        isIn : [['Formación', 'Caminantes', 'Pescadores', 'Mayores']]
+        notEmpty: {
+          msg: 'Tipo no puede ser vacío.'
+        },
+        isIn: {
+          args: [['Formación', 'Caminantes', 'Pescadores', 'Mayores']],
+          msg: 'Tipo no está dentro de los valores válidos.'
+        }
+       
       }
     },
     cantidadChicos : {
       type: DataTypes.INTEGER,
-      allowNull : false
+      allowNull : false,
+      defaultValue: 0,
+      validate: {
+        isInt: {
+          msg: 'La cantidad de chicos debe ser un número entero.'
+        },
+        min: {
+          args: [0],
+          msg: 'La cantidad de chicos no puede ser un número negativo.'
+        },
+        max: {
+          args: [30],
+          msg: 'La cantidad de chicos no puede ser mayor a 30.'
+        }
+      }
     },
     numeroReuniones : {
       type : DataTypes.INTEGER,
-      allowNull : false
+      allowNull : false,
+      defaultValue: 0,
+      validate: {
+        isInt: {
+          msg: 'La cantidad de reuniones debe ser un número entero.'
+        },
+        min: {
+          args: [0],
+          msg: 'La cantidad de reuniones no puede ser un número negativo.'
+        },
+        max: {
+          args: [30],
+          msg: 'La cantidad de reuniones no puede ser mayor a 30.'
+        }
+      }
     },
     genero : {
       type : DataTypes.STRING,
       allowNull : false,
       validate : {
-        isIn : [['Procare', 'Procare Mujeres']]
+        notEmpty: {
+          msg: 'Género no puede ser vacío.'
+        },
+        isIn: {
+          args: [['Procare', 'Procare Mujeres']],
+          msg: 'Género puede ser Procare o Procare Mujeres solamente.'
+        }
       }
     }
   }, {
@@ -40,13 +84,13 @@ module.exports = function(sequelize, DataTypes) {
         Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'})
         Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'})
       },
-      crearGrupo: function(nombre, tipo, cantidadChicos, numeroReuniones, genero ,callback, errorCallback){
+      crearGrupo: function(grupo ,callback, errorCallback){
         this.create({
-          nombre: nombre,
-          tipo: tipo,
-          cantidadChicos: cantidadChicos,
-          numeroReuniones: numeroReuniones,
-          genero: genero
+          nombre: grupo.nombre,
+          tipo: grupo.tipo,
+          cantidadChicos: grupo.cantidadChicos,
+          numeroReuniones: grupo.numeroReuniones,
+          genero: grupo.genero
         }).then(callback).catch(errorCallback);
       },
       obtenerGrupoPorId: function(idGrupo, success, error){
