@@ -145,8 +145,7 @@
 					type: 'GET',
 					url: '/api/etapa/',
 					success(res){
-						console.log(res)
-						let busquedaExitosa = (res.status && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
 						if(busquedaExitosa){
 							self.armarArrayEtapas(self, res.datos);
 						}else{

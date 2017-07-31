@@ -6,7 +6,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true  ,
       validate: {
-        isIn: [ ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa'] ]
+        isIn: {
+          args: [ ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa'] ],
+          msg: 'Valor ingresado como nombre de etapa no es válido.'
+        },
+        notEmpty: {
+          msg: 'Nombre no puede ser vacío.'
+        },
       }
     } 
     
@@ -17,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
         Etapa.belongsToMany(models.Grupo , {through: 'GrupoEtapa'})
         // associations can be defined here
       },
-      obtenerEtapa: function(callback){
+      obtenerEtapas: function(callback){
         this.findAll({
           
         }).then(callback);
@@ -27,6 +33,13 @@ module.exports = function(sequelize, DataTypes) {
           nombre: nomrbeEtapa,
           programas: ""
         }).then(callback).catch(error);
+      },
+      eliminarEtapa: function(idEtapa, success, error){
+        this.destroy({
+          where:{
+            id: idEtapa
+          }
+        }).then(success).catch(error);
       }
 
     }

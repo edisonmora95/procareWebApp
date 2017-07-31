@@ -22,3 +22,17 @@ module.exports.okGet = (res, mensaje, datos) => {
 		datos: datos
 	});
 };
+
+module.exports.okDelete = (res, mensaje, datos) => {
+	return res.status(200).json({
+		estado: true,
+		mensaje: mensaje
+	});
+};
+
+module.exports.errorDelete = (res, mensaje, datos) => {
+	return res.status(400).json({
+		estado: false,
+		mensajeError: mensaje
+	});
+};
