@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-	NinoAccion.belongsTo(models.Persona);
+        NinoAccion.belongsTo(models.Persona);
         // associations can be defined here
       },
       crearNinoAccion: function(ninoaccion, callback, errorCallback){
@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
           PersonaId: ninoaccion.PersonaId,
           nombreRep: ninoaccion.nombreRep,
           apellidoRep: ninoaccion.apellidoRep,
-	  telefonoRep: ninoaccion.telefonoRep,
+      	  telefonoRep: ninoaccion.telefonoRep,
           cedulaRep: ninoaccion.cedulaRep,
           escuela: ninoaccion.escuela,
           bautizado: ninoaccion.bautizado,

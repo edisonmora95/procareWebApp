@@ -15,7 +15,6 @@ const crearNinoAccion = (req, res, next) => {
 	}else{
 		fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
-	
 	let persona = {
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -23,18 +22,13 @@ const crearNinoAccion = (req, res, next) => {
 		direccion : req.body.direccion,
 		fechaNacimiento : fechaNacimiento,
 		genero : req.body.genero,
-		contrasenna : req.body.contrasenna,
+		contrasenna : null,
 		email : req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
 		convencional : req.body.convencional
 	};
 	modelo.Persona.crearPersona(persona, (persona) => {
-		if(req.body.fechaOrdenacion == ''){
-			fechaOrdenacion = null;
-		}else{
-			fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
-		}
 		let ninoaccion = {
 			PersonaId : persona.get('id'),
 			nombreRep : req.body.nombreRep,
@@ -44,17 +38,24 @@ const crearNinoAccion = (req, res, next) => {
 			escuela: req.body.escuela,
 			esBautizado: req.body.esBautizado,
 			estado : req.body.estado
-		}, (errorNinoAccion) => {
+		};
+		modelo.NinoAccion.crearNinoAccion(ninoaccion, (ninoaccion) => {
+			return res.status(200).json({
+				estado: true,
+				persona: persona,
+				ninoaccion: ninoaccion
+			});
+		},(errorNinoAccion) => {
 			return res.status(400).json({
-					estado: false,
-					errorNinoAccion: errorNinoAccion
-				});
+				estado: false,
+				errorNinoAccion: errorNinoAccion
+			});
 		});
 	}, (errorPersona) => {
 		return res.status(400).json({
-					estado: false,
-					errorPersona: errorPersona
-				});
+			estado: false,
+			errorPersona: errorPersona
+		});
 	});
 }
 
@@ -88,7 +89,7 @@ const buscarNinoAccion = (req, res , next) => {
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
-			errorProcariano : error
+			errorNinoAccion : error
 		}
 		res.json(jsonRespuesta);
 	});
@@ -96,7 +97,7 @@ const buscarNinoAccion = (req, res , next) => {
 
 const buscarNinoAccionPorId = (req,res,next) =>{
 	var id = req.params.id;
-	modelo.Procariano.findAll({
+	modelo.NinoAccion.findAll({
 	    include: [{
 	        model: modelo.Persona ,
 	        where: {
@@ -108,7 +109,7 @@ const buscarNinoAccionPorId = (req,res,next) =>{
 	    }  
 	}).then( repuesta => {
 		var status = true;
-		var mensaje = 'Se obtuvieron los tickets correctamente'
+		var mensaje = 'Se obtuvieron los niños de Accion correctamente'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -117,7 +118,7 @@ const buscarNinoAccionPorId = (req,res,next) =>{
 		res.json(jsonRespuesta)
 	}).catch( error => {
 		var status = false;
-		var mensaje = 'No se pudieron obtener los tickets'
+		var mensaje = 'No se pudieron obtener los niños de Accion'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
@@ -150,7 +151,7 @@ const editarNinoAccion = (req, res, next) => {
 	    id : id
 	  }
 	}).then( result => {
-		modelo.Procariano.update({
+		modelo.NinoAccion.update({
 			nombreRep : req.body.nombreRep,
 			apellidoRep : req.body.apellidoRep,
 			cedulaRep : req.body.cedulaRep,
@@ -184,9 +185,7 @@ const editarNinoAccion = (req, res, next) => {
 };
 
 const eliminarNinoAccion = (req, res, next) => {
-	console.log('SE VA A ELIMINAR EL NINO DE ACCION');
 	var id = req.params.id;
-	console.log(id);
 	modelo.NinoAccion.update({
 		estado : 'inactivo'	  
 	}, {
