@@ -3,6 +3,14 @@
 		<nav>
 			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
 			<a href="/" class="brand-logo">Procare</a>
+			<form id="busqueda" class="z-depth-3 right">
+									<div class="input-field">
+										<input placeholder="Search" id="search" type="search" required>
+										<label for="search"><i class="material-icons">search</i></label>
+										<i class="material-icons">close</i>
+									</div>
+									
+								</form>
 			<ul id="slide-out" class="side-nav">
 		    <li>
 		    	<div class="userView">
@@ -180,6 +188,9 @@
 		}
 	}
 </script>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
 
 <style>
 	#dropGrupos, #dropProcarianos{
