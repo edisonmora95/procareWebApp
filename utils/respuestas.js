@@ -36,3 +36,11 @@ module.exports.errorDelete = (res, mensaje, datos) => {
 		mensajeError: mensaje
 	});
 };
+
+module.exports.okUpdate = (res, mensaje, datos) => {
+	return res.status(200).json({
+		estado: true,
+		mensaje: mensaje,
+		datos: datos
+	});
+};

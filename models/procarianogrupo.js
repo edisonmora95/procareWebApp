@@ -43,6 +43,20 @@ module.exports = function(sequelize, DataTypes) {
             GrupoId: idGrupo
           }
         }).then(success).catch(error);
+      },
+      /*
+        @Descripción: 
+          Cuando se quiere registrar que un procariano ya no pertenece a un grupo, se le añade una fechaFin a su registro
+      */
+      eliminarProcarianoDeGrupo: function(idProcariano, idGrupo, success, error){
+        this.update({
+          fechaFin: new Date(),
+        }, {
+          where: {
+            GrupoId: idGrupo,
+            ProcarianoId: idProcariano
+          }
+        }).then(success).catch(error);
       }
     }
   });
