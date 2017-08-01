@@ -67,7 +67,8 @@ var main = new Vue({
 			convencional: '',
 			genero: '',
 			//estado: 'activo',	//deberia estar en persona
-			trabajo: ''
+			trabajo: '',
+			sueldo: ''
 
 		}
 	},
@@ -138,6 +139,13 @@ var main = new Vue({
 			});
 			$(".button-collapse").sideNav();
 			$('.modal').modal();
+    },
+    /*
+			@Descripcion:
+				Solo cancela y redirige a la panatalla de la tabla de personal
+    */
+    cancelar(){
+    	console.log('debo agregar esa vista aun');
     }
 	}
 });

@@ -5,7 +5,7 @@
 */
 
 var modelo = require('../models');
-var utils = require('../utils/utils')
+var utils = require('../utils/utils');
 var ControladorGrupo = require('../controllers/grupo');
 
 

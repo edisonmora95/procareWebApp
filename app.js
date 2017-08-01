@@ -32,6 +32,7 @@ let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
 let apiAnimadores = require('./routes/api/animadores.api.router.js');
+let apiPersonal = require('./routes/api/personal.api.router');
 
 var app = express();
 
@@ -85,6 +86,7 @@ app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
 app.use('/api/animadores', apiAnimadores);
+app.use('/api/personal', apiPersonal);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

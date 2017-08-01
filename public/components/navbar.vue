@@ -99,6 +99,8 @@
 				let aPersonal = $('<a>').html('Personal');
 				liPersonal.append(aPersonal);
 				$('#ulProcareAdministracion').append(liPersonal);
+
+
 				//director formacion
 				let liDirectorPF = $('<li>');
 				let aDirectorPF = $('<a>').html('Director procare formación');
@@ -217,7 +219,7 @@
 																'class': 'dropdown-button',
 																'href': '#',
 																'data-activates': 'dropProcarianos',
-																'data-hover': 'hover'
+																'data-hover': 'hover'	
 															});
 				liProcarianos.append(aProcarianos);
 				//Luego creo el ul del dropdown interior a Grupos

@@ -4,7 +4,7 @@
 @Descripcion: Modelo de persona
 @Autor: jose viteri
 @FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 18/06/2017 @JoseViteri (se agrego la funcion de clase compararContrasenna)
+@UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
 
 
 */
@@ -58,6 +58,9 @@ module.exports = function(sequelize, DataTypes) {
     },
     trabajo : {
       type : DataTypes.TEXT
+    },
+    sueldo : {
+      type : DataTypes.INTEGER
     }
   }, {
     classMethods: {
@@ -95,7 +98,8 @@ module.exports = function(sequelize, DataTypes) {
           email: persona.email,
           celular: persona.celular,
           trabajo: persona.trabajo,
-          convencional: persona.convencional
+          convencional: persona.convencional,
+          sueldo: persona.sueldo
         }).then(callback).catch(errorCallback);
       }
 
