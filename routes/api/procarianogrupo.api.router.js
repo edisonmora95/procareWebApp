@@ -9,4 +9,8 @@ router.get('/:id_procariano', controladorProcarianoGrupo.obtenerGrupoDeProcarian
 //Cambiar a un procariano de un grupo
 router.put('/:id_procariano', controladorProcarianoGrupo.cambiarDeGrupo);
 
+router.post('/anadir', controladorProcarianoGrupo.anadirProcarianoAGrupo);
+
+router.put('/quitar/:id_procariano', controladorProcarianoGrupo.eliminarProcarianoDeGrupo);
+
 module.exports = router;

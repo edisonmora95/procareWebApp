@@ -32,6 +32,7 @@ router.get('/usuarios', function(req, res, next){
   }
   	var json = {
   		status : true,
+      id: req.user[0].dataValues.id,
   		nombre : req.user[0].dataValues.nombres,
   		apellidos : req.user[0].dataValues.apellidos,
   		correo : req.user[0].dataValues.email, 

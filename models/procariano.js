@@ -7,6 +7,8 @@
 
 var bcrypt = require('bcryptjs');
 'use strict';
+var Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
   var Procariano = sequelize.define('Procariano', {
     colegio: {
@@ -45,7 +47,7 @@ module.exports = function(sequelize, DataTypes) {
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
         Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
       },
-      crearProcariano1: function(procariano, callback, errorCallback){
+      crearProcariano: function(procariano, callback, errorCallback){
         this.create({
           PersonaId: procariano.PersonaId,
           colegio: procariano.colegio,
@@ -55,6 +57,61 @@ module.exports = function(sequelize, DataTypes) {
           estado: procariano.estado,
           haceParticipacionEstudiantil: procariano.haceParticipacionEstudiantil
         }).then(callback).catch(errorCallback);
+      },
+      buscarChicosFormacion: function(successCallback, errorCallback){
+        const Tipo = sequelize.import("../models/tipo");
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include: [
+            {
+              model: Tipo,
+              where: {
+                id: 1   //Id de Chico Formación es 1
+              },
+              attributes: ['id', 'nombre']
+            },
+            {
+              model: Persona,
+              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+            }
+          ],
+          attributes: [['id', 'procarianoId'], 'estado']
+        }).then(successCallback).catch(errorCallback);
+      },
+      obtenerProcarianosDeGrupo: function(idGrupo, successCallback, errorCallback){
+        const Grupo = sequelize.import("../models/grupo");
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include: [
+            {
+              model: Grupo,
+              where: {
+                id: idGrupo
+              },
+              attributes: [ ['id', 'idGrupo']]
+            },
+            {
+              model: Persona,
+              attributes: [ ['id', 'idPersona'], 'nombres', 'apellidos', ]
+            }
+          ],
+          attributes:[['id', 'idProcariano']]
+        }).then(successCallback).catch(errorCallback);
+      },
+      obtenerProcarianoPorId: function(idProcariano, successCallback, errorCallback){
+        const Persona = sequelize.import("../models/persona");
+        this.findOne({
+          where: {
+            id: idProcariano
+          },
+          include: [
+            {
+              model: Persona,
+              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+            }
+          ],
+          attributes: [['id', 'procarianoId']]
+        }).then(successCallback).catch(errorCallback);
       }
     }
   });

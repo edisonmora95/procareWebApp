@@ -37,6 +37,7 @@
     "serve-favicon": "~2.3.0",
     "vee-validate": "^2.0.0-rc.5",
     "vue-material": "^0.7.1",
+    "vue-materialize-datatable": "^0.6.9",
     "vue-materials": "^1.0.7-rc.7"
   },
   "devDependencies": {

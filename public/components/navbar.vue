@@ -42,7 +42,7 @@
 		    		</li>
 		    	</ul>
 		    </li>
-		    <li><a href="#">Salir</a></li>
+		    <li><a href="/logout">Salir</a></li>
 		  </ul>
 		</nav>
 	</div>
@@ -52,7 +52,7 @@
 <script>
 	module.exports = {
 		created(){
-			this.obtenerUsuarioLogeado();
+			this.obtenerUsuarioLogeado(this);
 		},
 		mounted(){
 			$(".button-collapse").sideNav();
@@ -61,12 +61,16 @@
 		},
 		data: function() {
 			return{
-				usuario: {}
+				usuario: {},
+				grupoId: 0,
 			}
 		},
 		methods: {
-			obtenerUsuarioLogeado(){
-				let self = this;
+			/*
+				@Descripción: 
+					Obtiene la información del usuario logeado. Para armar la navbar de acuerdo con su rol.
+			*/
+			obtenerUsuarioLogeado(self){
 				$.ajax({
 					type: 'GET',
 					url: '/api/login/usuarios',
@@ -75,6 +79,57 @@
 						console.log(self.usuario)
 						console.log(self.usuario.roles)
 						self.formarNavbar();
+					}
+				});
+			},
+			/*
+				@Descripción:
+					Verifica si el usuario logeado tiene el rol indicado
+				@Params:
+					rolIndicado -> String -> Rol que se quiere averiguar.
+			*/
+			verificarRolDeUsuario(self, rolIndicado){
+				let roles = self.usuario.roles;
+				let flag = false;
+				$.each(roles, function(index, rol){
+					if(rol === rolIndicado){
+						flag = true;
+						return false;
+					}
+				});
+				return flag;
+			},
+			obtenerInformacionDeProcariano(self, idPersona){
+				const urlApi = '/api/procarianos/	' + idPersona;
+				$.ajax({
+					type: 'GET',
+					url: urlApi,
+					success(res){
+						self.procariano = res[0];
+						self.obtenerGrupoDeAnimador(self, self.procariano.procarianoID);
+					},
+					error(err){
+						console.log(err);
+					}
+				})
+			},
+			/*
+				@Descripción:
+					Obtiene el grupo del animador logeado y almacena su id en self.grupoId
+			*/
+			obtenerGrupoDeAnimador(self, idAnimador){
+				const urlApi = '/api/animadores/' + idAnimador;
+				console.log(urlApi)
+				$.ajax({
+					type: 'GET',
+					url: urlApi,
+					success(res){
+						console.log(res)
+						self.grupoId = res.datos.GrupoId;
+						console.log(self.grupoId)
+					},
+					error(err){
+						console.log(err);
 					}
 				});
 			},
@@ -89,7 +144,7 @@
 			  
 			  //this.crearDropdownPAd();
 			  this.crearDropdownPA();
-				this.crearDropdownPF();
+				this.crearDropdownPF(this);
 			},
 			crearDropdownPAd(){
 				//donacion , benefactores , personal , director formacion
@@ -133,110 +188,57 @@
 				liNinos.append(aNinos);
 				$('#ulProcareAccion').append(liNinos);
 			},
-			crearDropdownPF() {
+			crearDropdownPF(self) {
 				//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
-				let liAsistencias = $('<li>');
-				let aAsistencias = $('<a>').html('Asistencias');
-				liAsistencias.append(aAsistencias);
-				$('#ulProcareFormacion').append(liAsistencias);
+				let menuPF = $('#ulProcareFormacion');
+				self.crearLi('Asistencias', '/asistencias/formacion', menuPF);
 
+				let usuarioEsPersonal = self.verificarRolDeUsuario(self, 'Personal');
+				let usuarioEsAnimador = self.verificarRolDeUsuario(self, 'Animador');
+				let usuarioEsDirectorFormacion = self.verificarRolDeUsuario(self, 'Director Procare Formacion');
+				let usuarioEsDirectorEjecutivo = self.verificarRolDeUsuario(self, 'Director Ejecutivo');
+				
+				if(usuarioEsDirectorEjecutivo){
+					self.crearLi('Usuarios', '/usuarios/', menuPF);
+					self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
+					self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				}
+				if(usuarioEsPersonal){
+					self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
+					self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				}
+				if(usuarioEsDirectorFormacion){
 
-				if($.inArray('Personal', this.usuario.roles) >= 0){
-					this.crearDropdownGrupos();
-					this.crearDropdownProcarianos();	
-					//Usuarios
-					//
-					/*
-				if($.inArray('director ejecutivo', this.usuario.roles) >= 0){
-						let liUsuarios = $('<li>');
-						let aUsuarios = $('<a>')
-																		.html('Usuarios')
-																		.attr({
-																			'href': '/usuarios/',
-																		});
-						liUsuarios.append(aUsuarios);
-						$('#slide-out').append(liUsuarios);
-					}
-					*/
+				}
+				if(usuarioEsAnimador){
+					$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
+						let idGrupo = self.grupoId;
+						let urlGrupo = '/grupos/' + idGrupo;
+						self.crearLi('Grupo', urlGrupo, menuPF);	
+					});
 					
-				}else{
-					//Grupos
-					let liGrupo = $('<li>');
-					let aGrupo = $('<a>').html('Grupo');
-					liGrupo.append(aGrupo);
-					$('#ulProcareFormacion').append(liGrupo);
-					//Procarianos
-					let liProcarianos = $('<li>');
-					let aProcarianos = $('<a>').html('Integrantes');
-					liProcarianos.append(aProcarianos);
-					$('#ulProcareFormacion').append(liProcarianos);
-				}				
+				}
 			},
-			crearDropdownGrupos(){
-				/*
-				Procare Formación
-					Grupos -> <li>
-						Crear
-						Buscar
-				*/
-				//Primero creo el li exterior.
-				let liGrupos = $('<li>');
-				let aGrupos = $('<a>').html('Grupos')
-															.attr({
-																'class': 'dropdown-button',
-																'href': '#',
-																'data-activates': 'dropGrupos',
-																'data-hover': 'hover'
-															});
-				liGrupos.append(aGrupos);
-				//Luego creo el ul del dropdown interior a Grupos
-				let ulDropGrupos = $('<ul>').attr({
-					'id': 'dropGrupos',
-					'class': 'dropdown-content'
-				});
+			crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor){
+				//Creo el li exterior
+				let liExterior = $('<li>');
+				let aExterior = $('<a>').html(htmlAnchorExterior)
+																.attr({'class':'dropdown-button', 'href':'#', 'data-activates':idDropdown, 'data-hover':'hover'});
+				liExterior.append(aExterior);
+				//Creo el ul del dropdown
+				let ulDropdown = $('<ul>').attr({ 'id': idDropdown, 'class': 'dropdown-content' });
 				//Creo los li del dropdown. Crear y Buscar
-				let liCrear = $('<li>');
-				let aCrear = $('<a>').html('Crear').attr({'href': '/grupos/nuevo'});
-				liCrear.append(aCrear);
-				let liBuscar = $('<li>');
-				let aBuscar = $('<a>').html('Buscar').attr({'href': '/grupos/'});
-				liBuscar.append(aBuscar);
-				ulDropGrupos.append(liCrear, liBuscar);
-				$('#template').append(ulDropGrupos);
-				$('#ulProcareFormacion').append(liGrupos);
+				self.crearLi('Crear', rutaCrear, ulDropdown);
+				self.crearLi('Buscar', rutaBuscar, ulDropdown);
+
+				$('#template').append(ulDropdown);
+				ulContenedor.append(liExterior);
 			},
-			crearDropdownProcarianos(){
-				/*
-				Procare Formación
-					Procarianos -> <li>
-						Ingresar
-						Buscar
-				*/
-				//Primero creo el li exterior.
-				let liProcarianos = $('<li>');
-				let aProcarianos = $('<a>').html('Procarianos')
-															.attr({
-																'class': 'dropdown-button',
-																'href': '#',
-																'data-activates': 'dropProcarianos',
-																'data-hover': 'hover'	
-															});
-				liProcarianos.append(aProcarianos);
-				//Luego creo el ul del dropdown interior a Grupos
-				let ulDropProcarianos = $('<ul>').attr({
-					'id': 'dropProcarianos',
-					'class': 'dropdown-content'
-				});
-				//Creo los li del dropdown. Ingresar y Buscar
-				let liCrear = $('<li>');
-				let aCrear = $('<a>').html('Ingresar').attr({'href': '/procarianos/nuevo/'});
-				liCrear.append(aCrear);
-				let liBuscar = $('<li>');
-				let aBuscar = $('<a>').html('Buscar').attr({'href': '/procarianos/'});
-				liBuscar.append(aBuscar);
-				ulDropProcarianos.append(liCrear, liBuscar);
-				$('#template').append(ulDropProcarianos);
-				$('#ulProcareFormacion').append(liProcarianos);
+			crearLi(htmlAnchor, hrefAnchor, ulContenedor){
+				let li = $('<li>');
+				let a = $('<a>').html(htmlAnchor).attr({href: hrefAnchor});
+				li.append(a);
+				ulContenedor.append(li);
 			}
 		}
 	}

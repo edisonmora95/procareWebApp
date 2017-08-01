@@ -1,4 +1,5 @@
 let modelo = require('../models');
+let respuesta = require('../utils/respuestas');
 
 /*
 	@Descripción:
@@ -112,6 +113,33 @@ module.exports.cambiarDeGrupo = (req, res, next) => {
 		res.json(jsonRespuesta);
 	});
 
+}
+/*
+	@Descripción:
+		Añade un procariano a un grupo indicado
+*/
+module.exports.anadirProcarianoAGrupo = (req, res, next) => {
+	const idGrupo = req.body.idGrupo;
+	const idProcariano = req.body.idProcariano;
+	const fechaInicio = new Date();
+	modelo.ProcarianoGrupo.anadirProcarianoAGrupo(idGrupo, idProcariano, fechaInicio, (sucess) => {
+		return respuesta.okCreate(res, 'Procariano añadido a grupo.', sucess);
+	}, (error) => {
+		return respuesta.error(res, 'No se pudo añadir a grupo', '', error);
+	});
+}
+/*
+	@Descripción:
+		Saca a un procariano de un grupo indicado
+*/
+module.exports.eliminarProcarianoDeGrupo = (req, res, next) => {
+	const idGrupo = req.body.idGrupo;
+	const idProcariano = req.params.id_procariano;
+	modelo.ProcarianoGrupo.eliminarProcarianoDeGrupo(idProcariano, idGrupo, (sucess) => {
+		return respuesta.okUpdate(res, 'Procariano quitado de grupo', sucess);
+	}, (error) => {
+		return respuesta.error(res, 'No se pudo quitar al procariano del grupo', '', error);
+	});
 }
 
 //FUNCIONES

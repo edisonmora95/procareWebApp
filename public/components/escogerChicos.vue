@@ -74,17 +74,17 @@
 				let self = this;
 				$.ajax({
 					type: 'GET',
-					url: '/api/procarianos/',
+					url: '/api/procarianos/formacion',
 					success(res){
-						self.armarArraySinGrupo(self, res);
+						self.armarArraySinGrupo(self, res.datos);
 					}
 				});
 			},
 			armarArraySinGrupo(self, procarianos){
 				$.each(procarianos, function(index, procariano){
 					let obj = {
-						id: procariano.procarianoID,
-						nombre: procariano.nombres + ' ' + procariano.apellidos
+						id: procariano.procarianoId,
+						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos
 					};
 					self.sinGrupo.push(obj);
 				});

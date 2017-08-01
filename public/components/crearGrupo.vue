@@ -87,6 +87,7 @@
 		props: ['flag', 'grupo'],
 		mounted(){
 			this.obtenerEtapas(this);
+			this.obtenerPosiblesAnimadores(this);
 		},
 		data() {
 			return{
@@ -95,38 +96,7 @@
 					animador: '',
 				},*/
 				mensaje: '',
-				animadores: [
-				{
-				  "id": 1,
-				  "text": "Carmen Huxham"
-				}, {
-				  "id": 2,
-				  "text": "Cris Hamblington"
-				}, {
-				  "id": 3,
-				  "text": "Nelia Foli"
-				}, {
-				  "id": 4,
-				  "text": "Noam Deverose"
-				}, {
-				  "id": 5,
-				  "text": "Kaia Bordone"
-				}, {
-				  "id": 6,
-				  "text": "Zonda Furmage"
-				}, {
-				  "id": 7,
-				  "text": "Lenci Casarino"
-				}, {
-				  "id": 8,
-				  "text": "Cary De Metz"
-				}, {
-				  "id": 9,
-				  "text": "Mortie Connar"
-				}, {
-				  "id": 10,
-				  "text": "Stephana McQuarter"
-				}],
+				animadores: [],
 				flagVue: true,
 				generosGrupo: [
 					{
@@ -143,6 +113,31 @@
 		},
 		methods: {
 			/*
+				@Descripción:
+					Obtiene a todos los procarianos que pueden ser animadores de la base de datos.
+					A partir de eso, se arma el array para mostrar a los animadores en el select
+			*/
+			obtenerPosiblesAnimadores(self){
+				$.ajax({
+					type: 'GET',
+					url: '/api/animadores/',
+					success(res){
+						if(res.status){
+							self.armarArrayAnimadores(self, res.datos)							
+						}
+					}
+				});
+			},
+			armarArrayAnimadores(self, animadores){
+				$.each(animadores, function(index, animador){
+					let animadorObj = {
+						id: animador.procarianoId,
+						text:animador.Persona.nombres + ' ' +animador.Persona.apellidos
+					};
+					self.animadores.push(animadorObj);
+				});
+			},
+			/*
 				@Descripción: Obtiene todas las etapas de la base de datos y las añade al aray para mostrarlas en el <select>
 			*/
 			obtenerEtapas(self){
@@ -150,9 +145,9 @@
 					type: 'GET',
 					url: '/api/etapa/',
 					success(res){
-						let busquedaExitosa = (res.status && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
 						if(busquedaExitosa){
-							self.armarArrayEtapas(self, res.sequelizeStatus);
+							self.armarArrayEtapas(self, res.datos);
 						}else{
 							alert('Error al buscar etapas en la base de datos');
 						}
@@ -208,13 +203,16 @@
 			},
 			crearRegistroGrupo(){
 				let self = this;
+				console.log('Se va a crear el siguiente registro de grupo: ');
+				console.log(self.grupo);
 				$.ajax({
 					type: 'POST',
 					url: '/api/grupos/',
 					data: self.grupo,
 					success(res){
-						if(res.status === true && res.mensaje === 'Grupo creado exitosamente'){
-							self.grupo.id = res.sequelizeStatus.id;
+						console.log(res)
+						if(res.estado){
+							self.grupo.id = res.datos.grupo.id;
 							self.flagVue = false;
 							self.$emit('flagchanged', self.flagVue);		
 						}
@@ -222,7 +220,7 @@
 					error(jqXHR, textStatus, error){
 						$('#modalErrorAjax').modal('open');
 					}
-				})
+				});
 			}
 		}
 	}

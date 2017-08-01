@@ -18,7 +18,10 @@
 			</header>
 			<main class="container">
 				<!--Row ver procariano-->
-				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
+				<section class="row rowVer" id="rowVer" v-if="!habilitaredicion">
+					<header>
+						<h4 class="center-align">Perfil</h4>
+					</header>
 					<div class="col s12">
 						<div class="card">
 							<div class="card-content">
@@ -103,13 +106,13 @@
 							</div><!--End card content-->
 						</div><!--End card-->
 					</div>
-				</div>
+				</section>
 				<!--End row ver procariano-->
-				<div class="card" id="rowEditar" v-if="habilitaredicion">
+				<section class="card" id="rowEditar" v-if="habilitaredicion">
 					<div class="card-content">
 						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
 					</div>
-				</div>
+				</section>
 			</main>
 
 			<!-- Modal Structure -->

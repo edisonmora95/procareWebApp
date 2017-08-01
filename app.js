@@ -66,7 +66,7 @@ app.use(flash());
 
 //Rutas de las ventanas
 app.use('/home', index);
-app.use('/usuarios', usuarios);
+//app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);

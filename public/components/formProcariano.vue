@@ -230,9 +230,9 @@
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
 				$.get('/api/grupos/', function(res){
-					let conexionExitosa = (res.status === true && res.mensaje === 'Se obtuvieron los grupos correctamente');
+					let conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
 					if(conexionExitosa){
-						self.gruposObtenidos = res.sequelizeStatus;
+						self.gruposObtenidos = res.datos;
 						self.armarArraysGrupos(self.gruposObtenidos, self);
 					}
 				});
