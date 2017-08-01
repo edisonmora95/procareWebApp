@@ -148,7 +148,7 @@ router.get('/logout', function(req, res){
 
 
 
-router.post('/cambioContrasenna', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
+
 
 
 

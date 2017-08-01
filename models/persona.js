@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.TEXT
     },
     fechaNacimiento: {
-      type : DataTypes.DATEONLY
+      type : DataTypes.DATE
     },
     genero : {
       type : DataTypes.STRING,
@@ -85,6 +85,21 @@ module.exports = function(sequelize, DataTypes) {
 
         });
       },
+      crearPersona: function(persona, callback, errorCallback){
+        this.create({
+          cedula: persona.cedula,
+          nombres: persona.nombres,
+          apellidos: persona.apellidos,
+          direccion: persona.direccion,
+          fechaNacimiento: persona.fechaNacimiento,
+          genero: persona.genero,
+          contrasenna: persona.contrasenna,
+          email: persona.email,
+          celular: persona.celular,
+          trabajo: persona.trabajo,
+          convencional: persona.convencional
+        }).then(callback).catch(errorCallback);
+      }
 
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {

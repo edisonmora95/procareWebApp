@@ -1,6 +1,6 @@
 <template>
 	<div id="template">
-		<nav>
+		<nav class="orange darken-1">
 			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
 			<a href="/" class="brand-logo">Procare</a>
 			<form id="busqueda" class="z-depth-3 right">
@@ -39,7 +39,7 @@
 		    		</li>
 		    	</ul>
 		    </li>
-		    <li><a href="#">Salir</a></li>
+		    <li><a href="/logout">Salir</a></li>
 		  </ul>
 		</nav>
 	</div>
@@ -103,9 +103,22 @@
 				liAsistencias.append(aAsistencias);
 				$('#ulProcareFormacion').append(liAsistencias);
 
+
 				if($.inArray('Personal', this.usuario.roles) >= 0){
 					this.crearDropdownGrupos();
 					this.crearDropdownProcarianos();	
+					//Usuarios
+					if(this.usuario === 'director ejecutivo'){
+						let liUsuarios = $('<li>');
+						let aUsuarios = $('<a>')
+																		.html('Usuarios')
+																		.attr({
+																			'href': '/usuarios/',
+																		});
+						liUsuarios.append(aUsuarios);
+						$('#slide-out').append(liUsuarios);
+					}
+					
 				}else{
 					//Grupos
 					let liGrupo = $('<li>');

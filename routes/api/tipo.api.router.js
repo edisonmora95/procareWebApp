@@ -8,7 +8,7 @@ var router = express.Router();
 //Post de la etapa
 router.post('/nuevo', controladorTipo.crearTipo);
 
-//Read etapa
+//Obtiene todos los tipos de procariano de la base de datos
 router.get('/', controladorTipo.mostrarTipo);
 
 
@@ -19,6 +19,6 @@ router.put('/:id', controladorTipo.editarTipo);
 router.delete('/:id', controladorTipo.eliminarTipo);
 
 //Asignar etapa
-router.post('/asignar', controladorTipo.asignarTipo);
+//router.post('/asignar', controladorTipo.asignarTipo);
 
 module.exports = router;

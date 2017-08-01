@@ -1,24 +1,23 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "procare_db2",
+    "username": "procare_dev",
+    "password": "procare_sw_2",
+    "database": "procare_db_dev",
     "host": "127.0.0.1",
-    "dialect": "mariadb"
+    "dialect": "mysql"
   },
   "test": {
-     "username": "procare_test",
+    "username": "root",
     "password": "procare_sw_2",
-    "database": "procare_db_test",
+    "database": "procare",
     "host": "127.0.0.1",
-    "dialect": "mariadb",
-    "logging": false
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "procare_db2",
+    "password": "1234",
+    "database": "procare",
     "host": "127.0.0.1",
-    "dialect": "mariadb"
+    "dialect": "mysql"
   }
 }

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:700');
+
 body{
 	background-color: #d3dbdb;
 }
@@ -23,4 +25,8 @@ body{
 
 form{
 	padding: 2%;
+}
+
+.titulo, th{
+	font-family: 'Merriweather', serif;
 }

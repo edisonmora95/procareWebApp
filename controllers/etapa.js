@@ -5,7 +5,8 @@
 @UltimaFechaModificacion: 24/06/2017 @edanmora
 */
 
-var modelo = require('../models');
+let modelo = require('../models');
+let respuesta = require('../utils/respuestas');
 
 let jsonRespuesta = {};
 
@@ -17,43 +18,29 @@ const crearEtapa = (req, res, next) => {
 		@Razón: Añadidas validaciones de backend y status en respuestas
 	*/
 	let nombre = req.body.nombre;
-	if(validarRequestCrearEtapa(req, res)){
-		modelo.Etapa.create({
-			nombre : nombre,
-			programas : ""
-		}).then( respuesta => {
-			jsonRespuesta.status = true;
-			jsonRespuesta.mensaje = 'Se pudo crear correctamente';
-			jsonRespuesta.sequelizeStatus = respuesta;
-			res.status(200).json(jsonRespuesta)
-		}).catch( error => {
-			jsonRespuesta.status = false;
-			jsonRespuesta.mensaje = 'No se pudo crear';
-			jsonRespuesta.sequelizeStatus = error;
-			res.status(422).json(jsonRespuesta);
-		});
-	}
+	modelo.Etapa.crearEtapa(nombre, (etapa) => {
+		return respuesta.okCreate(res, 'Etapa creada correctamente', etapa);
+	}, (err) => {
+		let mensajeError = err.errors[0].message;
+		return respuesta.error(res, 'No se pudo crear la etapa', mensajeError, err);
+	});
 }
 
 const eliminarEtapa = (req, res, next) => {
 	/*
-		@ÚltimaModificación: 24/06/2017 @edanmora
+		@ÚltimaModificación: 30/07/2017 @edanmora
 		@Razón: Modificados mensajes de respuestas
 	*/
-	modelo.Etapa.destroy({
-		where:{
-			id: req.params.id
+	modelo.Etapa.eliminarEtapa(req.params.id, (success) => {
+		if(success === 1){
+			return respuesta.okDelete(res, 'Se pudo eliminar correctamente.', success);	
+		}else if(success > 1){
+			return respuesta.errorDelete(res, 'Error! Se eliminaron más etapas de las deseadas.', success);
+		}else if(success === 0){
+			return respuesta.errorDelete(res, 'No se encontraron etapas con el id indicado.', success);
 		}
-	}).then( respuesta => {
-		jsonRespuesta.status = true;
-		jsonRespuesta.mensaje = 'Se pudo eliminar correctamente';
-		jsonRespuesta.sequelizeStatus = respuesta;
-		res.status(200).json(jsonRespuesta);
-	}).catch( error => {
-		jsonRespuesta.status = false;
-		jsonRespuesta.mensaje = 'No se puede eliminar la etapa';
-		jsonRespuesta.sequelizeStatus = error;
-		res.status(404).send(jsonRespuesta);
+	}, (error) => {
+		return respuesta.errorDelete(res, 'No se puede eliminar la etapa', error);
 	});
 }
 
@@ -86,31 +73,15 @@ const editarEtapa = (req, res, next) => {
 	});
 }
 
+/*
+	@ÚltimaModificación: 24/06/2017 @edanmora
+	@Razón: Modificados mensajes de respuestas
+*/
 const mostrarEtapa = (req,res,next) =>{
-	/*
-		@ÚltimaModificación: 24/06/2017 @edanmora
-		@Razón: Modificados mensajes de respuestas
-	*/
-	modelo.Etapa.findAll({
-
-	}).then( repuesta => {
-		var status = true;
-		var mensaje = 'Se obtuvieron las etapas correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : repuesta
-		}
-		res.json(jsonRespuesta)
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'No se pudieron obtener las etapas'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
+	modelo.Etapa.obtenerEtapas( (etapas) => {
+		return respuesta.okGet(res, 'Se obtuvieron las etapas correctamente', etapas);
+	}, (error) => {
+		return respuesta.error(res, 'No se pudieron obtener las etapas', '', error);
 	});
 }
 
@@ -158,6 +129,53 @@ actualizarEtapa = (req, res) => {
 		res.json(jsonRespuesta);
 	});
 }
+
+
+const asignarEtapa = (req, res, next) => {
+	modelo.GrupoEtapa.findOne({
+		where: {
+			GrupoId: req.body.grupoId
+		}
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarEtapa(req,res)
+		}else{
+			agregarNuevaEtapa(req,res)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'error en la asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+actualizarEtapa = (req, res) => {
+	modelo.GrupoEtapa.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			FechaFin : null,
+			GrupoId: req.body.grupoId
+		}
+	}).then(respuesta1 => {
+		agregarNuevaEtapa(req,res)
+	}).catch( error1 => {
+		var status = false;
+		var mensaje = 'no existe asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			sequelizeStatus : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
 
 agregarNuevaEtapa = (req,res) => {
 	modelo.Etapa.findOne({

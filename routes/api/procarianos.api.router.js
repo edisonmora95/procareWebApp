@@ -26,6 +26,8 @@ router.post('/', utils.generarHash,controladorProcariano.crearProcariano);
 //Esta es la búsqueda en general.
 router.get('/', controladorProcariano.buscarProcariano);
 
+router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
+
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano
 router.get('/:id', controladorProcariano.buscarProcarianoPorId);

@@ -1,117 +1,181 @@
+import Navbar from './../../components/navbar.vue';
+import Materials from 'vue-materials';
+Vue.component('navbar', Navbar); 
+Vue.use(Materials);
+
 
 var app = new Vue({
-	el: '#app',
+	el: '#asistenciasApp',
 	data: {
-		grupos: [
-      {
-        nombre: 'Grupo A',
-        id: '1'
-      },
-      {
-        nombre: 'Grupo B',
-        id: '2'
-      },
-      {
-        nombre: 'Grupo C',
-        id: '3'
-      }
-
-    ],
-		grupoSel: {
-      nombre: '',
-      id: '',
-      genero: 'masculino'
-    },
+    generoSel: '',
+		grupos: [],
+    gruposAux: [],
+		grupoSel: {},
 		fechaSel:'',
-    chicos: [
-      {
-        nombre: 'Edison',
-        id: '1'
-      },
-      {
-        nombre: 'Xavier',
-        id: '2'
-      },
-      {
-        nombre: 'Joel',
-        id: '3'
-      },
-      {
-        nombre: 'Julio',
-        id: '4'
-      },
-      {
-        nombre: 'Jose',
-        id: '5'
-      },
-    ],
+    chicos: [],
     asistencias: [],
     faltas: [],
     justificadas: []
 	},
-	mounted: function(){
-    $('.datepicker').pickadate({
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 100 // Creates a dropdown of 50 years to control year
-    });
-    $(".button-collapse").sideNav();
-    $('.modal').modal();
-    this.crearSelectGrupos('select-grupos', this.grupoSel, 'div-select-grupos', this.grupos)
+  created(){
+    this.obtenerGrupos(this);
+  },
+	mounted(){
+    this.inicializarDOM(this);
 	},
 	methods: {
-    crearNavbar: function(){
-      //TODO
-    },
-    toggleLeftSidenav() {
-      this.$refs.leftSidenav.toggle();
-    },
-    openDialog(ref) {
-      this.$refs[ref].open();
-    },
-    crearSelectGrupos: function(idSelect, grupoEscogido, idDivSelect, grupos){
-      /*
-        Parámetros:
-          idSelect -> id del elemento select que se va a crear en esta función para contener a los grupos deseados. Ejemplo: select-grupo-formacion
-          grupoEscogido ->  Elemento de data con el cual se hará el 2 way data binding. Almacenará el grupo escogido del select
-          idDivSelect -> id del div que contendrá al elemento select que se va a crear
-          grupos -> Los grupos que se van a mostrar en el select
-      */
-      var self = this;
-      var select = $('<select>').attr({"id":idSelect});
-      var optionSelectedAux = '#' + idSelect + ' option:selected';
-      select.change(function(){
-        grupoEscogido.id = $(optionSelectedAux).val();
-        grupoEscogido.nombre = $(optionSelectedAux).text();
-        //Una vez seleccionado el grupo, se hace la búsqueda en la base de datos sobre los chicos que pertenecen al grupo
-        self.obtenerChicos();
+    inicializarDOM(self){
+      $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 100 // Creates a dropdown of 50 years to control year
       });
-      var idDivSelectAux = '#' + idDivSelect;
-      var divSelect = $(idDivSelectAux);
-      self.crearSelectOptions(select, grupos, divSelect);
-      divSelect.append(select);
-      select.material_select();
+      $(".button-collapse").sideNav();
+      $('.modal').modal();
+
+      $('#selectGrupos').prop('disabled', true);
+      $('#fechaAsistencia').prop('disabled', true);
+      $('#rowResultados').css('display', 'none');
+      $('#rowBotones').css('display', 'none');
+
+      $('#genero').change(function(){
+        self.filtrarGrupos(self);
+        $('#selectGrupos').prop('disabled', false);
+      });
+
+      $('#selectGrupos').change(function(){
+        let idGrupo = $('#selectGrupos option:selected').val();
+        self.obtenerGrupoSeleccionado(self, idGrupo);
+        $('#fechaAsistencia').prop('disabled', false);
+      });
+
+      $('#fechaAsistencia').change(function(){
+        self.validarFechaAsistencia(self);
+      });
     },
-    crearSelectOptions: function(select, grupos, divSelect){
-      /*
-        Parámetros:
-          select -> elemento select creado en la función crearSelectGrupo que mostrará a los grupos deseados
-          grupos -> los grupos que se mostrarán como opciones dentro del select
-          divSelect -> elemento div que contendrá al select
-      */
-      var self = this;
-      var optionDisabled = $('<option>').val("").text("");
-      select.append(optionDisabled);
+    /*
+      @Descripción: Filtra los grupos a mostrar en el select por el género seleccionado
+    */
+    filtrarGrupos(self){
+      self.grupos = [];
+      self.grupos = self.gruposAux;
+      let genero = $('#genero option:selected').val();
+      self.grupos = $.grep(self.grupos, function(grupo, index){
+        return grupo.genero === genero;
+      });
+    },
+    /*
+      @Descripción: Valida que la fecha ingresada sea correcta dependiendo del grupo seleccionado.
+    */
+    validarFechaAsistencia(self){
+      let fechaSeleccionada = new Date($('#fechaAsistencia').val());
+      let diaSeleccionado = fechaSeleccionada.getDay();
+      let jueves = 4;
+      let martes = 2;
+      let generoSeleccionado = self.generoSel;
+      let fechaProcare = (diaSeleccionado === jueves) && (generoSeleccionado === 'Procare');
+      let fechaProcareMujeres = (diaSeleccionado === martes) && (generoSeleccionado === 'Procare Mujeres');
+      let fechaCorrecta = ( fechaProcare ||  fechaProcareMujeres);
+
+      if( fechaCorrecta ){
+        self.fechaSel = fechaSeleccionada;
+        $('#rowResultados').css('display', 'block');
+        $('#rowBotones').css('display', 'block');
+        self.inicializarRadioButtons(self);
+      }else{
+        $('#modalDia').modal('open');
+        $('#fechaAsistencia').val("");
+        self.fechaSel = '';
+        $('#rowResultados').css('display', 'none');
+        $('#rowBotones').css('display', 'none');
+      }
+    },
+    /*
+      @Descripción: Marca todos los radio buttons de asistencias como:  Asistió
+    */
+    inicializarRadioButtons(self){
+      let idRadioAsistencia = '';
+      $.each(self.chicos, function(index, chico){
+        idRadioAsistencia = '#asist-' + chico.id;
+        $(idRadioAsistencia).attr('checked', 'checked');
+      });
+    },
+    /*
+      @Descripción: Obtiene todos los grupos de la base de datos
+    */
+    obtenerGrupos(self){
+      $.ajax({
+        type: 'GET',
+        url: '/api/grupos/',
+        success(res){
+          self.armarArrayGrupos(self, res.sequelizeStatus);
+        }
+      });
+    },
+    /*
+      @Descripción: Arma el array de grupos para mostrar en el select
+    */
+    armarArrayGrupos(self, grupos){
+      self.grupos = [];
+      self.gruposAux = [];
       $.each(grupos, function(index, grupo){
-        var option = $('<option>').val(grupo.id).text(grupo.nombre);
-        select.append(option);
+        let grupoObj = {
+          id: grupo.id,
+          text: grupo.nombre,
+          tipo: grupo.tipo,
+          integrantes: grupo.cantidadChicos,
+          genero: grupo.genero,
+          etapaId: '',
+          etapaNombre: ''
+        };
+        //Se busca la etapa actual del grupo
+        $.each(grupo.Etapas, function(j, etapa){
+          let fechaFin = etapa.GrupoEtapa.fechaFin;
+          //La etapa actual es aquella que tenga fecha fin null
+          if(fechaFin === null){
+            grupoObj.etapaId = etapa.id;
+            grupoObj.etapaNombre = etapa.nombre;
+          }
+        });
+        //Solo se añaden los grupos que pertenezcan actualmente a una etapa
+        if(grupoObj.etapaId !== ''){
+          self.grupos.push(grupoObj);
+          self.gruposAux.push(grupoObj);
+        }
       });
-      divSelect.append(select)
     },
-    obtenerChicos: function(){
-      //TODO
-      //Buscar en la base de datos al grupo en self.grupoSel, y devolver a los integrantes
+    /*
+      @Descripción: Una vez seleccionado un grupo, obtiene tods su información de la base
+    */
+    obtenerGrupoSeleccionado(self, idGrupo){
+      let urlApi = '/api/grupos/' + idGrupo;
+      $.ajax({
+        type: 'GET',
+        url: urlApi,
+        success(res){
+          self.armarObjGrupoSel(self, res);
+          self.armarArrayChicos(self, res);
+        }
+      });
     },
-    subirAsistencias: function(){
+    armarObjGrupoSel(self, res){
+      self.grupoSel = {
+        nombre: res.grupo.nombre,
+        id: res.grupo.id,
+        tipo: res.grupo.tipo,
+        cantidadChicos: res.procarianos.length
+      };
+    },
+    armarArrayChicos(self, res){
+      self.chicos = [];
+      $.each(res.procarianos, function(index, procariano){
+        let chicoObj = {
+          nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
+          id: procariano.idProcariano
+        };
+        self.chicos.push(chicoObj);
+      });
+    },
+    subirAsistencias(){
       var self = this;
       var idRadioAsistencia = "";
       var idRadioFalta = "";
@@ -167,14 +231,4 @@ var app = new Vue({
 	}
 });
 //2 way data binding de la fecha-asistencia
-$('#fecha-asistencia').change(function(){
-  //Los hombres se reúnen los jueves y las mujeres los martes
-  var dia = new Date($('#fecha-asistencia').val());
-  if((dia.getDay()==4&&app.$data.grupoSel.genero=='masculino')||(dia.getDay()==2&&app.$data.grupoSel.genero=='femenino')){
-    app.$data.fechaSel = $('#fecha-asistencia').val();
-  }else{
-    $('#modalDia').modal('open');
-    $('#fecha-asistencia').val("");
-    app.$data.fechaSel = "";
-  }
-});
+
