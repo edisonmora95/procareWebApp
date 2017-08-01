@@ -33,6 +33,14 @@ module.exports = function(sequelize, DataTypes) {
           }
         }).then(successCallback).catch(errorCallback);
       },
+      obtenerGrupoDeAnimador: function(idAnimador, success, error){
+        this.findOne({
+          where: {
+            ProcarianoId: idAnimador,
+            fechaFin: null
+          }
+        }).then(success).catch(error);
+      },
       cambiarAnimadorDeGrupo: function(idGrupo, idAnimadorAntiguo, idAnimadorNuevo, success, errorUpdate, errorCreate){
         this.update({
           fechaFin: new Date()

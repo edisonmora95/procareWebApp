@@ -1,4 +1,5 @@
 var modelo = require('../models');
+const respuesta = require('../utils/respuestas');
 
 const crearAnimadorAPartirDeProcariano = (procarianoId,fechaInicio,fechaFin) => {
 	modelo.Animador.create({
@@ -101,5 +102,14 @@ module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
 		return res.status(200).json({status: true, datos: result, mensaje: 'Se pudieron obtener los posibles animadores'});
 	}).catch( error => {
 		return res.status(400).json({status: false, datos: error, mensaje: 'Error en el query'});
+	});
+}
+
+module.exports.obtenerGrupoDeAnimador = (req, res, next) => {
+	const idAnimador = req.params.id_animador;
+	modelo.Animador.obtenerGrupoDeAnimador(idAnimador, (success) => {
+		return respuesta.okGet(res, 'Búsqueda exitosa', success);
+	}, (error) => {
+		return respuesta.error(res, 'Error en la búsqueda', '', error);
 	});
 }
