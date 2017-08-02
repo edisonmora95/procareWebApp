@@ -41,7 +41,7 @@ module.exports = function(sequelize, DataTypes) {
         this.findAll({
           where: {
             id: idProcariano,
-	    esGanador: true
+            esGanador: true
           }
         }).then(successCallback).catch(errorCallback);
       }

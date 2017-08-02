@@ -5,7 +5,7 @@
 @UltimaFechaModificacion: 14/07/2017
 
 */
-var controladorticket= require('../../controllers/ticket_clubporti')
+var controladorticket= require('../../controllers/ticket')
 var express = require('express');
 var router = express.Router();
 
@@ -13,7 +13,7 @@ var router = express.Router();
 router.post('/nuevo', controladorticket.crearTicket);
 
 //Read ticket
-router.get('/', controladorticket.mostrarTicket);
+router.get('/procariano/:id', controladorticket.mostrarTicketProcariano);
 
 //Update ticket
 router.put('/:id', controladorticket.editarTicket);
@@ -22,9 +22,9 @@ router.put('/:id', controladorticket.editarTicket);
 router.delete('/:id', controladorticket.eliminarTicket);
 
 //Delete ticket(no ganadores)
-router.delete('/:id', controladorticket.eliminarNoGanadores);
+router.delete('/todos/noGanadores', controladorticket.eliminarNoGanadores);
 
 //Read ticket(solo ganadores)
-router.get('/:id', controladorticket.mostrarGanadores);
+router.get('/ganadores', controladorticket.mostrarGanadores);
 
 module.exports = router;

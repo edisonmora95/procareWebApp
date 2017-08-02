@@ -3,6 +3,7 @@
 @Autor: Luis Lainez
 @FechaCreacion: 14/07/2017
 @UltimaFechaModificacion: 29/07/2017 LuisBSC15
+						  02/08/2017 erialper
 */
 
 var modelo = require('../models');
@@ -76,7 +77,7 @@ const editarTicket = (req, res, next) => {
 	});
 }
 
-const mostrarTicket = (req,res,next) =>{
+const mostrarTicketProcariano = (req, res, next) =>{
 	var id = req.params.id;
 	modelo.Ticket.findAll({
 	    where : {
@@ -103,12 +104,10 @@ const mostrarTicket = (req,res,next) =>{
 	});
 }
 
-
-const eliminarNoGanadores = (req,res,next) =>{
-	var ganador = false;
+const eliminarNoGanadores = (req, res, next) =>{
 	modelo.Ticket.destroy({
 		where:{
-			ganador: req.params.esGanador
+			esGanador: "no"
 		}
 	}).then( respuesta => {
 		jsonRespuesta.status = true;
@@ -123,13 +122,10 @@ const eliminarNoGanadores = (req,res,next) =>{
 	});
 }
 
-const mostrarGanadores = (req,res,next) =>{
-	var id = req.params.id;
-	var ganador = true;
+const mostrarGanadores = (req, res, next) =>{
 	modelo.Ticket.findAll({
 	    where : {
-	    	ProcarianoId : id,
-		ganador: req.params.esGanador
+			esGanador: "si"
 	    }
 	}).then( repuesta => {
 		var status = true;
@@ -152,12 +148,11 @@ const mostrarGanadores = (req,res,next) =>{
 	});
 }
 
-
 module.exports = {
 	crearTicket,
 	eliminarTicket,
 	editarTicket,
-	mostrarTicket,
+	mostrarTicketProcariano,
 	eliminarNoGanadores,
 	mostrarGanadores
 }

@@ -23,7 +23,7 @@ let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.ro
 
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
-let apiTicket = require('./routes/api/ticket_clubporti.api.router');
+let apiTicket = require('./routes/api/ticket.api.router');
 let apiNinoAccion = require('./routes/api/ninoaccion.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
 let apiCargo = require('./routes/api/cargo.api.router');
@@ -82,7 +82,7 @@ app.use('/api/login',apiLogin);
 app.use('/api/tarea',apiTareas);
 app.use('/api/evento', apiEventos);
 app.use('/api/ticket', apiTicket);
-app.use('/api/ticket', apiNinoAccion);
+app.use('/api/ninos', apiNinoAccion);
 app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
