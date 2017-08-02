@@ -8,21 +8,25 @@
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<!-- Compiled and minified CSS -->
 		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">-->
-		 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
-
-		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/verGrupoStyles.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/donacion/DonacionStyles.css">
 	</head>
 	<body>
-		<div class="container">
-		<header>
+		<div id="app">
+			<header>
 			<navbar></navbar>
 		</header>
+	</div>
+	<!--End row ver procariano-->
+	<section class="card" id="rowEditar" v-if="habilitaredicion">
+		<div class="card-content">
+			<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>
 		</div>
-	</body>
+	</section>
+</body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- Compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
-    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 <script src='https://unpkg.com/vue@2.3.3'></script>
-<script src='/build/grupo/verGrupoScript.js'></script>
+<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+<script src="/build/donacion/DonacionScript.js"></script>
 </html>

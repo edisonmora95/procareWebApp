@@ -21,6 +21,7 @@ var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 var personal = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
+var donacion = require('./routes/ventanas/donacion.ventanas.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
@@ -71,6 +72,7 @@ app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
 app.use('/personal', personal);
+app.use('/donacion', donacion);
 
 app.use('/cambioContrasenna',cambioContrasenna);
 app.use('/', login);
