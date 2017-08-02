@@ -99,11 +99,6 @@ module.exports = function(sequelize, DataTypes) {
           convencional: persona.convencional
         }).then(callback).catch(errorCallback);
       }
-
-
-
-
-
     }/*, hooks : {
       beforeCreate : (persona, options) => {
          bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
