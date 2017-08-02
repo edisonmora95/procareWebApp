@@ -118,6 +118,7 @@
 		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
+
 	import Materials from 'vue-materials';
 	//import VeeValidate from 'vee-validate';
 	Vue.use(Materials);
@@ -151,6 +152,7 @@
 		}
 	};
 	VeeValidate.Validator.updateDictionary(dictionary);
+
 	module.exports = {
 		props: ['procariano', 'habilitaredicion', 'grupoprocariano', 'tipoprocariano'],
 		data(){
