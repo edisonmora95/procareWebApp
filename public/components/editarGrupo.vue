@@ -1,53 +1,61 @@
 <template>
+	
 	<div>
-		<div class="row" id="row-info-general">
-			<h4 class="center-align">Editar grupo</h4>
-			<h5 class="center-align">Información general</h5>
-			<form class="col s12">
-				<div class="row" id="row-nombre-genero">
-					<div class="input-field col s6">
-						<input type="text" name="nombre" id="nombre" v-model="grupo.nombre">
-						<label for="nombre" class="active">Nombre del grupo</label>
+		<section class="row" id="row-info-general">
+			<header>
+				<h4 class="center-align">Editar grupo</h4>
+				<h5 class="center-align">Información general</h5>	
+			</header>
+			<main>
+				<form class="col s12">
+					<div class="row" id="row-nombre-genero">
+						<div class="input-field col s6">
+							<input type="text" name="nombre" id="nombre" v-model="grupo.nombre">
+							<label for="nombre" class="active">Nombre del grupo</label>
+						</div>
+						<div class="input-field col s6">
+							<v-select   name="genero" id="genero" v-model="grupo.genero" select-text="Procare/Procare Mujeres">
+								<option value="Procare">Procare</option>
+								<option value="Procare Mujeres">Procare Mujeres</option>
+		          </v-select>
+						</div>
 					</div>
-					<div class="input-field col s6">
-						<v-select   name="genero" id="genero" v-model="grupo.genero" select-text="Procare/Procare Mujeres">
-							<option value="Procare">Procare</option>
-							<option value="Procare Mujeres">Procare Mujeres</option>
-	          </v-select>
+					<div class="row" id="row-etapa-animador">
+						<div class="input-field col s6">
+							<v-select id="etapa" name="etapa"	v-model="grupo.etapaId" select-text="Etapa" :items="etapas">
+							</v-select>
+						</div>
+						<div class="input-field col s6">
+							<v-select name="animador" id="animador" v-model="grupo.animadorId" select-text="Animador" :items="animadores"></v-select>
+							<label for="animador" class="active">Animador</label>
+						</div>
 					</div>
+				</form>	
+			</main>
+		</section>
+		<section class="row" id="row-escoger-chicos">
+			<header>
+				<h5 class="center-align">Selección de integrantes</h5>
+			</header>
+			<main>
+				<div class="col s5 col-chicos" id="col-sin-grupo">
+					<h6 class="center-align">Chicos sin grupo</h6>
+					<ul id="chicosSinGrupo">
+						<li v-for="chico in sinGrupo" :id="chico.id" @click="anadir(chico)">{{chico.nombre}}</li>
+					</ul>
 				</div>
-				<div class="row" id="row-etapa-animador">
-					<div class="input-field col s6">
-						<v-select id="etapa" name="etapa"	v-model="grupo.etapaId" select-text="Etapa" :items="etapas">
-						</v-select>
-					</div>
-					<div class="input-field col s6">
-						<v-select name="animador" id="animador" v-model="grupo.animadorId" select-text="Animador" :items="animadores"></v-select>
-						<label for="animador" class="active">Animador</label>
-					</div>
+				<div class="col s5  col-chicos pull right" id="col-con-grupo">
+					<h6 class="center-align">Chicos en grupo</h6>
+					<ul id="integrantes">
+						<li v-for="chico in integrantes" :id="chico.idProcariano" @click="quitar(chico)">{{chico.nombre}} {{chico.apellido}}</li>
+					</ul>
 				</div>
-			</form>
-		</div>
-		<div class="row" id="row-escoger-chicos">
-			<h5 class="center-align">Selección de integrantes</h5>
-			<div class="col s5 col-chicos" id="col-sin-grupo">
-				<h6 class="center-align">Chicos sin grupo</h6>
-				<ul id="chicosSinGrupo">
-					<li v-for="chico in sinGrupo" :id="chico.id" @click="anadir(chico)">{{chico.nombre}}</li>
-
-				</ul>
-			</div>
-			<div class="col s5  col-chicos pull right" id="col-con-grupo">
-				<h6 class="center-align">Chicos en grupo</h6>
-				<ul id="integrantes">
-					<li v-for="chico in integrantes" :id="chico.idProcariano" @click="quitar(chico)">{{chico.nombre}} {{chico.apellido}}</li>
-				</ul>
-			</div>
-			<div class="col s12" id="col-btn">
+			</main>
+			<footer class="col s12" id="col-btn">
 				<a class="waves-effect waves-light btn" id="btnCancelar" @click="cancelar">Cancelar</a>
 				<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
-			</div>
-		</div>
+			</footer>
+		</section>
 		 <!-- Modal Structure -->
 	  <div id="modalCamposIncompletos" class="modal">
 	    <div class="modal-content">
@@ -95,7 +103,8 @@
 				sinGrupo: [],
 				etapas: [],
 				tempEtapaAntigua: '',
-				tempAnimadorAntiguo: ''
+				tempAnimadorAntiguo: '',
+				tempIngetrantesNuevos: []
 			}
 		},
 		methods: {
@@ -120,7 +129,6 @@
 					};
 					self.sinGrupo.push(obj);
 				});
-				console.log(self.sinGrupo)
 			},
 			/*
 				@Descripción:
@@ -156,11 +164,11 @@
 					type: 'GET',
 					url: '/api/etapa/',
 					success(res){
-						let busquedaExitosa = (res.status && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
 						if(busquedaExitosa){
 							self.armarArrayEtapas(self, res.datos);
 						}else{
-							alert('Error al buscar etapas en la base de datos');
+							Materialize.toast('Error al buscar etapas en la base de datos', 4000, 'rounded error');
 						}
 					}
 				});
@@ -176,20 +184,19 @@
 			},
 			//Eventos de botones
 			anadir(chico){
-				//Añade al chico seleccionado al grupo
 				this.integrantes.push(chico);
 				this.sinGrupo.splice(this.sinGrupo.indexOf(chico), 1);
+				this.anadirChicoAGrupo(this, chico);
 			},
 			quitar(chico){
-				//Quita al chico seleccionado del grupo
 				this.sinGrupo.push(chico);
 				this.integrantes.splice(this.integrantes.indexOf(chico), 1);
+				this.quitarChicoDeGrupo(this, chico);
 			},
-			cancelar(){
+			cancelarEdicionGeneral(){
 				this.$emit('edicionterminada', this.finEdicion);
 			},
-			formCompleto(){
-				var self = this;
+			formCompleto(self){
 				if( $('#nombre').val() === '' ){
 					self.mensaje = 'El campo nombre no puede quedar vacío';
 					return false;
@@ -212,46 +219,92 @@
 			},
 			aceptar(){
 				let self = this;
-				if(!this.formCompleto()){
-					console.log('Incompleto')
+				if(!self.formCompleto(self)){
 					$('#modalCamposIncompletos').modal('open');
+				}else{
+					self.enviarEdicion(self);
 				}
-				else{
-					let grupoObj = {
-						nombre: self.grupo.nombre,
-						tipo: self.grupo.tipo,
-						genero: self.grupo.genero,
-						cantidadChicos: self.grupo.cantidadChicos,
-						numeroReuniones: self.grupo.numeroReuniones,
-						etapaAntigua: self.tempEtapaAntigua,
-						etapaNueva: self.grupo.etapaId,
-						animadorAntiguo: self.tempAnimadorAntiguo,
-						animadorNuevo: self.grupo.animadorId
-					};
-					let urlApi = '/api/grupos/' + self.grupo.id;
-					console.log(urlApi)
-					console.log(grupoObj)
-					$.ajax({
-						type: 'PUT',
-						url: urlApi,
-						data: grupoObj,
-						success(res){
-							console.log(res);
-							if(res.estado){
-								Materialize.toast(res.mensaje, 4000);
-								this.$emit('edicionterminada', this.finEdicion);		
-							}else{
-								Materialize.toast(res.mensaje, 4000);
-							}
-						},
-						error(err){
-							console.log(err);
+			},
+			enviarEdicion(self){
+				let grupoObj = {
+					nombre: self.grupo.nombre,
+					tipo: self.grupo.tipo,
+					genero: self.grupo.genero,
+					cantidadChicos: self.grupo.cantidadChicos,
+					numeroReuniones: self.grupo.numeroReuniones,
+					etapaAntigua: self.tempEtapaAntigua,
+					etapaNueva: self.grupo.etapaId,
+					animadorAntiguo: self.tempAnimadorAntiguo,
+					animadorNuevo: self.grupo.animadorId
+				};
+				let urlApi = '/api/grupos/' + self.grupo.id;
+				$.ajax({
+					type: 'PUT',
+					url: urlApi,
+					data: grupoObj,
+					success(res){
+						if(res.estado){
+							Materialize.toast(res.mensaje, 4000);
+							this.$emit('edicionterminada', this.finEdicion);		
+						}else{
+							Materialize.toast(res.mensaje, 4000);
 						}
-					});
-					
-				}
-				
+					},
+					error(err){
+						console.log(err);
+					}
+				});
+			},
+			anadirChicoAGrupo(self, chico){
+				$.ajax({
+					type: 'POST',
+					url: '/api/pg/anadir',
+					data: {
+						idGrupo: self.grupo.id,
+						idProcariano: chico.idProcariano
+					},
+					success(res){
+						if(!res.estado){
+							Materialize.toast(res.mensaje, 4000, 'rounded error');
+							self.sinGrupo.push(chico);
+							self.integrantes.splice(self.integrantes.indexOf(chico), 1);
+						}
+					},
+					error(err){
+						Materialize.toast('No se pudo conectar con el servidor', 4000, 'rounded error');
+						self.sinGrupo.push(chico);
+						self.integrantes.splice(self.integrantes.indexOf(chico), 1);
+					}
+				});
+			},
+			quitarChicoDeGrupo(self, chico){
+				const urlApi = '/api/pg/' + chico.idProcariano;
+				$.ajax({
+					type: 'PUT',
+					url: urlApi,
+					data: {
+						idGrupo: self.grupo.id
+					},
+					success(res){
+						if(!res.estado){
+							Materialize.toast(res.mensaje, 4000, 'rounded error');
+							self.integrantes.push(chico);
+							self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
+						}
+					}, 
+					error(err){
+						Materialize.toast('No se pudo conectar con el servidor', 4000, 'rounded error');
+						self.integrantes.push(chico);
+						self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
+					}
+				})
 			}
 		}
 	}
 </script>
+
+<style scoped>
+	.error{
+		color: red;
+	}
+</style>

@@ -87,7 +87,11 @@ var main = new Vue({
 		grupoPescadoresSel: '',
 		gruposMayores: [],
 		grupoMayoresSel: '',
-		tipos: []
+		tipos: [],
+		errorAjax: {
+			titulo: '',
+			descripcion: ''
+		}
 	},
 	methods: {
 		validateBeforeSubmit() {
@@ -145,15 +149,15 @@ var main = new Vue({
       	url: urlApi,
       	data: self.procariano,
       	success: function(res){
-      		console.log(res)
       		if(res.estado){
       			$('#modalProcarianoCreado').modal('open');
       		}else{
-      			alert('Error al ingresar en la base de datos');
+      			self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de ingresar en la base de datos. Intente nuevamente.');
       		}
       	},
-      	error : function(err){
+      	error(err){
       		console.log(err);
+      		self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
       	}
       });
     },
@@ -167,11 +171,16 @@ var main = new Vue({
     		type: 'GET',
     		url: '/api/grupos/',
     		success(res){
-    			self.gruposObtenidos = res.sequelizeStatus;
-    			self.armarArraysGrupos(self.gruposObtenidos, self);
+    			if(res.estado){
+    				self.gruposObtenidos = res.datos;
+	    			self.armarArraysGrupos(self.gruposObtenidos, self);	
+    			}else{
+    				self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', res.mensaje);
+    			}
     		},
-    		error(){
-
+    		error(err){
+    			console.log(err);
+    			self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
     		}
     	});
     },
@@ -232,8 +241,8 @@ var main = new Vue({
     		};
     		self.tipos.push(tipoObj);
     	});
-    	console.log('Array de tipos de procarianos: ');
-    	console.log(self.tipos);
+    	//console.log('Array de tipos de procarianos: ');
+    	//console.log(self.tipos);
     },
     /*
 			@Descripción:
@@ -243,7 +252,7 @@ var main = new Vue({
     filtrarGruposPorGenero(self, generoSeleccionado){
     	//Primero hay que volver a armar los arrays de los grupos
     	self.armarArraysGrupos(self.gruposObtenidos, self);
-    	let generoGrupoSeleccionado = '';
+    	 let generoGrupoSeleccionado = '';
     	if(generoSeleccionado!==''){
     		if(generoSeleccionado == 'masculino'){
     			generoGrupoSeleccionado = 'Procare';
@@ -279,6 +288,11 @@ var main = new Vue({
 				let generoSeleccionado = $('#selectGenero option:selected').val();
 				self.filtrarGruposPorGenero(self, generoSeleccionado);
 			});
+    },
+    mostrarMensajeDeErrorAjax(self, titulo, descripcion){
+    	self.errorAjax.titulo = titulo;
+			self.errorAjax.descripcion = descripcion;
+			$('#modalErrorAjax').modal('open');
     }
 	}
 });

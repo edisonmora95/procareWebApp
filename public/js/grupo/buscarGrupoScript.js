@@ -61,8 +61,7 @@ let BuscarGrupoApp = new Vue({
 				type: 'GET',
 				url: '/api/grupos/',
 				success(res){
-					console.log(res)
-					self.armarArrayGrupos(self, res.sequelizeStatus);
+					self.armarArrayGrupos(self, res.datos);
 				}
 			});
 		},

@@ -145,8 +145,7 @@
 					type: 'GET',
 					url: '/api/etapa/',
 					success(res){
-						console.log(res)
-						let busquedaExitosa = (res.status && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
 						if(busquedaExitosa){
 							self.armarArrayEtapas(self, res.datos);
 						}else{
@@ -211,8 +210,9 @@
 					url: '/api/grupos/',
 					data: self.grupo,
 					success(res){
-						if(res.status && res.mensaje === 'Grupo creado exitosamente'){
-							self.grupo.id = res.grupo.id;
+						console.log(res)
+						if(res.estado){
+							self.grupo.id = res.datos.grupo.id;
 							self.flagVue = false;
 							self.$emit('flagchanged', self.flagVue);		
 						}

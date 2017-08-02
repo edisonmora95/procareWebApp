@@ -118,6 +118,7 @@
 		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
+
 	import Materials from 'vue-materials';
 	//import VeeValidate from 'vee-validate';
 	Vue.use(Materials);
@@ -151,6 +152,7 @@
 		}
 	};
 	VeeValidate.Validator.updateDictionary(dictionary);
+
 	module.exports = {
 		props: ['procariano', 'habilitaredicion', 'grupoprocariano', 'tipoprocariano'],
 		data(){
@@ -228,9 +230,9 @@
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
 				$.get('/api/grupos/', function(res){
-					let conexionExitosa = (res.status === true && res.mensaje === 'Se obtuvieron los grupos correctamente');
+					let conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
 					if(conexionExitosa){
-						self.gruposObtenidos = res.sequelizeStatus;
+						self.gruposObtenidos = res.datos;
 						self.armarArraysGrupos(self.gruposObtenidos, self);
 					}
 				});
