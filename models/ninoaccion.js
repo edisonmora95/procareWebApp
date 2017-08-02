@@ -10,10 +10,9 @@ module.exports = function(sequelize, DataTypes) {
     nombreRep: DataTypes.STRING,
     apellidoRep: DataTypes.STRING,
     telefonoRep: DataTypes.INTEGER,
-    cedulaRep: DataTypes.STRING,
     escuela: DataTypes.STRING,
     bautizado: DataTypes.BOOLEAN,
-    estado: DataTypes.BOOLEAN
+    estado: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
@@ -26,7 +25,6 @@ module.exports = function(sequelize, DataTypes) {
           nombreRep: ninoaccion.nombreRep,
           apellidoRep: ninoaccion.apellidoRep,
       	  telefonoRep: ninoaccion.telefonoRep,
-          cedulaRep: ninoaccion.cedulaRep,
           escuela: ninoaccion.escuela,
           bautizado: ninoaccion.bautizado,
           estado: ninoaccion.estado

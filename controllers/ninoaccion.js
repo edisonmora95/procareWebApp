@@ -33,7 +33,6 @@ const crearNinoAccion = (req, res, next) => {
 			PersonaId : persona.get('id'),
 			nombreRep : req.body.nombreRep,
 			apellidoRep : req.body.apellidoRep,
-			cedulaRep : req.body.cedulaRep,
 			telefonoRep : req.body.telefonoRep,
 			escuela: req.body.escuela,
 			esBautizado: req.body.esBautizado,
@@ -75,7 +74,6 @@ const buscarNinoAccion = (req, res , next) => {
 					ninoaccionID : ninoaccion.id ,
 					nombreRep : ninoaccion.nombreRep,
 					apellidoRep : ninoaccion.apellidoRep,
-					cedulaRep : ninoaccion.cedulaRep,
 					telefonoRep : ninoaccion.telefonoRep,
 					escuela: ninoaccion.escuela,
 					esBautizado: ninoaccion.esBautizado,
@@ -154,7 +152,6 @@ const editarNinoAccion = (req, res, next) => {
 		modelo.NinoAccion.update({
 			nombreRep : req.body.nombreRep,
 			apellidoRep : req.body.apellidoRep,
-			cedulaRep : req.body.cedulaRep,
 			telefonoRep : req.body.telefonoRep,
 			escuela: req.body.escuela,
 			esBautizado: req.body.esBautizado

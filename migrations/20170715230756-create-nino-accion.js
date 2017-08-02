@@ -14,9 +14,6 @@ module.exports = {
       apellidoRep: {
         type: Sequelize.STRING
       },
-      cedulaRep: {
-        type: Sequelize.STRING
-      },
       telefonoRep: {
         type: Sequelize.INTEGER
       },
