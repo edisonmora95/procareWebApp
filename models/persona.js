@@ -63,6 +63,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
+        Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'})
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -98,6 +99,9 @@ module.exports = function(sequelize, DataTypes) {
           convencional: persona.convencional
         }).then(callback).catch(errorCallback);
       }
+
+
+
 
 
     }/*, hooks : {

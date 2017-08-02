@@ -1,22 +1,23 @@
 {
   "development": {
-    "username": "procare_dev",
-    "password": "procare_sw_2",
-    "database": "procare_db_dev",
+    "username": "root",
+    "password": "admin",
+    "database": "procare_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "procare_sw_2",
-    "database": "procare",
+    "password": "admin",
+    "database": "procare_db",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "production": {
     "username": "root",
-    "password": "1234",
-    "database": "procare",
+    "password": "admin",
+    "database": "procare_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

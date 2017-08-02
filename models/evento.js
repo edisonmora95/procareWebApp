@@ -1,4 +1,3 @@
-
 /*
 @Descripcion: Modelo Evento, relacionado con Persona quien va quedar encargado del evento
 @Autor: jose alcivar
@@ -34,10 +33,10 @@ module.exports = function(sequelize, DataTypes) {
 
       type : DataTypes.STRING,
       allowNull : false
-		}
+    }
   },{
     classMethods: {
-			associate: function(models) {
+      associate: function(models) {
         Evento.belongsTo(models.Persona, {foreignKey: 'idOrganizador'})
         // associations can be defined here
       }

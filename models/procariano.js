@@ -42,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Procariano.belongsTo(models.Persona);
+        Procariano.hasMany(models.Ticket);
         Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'});
         Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});

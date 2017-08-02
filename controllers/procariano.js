@@ -1,4 +1,4 @@
-/*
+﻿/*
 @Descripcion: Clase controladora de todos los procarianos
 @Autor: Jose Viteri
 @FechaCreacion: 26/06/2017

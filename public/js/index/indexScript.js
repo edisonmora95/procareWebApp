@@ -91,7 +91,9 @@ let indexApp = new Vue({
 		eventoSeleccionado: {},
 		procarianos: []
 	}
+
 });
+
 
 
 
@@ -107,3 +109,4 @@ let indexApp = new Vue({
 	     data: datos
 	   });
 	});
+

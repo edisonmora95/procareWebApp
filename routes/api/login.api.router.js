@@ -1,11 +1,9 @@
 /*
-
 @Descripcion: Api del login
 @Autor: jose viteri
 @FechaCreacion: 19/06/2017
 @UltimaFechaModificacion: 15/07/2017 //agregado post cambio contrasenna
-
-
+@UltimaFechaModificacion: 03/07/2017 //solucionado problema sesiones
 */
 
 
@@ -17,11 +15,11 @@ var utils = require('../../utils/utils');
 
 
 router.get('/loginFalla', function(req,res,next){
-	let objeto = {
-		status : false,
-		message : "algo paso"
-	}
-	res.json(objeto);
+  let objeto = {
+    status : false,
+    message : "algo paso"
+  }
+  res.json(objeto);
 });
 
 router.get('/usuarios', function(req, res, next){

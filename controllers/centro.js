@@ -1,5 +1,5 @@
 /*
-@Descripcion: Creacion de Tareas.
+@Descripcion: Creacion de Centro.
 @Autor: Jose Alcivar Garcia
 @FechaCreacion: 17/06/2017
 @UltimaFechaModificacion: 17/06/2017 @josealcivar
@@ -7,37 +7,18 @@
 
 var modelo = require('../models');
 
-const crearTarea = (req, res, next) => {
-  //Validar fecha de inicio
-  if(req.body.fechaInicio === ''){
-    let fechaInicio = null;
-  }else{
-    let fechaInicio = new Date(req.body.fechaInicio)
-  }
-  //Validar fecha de fin
-  if(req.body.fechaFin === ''){
-    let fechaFin = null;
-  }else{
-    let fechaFin = new Date(req.body.fechaFin)
-  }
-  //Validar fecha de publicacion
-  if(req.body.fechaPublicacion === ''){
-    let fechaPublicacion = null;
-  }else{
-    let fechaPublicacion = new Date(req.body.fechaPublicacion)
-  }
-  
+const crearCentro = (req, res, next) => {
+
+  estado = 'activo';
 
   modelo.Tarea.create({
-    idResponsable : req.body.responsable,
-    nombre : req.body.nombre,
-    fechaPublicacion : fechaPublicacion,
-    fechaInicio : fechaInicio,
-    fechaFin : fechaFin,
-    prioridad : req.body.prioridad,
+    nombreCentro : req.body.nombreCentro,
+    direccion : req.body.direccion,
     estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
+    directorCentro : req.body.directorCentro,
+    directorTelefono : req.body.directorTelefono,
+    convenio: req.body.convenio,
+    observacion : req.body.observacion
     
   }).then( repuesta => {
     var status = true;
@@ -60,16 +41,16 @@ const crearTarea = (req, res, next) => {
   });
 }
 
-const eliminarTarea = (req, res, next) => {
+const eliminarCentro = (req, res, next) => {
    estado = 'inactivo';
-   idTarea = req.params.id;
-   modelo.Tarea.update({
+   idCentro = req.params.id;
+   modelo.Centro.update({
     
     estado : estado
 
   },{
     where:{
-      id: idTarea
+      id: idCentro
     }
   }).then( repuesta => {
     var status = true;
@@ -83,24 +64,23 @@ const eliminarTarea = (req, res, next) => {
   }).catch( error => {
     var json1 = {
       status : false,
-      mensaje: 'No se puede eliminar la Tarea',
+      mensaje: 'No se puede eliminar la Centro',
       error : error
       }
     res.send(json1);
   });
 }
 
-const editarTarea = (req, res, next) => {
-  modelo.Tarea.update({
+const editarCentro = (req, res, next) => {
+  modelo.Centro.update({
     
-     id_responsable : req.body.nombre,
-    nombre : req.body.nombre,
-    fecha_publicacion : req.body.fecha_publicacion,
-    fecha_limite : req.body.fecha_limite,
-    prioridad : req.body.prioridad,
+      nombreCentro : req.body.nombreCentro,
+    direccion : req.body.direccion,
     estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
+    directorCentro : req.body.directorCentro,
+    directorTelefono : req.body.directorTelefono,
+    convenio: req.body.convenio,
+    observacion : req.body.observacion
 
   },{
     where:{
@@ -150,32 +130,33 @@ const mostrarTarea = (req,res,next) =>{
   });
 }
 */
-const mostrarTareaPorUsuario = (req, res, next) =>{
-  idUsuario = req.params.id;
+const mostrarCentroPorUsuario = (req, res, next) =>{
+  idCentro = req.params.id;
   modelo.Tarea.findAll({
-      include: [{
-          model: modelo.Persona
-      }],
+      //include: [{
+       //   model: modelo.Persona
+     // }],
       where : {
-        idResponsable : idUsuario, 
+        idCentro : idCentro, 
         estado : "activo"
       } 
 
-  }).then( tareas => {
-    console.log(tareas);
-    const respuesta = tareas.map( tarea => {
+  }).then( centros => {
+    console.log(centros);
+    const respuesta = centros.map( centro => {
 
       return Object.assign(
         {},
         {
-          id : tarea.id,
-          idUser : tarea.Persona.id,
-          title : tarea.titulo,
-          user : tarea.Persona.nombres + " " + tarea.Persona.apellidos ,
-          start : tarea.fecha_publicacion ,
-          end : tarea.fecha_limite ,
-          description : tarea.descripcion, 
-          type : "tarea"
+          
+          id : centro.id,
+         // idUser : centro.Persona.id,
+          name : centro.nombreCentro,
+          director : centro.directorCentro,
+          telefono : centro.directorTelefono ,
+          convenio : centro.convenio ,
+          observacion : centro.observacion, 
+          type : "centro"
         });
     });
     return res.json({
@@ -194,27 +175,30 @@ const mostrarTareaPorUsuario = (req, res, next) =>{
   });
 }
 
-const mostrarTareas = (req, res, next) =>{
-  modelo.Tarea.findAll({
-    include: [{
-      model: modelo.Persona
-    }]
-  }).then( tareas => {
-    const respuesta = tareas.map( tarea => {
+const mostrarCentros = (req, res, next) =>{
+    modelo.Centro.findAll({
+      include: [{
+          model: modelo.Persona
+      }],
+      where : {
+        estado : "activo"
+      } 
+
+  }).then( centros => {
+    console.log(centros);
+    const respuesta = centros.map( tarea => {
 
       return Object.assign(
         {},
         {
-          id : tarea.id,
-          title : tarea.nombre,         
-          start : tarea.fecha_publicacion ,
-          end : tarea.fecha_limite ,
-          description : tarea.descripcion, 
-          estado: tarea.estado,
-          categoria: tarea.categoria,
-          prioridad: tarea. prioridad,
-          responsable: tarea.Persona.nombres + ' ' + tarea.Persona.apellidos,
-          type : "tarea"
+           id : centro.id,
+         // idUser : centro.Persona.id,
+          name : centro.nombreCentro,
+          director : centro.directorCentro,
+          telefono : centro.directorTelefono ,
+          convenio : centro.convenio ,
+          observacion : centro.observacion, 
+          type : "centro"
         });
     });
     return res.json({
@@ -222,9 +206,11 @@ const mostrarTareas = (req, res, next) =>{
       sequelizeStatus : respuesta
     })
   }).catch( error => {
+    var status = false;
+    var mensaje = 'no se pudo eliminar'
     var jsonRespuesta = {
-      status : false,
-      mensaje :'no se pudo eliminar',
+      status : status,
+      mensaje : mensaje,
       sequelizeStatus : error
     }
     res.json(JSON.parse(jsonRespuesta));
@@ -232,9 +218,9 @@ const mostrarTareas = (req, res, next) =>{
 }
 
 module.exports = {
-  crearTarea,
-  eliminarTarea,
-  editarTarea,
-  mostrarTareaPorUsuario,
-  mostrarTareas
+  crearCentro,
+  eliminarCentro,
+  editarCentro,
+  mostrarCentroPorUsuario,
+  mostrarCentros
 }
