@@ -227,7 +227,9 @@ const mostrarTareas = (req, res, next) =>{
       mensaje :'no se pudo eliminar',
       sequelizeStatus : error
     }
-    res.json(JSON.parse(jsonRespuesta));
+
+    return res.json(jsonRespuesta);
+
   });
 }
 
