@@ -10,7 +10,7 @@
 
 /* jshint node: true */
 'use strict';
-var controladorProcariano = require('../../controllers/procariano');
+var controladorProcariano = require('../../controllers/procariano.controller');
 var express = require('express');
 var router = express.Router();
 

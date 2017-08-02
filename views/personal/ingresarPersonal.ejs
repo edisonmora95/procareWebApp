@@ -102,9 +102,9 @@
 					</form>
 				</div>
 				<!-- Modal Structure -->
-			  <div id="modalProcarianoCreado" class="modal">
+			  <div id="modalPersonalCreado" class="modal">
 			    <div class="modal-content">
-			      <p class="center-align modal-text">Procariano creado correctamente.</p>
+			      <p class="center-align modal-text">Agregado personal correctamente.</p>
 			    </div>
 			    <div class="modal-footer">
 			      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
@@ -115,7 +115,7 @@
 		  <div id="modalError" class="modal">
 		    <div class="modal-content">
 		      <h4 class="center-align">Formulario con errores.</h4>
-		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+		      <p class="center-align" v-if="errorObj.statusApi">Existe un error del campo: "{{errorObj.campo}}"</p>
 		      <p class="center-align">Con el siguiente mensaje de error: </p>
 		      <p class="center-align">"{{errorObj.msj}}"</p>
 		    </div>

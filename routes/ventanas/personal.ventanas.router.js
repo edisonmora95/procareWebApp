@@ -11,4 +11,8 @@ router.get('/nuevo', function(req,res,next){
 	res.render('personal/ingresarPersonal')
 })
 
+router.get('/perfil/:cedula', function(req, res){
+	res.render('personal/verPersonal');
+});
+
 module.exports = router;

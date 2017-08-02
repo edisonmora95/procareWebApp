@@ -33,7 +33,7 @@ const crearPersonal = (req, res, next) => {
 		contrasenna : req.body.contrasenna,
 		email : req.body.email,
 		celular : req.body.celular,
-		trabajo : req.body.trabajo,
+		trabajo : 'personal procare',
 		convencional : req.body.convencional,
 		sueldo : req.body.sueldo
 	};
@@ -41,9 +41,8 @@ const crearPersonal = (req, res, next) => {
 		console.log(persona);
 
 		modelo.PersonaRol.create({
-			where : {
-
-			}
+			RolNombre : 'Personal',
+			PersonaId : persona.id
 		}).then( personaConRol => {
 			console.log('se creo correctamente');
 			return res.status(200).json({

@@ -1,7 +1,7 @@
 /*
 	CRUD de Etapas
 */
-var controladorCargo = require('../../controllers/cargo')
+var controladorCargo = require('../../controllers/cargo.controller')
 var express = require('express');
 var router = express.Router();
 

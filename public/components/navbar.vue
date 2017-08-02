@@ -139,16 +139,16 @@
 			   */
 			   
 			  if($.inArray('director ejecutivo', this.usuario.roles) >= 0){
-			  	this.crearDropdownPAd(); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
+			  	this.crearDropdownPAd(this); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
 			  }
 			  
 			  //this.crearDropdownPAd();
 			  this.crearDropdownPA();
 				this.crearDropdownPF(this);
 			},
-			crearDropdownPAd(){
+			crearDropdownPAd(self){
 				//donacion , benefactores , personal , director formacion
-
+				/*
 				//personal
 				let liPersonal = $('<li>');
 				let aPersonal = $('<a>').html('Personal');
@@ -172,6 +172,15 @@
 				let aDonaciones = $('<a>').html('Donaciones');
 				liDonaciones.append(aDonaciones);
 				$('#ulProcareAdministracion').append(liDonaciones);
+				*/
+				let menuPad = $('#ulProcareAdministracion');
+				//self.crearLi('Personal','/personal/', menuPad);
+				self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
+				//self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+
+
+
+
 			},
 			crearDropdownPA() {
 				//Esta función crea las pestañas del dropdown de Procare Acción del navbar.

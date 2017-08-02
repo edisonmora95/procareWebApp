@@ -54,7 +54,8 @@ var main = new Vue({
 		fechaIncorrecta: false,
 		errorObj: {
 			campo: '',
-			msj: ''
+			msj: '',
+			statusApi : true
 		},
 		personal: {
 			nombres: '',
@@ -81,6 +82,7 @@ var main = new Vue({
 	      }).catch(() => {
 	          self.errorObj.campo = self.errors.errors[0].field;
 	          self.errorObj.msj = self.errors.errors[0].msg;
+	          self.errorObj.statusApi = true;
 	          $('#modalError').modal('open');
 	      });
 			}
@@ -106,27 +108,29 @@ var main = new Vue({
     },
     ingresarPersonal(){
     	console.log("ingresado personal correctamente")
-    	/*
+    	
     	let self = this;
-    	console.log(self.procariano);
-    	let urlApi = '/api/procarianos/';
+    	console.log(self.personal);
+    	//let urlApi = '/api/procarianos/';
     	$.ajax({
       	type:'POST',
-      	url: urlApi,
-      	data: self.procariano,
+      	url: '/api/personal/',
+      	data: self.personal,
       	success: function(res){
       		console.log(res)
       		if(res.status){
-      			$('#modalProcarianoCreado').modal('open');
+      			$('#modalPersonalCreado').modal('open');
       		}else{
-      			alert('Error al ingresar en la base de datos');
+      			self.errorObj.msj = res.msg;
+      			self.errorObj.statusApi = false;
+      			$('#modalError').modal('open');
       		}
       	},
       	error : function(err){
       		console.log(err);
       	}
       });
-      */
+      
     },
     /*
 			@Descripción: 

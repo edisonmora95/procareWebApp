@@ -61,25 +61,29 @@ var main = new Vue({
     	*/
     	let self = this;
     	self.arregloPersonal = [];
-    	let urlApi = '/api/personal/';
+    	//let urlApi = '/api/personal/';
     	$.ajax({
 				type : 'GET',
-				url: url,
+				url: '/api/personal/',
 				success: function(res){
 					console.log(res);
 					if(res.status){
-						$.each(res, function(index, personalEncontrado){
+						$.each(res.personal, function(index, personalEncontrado){
+							//console.log(personalEncontrado)
 								self.arregloPersonal.push(personalEncontrado);
 							});
+						console.log(res)
 					}
 					else{
 							self.fallaCargar = true;
 							self.msg = res.message;
+							console.log(res)
 					}						
 				},
 				error : function(res){
 					self.fallaCargar = true;
 					self.msg = res.message;
+					console.log(res)
 				}
 			});
     }

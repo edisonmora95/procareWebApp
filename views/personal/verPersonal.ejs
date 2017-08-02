@@ -28,73 +28,64 @@
 									</div>
 									<p class="center-align">Estado: {{procariano.estado}}</p>
 								</div>-->
-								<p class="center-align"><span class="tag">Estado: </span>{{procariano.estado}}</p>
+							
 								<!--Nombres-->
 								<section class="row rowVer" id="rowVerNombres">
 									<div class="col s6" id="verNombre">
 										<label>Nombres</label>
-										<p>{{procariano.nombres}}</p>
+										<p>{{personal.nombres}}</p>
 									</div>
 									<div class="col s6" id="verApellido">
 										<label>Apellidos</label>
-										<p>{{procariano.apellidos}}</p>
+										<p>{{personal.apellidos}}</p>
 									</div>
 								</section>
 								<!--Cedula-fecha-->
 								<section class="row rowVer" id="rowVerCedulaFecha">
-									<div class="col s6" id="verCedula">
-										<label>Cédula</label>
-										<p>{{procariano.cedula}}</p>
-									</div>
+
 									<div class="col s6" id="verFecha">
 										<label>Fecha de nacimiento</label>
 										<p>{{date(fechaNacimiento)}}</p>
 									</div>
+									<div class="col s6" id="verCedula">
+										<label>Cédula</label>
+										<p>{{personal.cedula}}</p>
+									</div>
+
 								</section>
 								<!--Direccion-email-->
 								<section class="row rowVer" id="rowVerDireccionEmail">
 									<div class="col s6" id="verDireccion">
 										<label>Dirección</label>
-										<p>{{procariano.direccion}}</p>
+										<p>{{personal.direccion}}</p>
 									</div>
 									<div class="col s6" id="verEmail">
 										<label>Email</label>
-										<p>{{procariano.email}}</p>
+										<p>{{personal.email}}</p>
 									</div>
 								</section>
 								<!--Celular-convencional-->
 								<section class="row rowVer" id="rowVerTelefonos">
-									<div class="col s6" id="verConvencional">
-										<label>Convencional</label>
-										<p>{{procariano.convencional}}</p>
-									</div>
 									<div class="col s6" id="verCelular">
 										<label>Celular</label>
-										<p>{{procariano.celular}}</p>
+										<p>{{personal.celular}}</p>
+									</div>
+									<div class="col s6" id="verConvencional">
+										<label>Convencional</label>
+										<p>{{personal.convencional}}</p>
+									</div>
+
+								</section>
+								<section class="row">
+									<div class="col s6">
+										<label for="sueldo"></label>
+										<p>{{personal.sueldo}}</p>
 									</div>
 								</section>
 								<!--Tipo-grupo-->
-								<section class="row rowVer" id="rowVerTipoGrupo">
-									<div class="col s6" id="verTipo">
-										<label>Tipo</label>
-										<p>{{procariano.tipoNombre}}</p>
-									</div>
-									<div class="col s6" id="verGrupo">
-										<label>Grupo</label>
-										<p>{{grupoprocariano.text}}</p>
-									</div>
-								</section>
+	
 								<!--Coelgio-Universidad-->
-								<section class="row rowVer" id="rowVerEducacion">
-									<div class="col s6" id="verColegio">
-										<label>Colegio</label>
-										<p>{{procariano.colegio}}</p>
-									</div>
-									<div class="col s6" id="verUniversidad">
-										<label>Universidad</label>
-										<p>{{procariano.universidad}}</p>
-									</div>
-								</section>
+
 								<!--Botones-->
 								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
 									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
@@ -105,11 +96,13 @@
 					</div>
 				</div>
 				<!--End row ver procariano-->
+				<!--
 				<div class="card" id="rowEditar" v-if="habilitaredicion">
 					<div class="card-content">
 						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
+				-->
 			</main>
 
 			<!-- Modal Structure -->
@@ -149,7 +142,7 @@
 			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
-			<script src="/build/procariano/verProcarianoScript.js"></script>
+			<script src="/build/personal/verPersonalScript.js"></script>
 		</div>
 	</body>
 </html>

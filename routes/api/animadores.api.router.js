@@ -1,4 +1,4 @@
-var controlador = require('../../controllers/animador');
+var controlador = require('../../controllers/animador.controller');
 var express = require('express');
 var router = express.Router();
 
