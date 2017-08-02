@@ -326,6 +326,7 @@
 	    		self.tipos.push(tipoObj);
 	    	});
 			},
+			
 			//EVENTOS BOTONES
 			cancelarEdicion(){
 				location.reload();

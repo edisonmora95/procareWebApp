@@ -1,11 +1,8 @@
 /*
-
->>>>>>> 0ade0d7ca6e482b50084cb1ad035654c58a31ed9
 @Descripcion: Api del procariano
 @Autor: jose viteri
 @FechaCreacion: 25/05/2017
 @UltimaFechaModificacion: 05/06/2017 @EdisonMora (se lo puso bonito)
-
 */
 
 
@@ -25,8 +22,6 @@ router.post('/', utils.generarHash,controladorProcariano.crearProcariano);
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.
 router.get('/', controladorProcariano.buscarProcariano);
-
-router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
 
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano

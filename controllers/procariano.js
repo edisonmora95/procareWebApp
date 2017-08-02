@@ -49,7 +49,7 @@ const crearProcariano = (req, res, next) => {
 			estado : req.body.estado,
 			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
 		}
-		modelo.Procariano.crearProcariano(procariano, (procariano) => {
+		modelo.Procariano.crearProcariano1(procariano, (procariano) => {
 			let grupo = req.body.grupo;
 			let tipo = req.body.tipo;
 			if(grupo !== ''){									//SI SE INGRESÓ UN GRUPO
@@ -471,26 +471,6 @@ const eliminarProcariano = (req, res, next) => {
 	});
 };
 
-/*
-	@Descripción:
-		Busca a todos los chicos de Procare Formación que no están en ningún grupo
-*/
-const buscarChicosFormacionSinGrupo =(req, res, next) => {
-	modelo.Procariano.buscarChicosFormacion( (chicosFormacion) => {
-		modelo.ProcarianoGrupo.buscarProcarianosConGrupo( (procarianosEnGrupo) => {
-			let arrayChicosFormacionSinGrupo = [];
-			chicosFormacion.forEach(function(chico){
-				if( !chicoEnGrupo(chico.dataValues, procarianosEnGrupo) ){
-					arrayChicosFormacionSinGrupo.push(chico);
-				}
-			});
-			return res.status(200).json({status: true, datos: arrayChicosFormacionSinGrupo, chicosFormacion: chicosFormacion, procarianosEnGrupo: procarianosEnGrupo});
-		});
-	}, (errorProcarianos) => {
-
-	});
-}
-
 
 //FUNCIONES INTERNAS
 /*
@@ -551,30 +531,11 @@ agregarNuevoTipo = (req,res,procariano) => {
 		res.json(jsonRespuesta);
 	});
 }
-/*
-	@Descripción:
-		Recorre el array de chicosEnGrupo.
-		Si el chico indicado tiene el mismo id que cualquier chico del array entonces retorna true
-*/
-chicoEnGrupo = (chico, array) => {
-	let chicoEnGrupo = {};
-	let flag = false;
-	for (let i = 0; i < array.length; i++) {
-		chicoEnGrupo = array[i];
-		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){
-			
-			flag = true;
-			break;
-		}
-	}
-	return flag;
-}
 
 module.exports = {
 	crearProcariano,
 	buscarProcariano,
 	buscarProcarianoPorId,
 	editarProcariano,
-	eliminarProcariano,
-	buscarChicosFormacionSinGrupo
-};
+	eliminarProcariano
+}

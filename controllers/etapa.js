@@ -130,53 +130,6 @@ actualizarEtapa = (req, res) => {
 	});
 }
 
-
-const asignarEtapa = (req, res, next) => {
-	modelo.GrupoEtapa.findOne({
-		where: {
-			GrupoId: req.body.grupoId
-		}
-	}).then( respuesta =>{
-		if(respuesta!=null){
-			actualizarEtapa(req,res)
-		}else{
-			agregarNuevaEtapa(req,res)
-		}
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'error en la asignacion'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	})
-}
-
-actualizarEtapa = (req, res) => {
-	modelo.GrupoEtapa.update({
-		fechaFin : new Date()
-	},{
-		where: {
-			FechaFin : null,
-			GrupoId: req.body.grupoId
-		}
-	}).then(respuesta1 => {
-		agregarNuevaEtapa(req,res)
-	}).catch( error1 => {
-		var status = false;
-		var mensaje = 'no existe asignacion'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error1
-		}
-		res.json(jsonRespuesta);
-	});
-}
-
-
 agregarNuevaEtapa = (req,res) => {
 	modelo.Etapa.findOne({
 		where: {

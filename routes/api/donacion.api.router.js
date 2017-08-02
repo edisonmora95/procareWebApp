@@ -8,7 +8,7 @@ var express = require('express');
 var router = express.Router();
 
 //Post de la Tareas
-router.post('/nuevo', controladorDonacion.CrearDonacion);
+router.post('/nuevo', controladorDonacion.Donacion);
 
 //Read Tareas
 router.get('/', controladorDonacion.mostrarDonacion);

@@ -24,16 +24,14 @@ let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.ro
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
-<<<<<<< HEAD
-=======
 let apiCargo = require('./routes/api/cargo.api.router');
->>>>>>> fe819695fb37dd8cdb124a11a00e95fe2746d890
 let apiGrupos = require('./routes/api/grupos.api.router');
 let apiProcarianosGrupos = require('./routes/api/procarianogrupo.api.router');
 let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
 let apiAnimadores = require('./routes/api/animadores.api.router.js');
+let apiDonacion = require('./routes/api/donacion.api.router.js');
 
 var app = express();
 
@@ -85,10 +83,8 @@ app.use('/api/evento', apiEventos);
 app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
-<<<<<<< HEAD
-=======
 app.use('/api/animadores', apiAnimadores);
->>>>>>> fe819695fb37dd8cdb124a11a00e95fe2746d890
+app.use('/api/donacion', apiDonacion);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,12 +1,8 @@
-
 /*
-
 @Descripcion: Modelo de persona
 @Autor: jose viteri
 @FechaCreacion: 20/05/2017
 @UltimaFechaModificacion: 18/06/2017 @JoseViteri (se agrego la funcion de clase compararContrasenna)
-
-
 */
 
 var bcrypt = require('bcryptjs');
@@ -62,8 +58,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
-        Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'})
+         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'});
+         Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'});
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -77,7 +73,6 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
       },
-
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
@@ -101,16 +96,6 @@ module.exports = function(sequelize, DataTypes) {
         }).then(callback).catch(errorCallback);
       }
 
-      compararContrasenna2 :  function(candidatePassword, hash, callback){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
-            return callback(null , isMatch);
-
-        });
-      },
-
-
-
 
     }/*, hooks : {
       beforeCreate : (persona, options) => {
@@ -118,7 +103,6 @@ module.exports = function(sequelize, DataTypes) {
             console.log('este es el hash' + hash)
             persona.contrasenna = hash;
           });
-
       }
     }/*,instanceMethods: {
         generateHash: function(password) {

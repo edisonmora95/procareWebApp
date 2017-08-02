@@ -49,7 +49,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-      //  Benefactor.belongsTo(models.Persona)
+        //  Benefactor.belongsTo(models.Persona)
+       // Benefactor.hasMany(models.Persona , {through: 'Benefactor_persona'});
         // associations can be defined here
       }
     }
