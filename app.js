@@ -77,7 +77,7 @@ app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
 app.use('/api/cargo',apiCargo);
 app.use('/api/login',apiLogin);
-app.use('/api/tarea',apiTareas);
+app.use('/api/tareas',apiTareas);
 app.use('/api/evento', apiEventos);
 app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);

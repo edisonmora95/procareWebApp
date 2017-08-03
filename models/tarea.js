@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false
     },
     fechaPublicacion: {
-      type : DataTypes.DATE
+      type : DataTypes.DATE   //YYY-MM-DD HH:MM:SS
     },
     fechaInicio: {
       type : DataTypes.DATE
@@ -24,21 +24,45 @@ module.exports = function(sequelize, DataTypes) {
     },
     prioridad : {
       type : DataTypes.INTEGER,
-      allowNull : false
+      allowNull : false,
+      validate: {
+        isNumeric: {
+          msg: 'Debe ser número'
+        },
+        isIn: {
+          args: [[1, 2, 3]],  //alta, media, baja
+          msg: 'Debe ser 1, 2 ó 3'
+        }
+      }
     },
     estado: {
-      type : DataTypes.STRING,
-      allowNull : false/*,
-      validate : {
-        isIn : ['activo','inactivo']
+      type : DataTypes.INTEGER,
+      allowNull : false,
+      validate: {
+        notEmpty:{
+          msg: 'El valor ingresado como estado no puede estar vacío.'
+        },
+        isIn: {
+          args: [[1, 2, 3]],    //Pendiente, En proceso, Completada
+          msg: 'Debe ser un valor válido'
+        }
       }
-      */
 		},
     descripcion : {
       type : DataTypes.TEXT
     },
     categoria : {
-      type : DataTypes.TEXT
+      type : DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'El valor ingresado como categoría no puede estar vacío.'
+        },
+        isIn: {
+          args: [[1, 2, 3]],    //Formación, Acción, Fundación
+          msg: 'El valor ingresado como categoría debe ser 1, 2 ó 3'
+        }
+      }
     }
   }, {
     classMethods: {

@@ -8,23 +8,27 @@
 var modelo = require('../models');
 
 const crearTarea = (req, res, next) => {
+  console.log(req.body)
+  let fechaInicio = '';
+  let fechaFin = '';
+  let fechaPublicacion = '';
   //Validar fecha de inicio
   if(req.body.fechaInicio === ''){
-    let fechaInicio = null;
+     fechaInicio = null;
   }else{
-    let fechaInicio = new Date(req.body.fechaInicio)
+     fechaInicio = req.body.fechaInicio;
   }
   //Validar fecha de fin
   if(req.body.fechaFin === ''){
-    let fechaFin = null;
+     fechaFin = null;
   }else{
-    let fechaFin = new Date(req.body.fechaFin)
+     fechaFin = req.body.fechaFin;
   }
   //Validar fecha de publicacion
   if(req.body.fechaPublicacion === ''){
-    let fechaPublicacion = null;
+     fechaPublicacion = null;
   }else{
-    let fechaPublicacion = new Date(req.body.fechaPublicacion)
+     fechaPublicacion = req.body.fechaPublicacion;
   }
   
 
@@ -208,8 +212,8 @@ const mostrarTareas = (req, res, next) =>{
         {
           id : tarea.id,
           title : tarea.nombre,         
-          start : tarea.fecha_publicacion ,
-          end : tarea.fecha_limite ,
+          start : tarea.fechaInicio ,
+          end : tarea.fechaFin ,
           description : tarea.descripcion, 
           estado: tarea.estado,
           categoria: tarea.categoria,
@@ -228,7 +232,7 @@ const mostrarTareas = (req, res, next) =>{
       mensaje :'no se pudo eliminar',
       sequelizeStatus : error
     }
-    res.json(JSON.parse(jsonRespuesta));
+    res.json(jsonRespuesta);
   });
 }
 

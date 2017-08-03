@@ -5,7 +5,6 @@
 */
 
 import Navbar from './../../components/navbar.vue';
-
 import Tarea from './../../components/tareaNueva.vue';
 
 Vue.component('navbar', Navbar); 
@@ -14,12 +13,42 @@ Vue.component('tarea', Tarea);
 let indexApp = new Vue({
 	el: '#indexApp',
 	created(){
-		this.obtenerProcarianos();
+		this.obtenerProcarianos(this);
+		this.obtenerTareas(this);
 	},
 	mounted(){
 		let self = this;
 		$('.modal').modal();
-		$.when($.ajax(self.obtenerEventos())).then(function(){
+	},
+	methods:{
+		/*
+			@Descripción: Obtiene todos los procarianos de la base de datos. Para mostrarlos en el formulario de tarea nueva
+		*/
+		obtenerProcarianos(self){
+			let urlAPi = '/api/procarianos/';
+			$.ajax({
+				type: 'GET',
+				url: urlAPi,
+				success(res){
+					self.procarianos = res;
+				}
+			});
+		},
+		/*
+			@Descripción: Obtiene todas las tareas de la base de datos, luego arma el calendario con ellas
+		*/
+		obtenerTareas(self){
+			$.ajax({
+				type: 'GET',
+				url: '/api/tareas/',
+				success(res){
+					self.tareas = res.sequelizeStatus;
+					console.log(self.tareas)
+					self.armarCalendario(self);
+				}
+			});
+		},
+		armarCalendario(self){
 			$('#calendar').fullCalendar({
 	      //Atributos
 	     	header: {
@@ -31,73 +60,39 @@ let indexApp = new Vue({
 	     	showNonCurrentDates: false,
 	      navLinks: true,
 	      eventLimit: true, // for all non-agenda views
-	      events: self.eventos,
+	      events: self.tareas,
 	      //Funciones
 	      eventClick: function(calEvent, jsEvent, view) {
-
-	      	if (event.url) {
-	            window.open(event.url);
-	            return false;
-	        }
 	        self.eventoSeleccionado = calEvent;
+	        console.log(self.eventoSeleccionado);
 	    	}
 	    });	
-		});
-
-	},
-	methods:{
-		obtenerEventos(){
-			let self = this;
-			$.ajax({
-				type: 'GET',
-				url: '/api/tarea/',
-				success(res){
-					console.log(res)
-				}
-			});
-			/*$.getJSON('/api/tarea/', function(data){
-				console.log(data)
-				self.eventos = data.sequelizeStatus;
-				$.each(data.sequelizeStatus, function(index, evento){
-					//console.log("este es el evento " + evento[0]);
-					//console.log("este es el evento 0 " + evento[0][0]);
-					//console.log("este es el evento 1 " + evento[0][1]);
-					self.eventos.push(evento);
-				})
-<<<<<<< HEAD
-			})
-
-=======
-			})*/
-		},
-		obtenerProcarianos(){
-			let self = this;
-			let urlAPi = '/api/procarianos/';
-			$.ajax({
-				type: 'GET',
-				url: urlAPi,
-				success(res){
-					self.procarianos = res;
-				}
-			});
 		},
 		crearTarea(){
 			this.flag = false;
-		}
+		},
+		moment(date) {
+      return moment(date);
+    },
+    date(date) {
+      var es = moment().locale('es');
+      if (date === undefined || date === '') {
+        return '----';
+      }
+      return moment(date).format('DD MMMM YYYY - HH:MM');
+    },
 	},
 	data: {
 		flag: true,
-		eventos: [],
+		tareas: [],
 		eventoSeleccionado: {},
 		procarianos: []
 	}
 });
 
 
-
 //Por alguna razón, esto no funciona dentro de la instancia de Vue... 
 	$(document).ready(function(){
-		console.log('sdaf')
 		let datos = {};
 		$.each(indexApp.$data.procarianos, function(index, procariano){
 			let nombreCompleto = procariano.nombres + ' ' + procariano.apellidos;
@@ -107,3 +102,4 @@ let indexApp = new Vue({
 	     data: datos
 	   });
 	});
+

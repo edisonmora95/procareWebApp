@@ -1,28 +1,40 @@
 <template>
 	<div class="container" id="container-tarea-nueva">
 		<a href="#" @click="regresar"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
+		<header>
+			<h3 class="center-align">Tarea nueva</h3>
+		</header>
 		<form>
-	  	<v-row>
+	  	<v-row id="rowNombre">
 	  		<div class="col s12">
 	  			<label for="nombre">Nombre</label>	
 	  			<v-text-input name="nombre" id="nombre" v-model="tareaNueva.nombre"></v-text-input>
 	  		</div>
 	  	</v-row>
-	  	<v-row>
+	  	<v-row id="rowDescripcion">
 	  		<div class="col s12">
 	  			<label for="descripcion">Descripción</label>
 		  		<v-text-area name="descripcion" id="descripcion" v-model="tareaNueva.descripcion"></v-text-area>	
 	  		</div>
 	  	</v-row>
-	  	<v-row>
+	  	<v-row id="rowFechaInicio">
 	  		<div class="col s6">
 	  			<label for="fechaInicio">Fecha de inicio</label>
 		      <v-date-input id="fechaInicio" name="fechaInicio"></v-date-input>	
 	  		</div>
+	  		<div class="col s6" id="divHoraInicio">
+	  			<label for="fechaInicio">Hora de inicio</label>
+	  			<input type="text" class="timepicker" id="horaInicio">
+	  		</div>
+	  	</v-row>
+	  	<v-row id="rowFechaFin">
 	  		<div class="col s6">
 	  			<label for="fechaFin">Fecha de fin</label>
-	  			<input class="c-datepicker-input" />
-		      <!--<v-date-input id="fechaFin" name="fechaFin"></v-date-input>	-->
+		      <v-date-input id="fechaFin" name="fechaFin"></v-date-input>
+	  		</div>
+	  		<div class="col s6" id="divHoraFin">
+	  			<label for="fechaInicio">Hora de fin</label>
+	  			<input type="text" class="timepicker" id="horaFin">
 	  		</div>
 	  	</v-row>
 	  	<v-row>
@@ -50,13 +62,13 @@
 	  		</div>
 	  	</v-row>
 	  	<v-row>
-	  		<a class="waves-effect waves-light btn" @click="crearTarea">Crear</a>
+	  		<a class="waves-effect waves-light btn pul right" @click="crearTarea">Crear</a>
 	  	</v-row>
 	  </form>
 	  <v-modal id="modalTareaCreada">
       <div slot="content">
-        <h4>Tarea creada correctamente</h4>
-	      <p>¿Desea crear otra tarea?</p>
+        <h4 class="center-align">Tarea creada correctamente</h4>
+	      <p class="center-align">¿Desea crear otra tarea?</p>
       </div>
       <div slot="footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="limpiarTareaNueva">Si</a>
@@ -65,8 +77,8 @@
     </v-modal>
 	  <v-modal id="modalTareaError">
       <div slot="content">
-        <h4>Error</h4>
-	      <p>No se pudo crear la tarea. Intente recargar la página.</p>
+        <h4 class="center-align">Error</h4>
+	      <p class="center-align">No se pudo crear la tarea. Intente recargar la página.</p>
       </div>
       <div slot="footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
@@ -74,8 +86,8 @@
     </v-modal>
     <v-modal id="modalFechaIncorrecta">
       <div slot="content">
-        <h4>Error</h4>
-	      <p>No puede escoger como fecha de realización una fecha ya pasada.</p>
+        <h4 class="center-align">Error</h4>
+	      <p class="center-align">No puede escoger como fecha de realización una fecha ya pasada.</p>
       </div>
       <div slot="footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
@@ -83,13 +95,14 @@
     </v-modal>
 	</div>
 </template>
-<style>
+<style scoped>
 	#row-responsable{
 		margin-top: 0;
 	}
 	#container-tarea-nueva{
 		padding: 1%;
 		background-color: white;
+		margin-bottom: 3%;
 	}
 	form{
 		padding: 1%;
@@ -101,17 +114,15 @@
 </style>
 <script>
 	import Materials from 'vue-materials';
-	import MaterialDateTimePicker from 'material-datetime-picker';
 	Vue.use(Materials);
 
 	module.exports = {
 		props: ['procarianos'],
 		created(){
-			
+			this.bindFechaPublicacion(this);
 		},
 		mounted(){
-			this.inicializarMaterialize();
-        
+			this.inicializarMaterialize(this);
 		},
 		data(){
 			return{
@@ -162,30 +173,40 @@
 					},
 					{
 						id: '2',
-						text: 'Completada'
+						text: 'En proceso'
 					},
 					{
 						id: '3',
-						text: 'En proceso'
+						text: 'Completada'
 					}
 				]
 			}
 		},
 		methods: {
-			inicializarMaterialize(){
-				$('.modal').modal();
-				const input = document.querySelector('.c-datepicker-input');
-				const picker = new MaterialDateTimePicker()
-				    .on('submit', (val) => {
-				      input.value = val.format("DD/MM/YYYY");
-				    });
+			inicializarMaterialize(self){
+				let inputHoraInicio = $('#horaInicio');
+				let inputHoraFin = $('#horaFin');	
 
-				input.addEventListener('focus', () => picker.open());      
-			  
-			},
-			regresar(){
-				this.limpiarTareaNueva();
-				this.$emit('flagchanged', true);	
+				$('.modal').modal();
+				$('.timepicker').pickatime({
+			    default: 'now', // Set default time: 'now', '1:30AM', '16:30'
+			    fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+			    twelvehour: false, // Use AM/PM or 24-hour format
+			    donetext: 'OK', // text for done-button
+			    cleartext: 'Clear', // text for clear-button
+			    canceltext: 'Cancel', // Text for cancel-button
+			    autoclose: false, // automatic close timepicker
+			    ampmclickable: true, // make AM PM clickable
+			    aftershow: function(){} //Function for after opening timepicker
+			  });
+
+				inputHoraInicio.change( () => {
+					self.bindFecha(self, '#fechaInicio', '#horaInicio', 'fechaInicio');
+				});
+
+				inputHoraFin.change(function(){
+					self.bindFecha(self, '#fechaFin', '#horaFin', 'fechaFin');
+				});
 			},
 			/*
 				@Descripción: Busca el id del responsable seleccionado
@@ -203,22 +224,12 @@
 			},
 			crearTarea(){
 				let self = this;
-				self.bindFechaPublicacion();
 				self.obtenerIdProcarianoResponsable();
-				
-				let bindFechaInicio = self.bindFecha('#fechaInicio', self.tareaNueva.fechaInicio);
-				let bindFechaFin = self.bindFecha('#fechaFin', self.tareaNueva.fechaFin);
-				
-				if(bindFechaInicio&&bindFechaFin){
-					self.llamadaApi(self.tareaNueva);
-				}else{
-					$('#modalFechaIncorrecta').modal('open');
-				}
-				
+				self.llamadaApi(self, self.tareaNueva);
 			},
-			llamadaApi(tareaNueva){
+			llamadaApi(self, tareaNueva){
 				console.log(tareaNueva)
-				let urlApi = '/api/tarea/nuevo';
+				let urlApi = '/api/tareas/';
 				$.ajax({
 					type: 'POST',
 					url: urlApi,
@@ -250,17 +261,25 @@
 					true -> Si se pudo vincular correctamente
 					flase -> Si no se pudo vincular porque la fecha fue incorrecta
 			*/
-			bindFecha(idDatePicker, atributoAVincular){
-				let self = this;
-				let year = $(idDatePicker).pickadate('picker').get('highlight', 'yyyy');
-				let month = $(idDatePicker).pickadate('picker').get('highlight', 'mm');
-				let day = $(idDatePicker).pickadate('picker').get('highlight', 'dd');
-				if(self.validarFecha(year)){
-					atributoAVincular = year + '/' + month + '/' + day;
-					return true;
+			bindFecha(self, idDatePicker, idTimePicker, tipo){
+				let fechaCompleta = '';
+				const anio = $(idDatePicker).pickadate('picker').get('highlight', 'yyyy');
+				const mes = $(idDatePicker).pickadate('picker').get('highlight', 'mm');
+				const dia = $(idDatePicker).pickadate('picker').get('highlight', 'dd');
+				const hora = $(idTimePicker).val();
+				const fechaIngresada = new Date( $(idDatePicker).val() );
+
+				if(self.validarFecha(fechaIngresada)){
+					fechaCompleta = anio + '-' + mes + '-' + dia + ' ' + hora + ' Z';
+					if(tipo === 'fechaInicio'){
+						self.tareaNueva.fechaInicio = fechaCompleta;	
+					}
+					else if(tipo === 'fechaFin'){
+						self.tareaNueva.fechaFin = fechaCompleta;	
+					}
+					
 				}else{
-					//Fecha no válida
-					return false;
+					alert('jiji')
 				}
 			},
 			/*
@@ -269,15 +288,15 @@
 					true si la fecha es correcta
 					false si es incorrecta
 			*/
-			validarFecha(yearSel){
-				let actualYear = new Date().getFullYear();
-				if(yearSel < actualYear){
+			validarFecha(fechaIngresada){
+				const fechaActual = new Date();
+				if(fechaActual < fechaIngresada){
+					return true;
+				}else{
 					return false;
 				}
-				return true;
 			},
-			bindFechaPublicacion(){
-				let self = this;
+			bindFechaPublicacion(self){
 				let fechaActual = new Date();
 				let anio = fechaActual.getFullYear();
 				let mes = fechaActual.getMonth()+1;
@@ -285,7 +304,11 @@
 
 				let fecha = anio + '/' + ((''+mes).length < 2 ? '0' : '') + mes + '/' + ((''+dia).length < 2 ? '0' : '') + dia;
 				self.tareaNueva.fechaPublicacion = fecha;
-			}
+			},
+			regresar(){
+				this.limpiarTareaNueva();
+				this.$emit('flagchanged', true);	
+			},
 		}
 	}
 
