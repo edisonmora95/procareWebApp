@@ -6,6 +6,7 @@
 
 var modelo = require('../models');
 var utils = require('../utils/utils');
+var respuestas = require('../utils/respuestas.js')
 
 
 
@@ -90,7 +91,22 @@ const obtenerTablaPersonal = (req,res,next) =>{
 	})
 }
 
+const obtenerPersonalIndependiente = (req,res,next) =>{
+	modelo.Persona.find({
+		where : {
+			id : req.params.id
+		}
+	}).then( personal => {
+		console.log('este es personal ' + personal);
+		return respuestas.okGet(res,'personal puesto correctamente', personal);
+	}).catch( error => {
+		console.log('este es un error ' +  error);
+		return respuestas.error(res,'hubo un problema', '', error);
+	})
+}
+
 module.exports = {
 	obtenerTablaPersonal,
-	crearPersonal
+	crearPersonal,
+	obtenerPersonalIndependiente
 }

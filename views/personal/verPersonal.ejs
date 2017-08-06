@@ -76,9 +76,9 @@
 									</div>
 
 								</section>
-								<section class="row">
+								<section class="row rowVer" >
 									<div class="col s6">
-										<label for="sueldo"></label>
+										<label for="sueldo">Sueldo</label>
 										<p>{{personal.sueldo}}</p>
 									</div>
 								</section>
@@ -87,7 +87,7 @@
 								<!--Coelgio-Universidad-->
 
 								<!--Botones-->
-								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
+								<div class="row row-botones" v-if="personal.estado!=='inactivo'">
 									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
 									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
 								</div>

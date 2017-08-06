@@ -8,5 +8,7 @@ router.get('/', controladorPersonal.obtenerTablaPersonal);
 //Crea un nuevo miembro del personal
 router.post('/', utils.generarHash , controladorPersonal.crearPersonal);
 
+router.get('/:id',controladorPersonal.obtenerPersonalIndependiente);
+
 
 module.exports = router;

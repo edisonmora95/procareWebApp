@@ -41,7 +41,7 @@ var main = new Vue({
 	},
 	methods: {
 		irAPerfil(persona){
-			window.location.href = '/personal/perfil/' + procariano.personaId;
+			window.location.href = '/personal/perfil/' + persona.id;
 		},
 		//Funciones para editar la forma en la que se muestra la fecha
 		moment: function (date) {

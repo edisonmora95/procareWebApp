@@ -15,8 +15,8 @@ var app = new Vue({
 	el: '#app',
 	created(){
 		var path = window.location.pathname;
-		this.idProcariano = path.split('/')[3];
-		this.obtenerProcarianoPorId(this, this.idProcariano);
+		this.idPersonal = path.split('/')[3];
+		this.obtenerPersonalPorId(this, this.idPersonal);
 	},
 	mounted: function(){
 		//Inicializadores de Materialize
@@ -26,8 +26,8 @@ var app = new Vue({
 		
 	},
 	data: {
-		idProcariano: 0,
-		procariano: {},
+		idPersonal: 0,
+		personal: {},
 		fechaNacimiento: '',
 		habilitaredicion: false,
 	},
@@ -43,34 +43,20 @@ var app = new Vue({
       }
       return moment(date).format('DD MMMM YYYY');
     },
-		obtenerProcarianoPorId(self, id){
-			var urlApi = '/api/procarianos/' + id;
+		obtenerPersonalPorId(self, id){
+			var urlApi = '/api/personal/' + id;
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success: function(res){
-					self.procariano = res[0];
-					let grupo = {
-						id: '',
-						text: ''
-					};
-					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
+					self.personal = res.datos;
+					self.fechaNacimiento = new Date(self.personal.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
 
 				}
 			});
 		},
-		obtenerGrupoDeProcariano(self, idProcariano){
-			let urlApi = '/api/pg/' + idProcariano;
-			$.ajax({
-				type: 'GET',
-				url: urlApi,
-				success(res){
-					self.grupoprocariano.id = res.grupo.id;
-					self.grupoprocariano.text = res.grupo.nombre;
-				}
-			});
-		},
 		eliminar: function(){
+			/*
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
@@ -78,13 +64,14 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.status) {
-						self.procariano.estado = 'inactivo';
+						self.personal.estado = 'inactivo';
 						$('#modalExitoEliminar').modal('open');
 					}else{
 						$('#modalErrorEliminar').modal('open');
 					}
 				}
 			});
+			*/
 		},
 		habilitarEditar(){
 			this.habilitaredicion = true;
