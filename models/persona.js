@@ -32,10 +32,6 @@ module.exports = function(sequelize, DataTypes) {
     fechaNacimiento: {
       type : DataTypes.DATE
     },
-    genero : {
-      type : DataTypes.STRING,
-      allowNull : false
-    },
     contrasenna : {
       type : DataTypes.STRING
     },
@@ -60,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.TEXT
     },
     sueldo : {
-      type : DataTypes.INTEGER
+      type : DataTypes.DOUBLE
     }
   }, {
     classMethods: {

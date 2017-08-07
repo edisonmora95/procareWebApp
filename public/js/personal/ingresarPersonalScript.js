@@ -37,6 +37,9 @@ const dictionary = {
 			},
 			regex: function(field, val){
 				return 'No ingrese caracteres especiales.';
+			},
+			decimal: function(){
+				return 'Su sueldo debe tener un máximo de dos decimales'
 			}
 		}
 	}
@@ -118,10 +121,10 @@ var main = new Vue({
       	data: self.personal,
       	success: function(res){
       		console.log(res)
-      		if(res.status){
+      		if(res.estado){
       			$('#modalPersonalCreado').modal('open');
       		}else{
-      			self.errorObj.msj = res.msg;
+      			self.errorObj.msj = res.mensaje;
       			self.errorObj.statusApi = false;
       			$('#modalError').modal('open');
       		}

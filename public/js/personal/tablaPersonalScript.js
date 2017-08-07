@@ -67,8 +67,8 @@ var main = new Vue({
 				url: '/api/personal/',
 				success: function(res){
 					console.log(res);
-					if(res.status){
-						$.each(res.personal, function(index, personalEncontrado){
+					if(res.estado){
+						$.each(res.datos, function(index, personalEncontrado){
 							//console.log(personalEncontrado)
 								self.arregloPersonal.push(personalEncontrado);
 							});
@@ -76,13 +76,13 @@ var main = new Vue({
 					}
 					else{
 							self.fallaCargar = true;
-							self.msg = res.message;
+							self.msg = res.mensaje;
 							console.log(res)
 					}						
 				},
 				error : function(res){
 					self.fallaCargar = true;
-					self.msg = res.message;
+					self.msg = res.mensaje;
 					console.log(res)
 				}
 			});

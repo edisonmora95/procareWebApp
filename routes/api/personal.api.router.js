@@ -10,5 +10,9 @@ router.post('/', utils.generarHash , controladorPersonal.crearPersonal);
 
 router.get('/:id',controladorPersonal.obtenerPersonalIndependiente);
 
+router.delete('/:id', controladorPersonal.eliminarPersonal);
+
+router.put('/:id', controladorPersonal.editarPersonal);
+
 
 module.exports = router;

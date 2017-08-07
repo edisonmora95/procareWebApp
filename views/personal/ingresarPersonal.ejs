@@ -85,7 +85,7 @@
 								<label for="selectGenero">Género</label>
 							</div>
 							<div class="input-field col s6">
-								<input type="tel" name="sueldo" id="sueldo" v-model="personal.sueldo" v-validate="'required|numeric'">
+								<input type="tel" name="sueldo" id="sueldo" v-model="personal.sueldo" v-validate="'required|decimal:2'">
 								<span v-show="errors.has('sueldo')" class="help is-danger">{{ errors.first('sueldo') }}</span>
 								<label for="sueldo">Sueldo</label>
 							</div>

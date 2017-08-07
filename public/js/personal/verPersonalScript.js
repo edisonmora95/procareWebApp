@@ -56,22 +56,21 @@ var app = new Vue({
 			});
 		},
 		eliminar: function(){
-			/*
+			
 			var self = this;
 			var urlApi= '/api/procarianos/' + self.id;
 			$.ajax({
 				type: 'DELETE',
 				url: urlApi,
 				success: function(res){
-					if (res.status) {
-						self.personal.estado = 'inactivo';
+					if (res.estado) {
 						$('#modalExitoEliminar').modal('open');
 					}else{
 						$('#modalErrorEliminar').modal('open');
 					}
 				}
 			});
-			*/
+			
 		},
 		habilitarEditar(){
 			this.habilitaredicion = true;
