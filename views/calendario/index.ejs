@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="/scripts/materialize-css/dist/css/materialize.min.css">
+		<% include ../partials/head %>
  		<link rel='stylesheet' href='/scripts/fullcalendar/dist/fullcalendar.min.css' />
- 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  		<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
 	</head>
 	<body>
@@ -50,9 +45,7 @@
 		</div>
 	</body>
 	<div>
-		<script src="/scripts/jquery/dist/jquery.min.js"></script>
-		<script src="/scripts/materialize-css/dist/js/materialize.min.js"></script>
-		<script src='/scripts/vue/dist/vue.min.js'></script>
+		<% include ../partials/scripts %>
 		<script src="/scripts/moment/min/moment.min.js"></script>
 		<script src="/scripts/moment/locale/es.js"></script>
 		<script src='/scripts/fullcalendar/dist/fullcalendar.min.js'></script>

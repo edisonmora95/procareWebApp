@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecs-->
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
-  	<link rel="stylesheet" href="/scripts/materialize-css/dist/css/materialize.min.css">
+		<% include ../partials/head %>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/ingresarProcarianoStyles.css">
 	</head>
@@ -171,14 +165,11 @@
 				</div>
 			</main>
 		</div>
-		<div>
-			<script src="/scripts/jquery/dist/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="/scripts/materialize-css/dist/js/materialize.min.js"></script>
-			<script src='/scripts/vue/dist/vue.min.js'></script>
-			<!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-			<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
-			<script src="/build/procariano/ingresarNinoScript.js"></script>
-		</div>
 	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
+		<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+		<script src="/build/procariano/ingresarNinoScript.js"></script>
+	</div>
 </html>
