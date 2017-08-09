@@ -8,7 +8,6 @@
 var modelo = require('../models');
 
 const crearTarea = (req, res, next) => {
-  console.log(req.body)
   let fechaInicio = '';
   let fechaFin = '';
   let fechaPublicacion = '';

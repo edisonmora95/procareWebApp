@@ -63,12 +63,19 @@ module.exports = function(sequelize, DataTypes) {
           msg: 'El valor ingresado como categoría debe ser 1, 2 ó 3'
         }
       }
+    },
+    tipo: {
+      type: DataTypes.STRING,
+      defaultValue: 'tarea'
     }
   }, {
     classMethods: {
 			associate: function(models) {
         Tarea.belongsTo(models.Persona, {foreignKey: 'idResponsable'})
         // associations can be defined here
+      },
+      obtenerTodasLasTareas: function(success, error){
+        this.findAll({}).then(success).catch(error);
       }
     }
 

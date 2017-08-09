@@ -8,13 +8,26 @@
 var modelo = require('../models');
 
 const crearEvento = (req, res, next) => {
-
-  estado = 'activo';
+  let fechaInicio = '';
+  let fechaFin = '';
+  //Validar fecha de inicio
+  if(req.body.fechaInicio === ''){
+     fechaInicio = null;
+  }else{
+     fechaInicio = req.body.fechaInicio;
+  }
+  //Validar fecha de fin
+  if(req.body.fechaFin === ''){
+     fechaFin = null;
+  }else{
+     fechaFin = req.body.fechaFin;
+  }
 
   modelo.Evento.create({
     idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
-    fecha : req.body.fecha,
+    fechaInicio : fechaInicio,
+    fechaFin : fechaFin,
     descripcion : req.body.descripcion,
     lugar : req.body.lugar,
     gastos: req.body.gastos,

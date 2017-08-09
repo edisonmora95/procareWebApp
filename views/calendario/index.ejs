@@ -4,7 +4,6 @@
 		<title>Procare</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecss-->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="/scripts/materialize-css/dist/css/materialize.min.css">
  		<link rel='stylesheet' href='/scripts/fullcalendar/dist/fullcalendar.min.css' />
@@ -17,30 +16,47 @@
 				<navbar></navbar>
 			</header>
 			<main>
-			  <div class="row" v-show="flag">
+			  <div class="row">
 			  	<div id='calendar' class="col l8 s12"></div>	
 			  	<div id="tareas" class="col l4 s12">
 			  		<div class="card">
-			  			<h4 class="center-align">Tareas/Eventos</h4>
+			  			<h4 class="center-align">Selección</h4>
 			  			<h5 class="center-align"><span>Título: </span>{{eventoSeleccionado.title}}</h5>
 			  			<span>Descripción:</span>
 			  			<p>{{eventoSeleccionado.description}}</p>
 			  			<p><span>Hora de inicio: </span>{{date(eventoSeleccionado.start)}}</p>
 			  			<p><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>
 			  		</div>
-			  		 <a class="btn-floating btn-large waves-effect waves-light red pull right" @click="crearTarea"><i class="material-icons">add</i></a>
+			  		<div class="fixed-action-btn horizontal">
+					    <a class="btn-floating btn-large red">
+					      <i class="material-icons">add</i>
+					    </a>
+					    <ul>
+					      <li>
+					      	<a href="/home/evento/" class="btn-floating green btn tooltipped " data-position="top" data-delay="25" data-tooltip="Evento" >
+					      		<i class="material-icons rounded">event</i>
+					      	</a>
+					      </li>
+					      <li>
+					      	<a href="/home/tarea/" class="btn-floating yellow darken-1 btn tooltipped " data-position="top" data-delay="25" data-tooltip="Tarea" id="btnTarea">
+					      		<i class="material-icons rounded">edit</i>
+					      	</a>
+					      </li>
+					    </ul>
+					  </div>
 			  	</div>
 			  </div>
 			</main>
-			<tarea v-show="!flag" @flagchanged="flag = $event" :procarianos="procarianos"></tarea>
 		</div>
 	</body>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+	<div>
+		<script src="/scripts/jquery/dist/jquery.min.js"></script>
 		<script src="/scripts/materialize-css/dist/js/materialize.min.js"></script>
-		<script src='https://unpkg.com/vue@2.3.3'></script>
+		<script src='/scripts/vue/dist/vue.min.js'></script>
 		<script src="/scripts/moment/min/moment.min.js"></script>
-		<script src='scripts/fullcalendar/dist/fullcalendar.min.js'></script>
+		<script src="/scripts/moment/locale/es.js"></script>
+		<script src='/scripts/fullcalendar/dist/fullcalendar.min.js'></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.js"></script>
 		<script src="/build/index/indexScript.js"></script>
+	</div>
 </html>

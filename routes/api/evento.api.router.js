@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 
 //Post de la Evento
-router.post('/nuevo', controladorEvento.crearEvento);
+router.post('/', controladorEvento.crearEvento);
 
 //Read Evento
 router.get('/', controladorEvento.mostrarEventos);
