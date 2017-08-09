@@ -4,10 +4,8 @@
 		<title>Procare</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecs-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
-  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+  	<link rel="stylesheet" type="text/css" href="/scripts/materialize-css/dist/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
@@ -98,6 +96,13 @@
 										<p>{{procariano.universidad}}</p>
 									</div>
 								</section>
+								<!--Trabajo-->
+								<section class="row rowVer" id="rowVerTrabajo">
+									<div class="col s12" id="verTrabajo">
+										<label>Trabajo</label>
+										<p>{{procariano.trabajo}}</p>
+									</div>
+								</section>
 								<!--Botones-->
 								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
 									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
@@ -146,9 +151,9 @@
 		  </div>
 		</div>
 		<div>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="/scripts/jquery/dist/jquery.min.js"></script>
+  		<script src="/scripts/materialize-css/dist/js/materialize.min.js"></script>
+			<script src='/scripts/vue/dist/vue.min.js'></script>
 			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
