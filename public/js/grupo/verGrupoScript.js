@@ -69,13 +69,23 @@ let verGrupoApp = new Vue({
 		armarArrayIntegrantes(self, procarianos){
 			self.integrantes = [];
 			$.each(procarianos, function(index, procariano){
-				let integranteObj = {
-					idProcariano: procariano.idProcariano,
-					nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
-					idPersona: procariano.Persona.idPersona
-				};
-				self.integrantes.push(integranteObj);
+				if(self.validarProcarianoEnGrupo(procariano)){
+					let integranteObj = {
+						idProcariano: procariano.idProcariano,
+						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
+						idPersona: procariano.Persona.idPersona
+					};
+					self.integrantes.push(integranteObj);
+				}
 			});
+		},
+		validarProcarianoEnGrupo(procariano){
+			let fechaFin = procariano.Grupos[0].ProcarianoGrupo.fechaFin;
+			if(fechaFin === null){
+				return true;
+			}else{
+				return false;
+			}
 		},
 		obtenerEtapaDeGrupo(self, etapas){
 			$.each(etapas, function(index, etapa){

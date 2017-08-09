@@ -67,52 +67,17 @@ module.exports.cambiarDeGrupo = (req, res, next) => {
 	let idProcariano = req.params.id_procariano;
 	let idNuevoGrupo = req.body.idGrupoNuevo;
 	let idPrevioGrupo = req.body.idGrupoPrev;
-
-	//Primero hay que poner una fecha final al registro del procariano en su antiguo grupo
-	modelo.ProcarianoGrupo.update({
-		fechaFin: Date.now()
-	}, {
-		where: {
-			ProcarianoId : idProcariano,
-			GrupoId: idPrevioGrupo
-		}
-	}).then( result1 => {
-		//Luego se añade un nuevo registro del nuevo grupo del procariano
-		modelo.ProcarianoGrupo.create({
-			fechaInicio: Date.now(),
-			fechaFin: null,
-			GrupoId: idNuevoGrupo,
-			ProcarianoId: idProcariano
-		}).then( result2 => {
-			//Si se pudo editar y crear
-			let jsonRespuesta = {
-				status: true,
-				mensaje: 'Se pudo editar y crear el nuevo registro',
-				statusCrear: result2,
-				statusActualizar: result1
-			};
-			res.json(jsonRespuesta);
-		}).catch( err2 => {
-			//Se pudo editar pero no crear el nuevo registro
-			let jsonRespuesta = {
-				status: false,
-				mensaje: 'Se pudo editar pero no crear el nuevo registro',
-				statusCrear: err2,
-				statusActualizar: result1
-			};
-			res.json(jsonRespuesta);
+	//Primero pongo una fecha fin al registro del procariano en su grupo anterior
+	modelo.ProcarianoGrupo.eliminarProcarianoDeGrupo(idProcariano, idPrevioGrupo, (successUpdate) => {
+		//Luego añado un nuevo registro del nuevo grupo del procariano
+		modelo.ProcarianoGrupo.anadirProcarianoAGrupo(idGrupoNuevo, idProcariano, new Date(), (successCrear) => {
+			return respuesta.okCreate(res, 'Procariano cambiado de grupo.', successCrear);
+		}, (errorCrear) => {
+			return respuesta.error(res, 'No se pudo añadir al nuevo grupo.', errorCrear);
 		});
-	}).catch( err1 => {
-		//No se pudo editar ni crear el nuevo registro
-		let jsonRespuesta = {
-			status: false,
-			mensaje: 'No se pudo editar ni crear el nuevo registro',
-			statusCrear: err1,
-			statusActualizar: null
-		};
-		res.json(jsonRespuesta);
+	}, (errorEliminar) => {
+		return respuesta.error(res, 'No se pudo quitar del grupo anterior.', errorEliminar);
 	});
-
 }
 /*
 	@Descripción:
