@@ -6,23 +6,19 @@
 
 var modelo = require('../models');
 var utils = require('../utils/utils')
-var ControladorGrupo = require('../controllers/grupo');
+
 
 
 /*
-Autor : JV
-Creado : 26/06/2017
-Modificado: 21/07/2017 @edanmora95	agrega un procariano a un grupo y se coloca su tipo
+Autor : JOSE ALCIVAR
+Creado : 06/08/2017
+Modificado: 06/08/2017 @josealcivar	agrega un benefactor
 */
 
 
-const VerificarCedula = (req, res, next) =>{
-
-}
-
-
-const crearProcariano = (req, res, next) => {
-	if(req.body.fechaNacimiento == ''){
+const crearBenefactor = (req, res, next) => {
+	if(req.body.razonsocial == ''){
+		razonsocial = req.body.nombres +' '+ req.body.apellidos;
 		fechaNacimiento = null;
 	}else{
 		fechaNacimiento = new Date(req.body.fechaNacimiento);	
@@ -32,6 +28,7 @@ const crearProcariano = (req, res, next) => {
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
 		apellidos : req.body.apellidos,
+		razonsocial : razonsocial,
 		direccion : req.body.direccion,
 		fechaNacimiento : fechaNacimiento,
 		genero : req.body.genero,
@@ -42,79 +39,21 @@ const crearProcariano = (req, res, next) => {
 		convencional : req.body.convencional
 	};
 	modelo.Persona.crearPersona(persona, (persona) => {
-		if(req.body.fechaOrdenacion == ''){
-			fechaOrdenacion = null;
-		}else{
-			fechaOrdenacion = new Date(req.body.fechaOrdenacion);	
+		
+		let benefactor = {
+		  PersonaId : persona.get('id'),
+		  valor_contribucion: req.body.valor_contribucion,
+          dia_cobro: req.body.dia_cobro,
+          tarjeta_credito: req.body.tarjeta_credito,
+          tipo_donacion: req.body.tipo_donacion,
+          estado: req.body.estado,
+          nombre_gestor: req.body.nombre_gestor,
+          relacion: req.body.relacion,
+          observacion: req.body.observacion
+	
 		}
-		let procariano = {
-			PersonaId : persona.get('id'),
-			colegio : req.body.colegio,
-			universidad : req.body.universidad,
-			parroquia : req.body.parroquia,
-			fechaOrdenacion : fechaOrdenacion,
-			estado : req.body.estado,
-			haceParticipacionEstudiantil : req.body.haceParticipacionEstudiantil
-		}
-		modelo.Procariano.crearProcariano1(procariano, (procariano) => {
-			let grupo = req.body.grupo;
-			let tipo = req.body.tipo;
-			if(grupo !== ''){									//SI SE INGRESÓ UN GRUPO
-				modelo.ProcarianoGrupo.anadirProcarianoAGrupo(req.body.grupo, procariano.get('id'), procariano.get('createdAt'), (procarianoGrupo) => {
-					if(tipo !== ''){							//SI SE INGRESÓ UN TIPO
-						modelo.ProcarianoTipo.anadirTipoProcariano(req.body.tipo, procariano.get('id'), procariano.get('createdAt'), (procarianoTipo) => {
-							return res.status(200).json({
-								estado: true,
-								persona: persona,
-								procariano: procariano,
-								procarianoGrupo: procarianoGrupo,
-								procarianoTipo: procarianoTipo
-							});
-						}, (errorProcarianoTipo) => {
-							return res.status(400).json({
-								estado: false,
-								errorProcarianoTipo: errorProcarianoTipo
-							});
-						});
-					}else{												//SI SE INGRESÓ GRUPO PERO NO TIPO
-						//Se crea persona, procariano y procarianogrupo
-						return res.status(200).json({
-							status: true,
-							persona: persona,
-							procariano: procariano,
-							procarianogrupo: procarianogrupo
-						});
-					}
-					
-				}, (errorProcarianoGrupo) => {
-					return res.status(400).json({
-						estado: false,
-						errorProcarianoGrupo: errorProcarianoGrupo
-					});
-				});
-			}else if(tipo !== ''){						//SI NO SE INGRESÓ UN GRUPO PERO SE INGRESÓ UN TIPO
-				modelo.ProcarianoTipo.anadirTipoProcariano(req.body.tipo, procariano.get('id'), procariano.get('createdAt'), (procarianoTipo) => {
-					return res.status(200).json({
-						estado: true,
-						persona: persona,
-						procariano: procariano,
-						procarianoTipo: procarianoTipo
-					});
-				}, (errorProcarianoTipo) => {
-					return res.status(400).json({
-						estado: false,
-						errorProcarianoTipo: errorProcarianoTipo
-					});
-				});
-			}
-			else{															//SI NO SE INGRESÓ NI TIPO NI GRUPO
-				return res.status(200).json({
-					status: true,
-					persona: persona,
-					procariano: procariano,
-				});
-			}
-			
+		modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+				
 		}, (errorProcariano) => {
 			return res.status(400).json({
 					estado: false,
@@ -540,7 +479,7 @@ agregarNuevoTipo = (req,res,procariano) => {
 }
 
 module.exports = {
-	crearProcariano,
+	crearBenefactor,
 	buscarProcariano,
 	buscarProcarianoPorId,
 	editarProcariano,

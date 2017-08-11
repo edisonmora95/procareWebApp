@@ -16,12 +16,17 @@ module.exports = function(sequelize, DataTypes) {
     },
     nombres: {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : true
     },
     apellidos: {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true,
     },
+    razonsocial: {
+      type : DataTypes.STRING,
+      allowNull : true,
+    },
+    
     direccion: {
       type : DataTypes.TEXT
     },
@@ -37,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     genero : {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true,
       validate : {
         isIn : [['masculino', 'femenino']]
       }
@@ -53,13 +58,13 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING
     },
     trabajo : {
-      type : DataTypes.TEXT
+      type : DataTypes.STRING
     }
   }, {
     classMethods: {
       associate: function(models) {
-         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'});
-         Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'});
+         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
+         //Persona.belongsToMany(models.Benefactor , {through: 'BenefactorPersona'})
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -85,6 +90,7 @@ module.exports = function(sequelize, DataTypes) {
           cedula: persona.cedula,
           nombres: persona.nombres,
           apellidos: persona.apellidos,
+          razonsocial: persona.razonsocial,
           direccion: persona.direccion,
           fechaNacimiento: persona.fechaNacimiento,
           genero: persona.genero,

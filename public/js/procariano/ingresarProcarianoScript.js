@@ -94,6 +94,7 @@ var main = new Vue({
 		}
 	},
 	methods: {
+		
 		validateBeforeSubmit() {
 			let self = this;
 			if(self.validarFechaNacimiento()){

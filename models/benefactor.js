@@ -26,9 +26,10 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : true
     },
+
     estado: {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull : false
       /*validate : {
         isIn : ['activo', 'inactivo' ]
       }*/
@@ -49,12 +50,41 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        //  Benefactor.belongsTo(models.Persona)
-       // Benefactor.hasMany(models.Persona , {through: 'Benefactor_persona'});
-        // associations can be defined here
+        Benefactor.belongsTo(models.Persona);
+       // Benefactor.belongsToMany(models.Persona, {through: 'BenefactorPersona'});
+     
+      },
+      crearBenefactor: function(benefactor, callback, errorCallback){
+        this.create({
+          PersonaId: benefactor.PersonaId,
+          valor_contribucion: benefactor.valor_contribucion,
+          dia_cobro: benefactor.dia_cobro,
+          tarjeta_credito: benefactor.tarjeta_credito,
+          tipo_donacion: benefactor.tipo_donacion,
+          estado: benefactor.estado,
+          nombre_gestor: benefactor.nombre_gestor,
+          relacion: benefactor.relacion,
+          observacion: benefactor.observacion
+          
+        }).then(callback).catch(errorCallback);
+      },
+      obtenerProcarianoPorId: function(idBenefactor, successCallback, errorCallback){
+        const Persona = sequelize.import("../models/persona");
+        this.findOne({
+          where: {
+            id: idBenefactor
+          },
+          include: [
+            {
+              model: Persona,
+              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+            }
+          ],
+          attributes: [['id', 'benefactorId']]
+        }).then(successCallback).catch(errorCallback);
       }
     }
-
   });
   return Benefactor;
 };
+

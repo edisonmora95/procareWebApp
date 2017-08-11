@@ -21,8 +21,8 @@
 		</textarea>
 		</v-row>
 		<v-row id="rowBotones">
-		<a class="waves-effect waves-light btn" @click="cancelarDonacion">Cancelar</a>
-		<a class="waves-effect waves-light btn pull right" @click="aceptarDonacion">Aceptar</a>
+		<a class="waves-effect waves-light btn"  id="btn_cancelar" @click="cancelarDonacion">Cancelar</a>
+		<a class="waves-effect waves-light btn pull right" id="btn_cancelar" @click="aceptarDonacion" >Aceptar</a>
 		</v-row>
 	</form>
 	<div class="container-button">

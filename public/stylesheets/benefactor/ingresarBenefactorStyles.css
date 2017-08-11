@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:700');
+
+
+.container{
+	margin-top: 5%;
+}
+.btn-cancelar, .btn-cancelar:hover{
+	background-color: #F04F5A;
+}
+
+#row-form{
+	padding: 3%;
+	/*border: 1px solid black;*/
+	background-color: white;
+	border-radius: 2%;
+}
+
+hr {
+  height: 1px;
+  background-color: orange;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+/*edita el focus de los inputfield*/
+ .input-field input[type=text]:focus {
+     border-bottom: 0.8px solid #21378A;
+     box-shadow: 0 1px 0 0 silver;
+   }
+    .input-field input[type=tel]:focus {
+     border-bottom: 0.8px solid #21378A;
+     box-shadow: 0 1px 0 0 silver;
+   }
+
+  .input-field input[type=email]:focus {
+     border-bottom: 0.8px solid #21378A;
+     box-shadow: 0 1px 0 0 silver;
+   }
+
+   .input-field input[type=number]:focus {
+     border-bottom: 0.8px solid #21378A;
+     box-shadow: 0 1px 0 0 silver;
+   }
+
+ .input-field textarea[id=observacion]:focus{
+     border-bottom: 0.8px solid #21378A;
+     box-shadow: 0 1px 0 0 silver;
+   }
+
+  .input-field input[type=text].valid {
+     border-bottom: 1px solid #21378A;
+     box-shadow: 0 1px 0 0 #000;
+   }
+
+    .input-field input[type=email].valid {
+     border-bottom: 1px solid #21378A;
+     box-shadow: 0 1px 0 0 #000;
+   }
+    .input-field input[type=tel].valid {
+     border-bottom: 1px solid #21378A;
+     box-shadow: 0 1px 0 0 #000;
+   }
+    .input-field input[type=number].valid {
+     border-bottom: 1px solid #21378A;
+     box-shadow: 0 1px 0 0 #000;
+   }
+
+h2{
+	color: #21378A;
+}
+
+fieldset {
+    margin: 8px;
+    border: 1px solid  #878BBF;
+    padding: 20px 30px;    
+    border-radius: 4px;
+}
+
+legend {
+	color: #CE8920;
+    padding: 3px;    
+}
+
+
+.modal-text{
+
+	color: black;
+}
+
+.modal{
+	width: 25%;
+}
+
+.is-danger{
+	border-color: red !important;
+	color: red;
+}
+
+.titulo{
+	font-family: 'Merriweather', serif;
+	font-size: 3rem;
+}
+/*Navbar*/
+li a{
+	padding: 0 16px !important;
+}
+#ulProcareAccion li a, #ulProcareFormacion li a{
+	padding: 0 15% !important;
+}
+

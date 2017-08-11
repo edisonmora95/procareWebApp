@@ -38,7 +38,7 @@ router.get('/usuarios', function(req, res, next){
       correo : req.user[0].dataValues.email, 
       roles : lista
     }
-
+ 
     res.json(json);
 });
 

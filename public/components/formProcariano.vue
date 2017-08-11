@@ -4,7 +4,7 @@
 			<v-row id="rowNombresApellidos">
 				<div class="col s6 input-field">
 					<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
-					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>ssxcvxvc
 					<label for="nombres" class="active">Nombres</label>
 				</div>
 				<div class="col s6 input-field">
