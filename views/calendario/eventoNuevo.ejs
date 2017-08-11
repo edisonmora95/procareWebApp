@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/eventoNuevo.css">
+	</head>
+	<body>
+		<div id="eventoApp">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container" id="container-evento-nueva">
+				<div>
+					<a @click="regresar"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
+					<header>
+						<h3 class="center-align">Evento nuevo</h3>
+					</header>
+					<form>
+				  	<v-row id="rowNombre">
+				  		<div class="col s12">
+				  			<label for="nombre">Nombre</label>	
+				  			<input name="nombre" id="nombre" v-model="evento.nombre" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+				  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
+				  		</div>
+				  	</v-row>
+				  	<v-row id="rowDescripcion">
+				  		<div class="col s12">
+				  			<label for="descripcion">Descripción</label>
+					  		<textarea name="descripcion" id="descripcion" v-model="evento.descripcion" class="materialize-textarea" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'"></textarea>
+					  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>	
+				  		</div>
+				  	</v-row>
+				  	<v-row id="rowLugar">
+				  		<div class="col s12">
+				  			<label for="descripcion">Lugar</label>
+					  		<textarea name="lugar" id="lugar" v-model="evento.lugar" class="materialize-textarea" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'"></textarea>
+					  		<span v-show="errors.has('lugar')" class="help is-danger">{{ errors.first('lugar') }}</span>	
+				  		</div>
+				  	</v-row>
+				  	<v-row id="rowFechaInicio">
+				  		<div class="col s6">
+				  			<label for="eventoFechaInicio">Fecha de inicio</label>
+					      <v-date-input id="eventoFechaInicio" name="eventoFechaInicio"></v-date-input>
+				  		</div>
+				  		<div class="col s6" id="divHoraInicio">
+				  			<label for="eventoHoraInicio">Hora de inicio</label>
+				  			<input type="text" class="timepicker" id="eventoHoraInicio">
+				  		</div>
+				  	</v-row>
+				  	<v-row id="rowFechaFin">
+				  		<div class="col s6">
+				  			<label for="eventoFechaFin">Fecha de fin</label>
+					      <v-date-input id="eventoFechaFin" name="eventoFechaFin"></v-date-input>
+				  		</div>
+				  		<div class="col s6" id="divHoraFin">
+				  			<label for="eventoHoraFin">Hora de fin</label>
+				  			<input type="text" class="timepicker" id="eventoHoraFin">
+				  		</div>
+				  	</v-row>
+				  	<v-row id="rowIngresosGastos">
+				  		<div class="col s6">
+				  			<label for="ingresos">Ingresos</label>
+				  			<input type="number" name="ingresos" id="ingresos" v-model="evento.ingresos" min="0" step="0.01" v-validate="'between:0,100000'">
+				  			<span v-show="errors.has('ingresos')" class="help is-danger">{{ errors.first('ingresos') }}</span>
+				  		</div>
+				  		<div class="col s6">
+				  			<label for="gastos">Gastos</label>
+				  			<input type="number" name="gastos" id="gastos" v-model="evento.gastos" min="0" step="0.01" v-validate="'between:0,100000'">
+				  			<span v-show="errors.has('gastos')" class="help is-danger">{{ errors.first('gastos') }}</span>
+				  		</div>
+				  	</v-row>
+				  	<v-row id="row-responsable">
+				  		<div class="col s12">
+				  			<v-row id="row-interior">
+									<div class="input-field col s6">
+										<label for="eventoResponsable">Responsable</label>
+										<input type="text" name="eventoResponsable" id="eventoResponsable" class="autocomplete" autocomplete="off">
+									</div>
+									<div class="input-field col s6">
+										<v-select name="estado" id="estado" v-model="evento.estado" select-text="" :items="estados"></v-select>
+				  					<label for="estado">Estado</label>
+									</div>
+				  			</v-row>
+				  		</div>
+				  	</v-row>
+				  	<v-row>
+				  		<a class="waves-effect waves-light btn pul right" @click="crearEvento">Crear</a>
+				  	</v-row>
+				  </form>
+				  <v-modal id="modalEventoCreado">
+			      <div slot="content">
+			        <h4 class="center-align">Evento creado correctamente</h4>
+				      <p class="center-align">¿Desea crear otro evento?</p>
+			      </div>
+			      <div slot="footer">
+			        <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="limpiarEventoNuevo">Si</a>
+				      <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="regresar">No</a>
+			      </div>
+			    </v-modal>
+				  <v-modal id="modalEventoErrorServidor">
+			      <div slot="content">
+			        <h4 class="center-align">Error</h4>
+				      <p class="center-align">No se pudo crear el evento. Intente recargar la página.</p>
+			      </div>
+			      <div slot="footer">
+			        <a href="/home/evento" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			      </div>
+			    </v-modal>
+			    <v-modal id="modalError">
+			    	<div slot="content">
+			    		<h4 class="center-align">Formulario con errores.</h4>
+				      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+				      <p class="center-align">Con el siguiente mensaje de error: </p>
+				      <p class="center-align">"{{errorObj.msj}}"</p>
+			    	</div>
+			    	<div slot="footer">
+			    		<a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    	</div>
+			    </v-modal>
+			    <v-modal id="modalFechaIncorrecta">
+			      <div slot="content">
+			        <h4 class="center-align">Error</h4>
+				      <p class="center-align">No puede escoger como fecha de realización una fecha ya pasada.</p>
+			      </div>
+			      <div slot="footer">
+			        <a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			      </div>
+			    </v-modal>
+				</div>
+			</main>
+		</div>
+	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="/build/index/eventoNuevoScript.js"></script>
+	</div>
+</html>

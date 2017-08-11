@@ -278,7 +278,8 @@
 				});
 			},
 			quitarChicoDeGrupo(self, chico){
-				const urlApi = '/api/pg/' + chico.idProcariano;
+				const urlApi = '/api/pg/quitar/' + chico.idProcariano;
+				console.log(urlApi)
 				$.ajax({
 					type: 'PUT',
 					url: urlApi,

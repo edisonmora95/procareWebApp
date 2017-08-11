@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/ingresarProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div id="ingresarNinoApp">
 			<header>
 				<navbar></navbar>
 			</header>
@@ -164,43 +164,12 @@
 					</form>
 				</div>
 			</main>
-			<!-- Modal Structure -->
-		  <div id="modalProcarianoCreado" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align modal-text">Procariano creado correctamente.</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
-			<!-- Modal Structure -->
-		  <div id="modalError" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">Formulario con errores.</h4>
-		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
-		      <p class="center-align">Con el siguiente mensaje de error: </p>
-		      <p class="center-align">"{{errorObj.msj}}"</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
-		  <!-- Modal Structure -->
-		  <div id="modalErrorAjax" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">{{errorAjax.titulo}}.</h4>
-		      <p class="center-align">"{{errorAjax.descripcion}}"</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
 		</div>
-		
 	</body>
 	<div>
 		<% include ../partials/scripts %>
-		<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-		<script src="/build/procariano/ingresarProcarianoScript.js"></script>
+		<!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
+		<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+		<script src="/build/procariano/ingresarNinoScript.js"></script>
 	</div>
 </html>

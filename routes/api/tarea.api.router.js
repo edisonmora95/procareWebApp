@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 
 //Post de la Tareas
-router.post('/nuevo', controladorTarea.crearTarea);
+router.post('/', controladorTarea.crearTarea);
 
 //Read Tareas
 /*
