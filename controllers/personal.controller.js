@@ -3,7 +3,7 @@
 @Autor: Jose Viteri
 @FechaCreacion: 30/07/2017
 */
-
+'use strict'
 var modelo = require('../models');
 var utils = require('../utils/utils');
 var respuestas = require('../utils/respuestas.js')
@@ -17,12 +17,14 @@ Modificado: 30
 */
 const crearPersonal = (req, res, next) => {
 
-
+	console.log('\n\nesta es la fecha de nacimiento ' + req.body.fechaNacimiento);
 	if(req.body.fechaNacimiento == ''){
-		fechaNacimiento = null;
+		let fechaNacimiento = null;
 	}else{
-		fechaNacimiento = new Date(req.body.fechaNacimiento);	
+
+		let fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
+	console.log('\n\nesta es la fecha de nacimiento modificada' + fechaNacimiento);
 	
 	let persona = {
 		cedula : req.body.cedula,
@@ -87,12 +89,12 @@ const crearPersonal = (req, res, next) => {
 
 					}).catch(error2 => {
 						return respuestas.error(res, 'Usuario con esa cédula ya existe', '', error2);
-					})
+					});
 
 
 				}).catch( error => {
 					return respuestas.error(res, 'algo sucedio', '', error2);
-				})
+				});
 
 			})
 		}
@@ -110,17 +112,11 @@ const obtenerTablaPersonal = (req,res,next) =>{
 		}]
 	}).then( personal => {
 		console.log(personal);
-		return res.status(200).json({
-			status: true,
-			personal: personal
-		})
+		return respuestas.okGet(res,'aqui esta todo el staff del personal',personal);
 
 	}).catch( error => {
 		console.log(error);
-		return res.status(400).json({
-			status : false,
-			error : error
-		})
+		return respuestas.error(res, 'algo sucedio', '', error);
 	})
 }
 
@@ -177,11 +173,12 @@ const eliminarPersonal = (req,res,next) =>{
 }
 
 
-const editarPersonal = (res,req,next) =>{
+const editarPersonal = (req,res,next) =>{
 
 	console.log('entra aqui')
-	console.log(req.query.id);
-	let id = req.query.id;
+	console.log(req.params);
+	let id = req.params.id;
+	let fechaNacimiento = '';
 	if(req.body.fechaNacimiento == ''){
 		fechaNacimiento = null;
 	}else{
@@ -202,7 +199,19 @@ const editarPersonal = (res,req,next) =>{
 		sueldo : req.body.sueldo
 	};
 
-	modelo.Persona.update(persona,{
+	modelo.Persona.update({
+		cedula : req.body.cedula,
+		nombres : req.body.nombres,
+		apellidos : req.body.apellidos,
+		direccion : req.body.direccion,
+		fechaNacimiento : fechaNacimiento,
+		genero : req.body.genero,
+		contrasenna : req.body.contrasenna,
+		email : req.body.email,
+		celular : req.body.celular,
+		convencional : req.body.convencional,
+		sueldo : req.body.sueldo
+	},{
 		where : {
 			id : id
 		}

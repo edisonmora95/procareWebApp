@@ -80,7 +80,8 @@ var main = new Vue({
 		validateBeforeSubmit() {
 			let self = this;
 			if(self.validarFechaNacimiento()){
-				this.$validator.validateAll().then(() => {
+				this.$validator.validateAll().then(resultado => {
+					console.log('este es el resultado ' + resultado);
 					self.ingresarPersonal();	        
 	      }).catch(() => {
 	          self.errorObj.campo = self.errors.errors[0].field;
@@ -110,7 +111,7 @@ var main = new Vue({
 			return true;
     },
     ingresarPersonal(){
-    	console.log("ingresado personal correctamente")
+    	//console.log("ingresado personal correctamente")
     	
     	let self = this;
     	console.log(self.personal);
@@ -120,7 +121,7 @@ var main = new Vue({
       	url: '/api/personal/',
       	data: self.personal,
       	success: function(res){
-      		console.log(res)
+      		console.log('este es res: ' + res);
       		if(res.estado){
       			$('#modalPersonalCreado').modal('open');
       		}else{
