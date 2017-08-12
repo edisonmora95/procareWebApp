@@ -9,6 +9,7 @@
 
 import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
+import DataTable from 'vue-materialize-datatable';
 
 Vue.use(Materials);
 Vue.component('navbar', Navbar); 
@@ -17,6 +18,7 @@ let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
 	created: function(){
 		this.obtenerUsuario();
+		this.obtenerGrupos(this);
 	},
 	mounted: function(){
 		//Inicializadores de componentes de Materialize
@@ -27,28 +29,6 @@ let BuscarGrupoApp = new Vue({
 	},
 	data: {
 		grupos: [],
-		aux: [
-			{
-				nombre: 'Grupo de Mario',
-				etapa: 'Quinta etapa',
-				animador: 'Mario Montalván'
-			},
-			{
-				nombre: 'Grupo de Fernando',
-				etapa: 'Quinta etapa',
-				animador: 'Fernando Icaza'
-			},
-			{
-				nombre: 'Grupo de Luis',
-				etapa: 'Quinta etapa',
-				animador: 'Luis Andino'
-			},
-			{
-				nombre: 'Grupo de Bernardo',
-				etapa: 'Quinta etapa',
-				animador: 'Bernardo Meitzner'
-			}
-		],
 		grupo:{
 			nombre: '',
 			anio: new Date().getFullYear(),
@@ -60,44 +40,102 @@ let BuscarGrupoApp = new Vue({
 	},
 	methods: {
 		obtenerUsuario(){
-			//Codigo para obtener el usuario loggeado
 			let self = this;
-			self.usuario = {
-				nombre: '',
-				tipo: 'director formacion',
-				grupo: '',
-				genero: 'masculino'
-			};
-			if(self.usuario.tipo === 'director formacion'){
-				if(self.usuario.genero === 'masculino'){
-					self.grupo.genero = 'Procare';
-				}else if(self.usuario.genero === 'femenino'){
-					self.grupo.genero = 'Procare Mujeres';
-				}
-			}
-		},
-		//Eventos
-		buscar(){
-			let self = this;
-			let campoLleno = false;	//Bandera que indicará si hay por lo menos un campo de búsqueda lleno.
-			self.grupos = [];	//Lo vacío por si acaso...
-			console.log(self.grupo);
-			//Primero revisa si por lo menos un campo está lleno
-			$.each(self.grupo, (property, value) => {
-				if(value !== ''){
-					campoLleno = true;
-					return false;
+			$.ajax({
+				type: 'GET',
+				url: '/api/login/usuarios',
+				success(res){
+					self.usuario = res;
+					if(self.usuario.tipo === 'director formacion'){
+						if(self.usuario.genero === 'masculino'){
+							self.grupo.genero = 'Procare';
+						}else if(self.usuario.genero === 'femenino'){
+							self.grupo.genero = 'Procare Mujeres';
+						}
+					}
 				}
 			});
-			if(campoLleno){
-				//Llamada a la api...
-				$.each(self.aux, (index, grupo) => {
-					self.grupos.push(grupo);
+		},
+		obtenerGrupos(self){
+			$.ajax({
+				type: 'GET',
+				url: '/api/grupos/',
+				success(res){
+					self.armarArrayGrupos(self, res.datos);
+				}
+			});
+		},
+		armarArrayGrupos(self, grupos){
+			$.each(grupos, function(index, grupo){
+				let grupoObj = {
+					id: grupo.id,
+					nombre: grupo.nombre,
+					tipo: grupo.tipo,
+					integrantes: grupo.cantidadChicos,
+					genero: grupo.genero,
+					etapaId: '',
+					etapaNombre: ''
+				};
+
+				//Se busca la etapa actual del grupo
+				$.each(grupo.Etapas, function(j, etapa){
+					let fechaFin = etapa.GrupoEtapa.fechaFin;
+					//La etapa actual es aquella que tenga fecha fin null
+					if(fechaFin === null){
+						grupoObj.etapaId = etapa.id;
+						grupoObj.etapaNombre = etapa.nombre;
+					}
+				});
+
+				//Solo se añaden los grupos que pertenezcan actualmente a una etapa
+				if(grupoObj.etapaId !== ''){
+					self.grupos.push(grupoObj);
+				}
+
+
+			});
+		},
+		//Eventos
+		irAGrupo(grupo){
+			let url = '/grupos/' + grupo.id;
+			window.location.href = url;
+		},
+		buscar(){
+			let self = this;
+			self.grupos = [];	//Lo vacío por si acaso...
+			if(self.revisarUnCampoLleno(self)){
+				//Llamada a la api
+				$.ajax({
+					type: 'GET',
+					url: '/api/grupos/',
+					data: self.grupo,
+					success(res){
+						console.log(res);
+					}
 				});
 			}else{
 				Materialize.toast('Llene por lo menos un campo de búsqueda.', 3000, 'rounded');
 			}
 			
+		},
+		revisarUnCampoLleno(self){
+			let flag = false;
+			$.each(self.grupo, (property, value) => {
+				if(value !== ''){
+					flag = true;
+					return true;
+				}
+			});
+			return flag;
+		},
+		realizarBusqueda(){
+			$.ajax({
+				type: 'GET',
+				url: '/api/grupos/',
+				success(res){
+					
+				}
+			})
 		}
 	}
 });

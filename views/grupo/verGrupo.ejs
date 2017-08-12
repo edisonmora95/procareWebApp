@@ -16,40 +16,36 @@
 				<navbar></navbar>
 			</header>
 			<main class="container">
-				<div class="card large" v-if="editar === false">
-					<div class="row">
-						<div class="col s12">
-							<h2 class="center-align">{{grupo.nombre}}</h2>
-							<p class="center-align">Animador: {{grupo.animador}}</p>
-							<p class="center-align">Etapa actual: {{grupo.etapa}}</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col s6">
-							<h5 class="center-align">Lista de chicos</h5>
-							<ul id="listaChicos">
-								<li v-for="chico in integrantes" @click="seleccionChico(chico)">{{chico.nombres}} {{chico.apellidos}}</li>
-							</ul>
-						</div>
-						<div class="col s6">
-							<h5 class="center-align">Vista previa</h5>
-							<div v-if="!checkIsEmpty(chicoSeleccionado)">
-								<h6 class="center-align">{{chicoSeleccionado.nombres}} {{chicoSeleccionado.apellidos}}</h6>
-								<p class="center-align">Cédula: {{chicoSeleccionado.cedula}}</p>
-								<p>Fecha de nacimiento: {{chicoSeleccionado.fechaNacimiento}}</p>
-								<p>Celular: {{chicoSeleccionado.celular}}</p>
-							<p>Convencional: {{chicoSeleccionado.convencional}}</p>
-							</div>
-						</div>
-					</div>
-					<div class="row" v-if="usuario === 'personal'" id="row-btns">
+				<section class="card large" v-if="editar === false">
+					<section class="row">
+						<header class="headerNombreGrupo">
+							<h3 class="center-align">{{grupo.nombre}}</h3>
+							<p class="center-align">Etapa actual: {{etapa.text}}</p>	
+						</header>
+						<article class="col s4 center-align">
+							<h5 class="center-align">Animador</h5>
+							<img src="http://via.placeholder.com/150x150" class="responsive-img ">
+							<p class="center-align">{{animador.nombres}}</p>
+						</article>
+						<article>
+							<header>
+								<h5 class="center-align">Lista de chicos</h5>
+							</header>
+							<main>
+								<ul id="listaChicos">
+									<li v-for="chico in integrantes" @click="seleccionChico(chico)" :id="chico.idProcariano"> <i class="material-icons">person</i><p>{{chico.nombre}} {{chico.apellidos}}</p></li>
+								</ul>
+							</main>
+						</article>
+					</section>
+					<div class="row" v-if="puedeEditar" id="row-btns">
 						<a class="waves-effect waves-light btn" href="#modalEliminarGrupo">Eliminar</a>
 						<a class="waves-effect waves-light btn pull right" @click="habilitarEditar">Editar</a>
 					</div>
-				</div>
-				<div class="card large" v-if="editar === true">
+				</section>
+				<section class="card large" v-if="editar === true">
 					<editar-grupo :grupo="grupo" :integrantes="integrantes" @edicionterminada="editar = $event"></editar-grupo>
-				</div>
+				</section>
 			</main>
 			<!-- Modal Structure -->
 		  <div id="modalEliminarGrupo" class="modal">

@@ -9,7 +9,7 @@
 /* jshint node: true */
 'use strict';
 
-var controladorProcariano = require('../../controllers/procariano');
+var controladorProcariano = require('../../controllers/procariano.controller');
 var express = require('express');
 var router = express.Router();
 var utils = require('../../utils/utils');
@@ -22,6 +22,8 @@ router.post('/', utils.generarHash,controladorProcariano.crearProcariano);
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.
 router.get('/', controladorProcariano.buscarProcariano);
+
+router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
 
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano

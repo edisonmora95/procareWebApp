@@ -19,6 +19,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('personaRols');
+    return queryInterface.dropTable('PersonaRols');
   }
 };

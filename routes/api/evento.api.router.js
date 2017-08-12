@@ -1,7 +1,7 @@
 /*
 	CRUD de Eventos
 */
-var controladorEvento = require('../../controllers/evento')
+var controladorEvento = require('../../controllers/evento.controller')
 var express = require('express');
 var router = express.Router();
 

@@ -42,6 +42,15 @@
 				<v-btn-link class="pull-right" waves-light modal flat>Aceptar</v-btn-link>
 			</div>
 		</v-modal>
+		<v-modal id="modalErrorAjax">
+			<div slot="content">
+				<h4 class="center-align">¡Error!</h4>
+				<p class="center-align">No se pudo conectar con el servidor. Recargue la página.</p>
+			</div>
+			<div slot="footer">
+				<v-btn-link class="pull-right" waves-light modal flat>Aceptar</v-btn-link>
+			</div>
+		</v-modal>
 	</div>
 	
 </template>
@@ -76,6 +85,10 @@
 
 	module.exports = {
 		props: ['flag', 'grupo'],
+		mounted(){
+			this.obtenerEtapas(this);
+			this.obtenerPosiblesAnimadores(this);
+		},
 		data() {
 			return{
 				/*grupo: {
@@ -83,38 +96,7 @@
 					animador: '',
 				},*/
 				mensaje: '',
-				animadores: [
-				{
-				  "id": 1,
-				  "text": "Carmen Huxham"
-				}, {
-				  "id": 2,
-				  "text": "Cris Hamblington"
-				}, {
-				  "id": 3,
-				  "text": "Nelia Foli"
-				}, {
-				  "id": 4,
-				  "text": "Noam Deverose"
-				}, {
-				  "id": 5,
-				  "text": "Kaia Bordone"
-				}, {
-				  "id": 6,
-				  "text": "Zonda Furmage"
-				}, {
-				  "id": 7,
-				  "text": "Lenci Casarino"
-				}, {
-				  "id": 8,
-				  "text": "Cary De Metz"
-				}, {
-				  "id": 9,
-				  "text": "Mortie Connar"
-				}, {
-				  "id": 10,
-				  "text": "Stephana McQuarter"
-				}],
+				animadores: [],
 				flagVue: true,
 				generosGrupo: [
 					{
@@ -126,44 +108,73 @@
 						text: 'Procare Mujeres'
 					}
 				],
-				etapasGrupo: [
-					{
-						id: 'Iniciación',
-						text: 'Iniciación'
-					},
-					{
-						id: 'Primera etapa',
-						text: 'Primera etapa'
-					},
-					{
-						id: 'Segunda etapa',
-						text: 'Segunda etapa'
-					},
-					{
-						id: 'Tercera etapa',
-						text: 'Tercera etapa'
-					},
-					{
-						id: 'Cuarta etapa',
-						text: 'Cuarta etapa'
-					},
-					{
-						id: 'Quinta etapa',
-						text: 'Quinta etapa'
-					}
-				]
+				etapasGrupo: []
 			}
 		},
 		methods: {
+			/*
+				@Descripción:
+					Obtiene a todos los procarianos que pueden ser animadores de la base de datos.
+					A partir de eso, se arma el array para mostrar a los animadores en el select
+			*/
+			obtenerPosiblesAnimadores(self){
+				$.ajax({
+					type: 'GET',
+					url: '/api/animadores/',
+					success(res){
+						if(res.status){
+							self.armarArrayAnimadores(self, res.datos)							
+						}
+					}
+				});
+			},
+			armarArrayAnimadores(self, animadores){
+				$.each(animadores, function(index, animador){
+					let animadorObj = {
+						id: animador.procarianoId,
+						text:animador.Persona.nombres + ' ' +animador.Persona.apellidos
+					};
+					self.animadores.push(animadorObj);
+				});
+			},
+			/*
+				@Descripción: Obtiene todas las etapas de la base de datos y las añade al aray para mostrarlas en el <select>
+			*/
+			obtenerEtapas(self){
+				$.ajax({
+					type: 'GET',
+					url: '/api/etapa/',
+					success(res){
+						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
+						if(busquedaExitosa){
+							self.armarArrayEtapas(self, res.datos);
+						}else{
+							alert('Error al buscar etapas en la base de datos');
+						}
+					}
+				});
+			},
+			armarArrayEtapas(self, etapas){
+				$.each(etapas, function(index, etapa){
+					let etapaObj = {
+						id: etapa.id,
+						text: etapa.nombre
+					};
+					self.etapasGrupo.push(etapaObj);
+				});
+			},
 			//Eventos de botones
 			cancelar(){
 				//Regresar al menú principal
+				window.location.href = '/home';
 			},
+			/*
+				@Descripción:
+					Lleva al siguiente componente para escoger a los integrantes luego de crear el grupo en la base de datos
+			*/
 			continuar(){
-				//Lleva al siguiente componente, para escoger a los chicos
 				if(this.formCompleto()){
-					this.flagVue = false;
-					this.$emit('flagchanged', this.flagVue);	
+					this.crearRegistroGrupo();
 				}else{
 					$('#modalCamposIncompletos').modal('open');
 				}
@@ -189,6 +200,27 @@
 				else{
 					return true;	
 				}
+			},
+			crearRegistroGrupo(){
+				let self = this;
+				console.log('Se va a crear el siguiente registro de grupo: ');
+				console.log(self.grupo);
+				$.ajax({
+					type: 'POST',
+					url: '/api/grupos/',
+					data: self.grupo,
+					success(res){
+						console.log(res)
+						if(res.estado){
+							self.grupo.id = res.datos.grupo.id;
+							self.flagVue = false;
+							self.$emit('flagchanged', self.flagVue);		
+						}
+					},
+					error(jqXHR, textStatus, error){
+						$('#modalErrorAjax').modal('open');
+					}
+				});
 			}
 		}
 	}

@@ -5,10 +5,8 @@
 @UltimaFechaModificacion: 07/06/2017 @JoseViteri (cambios detallados abajo)
 */
 
-<<<<<<< HEAD
+
 'use strict';
-=======
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 
 
 var modelo = require('../models');
@@ -82,12 +80,10 @@ const crearProcariano = (req, res, next) => {
 
 
 	}).then( persona => {
-<<<<<<< HEAD
+
 
 		console.log('S1')
 
-=======
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 		modelo.Procariano.create({
 			PersonaId : persona.get('id'),
 			colegio : colegio,
@@ -97,12 +93,11 @@ const crearProcariano = (req, res, next) => {
 			estado : estado,
 			haceParticipacionEstudiantil : haceParticipacionEstudiantil
 		}).then( procariano => {
-<<<<<<< HEAD
+
 
 			console.log('S2')
 
-=======
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
+
 			var status = true;
 			var json1 = {
 				status : status,
@@ -114,11 +109,9 @@ const crearProcariano = (req, res, next) => {
 
 			res.json(json1);
 		}).catch( error2 => {
-<<<<<<< HEAD
+
 	console.log('E2')
 
-=======
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 			var json1 = {
 			status : false,
 			mensaje : 'No se pudo crear este procariano',
