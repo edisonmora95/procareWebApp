@@ -14,17 +14,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     programa: {
       type : DataTypes.STRING
-    }, 
-    estado: {
-
-      type : DataTypes.STRING,
-      allowNull : false
     }
-   
   }, {
     classMethods: {
       associate: function(models) {
-        Nivel.belongsTo(models.Centro, {foreignKey: 'idCentro'})
+        Nivel.belongsTo(models.Centro);
         // associations can be defined here
       }
     }

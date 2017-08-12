@@ -8,15 +8,9 @@
 var modelo = require('../models');
 
 const CrearParalelo = (req, res, next) => {
-
-  estado = 'activo';
-
   modelo.Paralelo.create({
     nombre : req.body.nombre,
-    cantidadNinios : req.body.cantidadNinios,
-    estado : req.body.estado
-    
-
+    cantidadNinios : req.body.cantidadNinios
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -39,11 +33,7 @@ const CrearParalelo = (req, res, next) => {
 }
 
 const eliminarParalelo = (req, res, next) => {
-   estado = 'inactivo';
-   modelo.Paralelo.update({
-    {
-      estado: req.body.estado
-    }
+  modelo.Paralelo.destroy({
     where:{
       id: req.params.id
     }
@@ -68,10 +58,8 @@ const eliminarParalelo = (req, res, next) => {
 
 const editarParalelo = (req, res, next) => {
   modelo.Paralelo.update({
-
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada
-
+    nombre : req.body.nombre,
+    cantidadNinios : req.body.cantidadNinios,
   },{
     where:{
       id: req.params.id
@@ -122,7 +110,7 @@ const mostrarParalelo = (req,res,next) =>{
 }
 
 module.exports = {
-  CrearParalelo,
+  crearParalelo,
   eliminarParalelo,
   editarParalelo,
   mostrarParalelo

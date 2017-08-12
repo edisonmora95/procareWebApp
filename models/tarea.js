@@ -4,7 +4,6 @@
 @FechaCreacion: 16/06/2017
 @UltimaFechaModificacion: 03/07/2017 @JV modificado el validate del estado, y el ID responsable
 */
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Tarea = sequelize.define('Tarea', {

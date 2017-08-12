@@ -1,8 +1,14 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var ProcarianoCargoFormacion = sequelize.define('ProcarianoCargoFormacion', {
-    fechaInicio: DataTypes.DATE,
-    fechaFin: DataTypes.DATE
+  var Asesor = sequelize.define('Asesor', {
+    fechaInicio : {
+      type : DataTypes.DATE,
+      allowNull : true
+    },
+    fechaFin : {
+      type : DataTypes.DATE,
+      allowNull : true
+    }
   }, {
     classMethods: {
       associate: function(models) {
@@ -11,5 +17,5 @@ module.exports = function(sequelize, DataTypes) {
     },
     freezeTableName: true
   });
-  return ProcarianoCargoFormacion;
+  return Asesor;
 };

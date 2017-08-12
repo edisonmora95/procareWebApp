@@ -1,8 +1,14 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var ProcarianoTipo = sequelize.define('ProcarianoTipo', {
-    fechaInicio: DataTypes.DATE,
-    fechaFin: DataTypes.DATE
+    fechaInicio : {
+      type : DataTypes.DATE,
+      allowNull : true
+    },
+    fechaFin : {
+      type : DataTypes.DATE,
+      allowNull : true
+    }
   }, {
     classMethods: {
       associate: function(models) {

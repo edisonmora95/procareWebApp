@@ -26,7 +26,8 @@ const crearNinoAccion = (req, res, next) => {
 		email : req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
-		convencional : req.body.convencional
+		convencional : req.body.convencional,
+		sueldo : 0
 	};
 	modelo.Persona.crearPersona(persona, (persona) => {
 		let ninoaccion = {
@@ -36,7 +37,7 @@ const crearNinoAccion = (req, res, next) => {
 			telefonoRep : req.body.telefonoRep,
 			escuela: req.body.escuela,
 			esBautizado: req.body.esBautizado,
-			estado : req.body.estado
+			estado : 'activo'
 		};
 		modelo.NinoAccion.crearNinoAccion(ninoaccion, (ninoaccion) => {
 			return res.status(200).json({

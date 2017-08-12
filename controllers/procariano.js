@@ -561,8 +561,7 @@ chicoEnGrupo = (chico, array) => {
 	let flag = false;
 	for (let i = 0; i < array.length; i++) {
 		chicoEnGrupo = array[i];
-		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){
-			
+		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){	
 			flag = true;
 			break;
 		}

@@ -1,6 +1,4 @@
 /*
-
->>>>>>> 0ade0d7ca6e482b50084cb1ad035654c58a31ed9
 @Descripcion: Api del procariano
 @Autor: jose viteri
 @FechaCreacion: 25/05/2017

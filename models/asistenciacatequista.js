@@ -1,8 +1,8 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var PersonaCargoFundacion = sequelize.define('PersonaCargoFundacion', {
-    fechaInicio: DataTypes.DATE,
-    fechaFin: DataTypes.DATE
+  var AsistenciaCatequista = sequelize.define('AsistenciaCatequista', {
+    fecha: DataTypes.DATE,
+    descripcion: DataTypes.STRING(300)
   }, {
     classMethods: {
       associate: function(models) {
@@ -11,5 +11,5 @@ module.exports = function(sequelize, DataTypes) {
     },
     freezeTableName: true
   });
-  return PersonaCargoFundacion;
+  return AsistenciaCatequista;
 };

@@ -1,18 +1,24 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('PersonaCargoFundacions', {
+    return queryInterface.createTable('Clases', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      fechaInicio: {
+      fecha: {
         type: Sequelize.DATE
       },
-      fechaFin: {
+      horaInicio: {
         type: Sequelize.DATE
+      },
+      horaSalida: {
+        type: Sequelize.DATE
+      },
+      descripcion: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -25,6 +31,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('PersonaCargoFundacions');
+    return queryInterface.dropTable('Clases');
   }
 };

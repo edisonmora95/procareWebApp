@@ -4,7 +4,6 @@
 @FechaCreacion: 15/07/2017
 @UltimaFechaModificacion: 03/07/2017 @JV modificado el validate del estado, y el ID responsable
 */
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Centro = sequelize.define('Centro', {
@@ -16,7 +15,6 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING
     },
     estado: {
-
       type : DataTypes.STRING,
       allowNull : false
     },
@@ -36,13 +34,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-       // Centro.belongsTo(models.Persona, {foreignKey: 'idResponsable'})
+        Procariano.hasMany(models.Nivel);
         // associations can be defined here
       }
     }
-
   });
   return Centro;
 };
-
-

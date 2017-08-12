@@ -4,7 +4,6 @@
 @FechaCreacion: 14/07/2017
 @UltimaFechaModificacion: 29/07/2017
 */
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
    var Ticket = sequelize.define('Ticket', {

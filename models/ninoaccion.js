@@ -2,8 +2,6 @@
 @Descripcion: Modelo de Niño Accion
 @UltimaFechaModificacion: 29/07/2017 @LuisBSC15
 */
-
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var NinoAccion = sequelize.define('NinoAccion', {

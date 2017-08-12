@@ -2,7 +2,7 @@
 @Descripcion: Api de Club por ti
 @Autor: Luis Lainez
 @FechaCreacion: 14/07/2017
-@UltimaFechaModificacion: 14/07/2017
+@UltimaFechaModificacion: 12/08/2017 @erialper Corrige las rutas
 
 */
 var controladorticket= require('../../controllers/ticket')

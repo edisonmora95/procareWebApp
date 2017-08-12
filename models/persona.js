@@ -4,11 +4,9 @@
 @Descripcion: Modelo de persona
 @Autor: jose viteri
 @FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 18/06/2017 @JoseViteri (se agrego la funcion de clase compararContrasenna)
-
+@UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
 
 */
-
 var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
@@ -32,10 +30,6 @@ module.exports = function(sequelize, DataTypes) {
     fechaNacimiento: {
       type : DataTypes.DATE
     },
-    genero : {
-      type : DataTypes.STRING,
-      allowNull : false
-    },
     contrasenna : {
       type : DataTypes.STRING
     },
@@ -58,12 +52,14 @@ module.exports = function(sequelize, DataTypes) {
     },
     trabajo : {
       type : DataTypes.TEXT
+    },
+    sueldo : {
+      type : DataTypes.DOUBLE
     }
   }, {
     classMethods: {
       associate: function(models) {
         Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
-        Persona.belongsToMany(models.Benefactor , {through: 'benefactor_persona'})
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -96,7 +92,8 @@ module.exports = function(sequelize, DataTypes) {
           email: persona.email,
           celular: persona.celular,
           trabajo: persona.trabajo,
-          convencional: persona.convencional
+          convencional: persona.convencional,
+          sueldo: persona.sueldo
         }).then(callback).catch(errorCallback);
       }
     }/*, hooks : {
@@ -116,6 +113,5 @@ module.exports = function(sequelize, DataTypes) {
         },
     }*/
   });
-
   return Persona;
 };

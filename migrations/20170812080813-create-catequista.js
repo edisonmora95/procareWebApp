@@ -1,21 +1,18 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('CargoFundacions', {
+    return queryInterface.createTable('Catequista', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombre: {
-        type: Sequelize.STRING
+      fechaInicio: {
+        type: Sequelize.DATE
       },
-      sueldo: {
-        type: Sequelize.DOUBLE
-      },
-      descripcion: {
-        type: Sequelize.STRING
+      fechaFin: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +25,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('CargoFundacions');
+    return queryInterface.dropTable('Catequista');
   }
 };

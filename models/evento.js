@@ -4,12 +4,9 @@
 @FechaCreacion: 16/06/2017
 @UltimaFechaModificacion: --
 */
-var bcrypt = require('bcryptjs');
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Evento = sequelize.define('Evento', {
-
     nombre: {
       type : DataTypes.STRING,
       allowNull : false
@@ -30,7 +27,6 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.DECIMAL(10,2)
     },
     estado: {
-
       type : DataTypes.STRING,
       allowNull : false
     }
