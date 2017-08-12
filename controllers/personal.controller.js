@@ -19,10 +19,10 @@ const crearPersonal = (req, res, next) => {
 
 	console.log('\n\nesta es la fecha de nacimiento ' + req.body.fechaNacimiento);
 	if(req.body.fechaNacimiento == ''){
-		let fechaNacimiento = null;
+		var fechaNacimiento = null;
 	}else{
 
-		let fechaNacimiento = new Date(req.body.fechaNacimiento);	
+		var fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
 	console.log('\n\nesta es la fecha de nacimiento modificada' + fechaNacimiento);
 	

@@ -62,6 +62,7 @@ let indexApp = new Vue({
 	    return moment(date);
 	  },
 	  date(date) {
+	  	console.log(date)
 	    var es = moment().locale('es');
 	    if (date === undefined || date === '') {
 	      return '----';

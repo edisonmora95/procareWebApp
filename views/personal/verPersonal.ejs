@@ -91,13 +91,12 @@
 					</div>
 				</div>
 				<!--End row ver procariano-->
-				<!--
+				
 				<div class="card" id="rowEditar" v-if="habilitaredicion">
 					<div class="card-content">
-						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
+						<editar :personal="personal" :habilitaredicion="habilitaredicion"  @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
-				-->
 			</main>
 
 			<!-- Modal Structure -->
@@ -123,10 +122,10 @@
 		  <!-- Modal Structure -->
 		  <div id="modalExitoEliminar" class="modal">
 		    <div class="modal-content">
-		      <p class="center-align">Procariano eliminado correctamente.</p>
+		      <p class="center-align">Miembro del personal eliminado correctamente.</p>
 		    </div>
 		    <div class="modal-footer">
-		      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 		    </div>
 		  </div>
 		</div>
