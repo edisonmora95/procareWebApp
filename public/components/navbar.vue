@@ -8,7 +8,15 @@
 		    	<div class="userView">
 			      
 			    </div>
+
 		    </li>
+		    <li>
+		    	<img :src="logoImagen" alt="logo procare" class=" responsive-img circle" >
+		    </li>
+		    <li>
+		    	<h4> {{usuario.nombre}} {{usuario.apellidos}}</h4>
+		    </li>
+
 		    <li class="no-padding">
 		    	<ul class="collapsible collapsible-accordion">
 		    		<li>
@@ -42,10 +50,39 @@
 		    		</li>
 		    	</ul>
 		    </li>
+		    <li><a href="/cambioContrasenna">Cambiar contraseña</a></li>
 		    <li><a href="/logout">Salir</a></li>
+
 		  </ul>
 		</nav>
+		<!--
+		<div id="modalFormacion" class="modal">
+			<div class="modal-content" id="modal-content">
+			  <h4 class="center-align">Asignación de directores de formación </h4>
+				<form action="">
+							<div class="row">
+								  <div class="input-field col s6">							  
+								    <select >
+								      <option  v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'masculino' " :value="usuario.id">{{usuario.nombres}} {{usuario.apellidos}}</option>
+								    </select>
+								    <label>Hombres</label>
+								  </div>
+									<div class="input-field col s6">
+								    <select >
+								      <option v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'femenino' " :value="usuario.id">  {{usuario.nombres}} {{usuario.apellidos}}</option>
+								    </select>
+								    <label>Mujeres</label>
+								  </div>
+							</div>
+						</form>
+			</div>
+			<div class="modal-footer">
+			      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Aceptar</a>
+			</div>
+		</div>
+		-->
 	</div>
+
 	
 </template>
 
@@ -55,14 +92,22 @@
 			this.obtenerUsuarioLogeado(this);
 		},
 		mounted(){
+			this.generoUsuarioImagen();
 			$(".button-collapse").sideNav();
 			$(".dropdown-button").dropdown();
+			if($.inArray('director ejecutivo', this.usuario.roles) >= 0){
+			  	//this.cargarCandidatosFormacion(this); // genera y carga la informacion de los posibles candidatos a formacion
+			 }
 			//this.formarNavbar();
 		},
 		data: function() {
 			return{
 				usuario: {},
 				grupoId: 0,
+				logoImagen: '/images/logoProcareHombres2.png',
+				candidatosFormacion: [],
+				elegidoFormacionHombre: '',
+				elegidoFormacionMujer: ''
 			}
 		},
 		methods: {
@@ -176,11 +221,9 @@
 				let menuPad = $('#ulProcareAdministracion');
 				//self.crearLi('Personal','/personal/', menuPad);
 				self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
+				self.crearLi('Cargos', '/usuarios', menuPad);
+				self.crearLi('Cargos', '#modalFormacion', menuPad);
 				//self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
-
-
-
-
 			},
 			crearDropdownPA() {
 				//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
@@ -248,6 +291,92 @@
 				let a = $('<a>').html(htmlAnchor).attr({href: hrefAnchor});
 				li.append(a);
 				ulContenedor.append(li);
+			},
+			/*
+			creador : JV
+			fecha : 11/08/2017
+			//Pone la imagen del logo en la navbar dependiendo si eres mujer u hombre
+
+			*/
+			generoUsuarioImagen : function(){
+				let self = this;
+				if (self.usuario.genero == 'femenino'){
+					self.logoImagen = '/images/logoProcareMujeres2.png';
+				}else{
+					self.logoImagen = '/images/logoProcareHombres2.png';
+				}
+			},
+			cargarCandidatosFormacion : function(self){
+				const urlApi = '/api/usuarios/';
+				//let self = this;
+				//console.log(urlApi)
+				$.ajax({
+					type: 'GET',
+					url: urlApi,
+					success(res){
+						console.log(res)
+						if (res.estado){
+							self.candidatosFormacion = res.datos;
+							$.each(res.datos, function(index, element){
+								if($.inArray('director formacion', element.roles) >= 0){
+									if (element.genero == 'masculino'){
+											self.elegidoFormacionHombre = element;
+						  		
+						 			}else if ( element.genero == 'femenino') {
+						 					self.elegidoFormacionMujer = element;
+						 			}
+						 		}								
+							});
+
+						}else{
+							console.log(res);
+						}
+						self.grupoId = res.datos.GrupoId;
+						console.log(self.grupoId)
+					},
+					error(err){
+						console.log(err);
+					}
+				});
+
+			},
+			designarDirectorFormacion : function(){
+				/*
+
+				const urlApi = '/api/usuarios/' + self.;
+				let self = this;
+
+				let data = 
+				//console.log(urlApi)
+				$.ajax({
+					type: 'GET',
+					url: urlApi,
+					success(res){
+						console.log(res)
+						if (res.estado){
+							self.candidatosFormacion = res.datos;
+							$.each(res.datos, function(index, element){
+								if($.inArray('director formacion', element.roles) >= 0){
+									if (element.genero == 'masculino'){
+											self.elegidoFormacionHombre = element;
+						  		
+						 			}else if ( element.genero == 'femenino') {
+						 					self.elegidoFormacionMujer = element;
+						 			}
+						 		}								
+							});
+
+						}else{
+							console.log(res);
+						}
+						self.grupoId = res.datos.GrupoId;
+						console.log(self.grupoId)
+					},
+					error(err){
+						console.log(err);
+					}
+				});
+				*/
 			}
 		}
 	}
@@ -256,5 +385,16 @@
 <style>
 	#dropGrupos, #dropProcarianos{
 		margin-left: 50% !important;
+	}
+
+	img {
+    display: block;
+    margin: auto;
+    width: 40%;
+	}
+
+	h4 {
+		color: black;
+		text-align: center;
 	}
 </style>

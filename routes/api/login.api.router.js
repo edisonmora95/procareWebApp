@@ -35,9 +35,12 @@ router.get('/usuarios', function(req, res, next){
       id: req.user[0].dataValues.id,
   		nombre : req.user[0].dataValues.nombres,
   		apellidos : req.user[0].dataValues.apellidos,
+      genero : req.user[0].dataValues.genero,
   		correo : req.user[0].dataValues.email, 
   		roles : lista
   	}
+
+    //console.log('\n\neste es genero ' + json.genero);
 
   	res.json(json);
 });
