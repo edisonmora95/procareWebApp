@@ -15,13 +15,13 @@ var router = express.Router();
 var utils = require('../../utils/utils');
 
 //API
-
+ 
 //Post del procariano
 router.post('/', utils.generarHash,controladorBenefactor.crearBenefactor);
 
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.
-router.get('/', controladorBenefactor.buscarProcariano);
+router.get('/', controladorBenefactor.buscarBenefactor);
 
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano

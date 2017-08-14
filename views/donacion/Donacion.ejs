@@ -16,17 +16,67 @@
 			<header>
 			<navbar></navbar>
 		</header>
-	</div>
-	<!--End row ver procariano-->
-	<section class="card" id="rowEditar" v-if="habilitaredicion">
-		<div class="card-content">
-			<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>
+		<fieldset>
+			<legend>Benefactor:</legend>
+			<section class="row row-razon-social">
+				<div class="input-field col s12">
+					<input type="text" name="razonsocial" id="razonsocial" v-model="donacion.razonsocial">
+					<span v-show="errors.has('razonsocial')" class="help is-danger">{{ errors.first('razonsocial') }}</span>
+					<label for="direccion">Razon Social</label>
+				</div>
+			</section>
+			<section class="row row-contribucion-dia">
+				<div class="input-field col s6 m4">
+					<input type="tel" name="valor_contribucion" id="valor_contribucion"  v-money="money" placeholder="$ 0.00" v-model="valor" v-validate="'required'" disabled>
+					<span v-show="errors.has('valor_contribucion')" class="help is-danger">{{ errors.first('valor_contribucion') }}</span>
+					<label for="celular">contribución $</label>
+				</div>
+				<div class="input-field col s6 m4">
+					<input type="tel" name="diacobro" id="diacobro" min=1 max=30 v-model="donacion.diaCobro" disabled>
+					<span v-show="errors.has('diacobro')" class="help is-danger">{{ errors.first('diacobro') }}</span>
+					<label for="convencional">dia Cobro</label>
+				</div>
+				<div class="input-field col s6 m4">
+					<div class="input-field col s6 m4">
+					<input type="tel" name="tipodonacion" id="tipodonacion" min=1 max=30 v-model="donacion.tipodonacion" disabled>
+					<span v-show="errors.has('tipodonacion')" class="help is-danger">{{ errors.first('tipodonacion') }}</span>
+					<label for="convencional">tipo Donacion</label>
+				</div>
+				</div>
+			</section>
+		</fieldset>
+		<fieldset>
+			<legend>Donación:</legend>
+
+				<section class="row row-contribucion-dia">
+						<div class="input-field col s6 m4">
+							<input type="tel" name="cantidad_donada" id="cantidad_donada"  v-money="money" placeholder="$ 0.00" v-model="valor" v-validate="'required'">
+							<span v-show="errors.has('valor_contribucion')" class="help is-danger">{{ errors.first('valor_contribucion') }}</span>
+							<label for="celular">contribución $</label>
+						</div>
+						<div class="input-field col s6 m8">
+								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="donacion.fechaNacimiento" v-validate="'required'">
+								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
+								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
+								<label for="fecha-nacimiento">Fecha de nacimiento</label>
+							</div>
+						<div class="input-field col s12">
+							<v-select id="selectDonacion" name="selectDonacion" v-model="donacion.tipo_donacion" select-text="">
+							<!--<option value="" disabled selected></option> -->
+							<option value="mensual">Mensual</option>
+							<option value="extraordinario">Extraordinaria</option>
+							</v-select>
+							<label>Tipo Donación</label>
+						</div>
+					</section>
+
+		</fieldset>
+			
 		</div>
-	</section>
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-<script src='https://unpkg.com/vue@2.3.3'></script>
-<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-<script src="/build/donacion/DonacionScript.js"></script>
+	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+	<script src='https://unpkg.com/vue@2.3.3'></script>
+	<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+	<script src="/build/donacion/DonacionScript.js"></script>
 </html>

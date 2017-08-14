@@ -37,10 +37,9 @@
 						<!--Row cedula y fecha nacimiento-->
 						<section class="row row-cedula-fecha">
 							<div class="input-field col s6">
-								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
-								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
-								<label for="fecha-nacimiento">Fecha de nacimiento</label>
+								<input type="date" name="fecha_donacion" id="fecha_donacion" class="datepicker" v-model="procariano.fecha_donacion" v-validate="'required'">
+								<span v-show="errors.has('fecha_donacion')" class="help is-danger">{{ errors.first('fecha_donacion') }}</span>
+								<label for="fecha_donacion">fecha Donación</label>
 							</div>
 							<div class="input-field col s6">
 								<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
