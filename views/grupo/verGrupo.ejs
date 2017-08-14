@@ -5,11 +5,11 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/verGrupoStyles.css">
 	</head>
 	<body>
-		<div id="verGrupoApp">
+		<div >
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="verGrupoApp">
 				<section class="card large" v-if="editar === false">
 					<section class="row">
 						<header class="headerNombreGrupo">
@@ -38,7 +38,7 @@
 					</div>
 				</section>
 				<section class="card large" v-if="editar === true">
-					<editar-grupo :grupo="grupo" :integrantes="integrantes" @edicionterminada="editar = $event"></editar-grupo>
+					<editar-grupo :grupo="grupo" :integrantes="integrantes" :etapa="etapa" @edicionterminada="editar = $event"></editar-grupo>
 				</section>
 			</main>
 			<!-- Modal Structure -->
@@ -55,6 +55,6 @@
 	</body>
 	<div>
 		<% include ../partials/scripts %>
-		<script src='/build/grupo/verGrupoScript.js'></script>
+		<script src='/build/grupo/verGrupoScript.min.js'></script>
 	</div>
 </html>

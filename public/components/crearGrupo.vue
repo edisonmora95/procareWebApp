@@ -64,7 +64,6 @@
 	'use strict';
 
 	import Materials from 'vue-materials';
-	//import VeeValidate from 'vee-validate';
 
 	Vue.use(Materials);
 	Vue.use(VeeValidate);
@@ -91,10 +90,6 @@
 		},
 		data() {
 			return{
-				/*grupo: {
-					nombre: '',
-					animador: '',
-				},*/
 				mensaje: '',
 				animadores: [],
 				flagVue: true,
@@ -203,14 +198,11 @@
 			},
 			crearRegistroGrupo(){
 				let self = this;
-				console.log('Se va a crear el siguiente registro de grupo: ');
-				console.log(self.grupo);
 				$.ajax({
 					type: 'POST',
 					url: '/api/grupos/',
 					data: self.grupo,
 					success(res){
-						console.log(res)
 						if(res.estado){
 							self.grupo.id = res.datos.grupo.id;
 							self.flagVue = false;

@@ -112,6 +112,19 @@ module.exports = function(sequelize, DataTypes) {
           ],
           attributes: [['id', 'procarianoId']]
         }).then(successCallback).catch(errorCallback);
+      },
+      obtenerGrupoDeProcariano: function(idProcariano, success, error){
+        const Grupo = sequelize.import("../models/grupo");
+        this.findOne({
+          where: {
+            id: idProcariano
+          },
+          include: [
+            {
+              model: Grupo
+            }
+          ]
+        }).then(success).catch(error);
       }
     }
   });

@@ -7,6 +7,7 @@
 var modelo = require('../models');
 var utils = require('../utils/utils')
 var ControladorGrupo = require('../controllers/grupo');
+let respuesta = require('../utils/respuestas');
 
 
 /*
@@ -489,7 +490,21 @@ const buscarChicosFormacionSinGrupo =(req, res, next) => {
 	}, (errorProcarianos) => {
 
 	});
-}
+};
+
+const obtenerGrupoActualDeProcariano = (req, res, next) => {
+	const idProcariano = req.params.id;
+	modelo.ProcarianoGrupo.obtenerGrupoActualDeProcariano(idProcariano, (procarianogrupo) => {
+		const idGrupo = procarianogrupo.get('GrupoId');
+		modelo.Grupo.obtenerGrupoPorId(idGrupo, (grupo) => {
+			return respuesta.okGet(res, 'Búsqueda exitosa', grupo);
+		}, (errorGrupo) => {
+			return respuesta.error(res, 'Error en la búsqueda', '', errorGrupo);
+		});
+	}, (error) => {
+		return respuesta.error(res, 'Error en la búsqueda', '', error);
+	});
+};
 
 
 //FUNCIONES INTERNAS
@@ -576,5 +591,6 @@ module.exports = {
 	buscarProcarianoPorId,
 	editarProcariano,
 	eliminarProcariano,
-	buscarChicosFormacionSinGrupo
+	buscarChicosFormacionSinGrupo,
+	obtenerGrupoActualDeProcariano
 };

@@ -6,11 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/buscarProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div >
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="main">
 				<h3 class="center-align">Búsqueda</h3>
 				<!--Busqueda-->	
 				<section id="section-busqueda">
@@ -186,12 +186,11 @@
 			  </div>
 			</main>
 		</div>
-		
 	</body>
 	<div>
 		<% include ../partials/scripts %>
 		<script src="/scripts/moment/moment.js"></script>
 		<script src="/scripts/moment/locale/es.js"></script>
-		<script src="/build/procariano/buscarProcarianoScript.js"></script>
+		<script src="/build/procariano/buscarProcarianoScript.min.js"></script>
 	</div>
 </html>

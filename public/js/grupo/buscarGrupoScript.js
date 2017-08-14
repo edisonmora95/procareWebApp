@@ -7,12 +7,9 @@
 	@FechaCreación: 31/05/2017
 */
 
-import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
-import DataTable from 'vue-materialize-datatable';
 
 Vue.use(Materials);
-Vue.component('navbar', Navbar); 
 
 let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
@@ -21,11 +18,6 @@ let BuscarGrupoApp = new Vue({
 		this.obtenerGrupos(this);
 	},
 	mounted: function(){
-		//Inicializadores de componentes de Materialize
-		$('.modal').modal();
-		$('select').material_select();
-		$('.tooltipped').tooltip({delay: 50});
-		//Flujo
 	},
 	data: {
 		grupos: [],
@@ -100,47 +92,5 @@ let BuscarGrupoApp = new Vue({
 			let url = '/grupos/' + grupo.id;
 			window.location.href = url;
 		},
-		buscar(){
-			let self = this;
-			self.grupos = [];	//Lo vacío por si acaso...
-			if(self.revisarUnCampoLleno(self)){
-				//Llamada a la api
-				$.ajax({
-					type: 'GET',
-					url: '/api/grupos/',
-					data: self.grupo,
-					success(res){
-						console.log(res);
-					}
-				});
-			}else{
-				Materialize.toast('Llene por lo menos un campo de búsqueda.', 3000, 'rounded');
-			}
-			
-		},
-		revisarUnCampoLleno(self){
-			let flag = false;
-			$.each(self.grupo, (property, value) => {
-				if(value !== ''){
-					flag = true;
-					return true;
-				}
-			});
-			return flag;
-		},
-		realizarBusqueda(){
-			$.ajax({
-				type: 'GET',
-				url: '/api/grupos/',
-				success(res){
-					
-				}
-			})
-		}
 	}
-});
-
-//2 way data binding
-$('#etapaSelect').change(function(){
-	BuscarGrupoApp.$data.grupo.etapa = $('#etapaSelect option:selected').text();
 });

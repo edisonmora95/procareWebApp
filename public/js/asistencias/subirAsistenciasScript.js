@@ -1,8 +1,6 @@
-import Navbar from './../../components/navbar.vue';
+'use strict';
 import Materials from 'vue-materials';
-Vue.component('navbar', Navbar); 
 Vue.use(Materials);
-
 
 var app = new Vue({
 	el: '#asistenciasApp',
@@ -107,7 +105,12 @@ var app = new Vue({
         type: 'GET',
         url: '/api/grupos/',
         success(res){
-          self.armarArrayGrupos(self, res.sequelizeStatus);
+          if(res.estado){
+            self.armarArrayGrupos(self, res.datos);  
+          }else{
+            Materialize.toast(res.mensaje, 5000, 'rounded');
+          }
+          
         }
       });
     },

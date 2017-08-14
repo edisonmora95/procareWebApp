@@ -4,10 +4,6 @@
 	@FechaCreación: 15/06/2017
 */
 
-import Navbar from './../../components/navbar.vue';
-
-Vue.component('navbar', Navbar); 
-
 let indexApp = new Vue({
 	el: '#indexApp',
 	created(){
@@ -30,7 +26,6 @@ let indexApp = new Vue({
 				url: '/api/calendario/',
 				success(res){
 					self.tareasEventos = res.datos;
-					console.log(self.tareasEventos)
 					self.armarCalendario(self);
 				}
 			});

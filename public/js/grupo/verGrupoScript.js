@@ -3,13 +3,9 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 3/06/2017
 */
-import Navbar from './../../components/navbar.vue';
 import EditarGrupo from './../../components/editarGrupo.vue';
-import EscogerChicos from './../../components/escogerChicos.vue';
 
-Vue.component('navbar', Navbar);
 Vue.component('editar-grupo', EditarGrupo);
-Vue.component('chicos-grupo', EscogerChicos);
 
 let verGrupoApp = new Vue({
 	el: '#verGrupoApp',

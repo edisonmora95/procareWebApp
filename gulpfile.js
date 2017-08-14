@@ -10,13 +10,15 @@ var mocha = require('gulp-mocha');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var gutil = require('gulp-util');
+var stripDebug = require('gulp-strip-debug');
+
 
 ////////////////////////////////////////////
 //Tasks para correr la aplicación
 ////////////////////////////////////////////
 
 //CORRER LA APLICACIÓN PARA DEVELOPMENT
-gulp.task('default', ['js-compile'], function(){
+gulp.task('default', ['js-compile', 'vue-compile'], function(){
 		//Por default, el environment será el de development
 		runSequence('set-dev-node-env', 'browser-sync', 'nodemon');
 });
@@ -36,12 +38,13 @@ gulp.task('build-prod', function(){
 ////////////////////////////////////////////
 
 //Vigila los cambios en los archivos dentro de la carpeta /public/js/
+//Hace build solo de los archivos cambiados
 gulp.task('js-compile', function(){
 	const src = './public/js/**/*.js';
 	const dest = './public/build';
 
 	var jsWatcher = gulp.watch(src, function(){
-		gutil.log('Esto funciona');
+		gutil.log('Compilar js');
 	});
 
 	jsWatcher.on('change', function(file){
@@ -55,6 +58,20 @@ gulp.task('js-compile', function(){
 				.pipe(rename({suffix: '.min'}))		//Cambia la extensión a nombreArchivo.min.js
 				.pipe(uglify())										//Minify
 				.pipe(gulp.dest(dest));
+	});
+
+});
+//Vigila los cambios de los archivos *.vue
+//Vuelve a hacer build de toda la aplicación
+gulp.task('vue-compile', function(){
+	const src = './public/components/**/*.vue';
+
+	var vueWatcher = gulp.watch(src, function(){
+		gutil.log('Compilar vue');
+	});
+
+	vueWatcher.on('change', function(file){
+		runSequence('babel', 'vueify');
 	});
 
 });
@@ -91,7 +108,10 @@ gulp.task('nodemon', function(cb){
 	return nodemon({
 		script: './bin/www',
 		ignore: [
-			"public/**/*.*"
+			"public/**/*.*",
+			"gulpfile.js",
+			"package.json",
+			"README.md"
 		]
 	})
 	.on('start', function(){
@@ -110,8 +130,8 @@ gulp.task('nodemon', function(cb){
 //Conversión a ES5
 gulp.task('babel', function(){
 	console.log('Convirtiendo a ES5');
-	var dist = './public/es/';
-	return gulp.src('./public/js/*/*')
+	var dist = './public/dist/';
+	return gulp.src('./public/js/**/*.*')
 				.pipe(babel({
 					presets: ['es2015']
 				}))
@@ -121,7 +141,7 @@ gulp.task('babel', function(){
 //Ipmortación de módulos requeridos
 gulp.task('vueify', function(){
 	console.log('Importando los módulos con Vueify');
-	var src = './public/dist/**/*.js';
+	var src = './public/dist/**/*.*';
 	var build = './public/build/';
 	gulp.src(src, { read: false })
 			.pipe(browserify({

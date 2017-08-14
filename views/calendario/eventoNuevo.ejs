@@ -5,11 +5,10 @@
  		<link rel="stylesheet" type="text/css" href="/stylesheets/eventoNuevo.css">
 	</head>
 	<body>
-		<div id="eventoApp">
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container" id="container-evento-nueva">
+			<main class="container" id="eventoApp">
 				<div>
 					<a @click="regresar"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
 					<header>
@@ -128,10 +127,10 @@
 			    </v-modal>
 				</div>
 			</main>
-		</div>
 	</body>
 	<div>
 		<% include ../partials/scripts %>
-		<script src="/build/index/eventoNuevoScript.js"></script>
+		<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+		<script src="/build/index/eventoNuevoScript.min.js"></script>
 	</div>
 </html>

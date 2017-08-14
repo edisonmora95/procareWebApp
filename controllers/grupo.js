@@ -98,7 +98,7 @@ module.exports.editarGrupo = (req, res, next) => {
 			if(cambioAnimador){
 				modelo.Animador.cambiarAnimadorDeGrupo(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, (successCambioAnimador) => {
 					//Se pudo editar el grupo y se pudo cambiar al animador. No se quiso cambiar de etapa
-					return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'No se pudo editar el grupo y cambiar el animador.'});
+					return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'Se pudo editar el grupo y cambiar el animador.'});
 				}, (errorUA) => {
 					//Error al ponerle fechaFin al registro de animador
 					return res.status(400).json({estado : false, datos : errorUA, mensaje: 'Se pudo editar el grupo, no se pudo eliminar el registro antiguo del animador.'});

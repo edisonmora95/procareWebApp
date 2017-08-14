@@ -5,24 +5,22 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/grupoStyles.css">
 	</head>
 	<body>
-		<div id="app">
-			<header>
-				<navbar></navbar>	
-			</header>
-			<main class="container">
-				<div class="card large">
-					<div class="row">
-						<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
-					</div>
-					<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" :grupo="grupo"></crear-grupo-1>
-					<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
+		<header>
+			<% include ../partials/navbar %>
+		</header>
+		<main class="container" id="app">
+			<div class="card large">
+				<div class="row">
+					<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
 				</div>
-			</main>
-		</div>
+				<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" :grupo="grupo"></crear-grupo-1>
+				<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
+			</div>
+		</main>
 	</body>
 	<div>
 		<% include ../partials/scripts %>
-		<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-		<script src='/build/grupo/crearGrupoScript.js'></script>
+		<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+		<script src='/build/grupo/crearGrupoScript.min.js'></script>
 	</div>
 </html>

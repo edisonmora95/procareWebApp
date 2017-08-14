@@ -3,12 +3,7 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 */
- 
 'use strict';
-
-import Navbar from './../../components/navbar.vue';
-Vue.component('navbar', Navbar); 
-
 var main = new Vue({
 	el: '#main',
 	mounted: function(){

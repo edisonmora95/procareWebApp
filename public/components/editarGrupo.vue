@@ -22,7 +22,7 @@
 					</div>
 					<div class="row" id="row-etapa-animador">
 						<div class="input-field col s6">
-							<v-select id="etapa" name="etapa"	v-model="grupo.etapaId" select-text="Etapa" :items="etapas">
+							<v-select id="etapa" name="etapa"	select-text="Etapa" :items="etapas" v-model="etapa.id">
 							</v-select>
 						</div>
 						<div class="input-field col s6">
@@ -84,7 +84,7 @@
 	Vue.use(Materials);
 
 	module.exports = {
-		props: ['grupo', 'integrantes'],
+		props: ['grupo', 'integrantes', 'etapa'],
 		created(){
 			this.obtenerEtapas(this);
 			this.obtenerPosiblesAnimadores(this);
@@ -94,6 +94,7 @@
 			$('select').material_select();
 			$('.modal').modal();
 			this.inicializarDOM(this);
+			console.log(this.grupo)
 		},
 		data() {
 			return{
@@ -181,6 +182,13 @@
 					};
 					self.etapas.push(etapaObj);
 				});
+				$('#etapa').change( () => {
+					self.cambiarEtapa(self);
+				})
+			},
+			cambiarEtapa(self){
+				self.etapa.id = $('#etapa option:selected').val();
+				self.etapa.text = $('#etapa option:selected').text();
 			},
 			//Eventos de botones
 			anadir(chico){
@@ -193,7 +201,7 @@
 				this.integrantes.splice(this.integrantes.indexOf(chico), 1);
 				this.quitarChicoDeGrupo(this, chico);
 			},
-			cancelarEdicionGeneral(){
+			cancelar(){
 				this.$emit('edicionterminada', this.finEdicion);
 			},
 			formCompleto(self){
@@ -245,7 +253,7 @@
 					success(res){
 						if(res.estado){
 							Materialize.toast(res.mensaje, 4000);
-							this.$emit('edicionterminada', this.finEdicion);		
+							self.$emit('edicionterminada', self.finEdicion);		
 						}else{
 							Materialize.toast(res.mensaje, 4000);
 						}
@@ -261,7 +269,7 @@
 					url: '/api/pg/anadir',
 					data: {
 						idGrupo: self.grupo.id,
-						idProcariano: chico.idProcariano
+						idProcariano: chico.id
 					},
 					success(res){
 						if(!res.estado){

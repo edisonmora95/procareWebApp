@@ -1,12 +1,7 @@
 'use strict';
 import Materials from 'vue-materials';
-import VeeValidate from 'vee-validate';
-import Navbar from './../../components/navbar.vue';
-
-Vue.use(Materials);
+Vue.use(Materials)
 Vue.use(VeeValidate);
-
-Vue.component('navbar', Navbar); 
 
 /*
 	Validaciones. Cambio de mensajes de error
@@ -118,6 +113,18 @@ let tareaApp = new Vue({
 			let inputHoraInicio = $('#horaInicio');
 			let inputHoraFin = $('#horaFin');	
 			//Inicialización de elementos
+			$('.datepicker').pickadate({
+				monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			  monthsShort: ['En', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+			  today: 'Hoy',
+			  clear: 'Limpiar',
+			  close: 'Cerrar',
+		    selectMonths: true, // Creates a dropdown to control month
+		    selectYears: 100, // Creates a dropdown of 15 years to control year,
+		    closeOnSelect: true // Close upon selecting a date,
+		  });
 			$('.modal').modal();
 			$('.timepicker').pickatime({
 		    default: 'now', // Set default time: 'now', '1:30AM', '16:30'

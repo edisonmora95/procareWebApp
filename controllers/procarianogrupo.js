@@ -70,13 +70,13 @@ module.exports.cambiarDeGrupo = (req, res, next) => {
 	//Primero pongo una fecha fin al registro del procariano en su grupo anterior
 	modelo.ProcarianoGrupo.eliminarProcarianoDeGrupo(idProcariano, idPrevioGrupo, (successUpdate) => {
 		//Luego añado un nuevo registro del nuevo grupo del procariano
-		modelo.ProcarianoGrupo.anadirProcarianoAGrupo(idGrupoNuevo, idProcariano, new Date(), (successCrear) => {
+		modelo.ProcarianoGrupo.anadirProcarianoAGrupo(idNuevoGrupo, idProcariano, new Date(), (successCrear) => {
 			return respuesta.okCreate(res, 'Procariano cambiado de grupo.', successCrear);
 		}, (errorCrear) => {
-			return respuesta.error(res, 'No se pudo añadir al nuevo grupo.', errorCrear);
+			return respuesta.error(res, 'No se pudo añadir al nuevo grupo.', '', errorCrear);
 		});
 	}, (errorEliminar) => {
-		return respuesta.error(res, 'No se pudo quitar del grupo anterior.', errorEliminar);
+		return respuesta.error(res, 'No se pudo quitar del grupo anterior.', '' , errorEliminar);
 	});
 }
 /*

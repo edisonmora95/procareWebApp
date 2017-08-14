@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<h4 class="center-align">Editar perfil</h4>
 		<form>
 			<v-row id="rowNombresApellidos">
 				<div class="col s6 input-field">
@@ -120,7 +121,6 @@
 	'use strict'; 
 
 	import Materials from 'vue-materials';
-	//import VeeValidate from 'vee-validate';
 	Vue.use(Materials);
 	Vue.use(VeeValidate);
 	//Validaciones. Cambio de mensajes de error
@@ -230,7 +230,7 @@
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
 				$.get('/api/grupos/', function(res){
-					let conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
+					const conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
 					if(conexionExitosa){
 						self.gruposObtenidos = res.datos;
 						self.armarArraysGrupos(self.gruposObtenidos, self);
@@ -395,42 +395,85 @@
 	    		idGrupoPrev: self.tempGrupoPrevio.id,
 	    		idGrupoNuevo: self.grupoprocariano.id
 	    	};
-	    	$.ajax({
-	    		type: 'PUT',
-	    		url: '/api/pg/' + self.procariano.procarianoID,
-	    		data: dataObj,
-	    		success(res){
-	    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
-	    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
+	    	if(dataObj.idGrupoPrev === ''){
+	    		self.anadirChicoAGrupo(self, self.procariano.procarianoID, dataObj.idGrupoNuevo);
+	    	}else{
+	    		$.ajax({
+		    		type: 'PUT',
+		    		url: '/api/pg/' + self.procariano.procarianoID,
+		    		data: dataObj,
+		    		success(res){
+		    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
+		    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
 
-	    			if(res.status){
-	    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
-	    				const auxId = self.grupoprocariano.id;
-	    				const auxText = self.grupoprocariano.text;
-	    				self.tempGrupoPrevio.id = auxId;
-	    				self.tempGrupoPrevio.text = auxText;
-	    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
-	    			}else if( !res.status && res.mensaje === msjErrorEditar ){
-	    				//Regresa al valor previo ya que no se pudo realizar el cambio
-	    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    			if(res.estado){
+		    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
+		    				self.tempGrupoPrevio.id = $('#grupoSelect option:selected').val();
+		    				self.tempGrupoPrevio.text = $('#grupoSelect option:selected').text();
+		    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
+		    			}else if( !res.estado && res.mensaje === msjErrorEditar ){
+		    				//Regresa al valor previo ya que no se pudo realizar el cambio
+		    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+		    				self.grupoprocariano.id = tempGrupoPrevioId;
+		    				self.grupoprocariano.text = tempGrupoPrevioText;
+		    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
+		    			}else if( !res.estado && res.mensaje === msjErrorCrear ){
+		    				//Regresa al valor previo ya que no se pudo realizar el cambio
+		    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+		    				self.grupoprocariano.id = tempGrupoPrevioId;
+		    				self.grupoprocariano.text = tempGrupoPrevioText;
+		    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
+		    			}else{
+
+		    			}
+		    		},
+		    		error(err){
+		    			console.log(err)
+		    			const tempGrupoPrevioId = self.tempGrupoPrevio.id;
 	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
 	    				self.grupoprocariano.id = tempGrupoPrevioId;
 	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
-	    			}else if( !res.status && res.mensaje === msjErrorCrear ){
-	    				//Regresa al valor previo ya que no se pudo realizar el cambio
-	    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    		}
+		    	});
+	    	}
+	    },
+	    anadirChicoAGrupo(self, idProcariano, idGrupo){
+				$.ajax({
+					type: 'POST',
+					url: '/api/pg/anadir',
+					data: {
+						idGrupo: idGrupo,
+						idProcariano: idProcariano
+					},
+					success(res){
+						console.log(res)
+						if(res.estado){
+							const auxId = self.grupoprocariano.id;
+	    				const auxText = self.grupoprocariano.text;
+	    				self.tempGrupoPrevio.id = auxId;
+	    				self.tempGrupoPrevio.text = auxText;
+	    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
+						}else{
+							const tempGrupoPrevioId = self.tempGrupoPrevio.id;
 	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
 	    				self.grupoprocariano.id = tempGrupoPrevioId;
 	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
-	    			}
-	    		},
-	    		error(err){
-	    			console.log(err)
-	    		}
-	    	});
-	    },
+						}
+					},
+					error(err){
+						console.log(err)
+						const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
+    				self.grupoprocariano.id = tempGrupoPrevioId;
+    				self.grupoprocariano.text = tempGrupoPrevioText;
+    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
+					}
+				});
+			},
 	    cancelarCambioDeGrupo(){
 	    	let self = this;
 	    	const tempGrupoPrevioId = self.tempGrupoPrevio.id;

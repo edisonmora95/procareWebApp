@@ -14,6 +14,7 @@ var express = require('express');
 var router = express.Router();
 var utils = require('../../utils/utils');
 
+
 //API
 
 //Post del procariano
@@ -28,6 +29,8 @@ router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano
 router.get('/:id', controladorProcariano.buscarProcarianoPorId);
+
+router.get('/grupo/:id', controladorProcariano.obtenerGrupoActualDeProcariano);
 
 //Update procariano
 //Responde con un status indicando si se pudo actualizar o no
