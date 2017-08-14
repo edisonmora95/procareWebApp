@@ -16,7 +16,7 @@
 		    <li>
 		    	<h4> {{usuario.nombre}} {{usuario.apellidos}}</h4>
 		    </li>
-
+				<li class="no-padding"><a href="/home">Pantalla de inicio</a></li>
 		    <li class="no-padding">
 		    	<ul class="collapsible collapsible-accordion">
 		    		<li>
@@ -50,12 +50,14 @@
 		    		</li>
 		    	</ul>
 		    </li>
-		    <li><a href="/cambioContrasenna">Cambiar contraseña</a></li>
-		    <li><a href="/logout">Salir</a></li>
+		    <li class="no-padding"><a href="/cambioContrasenna">Cambiar contraseña</a></li>
+		    <li class="no-padding"><a href="/logout">Salir</a></li>
 
 		  </ul>
 		</nav>
+		<!-- no borrar es el futuro modal de director de formacion -->
 		<!--
+
 		<div id="modalFormacion" class="modal">
 			<div class="modal-content" id="modal-content">
 			  <h4 class="center-align">Asignación de directores de formación </h4>
@@ -221,9 +223,8 @@
 				let menuPad = $('#ulProcareAdministracion');
 				//self.crearLi('Personal','/personal/', menuPad);
 				self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
-				self.crearLi('Cargos', '/usuarios', menuPad);
-				self.crearLi('Cargos', '#modalFormacion', menuPad);
-				//self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				//self.crearLi('Cargos', '/usuarios', menuPad);
+				//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 			},
 			crearDropdownPA() {
 				//Esta función crea las pestañas del dropdown de Procare Acción del navbar.

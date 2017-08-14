@@ -153,7 +153,8 @@ var main = new Vue({
 				Solo cancela y redirige a la panatalla de la tabla de personal
     */
     cancelar(){
-    	console.log('debo agregar esa vista aun');
+    	window.location.href = '/personal/'
+    	//console.log('debo agregar esa vista aun');
     }
 	}
 });
