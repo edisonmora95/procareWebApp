@@ -1,5 +1,8 @@
 'use strict';
 
+import Navbar from './../../components/navbar.vue';
+Vue.component('navbar', Navbar); 
+
 var appCambio = new Vue({
 	el: '#app-cambioContrasenna',
 	mounted(){
@@ -31,7 +34,7 @@ var appCambio = new Vue({
 					type : 'POST',
 					data : obj,
 					url: url,
-					success(res){
+					success: function(res){
 						console.log(res);
 						if(res.status){
 							$('#modal1').modal('open');
@@ -41,20 +44,25 @@ var appCambio = new Vue({
 							
 						}
 						else{
-							self.fallaLogin = true;
-							self.msg = res.message;
 
-							console.log('error');
+							self.fallaCambio = true;
+							self.msg = res.message;
+							console.log("este es el textContent:" + this.$el);
+							console.log('este es el msg: ' +  self.msg + " " + res.message);
+							console.log(res);
 						}
 						
 					},
-					error(res){
-						self.fallaLogin = true;
+					error : function(res){
+						self.fallaCambio = true;
 						self.msg = res.message;
-						console.log('error');
+						console.log("este es el textContent:" + self.$el.textContent);
+						console.log('este es el msg: ' +  self.msg);
+						console.log(res);
 						//console.log(self.fallaLogin);
 					}
 				});
+
 
 			}
 

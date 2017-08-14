@@ -24,7 +24,7 @@ passport.use(new LocalStrategy({
 function(correo, password, done) {
 	console.log('entra aqui passport');
 	modelos.Persona.find({
-  	  attributes: ['id','contrasenna','nombres','apellidos','email'],
+  	  attributes: ['id','contrasenna','nombres','apellidos','email','genero'],
   	  where : {
   	  	email : correo
   	  },
@@ -58,7 +58,7 @@ passport.serializeUser(function(persona, done) {
 //desarializador de passport
 passport.deserializeUser(function(id, done) {
   modelos.Persona.findAll({
-  	  attributes: ['id','nombres','apellidos','email'],
+  	  attributes: ['id','nombres','apellidos','email','genero'],
   	  where : {
   	  	id : id
   	  },

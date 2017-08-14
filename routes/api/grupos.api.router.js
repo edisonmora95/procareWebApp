@@ -1,4 +1,4 @@
-var controladorGrupo = require('../../controllers/grupo');
+var controladorGrupo = require('../../controllers/grupo.controller');
 var express = require('express');
 var router = express.Router();
 

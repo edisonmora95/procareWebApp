@@ -1,7 +1,7 @@
 /*
 	CRUD de Tipo
 */
-var controladorTipo = require('../../controllers/tipo')
+var controladorTipo = require('../../controllers/tipo.controller')
 var express = require('express');
 var router = express.Router();
 

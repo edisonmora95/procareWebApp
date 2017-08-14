@@ -9,7 +9,6 @@ var utils = require('../utils/utils')
 var ControladorGrupo = require('../controllers/grupo');
 let respuesta = require('../utils/respuestas');
 
-
 /*
 Autor : JV
 Creado : 26/06/2017

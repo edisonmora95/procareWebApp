@@ -19,6 +19,7 @@ var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
+var personal = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
@@ -31,7 +32,10 @@ let apiLogin = require('./routes/api/login.api.router');
 let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
 let apiAnimadores = require('./routes/api/animadores.api.router.js');
+let apiPersonal = require('./routes/api/personal.api.router');
+
 let apiCalendario = require('./routes/api/calendario.api.router');
+
 
 var app = express();
 
@@ -66,10 +70,11 @@ app.use(flash());
 
 //Rutas de las ventanas
 app.use('/home', index);
-//app.use('/usuarios', usuarios);
+app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
+app.use('/personal', personal);
 
 app.use('/cambioContrasenna',cambioContrasenna);
 app.use('/', login);
@@ -85,7 +90,9 @@ app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
 app.use('/api/animadores', apiAnimadores);
+app.use('/api/personal', apiPersonal);
 app.use('/api/calendario', apiCalendario);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

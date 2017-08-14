@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/buscarProcarianoStyles.css">
+	</head>
+	<body>
+		<div id="main">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<h3 class="center-align">Personal</h3>
+				<!--Resultados-->
+				<section id="section-resultados">
+					<div class="row" id="row-resultados">
+						<table class="stripped bordered responsive-table centered highlight">
+							<thead>
+								<th>Nombre</th>
+								<th>Apellido</th>
+								<th>Cédula</th>
+								<th>Fecha de nacimiento</th>
+								<th>Email</th>
+								<th>Convencional</th>
+								<th>Celular</th>
+								<th>Sueldo</th>
+					
+							</thead>
+							<tbody>
+								<tr v-for="personal in arregloPersonal">
+									<td @click="irAPerfil(personal)"><a  class="nombre">{{personal.nombres}}</a></td>
+									<td>{{personal.apellidos}}</td>
+									<td>{{personal.cedula}}</td>
+									<td>{{date(personal.fechaNacimiento)}}</td>
+									<td>{{personal.email}}</td>
+									<td>{{personal.convencional}}</td>
+									<td>{{personal.celular}}</td>
+									<td>{{personal.sueldo}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</main>
+		</div>
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<!-- Compiled and minified JavaScript -->
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="/scripts/moment/moment.js"></script>
+			<script src="/scripts/moment/locale/es.js"></script>
+			<script src="/build/personal/tablaPersonalScript.js"></script>
+		</div>
+	</body>
+</html>

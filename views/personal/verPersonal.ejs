@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
+	</head>
+	<body>
+		<div id="app">
+			<header>
+				<navbar></navbar>
+			</header>
+			<main class="container">
+				<!--Row ver procariano-->
+				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
+					<div class="col s12">
+						<div class="card">
+							<div class="card-content">
+								<!--<div class="row rowVer" id="rowVerImagen">
+									<div class="col s12 center-align" id="verImagen">
+										<img class="responsive-img circle" src="http://placehold.it/350x150">
+									</div>
+									<p class="center-align">Estado: {{procariano.estado}}</p>
+								</div>-->
+							
+								<!--Nombres-->
+								<section class="row rowVer" id="rowVerNombres">
+									<div class="col s6" id="verNombre">
+										<label>Nombres</label>
+										<p>{{personal.nombres}}</p>
+									</div>
+									<div class="col s6" id="verApellido">
+										<label>Apellidos</label>
+										<p>{{personal.apellidos}}</p>
+									</div>
+								</section>
+								<!--Cedula-fecha-->
+								<section class="row rowVer" id="rowVerCedulaFecha">
+
+									<div class="col s6" id="verFecha">
+										<label>Fecha de nacimiento</label>
+										<p>{{date(fechaNacimiento)}}</p>
+									</div>
+									<div class="col s6" id="verCedula">
+										<label>Cédula</label>
+										<p>{{personal.cedula}}</p>
+									</div>
+
+								</section>
+								<!--Direccion-email-->
+								<section class="row rowVer" id="rowVerDireccionEmail">
+									<div class="col s6" id="verDireccion">
+										<label>Dirección</label>
+										<p>{{personal.direccion}}</p>
+									</div>
+									<div class="col s6" id="verEmail">
+										<label>Email</label>
+										<p>{{personal.email}}</p>
+									</div>
+								</section>
+								<!--Celular-convencional-->
+								<section class="row rowVer" id="rowVerTelefonos">
+									<div class="col s6" id="verCelular">
+										<label>Celular</label>
+										<p>{{personal.celular}}</p>
+									</div>
+									<div class="col s6" id="verConvencional">
+										<label>Convencional</label>
+										<p>{{personal.convencional}}</p>
+									</div>
+
+								</section>
+								<section class="row rowVer" >
+									<div class="col s6">
+										<label for="sueldo">Sueldo</label>
+										<p>{{personal.sueldo}}</p>
+									</div>
+								</section>
+								<div class="row row-botones" v-if="personal.estado!=='inactivo'">
+									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
+									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
+								</div>
+							</div><!--End card content-->
+						</div><!--End card-->
+					</div>
+				</div>
+				<!--End row ver procariano-->
+				
+				<div class="card" id="rowEditar" v-if="habilitaredicion">
+					<div class="card-content">
+						<editar :personal="personal" :habilitaredicion="habilitaredicion"  @edicionchanged="habilitaredicion"></editar>	
+					</div>
+				</div>
+			</main>
+
+			<!-- Modal Structure -->
+		  <div id="modalErrorEliminar" class="modal">
+		    <div class="modal-content">
+		      <h4 class="center-align">¡Error!</h4>
+		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalConfirmarEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">¿Está seguro de que desea eliminar a este persona  de su cargo?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalExitoEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">Miembro del personal eliminado correctamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		</div>
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+			<script src="/scripts/moment/moment.js"></script>
+			<script src="/scripts/moment/locale/es.js"></script>
+			<script src="/build/personal/verPersonalScript.js"></script>
+		</div>
+	</body>
+</html>

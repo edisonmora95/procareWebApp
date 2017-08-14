@@ -30,9 +30,9 @@ module.exports = function(sequelize, DataTypes) {
     estado: {
       type : DataTypes.STRING,
       allowNull : false,
-      /*validate : {
-        isIn : ['activo', 'inactivo' ]
-      }*/
+      validate : {
+        isIn : [['activo', 'inactivo' ]]
+      }
     },
     haceParticipacionEstudiantil: {
       type : DataTypes.BOOLEAN,

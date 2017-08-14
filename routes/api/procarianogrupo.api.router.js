@@ -1,4 +1,4 @@
-var controladorProcarianoGrupo = require('../../controllers/procarianogrupo');
+var controladorProcarianoGrupo = require('../../controllers/procarianogrupo.controller');
 var express = require('express');
 var router = express.Router();
 
