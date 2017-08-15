@@ -135,9 +135,9 @@ agregarNuevaEtapa = (req,res) => {
 		where: {
 			nombre: req.body.nombre
 		}
-	}).then(Tipo => {
+	}).then(etapa => {
 		modelo.GrupoEtapa.create({
-			EtapaId : Tipo.get('id'),
+			EtapaId : etapa.get('id'),
 			GrupoId : req.body.grupoId,
 			fechaInicio : new Date(),
 			fechaFin : null

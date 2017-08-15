@@ -8,7 +8,7 @@ var controladorCargo = require('../../controllers/cargo')
 var express = require('express');
 var router = express.Router();
 
-//Post persona-cargoFormacion
+//Post Director de Formacion
 router.post('/directorF', controladorCargo.asignarDirectorFormacion);
 
 module.exports = router;

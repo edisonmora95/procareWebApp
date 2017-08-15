@@ -18,11 +18,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     nombres: {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : true
     },
     apellidos: {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true
+    },
+    razonSocial : {
+      type : DataTypes.STRING,
+      allowNull : true
     },
     direccion: {
       type : DataTypes.TEXT
@@ -66,7 +70,7 @@ module.exports = function(sequelize, DataTypes) {
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
             if (isMatch){
-              return done(null,user, {status : true , message : "logueado correcatmente"});
+              return done(null,user, {status : true , message : "Logueado correctamente"});
             }
             else{
               return done(null, false , { status : false ,  message : "Contraseña inválida"});

@@ -34,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Procariano.hasMany(models.Nivel);
+        Centro.belongsToMany(models.Nivel , {through: 'CentroNivel'})
         // associations can be defined here
       }
     }

@@ -2,8 +2,6 @@
 var modelo = require('../models');
 var utils = require('../utils/utils');
 
-
-
 const cambioContrasenna = (req, res , next) => {
 	let	email = req.body.correo;
 	let viejaContrasenna = req.body.viejaContrasenna;
@@ -55,7 +53,6 @@ const cambioContrasenna = (req, res , next) => {
 	})
 
 };
-
 
 module.exports = {
 	cambioContrasenna

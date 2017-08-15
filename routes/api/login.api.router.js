@@ -28,16 +28,15 @@ router.get('/usuarios', function(req, res, next){
   for ( var i = 0 ; i < rolesTemp.length ; i++){
     lista.push(rolesTemp[i].dataValues.nombre);
   }
-  	var json = {
-  		status : true,
-      id: req.user[0].dataValues.id,
-  		nombre : req.user[0].dataValues.nombres,
-  		apellidos : req.user[0].dataValues.apellidos,
-  		correo : req.user[0].dataValues.email, 
-  		roles : lista
-  	}
-
-  	res.json(json);
+  var json = {
+  	status : true,
+    id: req.user[0].dataValues.id,
+  	nombres : req.user[0].dataValues.nombres,
+  	apellidos : req.user[0].dataValues.apellidos,
+  	correo : req.user[0].dataValues.email, 
+  	roles : lista
+  }
+  res.json(json);
 });
 
 router.post('/', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);

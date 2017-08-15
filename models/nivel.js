@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Nivel.belongsTo(models.Centro);
+        Nivel.belongsToMany(models.Centro , {through: 'CentroNivel'})
         // associations can be defined here
       }
     }

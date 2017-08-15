@@ -26,9 +26,9 @@ module.exports = function(sequelize, DataTypes) {
         this.findAll({     
         }).then(callback);
       },
-      crearEtapa: function(nomrbeEtapa, callback, error){
+      crearEtapa: function(nombreEtapa, callback, error){
         this.create({
-          nombre: nomrbeEtapa,
+          nombre: nombreEtapa,
           programa: ""
         }).then(callback).catch(error);
       },
