@@ -1,5 +1,4 @@
 'use strict';
-// asistencia chico reunion
 module.exports = function(sequelize, DataTypes) {
   var ProcarianoReunion = sequelize.define('ProcarianoReunion', {
     esJustificada : {

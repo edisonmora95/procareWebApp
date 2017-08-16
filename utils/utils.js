@@ -150,9 +150,32 @@ module.exports.generarHashNuevaContrasenna = function(req,res, next){
 };
 
 
+/*
+@Descripcion: pone en un formato adecuado los campos para buscar nino de accion
+@Autor: Luis Lainez
+@FechaCreacion: 29/07/2017
+*/
 
 
+module.exports.generarJsonNinoAccion = function(ninoaccion){
+    var respuesta = {};
+    respuesta['persona'] = {};
+    respuesta['ninoaccion'] = {};
+    for (var clave in ninoaccion) {
+        if (ninoaccion.hasOwnProperty(clave)) {
+            if ( ( (clave == 'cedula') || (clave == 'nombres') || (clave == 'apellidos') || (clave == 'direccion')  || (clave == 'genero') || (clave == 'email') || (clave == 'celular') || (clave == 'trabajo')  || (clave == 'convencional') || (clave == 'fechaNacimiento') ) && ( ninoaccion[clave] != '' ) ) {
 
+                respuesta['persona'][clave] = {
+                    $like : '%' + ninoaccion[clave] + '%'
+                }
+            }
+            if ( ( (clave == 'nombreRep') || (clave == 'apellidoRep') || (clave == 'cedulaRep') || (clave == 'telefonoRep')  || (clave == 'escuela') || (clave == 'esBautizado') || (clave == 'estado') ) && ( ninoaccion[clave] != '' )) {
+                respuesta['ninoaccion'][clave] = {
+                    $like : '%' + ninoaccion[clave] + '%'
+                }
+            }
 
-
-
+        }
+    }
+    return respuesta;
+}

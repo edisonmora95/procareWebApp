@@ -21,9 +21,11 @@ var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 var personal = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
+
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
+let apiTicket = require('./routes/api/ticket.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
 let apiCargo = require('./routes/api/cargo.api.router');
 let apiGrupos = require('./routes/api/grupos.api.router');
@@ -33,13 +35,10 @@ let apiTareas = require('./routes/api/tarea.api.router');
 let apiEventos = require('./routes/api/evento.api.router.js');
 let apiAnimadores = require('./routes/api/animadores.api.router.js');
 let apiPersonal = require('./routes/api/personal.api.router');
-
 let apiCalendario = require('./routes/api/calendario.api.router');
-
+let apiNinoAccion = require('./routes/api/ninoaccion.api.router');
 
 var app = express();
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -67,7 +66,6 @@ app.use(passport.session());
 // Connect Flash
 app.use(flash());
 
-
 //Rutas de las ventanas
 app.use('/home', index);
 app.use('/usuarios', usuarios);
@@ -75,7 +73,6 @@ app.use('/procarianos', procarianos);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
 app.use('/personal', personal);
-
 app.use('/cambioContrasenna',cambioContrasenna);
 app.use('/', login);
 
@@ -84,15 +81,16 @@ app.use('/api/procarianos', apiProcarianos);
 app.use('/api/etapa',apiEtapa);
 app.use('/api/cargo',apiCargo);
 app.use('/api/login',apiLogin);
-app.use('/api/tareas',apiTareas);
-app.use('/api/eventos', apiEventos);
+app.use('/api/tarea',apiTareas);
+app.use('/api/evento', apiEventos);
+app.use('/api/ticket', apiTicket);
 app.use('/api/tipo', apiTipo);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/pg', apiProcarianosGrupos);
 app.use('/api/animadores', apiAnimadores);
 app.use('/api/personal', apiPersonal);
 app.use('/api/calendario', apiCalendario);
-
+app.use('/api/ninos', apiNinoAccion);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

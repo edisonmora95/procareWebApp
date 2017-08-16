@@ -4,9 +4,6 @@
 @FechaCreacion: 21/06/2017
 @UltimaFechaModificacion: 21/06/2017 @josealcivar
 */
-
-
-var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Donacion = sequelize.define('Donacion', {
@@ -33,7 +30,6 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     }
-
   });
   return Donacion;
 };

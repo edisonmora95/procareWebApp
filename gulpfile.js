@@ -188,4 +188,3 @@ gulp.task('mocha', function(){
 gulp.task('test', function(){
 	runSequence('set-test-node-env', 'mocha');
 });
-

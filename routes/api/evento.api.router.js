@@ -9,6 +9,8 @@ var router = express.Router();
 router.post('/', controladorEvento.crearEvento);
 
 //Read Evento
+//router.get('/', controladorEvento.mostrarEvento);
+
 router.get('/', controladorEvento.mostrarEventos);
 
 
@@ -17,5 +19,11 @@ router.put('/:id', controladorEvento.editarEvento);
 
 //Delete Evento
 router.delete('/:id', controladorEvento.eliminarEvento);
+
+
+
+module.exports = router;
+
+module.exports = router;
 
 module.exports = router;

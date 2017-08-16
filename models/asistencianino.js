@@ -1,15 +1,15 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var CargoFundacion = sequelize.define('CargoFundacion', {
-    nombre: DataTypes.STRING,
-    sueldo: DataTypes.DOUBLE,
-    descripcion: DataTypes.STRING
+  var AsistenciaNino = sequelize.define('AsistenciaNino', {
+    fecha: DataTypes.DATE,
+    descripcion: DataTypes.STRING(300)
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
       }
-    }
+    },
+    freezeTableName: true
   });
-  return CargoFundacion;
+  return AsistenciaNino;
 };

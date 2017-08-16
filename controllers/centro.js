@@ -1,18 +1,22 @@
 /*
-@Descripcion: Creacion de Donacion.
+@Descripcion: Creacion de Centro.
 @Autor: Jose Alcivar Garcia
-@FechaCreacion: 21/06/2017
-@UltimaFechaModificacion: 12/08/2017 @erialper errores de comunicación con el modelo
+@FechaCreacion: 17/06/2017
+@UltimaFechaModificacion: 12/08/2017 @erialper Errores de tabla
 */
 
 var modelo = require('../models');
 
-const crearDonacion = (req, res, next) => {
-  modelo.Donacion.create({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const crearCentro = (req, res, next) => {
+  estado = 'activo';
+  modelo.Centro.create({
+    nombreCentro : req.body.nombreCentro,
+    direccion : req.body.direccion,
+    estado: estado,
+    directorCentro : req.body.directorCentro,
+    directorTelefono : req.body.directorTelefono,
+    convenio: req.body.convenio,
+    observacion : req.body.observacion
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -34,10 +38,14 @@ const crearDonacion = (req, res, next) => {
   });
 }
 
-const eliminarDonacion = (req, res, next) => {   
-  modelo.Donacion.destroy({
+const eliminarCentro = (req, res, next) => {
+   estado = 'inactivo';
+   idCentro = req.params.id;
+   modelo.Centro.update({
+    estado : estado
+  },{
     where:{
-      id: req.params.id
+      id: idCentro
     }
   }).then( repuesta => {
     var status = true;
@@ -51,19 +59,22 @@ const eliminarDonacion = (req, res, next) => {
   }).catch( error => {
     var json1 = {
       status : false,
-      mensaje: 'No se puede eliminar la Tarea',
+      mensaje: 'No se puede eliminar la Centro',
       error : error
       }
     res.send(json1);
   });
 }
 
-const editarDonacion = (req, res, next) => {
-  modelo.Donacion.update({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const editarCentro = (req, res, next) => {
+  modelo.Centro.update({
+    nombreCentro : req.body.nombreCentro,
+    direccion : req.body.direccion,
+    estado: req.body.estado,
+    directorCentro : req.body.directorCentro,
+    directorTelefono : req.body.directorTelefono,
+    convenio: req.body.convenio,
+    observacion : req.body.observacion
   },{
     where:{
       id: req.params.id
@@ -89,33 +100,8 @@ const editarDonacion = (req, res, next) => {
   });
 }
 
-const mostrarDonacion = (req,res,next) =>{
-  modelo.Donacion.findAll({
-
-  }).then( repuesta => {
-    var status = true;
-    var mensaje = 'se pudo actualizar correctamente'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : repuesta
-    }
-    res.json(jsonRespuesta)
-  }).catch( error => {
-    var status = false;
-    var mensaje = 'no se pudo eliminar'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : error
-    }
-    res.json(jsonRespuesta);
-  });
-}
-
 module.exports = {
-  crearDonacion,
-  eliminarDonacion,
-  editarDonacion,
-  mostrarDonacion
+  crearCentro,
+  eliminarCentro,
+  editarCentro
 }

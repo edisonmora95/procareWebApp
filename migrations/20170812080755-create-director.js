@@ -1,30 +1,18 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('NinoAccions', {
+    return queryInterface.createTable('Directors', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombreRep: {
-        type: Sequelize.STRING
+      fechaInicio: {
+        type: Sequelize.DATE
       },
-      apellidoRep: {
-        type: Sequelize.STRING
-      },
-      telefonoRep: {
-        type: Sequelize.INTEGER
-      },
-      escuela: {
-        type: Sequelize.STRING
-      },
-      bautizado: {
-        type: Sequelize.BOOLEAN
-      },
-      estado: {
-        type: Sequelize.BOOLEAN
+      fechaFin: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +25,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('NinoAccions');
+    return queryInterface.dropTable('Directors');
   }
 };

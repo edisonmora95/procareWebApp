@@ -1,12 +1,9 @@
-
 /*
 @Descripcion: Modelo Evento, relacionado con Persona quien va quedar encargado del evento
 @Autor: jose alcivar
 @FechaCreacion: 16/06/2017
 @UltimaFechaModificacion: --
 */
-var bcrypt = require('bcryptjs');
-
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Evento = sequelize.define('Evento', {
@@ -51,7 +48,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   },{
     classMethods: {
-			associate: function(models) {
+      associate: function(models) {
         Evento.belongsTo(models.Persona, {foreignKey: 'idOrganizador'})
         // associations can be defined here
       },

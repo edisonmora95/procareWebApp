@@ -1,4 +1,4 @@
-/*
+﻿/*
 @Descripcion: Clase controladora de todos los procarianos
 @Autor: Jose Viteri
 @FechaCreacion: 26/06/2017
@@ -575,8 +575,7 @@ chicoEnGrupo = (chico, array) => {
 	let flag = false;
 	for (let i = 0; i < array.length; i++) {
 		chicoEnGrupo = array[i];
-		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){
-			
+		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){	
 			flag = true;
 			break;
 		}

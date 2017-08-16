@@ -1,14 +1,10 @@
 
 /*
-
-@Descripcion: Modelo de persona
-@Autor: jose viteri
-@FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
-
-
+  @Descripcion: Modelo de persona
+  @Autor: jose viteri
+  @FechaCreacion: 20/05/2017
+  @UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
 */
-
 var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
@@ -20,11 +16,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     nombres: {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : true
     },
     apellidos: {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true
+    },
+    razonSocial : {
+      type : DataTypes.STRING,
+      allowNull : true
     },
     direccion: {
       type : DataTypes.TEXT
@@ -68,7 +68,7 @@ module.exports = function(sequelize, DataTypes) {
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
             if(err) throw err;
             if (isMatch){
-              return done(null,user, {status : true , message : "logueado correcatmente"});
+              return done(null,user, {status : true , message : "Logueado correctamente"});
             }
             else{
               return done(null, false , { status : false ,  message : "Contraseña inválida"});
@@ -98,8 +98,6 @@ module.exports = function(sequelize, DataTypes) {
           sueldo: persona.sueldo
         }).then(callback).catch(errorCallback);
       }
-
-
     }/*, hooks : {
       beforeCreate : (persona, options) => {
          bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
@@ -117,6 +115,5 @@ module.exports = function(sequelize, DataTypes) {
         },
     }*/
   });
-
   return Persona;
 };

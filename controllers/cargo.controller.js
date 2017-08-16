@@ -1,162 +1,87 @@
-var modelo = require('../models');
-var utils = require('../utils/utils')
-
 /*
 Autor : erialper
 Creado : 21/06/2017
 Modificado: 21/06/2017
-Por: erialper , agregados campos convencional y fecha date
-
+Por: erialper , controlador de los cargos del sistema, asigna el director de formación
 */
 
-const crearCargoFundacion = (req, res, next) => {
-	modelo.CargoFundacion.create({
-		nombre : req.body.nombre,
-		descripcion : req.body.descripcion,
-		sueldo : req.body.sueldo
-	}).then( repuesta => {
-		modelo.Rol.create({
-			nombre : req.body.nombre,
-			descripcion : req.body.descripcion,
-		}).then( repuesta => {
-			var status = true;
-			var mensaje = 'se pudo crear correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : repuesta
-			}
-			res.json(jsonRespuesta)
-		}).catch( error => {
-			var status = false;
-			var mensaje = 'no se pudo crear'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : error
-			}
-			res.json(jsonRespuesta);
-		});
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'no se pudo crearx2'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	});
-}
+var modelo = require('../models');
+var utils = require('../utils/utils')
 
-const crearCargoFormacion = (req, res, next) => {
-	modelo.CargoFormacion.create({
-		nombre : req.body.nombre,
-		descripcion : req.body.descripcion,
-	}).then( repuesta => {
-		modelo.Rol.create({
-			nombre : req.body.nombre,
-			descripcion : req.body.descripcion,
-		}).then( repuesta => {
-			var status = true;
-			var mensaje = 'se pudo crear correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : repuesta
-			}
-			res.json(jsonRespuesta)
-		}).catch( error => {
-			var status = false;
-			var mensaje = 'no se pudo crear'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : error
-			}
-			res.json(jsonRespuesta);
-		});
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'no se pudo crear'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
-	});
-}
-
-const asignarCargoFormacion = (req, res, next) => {
-	modelo.CargoFormacion.findOne({
+const asignarDirectorFormacion = (req, res, next) => {
+	modelo.PersonaRol.findOne({
 		where: {
-			nombre: req.body.nombre
+			PersonaId : req.body.anteriorPersonaId,
+			fechaFin : null,
+			RolNombre : 'Director Procare Formacion'
 		}
-	}).then(CargoFormacion => {
-		modelo.ProcarianoCargoFormacion.create({
-			CargoFormacionId : CargoFormacion.get('id'),
-			ProcarianoId : req.body.procarianoId,
-			fechaInicio : new Date(),
-			fechaFin : null
-		}).then( repuesta => {
-			modelo.PersonaRol.create({
-				PersonaId : req.body.procarianoId,
-				RolNombre : req.body.nombre,
-			}).then( repuesta2 => {
-				var status = true;
-				var mensaje = 'se pudo crear correctamente'
-				var jsonRespuesta = {
-					status : status,
-					mensaje : mensaje,
-					sequelizeStatus : repuesta2
-				}
-				res.json(jsonRespuesta)
-			}).catch( error4 => {
-				var status = false;
-				var mensaje = 'no se pudo crear'
-				var jsonRespuesta = {
-					status : status,
-					mensaje : mensaje,
-					sequelizeStatus : error4
-				}
-				res.json(jsonRespuesta);
-			});
-		}).catch( error2 => {
-			var status = false;
-			var mensaje = 'no se pudo asignar'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : error2
-			}
-			res.json(jsonRespuesta);
-		});
+	}).then( respuesta =>{
+		if(respuesta!=null){
+			actualizarDirectorFormacion(req,res)
+		}else{
+			nuevoDirectorFormacion(req,res)
+		}
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'error en la asignacion'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			director : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+actualizarDirectorFormacion = (req, res) => {
+	modelo.PersonaRol.update({
+		fechaFin : new Date()
+	},{
+		where: {
+			PersonaId : req.body.anteriorPersonaId,
+			RolNombre: 'Director Procare Formacion'
+		}
+	}).then(respuesta1 => {
+		nuevoDirectorFormacion(req,res)
 	}).catch( error1 => {
 		var status = false;
-		var mensaje = 'no existe cargo'
+		var mensaje = 'no existe asignacion'
 		var jsonRespuesta = {
 			status : status,
 			mensaje : mensaje,
-			sequelizeStatus : error1
+			actualizarDirector : error1
+		}
+		res.json(jsonRespuesta);
+	});
+}
+
+nuevoDirectorFormacion = (req,res) => {
+	modelo.PersonaRol.create({
+		fechaInicio : new Date(),
+		fechaFin : null,
+		PersonaId : req.body.nuevoPersonaId,
+		RolNombre: 'Director Procare Formacion'
+	}).then( repuesta2 => {
+		var status = true;
+		var mensaje = 'Asignado correctamente'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			director : repuesta2
+		}
+		res.json(jsonRespuesta)
+	}).catch( error2 => {
+		var status = false;
+		var mensaje = 'no se pudo asignar'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			nuevoDirector : error2
 		}
 		res.json(jsonRespuesta);
 	});
 }
 
 module.exports = {
-	crearCargoFundacion,
-	crearCargoFormacion,
-	asignarCargoFormacion
+	asignarDirectorFormacion
 };
-
-			/*
-			var status = true;
-			var mensaje = 'se pudo crear correctamente'
-			var jsonRespuesta = {
-				status : status,
-				mensaje : mensaje,
-				sequelizeStatus : repuesta
-			}
-			res.json(jsonRespuesta);
-			*/

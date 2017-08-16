@@ -1,18 +1,18 @@
 /*
-@Descripcion: Creacion de Donacion.
+@Descripcion: Creacion de Nivel.
 @Autor: Jose Alcivar Garcia
-@FechaCreacion: 21/06/2017
-@UltimaFechaModificacion: 12/08/2017 @erialper errores de comunicación con el modelo
+@FechaCreacion: 17/06/2017
+@UltimaFechaModificacion: 17/06/2017 @josealcivar
 */
 
 var modelo = require('../models');
 
-const crearDonacion = (req, res, next) => {
-  modelo.Donacion.create({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const crearNivel = (req, res, next) => {
+  modelo.Nivel.create({
+    nombre : req.body.nombre,
+    programa : "",
+    estado: req.body.estado
+    
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -34,10 +34,11 @@ const crearDonacion = (req, res, next) => {
   });
 }
 
-const eliminarDonacion = (req, res, next) => {   
-  modelo.Donacion.destroy({
+const eliminarNivel = (req, res, next) => {
+   idNivel = req.params.id;
+   modelo.Nivel.destroy({
     where:{
-      id: req.params.id
+      id: idNivel
     }
   }).then( repuesta => {
     var status = true;
@@ -51,19 +52,17 @@ const eliminarDonacion = (req, res, next) => {
   }).catch( error => {
     var json1 = {
       status : false,
-      mensaje: 'No se puede eliminar la Tarea',
+      mensaje: 'No se puede eliminar la Nivel',
       error : error
       }
     res.send(json1);
   });
 }
 
-const editarDonacion = (req, res, next) => {
-  modelo.Donacion.update({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const editarNivel = (req, res, next) => {
+  modelo.Nivel.update({
+     nombre : req.body.nombre,
+     programa : ""
   },{
     where:{
       id: req.params.id
@@ -89,18 +88,23 @@ const editarDonacion = (req, res, next) => {
   });
 }
 
-const mostrarDonacion = (req,res,next) =>{
-  modelo.Donacion.findAll({
+const mostrarNiveles = (req, res, next) =>{
+  modelo.Nivel.findAll({
 
-  }).then( repuesta => {
-    var status = true;
-    var mensaje = 'se pudo actualizar correctamente'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : repuesta
-    }
-    res.json(jsonRespuesta)
+  }).then( nivels => {
+    const respuesta = nivels.map( nivel => {
+      return Object.assign(
+        {},
+        {
+          id : nivel.id,
+          name : nivel.nombre,
+          program: nivel.programa, 
+        });
+    });
+    return res.json({
+      status : true,
+      sequelizeStatus : respuesta
+    })
   }).catch( error => {
     var status = false;
     var mensaje = 'no se pudo eliminar'
@@ -109,13 +113,13 @@ const mostrarDonacion = (req,res,next) =>{
       mensaje : mensaje,
       sequelizeStatus : error
     }
-    res.json(jsonRespuesta);
+    res.json(JSON.parse(jsonRespuesta));
   });
 }
 
 module.exports = {
-  crearDonacion,
-  eliminarDonacion,
-  editarDonacion,
-  mostrarDonacion
+  crearNivel,
+  eliminarNivel,
+  editarNivel,
+  mostrarNiveles
 }

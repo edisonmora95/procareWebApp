@@ -2,17 +2,15 @@
 @Descripcion: Creacion de Donacion.
 @Autor: Jose Alcivar Garcia
 @FechaCreacion: 21/06/2017
-@UltimaFechaModificacion: 12/08/2017 @erialper errores de comunicación con el modelo
+@UltimaFechaModificacion: 21/06/2017 @josealcivar
 */
 
 var modelo = require('../models');
 
-const crearDonacion = (req, res, next) => {
-  modelo.Donacion.create({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const CrearParalelo = (req, res, next) => {
+  modelo.Paralelo.create({
+    nombre : req.body.nombre,
+    cantidadNinios : req.body.cantidadNinios
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -34,8 +32,8 @@ const crearDonacion = (req, res, next) => {
   });
 }
 
-const eliminarDonacion = (req, res, next) => {   
-  modelo.Donacion.destroy({
+const eliminarParalelo = (req, res, next) => {
+  modelo.Paralelo.destroy({
     where:{
       id: req.params.id
     }
@@ -58,12 +56,10 @@ const eliminarDonacion = (req, res, next) => {
   });
 }
 
-const editarDonacion = (req, res, next) => {
-  modelo.Donacion.update({
-    id_benefactor : req.body.id_benefactor,
-    cantidad_donada : req.body.cantidad_donada,
-    fecha_donacion : req.body.fecha_donacion,
-    observacion : req.body.observacion,
+const editarParalelo = (req, res, next) => {
+  modelo.Paralelo.update({
+    nombre : req.body.nombre,
+    cantidadNinios : req.body.cantidadNinios,
   },{
     where:{
       id: req.params.id
@@ -89,8 +85,8 @@ const editarDonacion = (req, res, next) => {
   });
 }
 
-const mostrarDonacion = (req,res,next) =>{
-  modelo.Donacion.findAll({
+const mostrarParalelo = (req,res,next) =>{
+  modelo.Paralelo.findAll({
 
   }).then( repuesta => {
     var status = true;
@@ -114,8 +110,8 @@ const mostrarDonacion = (req,res,next) =>{
 }
 
 module.exports = {
-  crearDonacion,
-  eliminarDonacion,
-  editarDonacion,
-  mostrarDonacion
+  crearParalelo,
+  eliminarParalelo,
+  editarParalelo,
+  mostrarParalelo
 }

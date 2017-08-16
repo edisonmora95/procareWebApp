@@ -1,11 +1,9 @@
 /*
-
 @Descripcion: Api del login
 @Autor: jose viteri
 @FechaCreacion: 19/06/2017
 @UltimaFechaModificacion: 15/07/2017 //agregado post cambio contrasenna
-
-
+@UltimaFechaModificacion: 03/07/2017 //solucionado problema sesiones
 */
 
 
@@ -17,11 +15,11 @@ var utils = require('../../utils/utils');
 
 
 router.get('/loginFalla', function(req,res,next){
-	let objeto = {
-		status : false,
-		message : "algo paso"
-	}
-	res.json(objeto);
+  let objeto = {
+    status : false,
+    message : "algo paso"
+  }
+  res.json(objeto);
 });
 
 router.get('/usuarios', function(req, res, next){
@@ -30,19 +28,16 @@ router.get('/usuarios', function(req, res, next){
   for ( var i = 0 ; i < rolesTemp.length ; i++){
     lista.push(rolesTemp[i].dataValues.nombre);
   }
-  	var json = {
-  		status : true,
-      id: req.user[0].dataValues.id,
-  		nombre : req.user[0].dataValues.nombres,
-  		apellidos : req.user[0].dataValues.apellidos,
-      genero : req.user[0].dataValues.genero,
-  		correo : req.user[0].dataValues.email, 
-  		roles : lista
-  	}
-
-    //console.log('\n\neste es genero ' + json.genero);
-
-  	res.json(json);
+	var json = {
+		status : true,
+    id: req.user[0].dataValues.id,
+		nombre : req.user[0].dataValues.nombres,
+		apellidos : req.user[0].dataValues.apellidos,
+    genero : req.user[0].dataValues.genero,
+		correo : req.user[0].dataValues.email, 
+		roles : lista
+	}
+	res.json(json);
 });
 
 router.post('/', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);

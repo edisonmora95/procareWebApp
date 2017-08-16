@@ -132,7 +132,6 @@ const editarTarea = (req, res, next) => {
 /*
 const mostrarTarea = (req,res,next) =>{
   modelo.Tarea.findAll({
-
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo actualizar correctamente'
