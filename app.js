@@ -21,6 +21,7 @@ var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 var personal = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
+let perderContrasenna = require('./routes/ventanas/perderContrasenna.ventanas.router');
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
@@ -77,6 +78,7 @@ app.use('/grupos', grupos);
 app.use('/personal', personal);
 
 app.use('/cambioContrasenna',cambioContrasenna);
+app.use('/perderContrasenna',perderContrasenna);
 app.use('/', login);
 
 //Rutas de la api
