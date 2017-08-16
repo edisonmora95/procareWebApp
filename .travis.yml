@@ -9,6 +9,7 @@ before_script :
 before_install:
     - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db2;'
 script : gulp test
+after_script: "coveralls"
 
 
 
