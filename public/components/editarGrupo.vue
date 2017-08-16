@@ -109,33 +109,33 @@
 			}
 		},
 		methods: {
-			inicializarDOM(self){
-				self.tempEtapaAntigua = self.grupo.etapaId;
-				self.tempAnimadorAntiguo = self.grupo.animadorId;
+			////////////////////////////////////
+			//Obtener de la base de datos
+			////////////////////////////////////
+			obtenerEtapas(self){
+				$.ajax({
+					type: 'GET',
+					url: '/api/etapa/',
+					success(res){
+						if(res.estado){
+							self.armarArrayEtapas(self, res.datos);
+						}else{
+							Materialize.toast('Error al buscar etapas en la base de datos', 4000, 'rounded error');
+						}
+					}
+				});
 			},
 			obtenerChicosFormacion(self){
 				$.ajax({
 					type: 'GET',
 					url: '/api/procarianos/formacion',
 					success(res){
-						self.armarArraySinGrupo(self, res.datos);
+						if(res.status){
+							self.armarArraySinGrupo(self, res.datos);	
+						}
 					}
 				});
 			},
-			armarArraySinGrupo(self, procarianos){
-				$.each(procarianos, function(index, procariano){
-					let obj = {
-						id: procariano.procarianoId,
-						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos
-					};
-					self.sinGrupo.push(obj);
-				});
-			},
-			/*
-				@Descripción:
-					Obtiene a todos los procarianos que pueden ser animadores de la base de datos.
-					A partir de eso, se arma el array para mostrar a los animadores en el select
-			*/
 			obtenerPosiblesAnimadores(self){
 				$.ajax({
 					type: 'GET',
@@ -145,6 +145,22 @@
 							self.armarArrayAnimadores(self, res.datos)							
 						}
 					}
+				});
+			},
+			////////////////////////////////////
+			//DOM
+			////////////////////////////////////
+			inicializarDOM(self){
+				self.tempEtapaAntigua = self.grupo.etapaId;
+				self.tempAnimadorAntiguo = self.grupo.animadorId;
+			},
+			armarArraySinGrupo(self, procarianos){
+				$.each(procarianos, function(index, procariano){
+					let obj = {
+						id: procariano.procarianoId,
+						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos
+					};
+					self.sinGrupo.push(obj);
 				});
 			},
 			armarArrayAnimadores(self, animadores){
@@ -157,23 +173,6 @@
 					self.animadores.push(animadorObj);
 				});
 			},
-			/*
-				@Descripción: Obtiene todas las etapas de la base de datos y las añade al aray para mostrarlas en el <select>
-			*/
-			obtenerEtapas(self){
-				$.ajax({
-					type: 'GET',
-					url: '/api/etapa/',
-					success(res){
-						let busquedaExitosa = (res.estado && res.mensaje === 'Se obtuvieron las etapas correctamente');
-						if(busquedaExitosa){
-							self.armarArrayEtapas(self, res.datos);
-						}else{
-							Materialize.toast('Error al buscar etapas en la base de datos', 4000, 'rounded error');
-						}
-					}
-				});
-			},
 			armarArrayEtapas(self, etapas){
 				$.each(etapas, function(index, etapa){
 					let etapaObj = {
@@ -184,22 +183,72 @@
 				});
 				$('#etapa').change( () => {
 					self.cambiarEtapa(self);
-				})
+				});
 			},
 			cambiarEtapa(self){
 				self.etapa.id = $('#etapa option:selected').val();
 				self.etapa.text = $('#etapa option:selected').text();
 			},
+			////////////////////////////////////
 			//Eventos de botones
+			////////////////////////////////////
 			anadir(chico){
 				this.integrantes.push(chico);
 				this.sinGrupo.splice(this.sinGrupo.indexOf(chico), 1);
 				this.anadirChicoAGrupo(this, chico);
 			},
+			anadirChicoAGrupo(self, chico){
+				$.ajax({
+					type: 'POST',
+					url: '/api/pg/anadir',
+					data: {
+						idGrupo: self.grupo.id,
+						idProcariano: chico.id
+					},
+					success(res){
+						if(!res.estado){
+							//Si no se pudo realizar la acción, se regresa al chico al array de sinGrupo
+							Materialize.toast(res.mensaje, 4000, 'rounded error');
+							self.sinGrupo.push(chico);
+							self.integrantes.splice(self.integrantes.indexOf(chico), 1);
+						}
+					},
+					error(err){
+						//Si no se pudo realizar la acción, se regresa al chico al array de sinGrupo
+						Materialize.toast('No se pudo añadir al grupo', 4000, 'rounded error');
+						self.sinGrupo.push(chico);
+						self.integrantes.splice(self.integrantes.indexOf(chico), 1);
+					}
+				});
+			},
 			quitar(chico){
 				this.sinGrupo.push(chico);
 				this.integrantes.splice(this.integrantes.indexOf(chico), 1);
 				this.quitarChicoDeGrupo(this, chico);
+			},
+			quitarChicoDeGrupo(self, chico){
+				const urlApi = '/api/pg/quitar/' + chico.id;
+				$.ajax({
+					type: 'PUT',
+					url: urlApi,
+					data: {
+						idGrupo: self.grupo.id
+					},
+					success(res){
+						if(!res.estado){
+							//Si no se pudo realizar la acción, se regresa al chico al array de integrantes
+							Materialize.toast(res.mensaje, 4000, 'rounded error');
+							self.integrantes.push(chico);
+							self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
+						}
+					}, 
+					error(err){
+						//Si no se pudo realizar la acción, se regresa al chico al array de integrantes
+						Materialize.toast('No se pudo conectar con el servidor', 4000, 'rounded error');
+						self.integrantes.push(chico);
+						self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
+					}
+				})
 			},
 			cancelar(){
 				this.$emit('edicionterminada', this.finEdicion);
@@ -241,7 +290,7 @@
 					cantidadChicos: self.grupo.cantidadChicos,
 					numeroReuniones: self.grupo.numeroReuniones,
 					etapaAntigua: self.tempEtapaAntigua,
-					etapaNueva: self.grupo.etapaId,
+					etapaNueva: self.etapa.id,
 					animadorAntiguo: self.tempAnimadorAntiguo,
 					animadorNuevo: self.grupo.animadorId
 				};
@@ -252,62 +301,20 @@
 					data: grupoObj,
 					success(res){
 						if(res.estado){
+							self.grupo.etapaId = self.etapa.id;
 							Materialize.toast(res.mensaje, 4000);
-							self.$emit('edicionterminada', self.finEdicion);		
+							location.reload();
+							//self.$emit('edicionterminada', self.finEdicion);		
 						}else{
 							Materialize.toast(res.mensaje, 4000);
 						}
 					},
 					error(err){
-						console.log(err);
+						console.log(err)
+						Materialize.toast(err.mensaje, 4000);
 					}
 				});
 			},
-			anadirChicoAGrupo(self, chico){
-				$.ajax({
-					type: 'POST',
-					url: '/api/pg/anadir',
-					data: {
-						idGrupo: self.grupo.id,
-						idProcariano: chico.id
-					},
-					success(res){
-						if(!res.estado){
-							Materialize.toast(res.mensaje, 4000, 'rounded error');
-							self.sinGrupo.push(chico);
-							self.integrantes.splice(self.integrantes.indexOf(chico), 1);
-						}
-					},
-					error(err){
-						Materialize.toast('No se pudo conectar con el servidor', 4000, 'rounded error');
-						self.sinGrupo.push(chico);
-						self.integrantes.splice(self.integrantes.indexOf(chico), 1);
-					}
-				});
-			},
-			quitarChicoDeGrupo(self, chico){
-				const urlApi = '/api/pg/quitar/' + chico.idProcariano;
-				console.log(urlApi)
-				$.ajax({
-					type: 'PUT',
-					url: urlApi,
-					data: {
-						idGrupo: self.grupo.id
-					},
-					success(res){
-						if(!res.estado){
-							Materialize.toast(res.mensaje, 4000, 'rounded error');
-							self.integrantes.push(chico);
-							self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
-						}
-					}, 
-					error(err){
-						Materialize.toast('No se pudo conectar con el servidor', 4000, 'rounded error');
-						self.integrantes.push(chico);
-						self.sinGrupo.splice(self.sinGrupo.indexOf(chico), 1);
-					}
-				})
-			}
 		}
 	}
 </script>
