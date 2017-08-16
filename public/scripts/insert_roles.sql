@@ -6,4 +6,4 @@ INSERT INTO rols(nombre, descripcion, createdAt, updatedAt) VALUES ('Director Ej
 INSERT INTO rols(nombre, descripcion, createdAt, updatedAt) VALUES ('Animador', 'este es parte del animador', now(), now());
 INSERT INTO rols(nombre, descripcion, createdAt, updatedAt) VALUES ('Asesor', 'este es parte del asesor', now(), now());
 
-INSERT INTO personarol(PersonaId, RolNombre) VALUES (14, 'Personal');
+INSERT INTO personarol(PersonaId, RolNombre) VALUES (1, 'Personal');
