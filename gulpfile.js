@@ -25,7 +25,7 @@ gulp.task('default', ['js-compile', 'vue-compile'], function(){
 
 //CORRER LA APLICACIÓN PARA TESTING
 gulp.task('build-test', function(){
-	runSequence('set-test-node-env', 'browser-sync');
+	runSequence('set-test-node-env', 'browser-sync', 'nodemon');
 });
 
 //CORRER LA APLICACIÓN PARA PRODUCCIÓN
@@ -111,7 +111,8 @@ gulp.task('nodemon', function(cb){
 			"public/**/*.*",
 			"gulpfile.js",
 			"package.json",
-			"README.md"
+			"README.md",
+			"./test/**/*.*"
 		]
 	})
 	.on('start', function(){
@@ -179,7 +180,7 @@ gulp.task('set-prod-node-env', function(){
 
 //TASK DE MOCHA
 gulp.task('mocha', function(){
-	gulp.src('./test/**/*.js', {read: false})
+	gulp.src('./test/grupos/*.js', {read: false})
 		.pipe(mocha());
 });
 
