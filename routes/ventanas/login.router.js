@@ -20,31 +20,31 @@ passport.use(new LocalStrategy({
   passwordField : 'password'
 },
 function(correo, password, done) {
-	console.log('entra aqui passport');
-	modelos.Persona.find({
-  	  attributes: ['id','contrasenna','nombres','apellidos','email','genero'],
-  	  where : {
-  	  	email : correo
-  	  },
-	  include: [{
-	    model: modelos.Rol,
-	    through: {
-	      attributes: ['RolNombre'],
-	    }
-	  }]
-	}).then( persona => {
-		var roles = persona.Rols
-		console.log({
-			estaPersona : persona,
-			roles : roles
-		})
-		isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
-	}).catch( err => {
-		console.log('no existe usuario')
-		console.log(err);
-		return done(null, false, { status : false , message : "usuario no existe"});
-	})
-}));
+  console.log('entra aqui passport');
+  modelos.Persona.find({
+      attributes: ['id','contrasenna','nombres','apellidos','email','genero'],
+      where : {
+        email : correo
+      },
+    include: [{
+      model: modelos.Rol,
+      through: {
+        attributes: ['RolNombre'],
+      }
+    }]
+  }).then( persona => {
+    var roles = persona.Rols
+    console.log({
+      estaPersona : persona,
+      roles : roles
+    })
+    isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
+  }).catch( err => {
+    console.log('no existe usuario')
+    console.log(err);
+    return done(null, false, { status : false , message : "usuario no existe"});
+  })
+ }));
 
 
 //serializador de passport
@@ -56,16 +56,16 @@ passport.serializeUser(function(persona, done) {
 //desarializador de passport
 passport.deserializeUser(function(id, done) {
   modelos.Persona.findAll({
-	  attributes: ['id','nombres','apellidos','email','genero'],
-	  where : {
-	  	id : id
-	  },
-	  include: [{
-	    model: modelos.Rol,
-	    through: {
-	      attributes: ['RolNombre'],
-	    }
-	  }]
+      attributes: ['id','nombres','apellidos','email','genero'],
+      where : {
+        id : id
+      },
+    include: [{
+      model: modelos.Rol,
+      through: {
+        attributes: ['RolNombre'],
+      }
+    }]
   }).then( persona => {
 
     done(null, persona);
