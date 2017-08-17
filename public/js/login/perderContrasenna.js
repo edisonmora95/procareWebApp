@@ -17,6 +17,9 @@ const dictionary = {
 			},
 			regex: function(field, val){
 				return 'Su contraseña debe contener al menos un cáracter en minúscula, otro en mayúscula y un número';
+			},
+			numeric: function(){
+				return 'el PIN debe ser numerico';
 			}
 		}
 	}
@@ -24,14 +27,14 @@ const dictionary = {
 VeeValidate.Validator.updateDictionary(dictionary);
 
 var appCambio = new Vue({
-	el: '#app-cambioContrasenna',
+	el: '#app-perderContrasenna',
 	mounted(){
 		$('#modal1').modal();
 		$('#modalError').modal();
 	},
 	data: {
 		correo: '',
-		viejaContrasenna: '',
+		pin: '',
 		nuevaContrasenna: '',
 		nuevaContrasenna2: '',
 		fallaCambio: false,
@@ -40,6 +43,10 @@ var appCambio = new Vue({
 	},
 	methods: {
 		cambio(){
+			console.log('cambio')
+			/*
+
+
 			let self = this;
 			var url = "/api/login/";
 			let obj = {
@@ -88,10 +95,10 @@ var appCambio = new Vue({
 
 			}
 
-			
+	*/			
 		},
 		cancelar(){
-			window.location.href = '/home';
+			window.location.href = '/';
 		},
 		validarAntesDeSubir(){
 			let self = this;
