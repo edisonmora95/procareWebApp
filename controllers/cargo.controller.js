@@ -8,6 +8,39 @@ Por: erialper , controlador de los cargos del sistema, asigna el director de for
 var modelo = require('../models');
 var utils = require('../utils/utils')
 
+const obtenerUsuarios = (req, res, next) => {
+	modelo.Persona.findAll({
+		include:[{
+			model: modelo.Rol,
+			attributes:['nombre'],
+			through:{
+				attributes:[],
+				where: {fechaFin:null}
+			}
+		}],
+		attributes:['nombres','apellidos','email']
+	}).then( respuesta => {
+		var status = true;
+		var mensaje = 'Usuarios encontrados'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			usuarios : respuesta
+		}
+		res.json(jsonRespuesta)
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se pudo realizar la busquedad'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			obtenerUsuarios : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+
 const asignarDirectorFormacion = (req, res, next) => {
 	modelo.PersonaRol.findOne({
 		where: {
@@ -83,5 +116,6 @@ nuevoDirectorFormacion = (req,res) => {
 }
 
 module.exports = {
+	obtenerUsuarios,
 	asignarDirectorFormacion
 };
