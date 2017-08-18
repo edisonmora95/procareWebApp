@@ -8,11 +8,11 @@
  		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="main">
 				<section id="section-resultados">
 					<div class="row">
 					  <div id="admin" class="col s12">
@@ -107,9 +107,9 @@
 		</div>
 		<div id="scripts">
 			<% include ../partials/scripts %>
-  		<script src="/js/libs/jquery.dataTables.min.js"></script>
-			<script src="/js/usuarios/tableMaterial.js"></script>
-			<script src="/build/usuarios/verTodosScript.js"></script>
+  			<script src="/js/libs/jquery.dataTables.min.js"></script>
+			<!--<script src="/js/usuarios/tableMaterial.js"></script>-->
+			<script src="/build/usuarios/verTodosScript.min.js"></script>
 		</div>
 	</body>
 </html>

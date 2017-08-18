@@ -38,6 +38,8 @@ var appLogin = new Vue({
 					}
 					else{
 						self.fallaLogin = true;
+						self.correo = '';
+						self.contrasenna = '';
 						//console.log(self.fallaLogin);
 					}
 					
