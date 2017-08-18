@@ -4,12 +4,12 @@
    	<% include partials/head %>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/login/cambioContrasenna.css">
 	</head>
-	<body >
-		<div id="app-cambioContrasenna">
+	<body>
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ./partials/navbar %>
 			</header>
-			<div class="container">
+			<div class="container" id="app-cambioContrasenna">
 				<div>
 					<div class="row">
 						<h4><b>Cambiar contraseña</b></h4>
@@ -88,7 +88,6 @@
 				<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 				<script src="build/login/cambiarContrasenna.min.js"></script>
 			</div>
-
 			
 		</div>
 
