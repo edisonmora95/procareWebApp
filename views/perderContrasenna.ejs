@@ -2,14 +2,11 @@
 <html>
 	<head>
    	<% include partials/head %>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/login/cambioContrasenna.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/login/perderContrasenna.css">
 	</head>
-	<body>
-		<div>
-			<header>
-				<% include ./partials/navbar %>
-			</header>
-			<div class="container" id="app-cambioContrasenna">
+	<body >
+		<div id="app-perderContrasenna">
+			<div class="container">
 				<div>
 					<div class="row">
 						<h4><b>Cambiar contraseña</b></h4>
@@ -30,9 +27,9 @@
 					      <div class="row">
 					        <div class="input-field col s12 form-group">
 					          <i class="fa fa-lock"></i>
-					          <input id="viejaContrasenna" name="viejaContrasenna" type="password" class="validate" v-model="viejaContrasenna" v-validate="'required'">
-					          <span v-show="errors.has('viejaContrasenna')" class="help is-danger">{{ errors.first('viejaContrasenna') }}</span>
-					          <label for="viejaContrasenna">Ingrese su vieja contraseña</label>
+					          <input id="pin" name="pin" type="text" class="validate" v-model="pin" v-validate="'required|numeric:4'">
+					          <span v-show="errors.has('pin')" class="help is-danger">{{ errors.first('pin') }}</span>
+					          <label for="pin">Ingrese el PIN enviado por correo</label>
 					        </div>
 					      </div>
 					      <div class="row">
@@ -52,7 +49,7 @@
 					        </div>
 					      </div>
 
-								<p class="alert"  v-if="fallaCambio" > {{msg}} </p>
+								<p class="alert"  v-if="!fallaCambio" > {{msg}} </p>
 				      	
 					      <div class="row">
 
@@ -86,9 +83,8 @@
 			<div class="scriptZone">
 				<% include partials/scripts %>
 				<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-				<script src="build/login/cambiarContrasenna.min.js"></script>
-			</div>
-			
+				<script src="build/login/perderContrasenna.min.js"></script>
+			</div>			
 		</div>
 
 	</body>

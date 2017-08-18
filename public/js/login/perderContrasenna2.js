@@ -17,6 +17,9 @@ const dictionary = {
 			},
 			regex: function(field, val){
 				return 'Su contraseña debe contener al menos un cáracter en minúscula, otro en mayúscula y un número';
+			},
+			numeric: function(){
+				return 'el PIN debe ser numerico';
 			}
 		}
 	}
@@ -24,14 +27,14 @@ const dictionary = {
 VeeValidate.Validator.updateDictionary(dictionary);
 
 var appCambio = new Vue({
-	el: '#app-cambioContrasenna',
+	el: '#app-perderContrasenna',
 	mounted(){
 		$('#modal1').modal();
 		$('#modalError').modal();
 	},
 	data: {
 		correo: '',
-		viejaContrasenna: '',
+		pin: '',
 		nuevaContrasenna: '',
 		nuevaContrasenna2: '',
 		fallaCambio: false,
@@ -40,6 +43,10 @@ var appCambio = new Vue({
 	},
 	methods: {
 		cambio(){
+			console.log('cambio')
+			/*
+
+
 			let self = this;
 			var url = "/api/login/";
 			let obj = {
@@ -50,9 +57,7 @@ var appCambio = new Vue({
 			};
 			if ( obj.nuevaContrasenna != obj.nuevaContrasenna2){
 				self.fallaCambio = true;
-				self.msg = "Contraseñas no coinciden";
-				//console.log('este es el fallaCambio: ' +  self.fallaCambio);
-				//console.log('este es el msg: ' +  self.msg);
+				self.msg = "Contraseñas no coinciden"
 			}else{
 				$.ajax({
 					type : 'POST',
@@ -71,18 +76,18 @@ var appCambio = new Vue({
 
 							self.fallaCambio = true;
 							self.msg = res.message;
-							//console.log("este es el textContent:" + this.$el);
-							//console.log('este es el msg: ' +  self.msg + " " + res.message);
-							//console.log(res);
+							console.log("este es el textContent:" + this.$el);
+							console.log('este es el msg: ' +  self.msg + " " + res.message);
+							console.log(res);
 						}
 						
 					},
 					error : function(res){
 						self.fallaCambio = true;
 						self.msg = res.message;
-						//console.log("este es el textContent:" + self.$el.textContent);
-						//console.log('este es el msg: ' +  self.msg);
-						//console.log(res);
+						console.log("este es el textContent:" + self.$el.textContent);
+						console.log('este es el msg: ' +  self.msg);
+						console.log(res);
 						//console.log(self.fallaLogin);
 					}
 				});
@@ -90,16 +95,16 @@ var appCambio = new Vue({
 
 			}
 
-			
+	*/			
 		},
 		cancelar(){
-			window.location.href = '/home';
+			window.location.href = '/';
 		},
 		validarAntesDeSubir(){
 			let self = this;
 
 			this.$validator.validateAll().then(respuesta => {
-				//console.log('esta es respuesta');
+				console.log('esta es respuesta');
 			  self.cambio();       
 	    }).catch(() => {
 	      self.errorObj.campo = self.errors.errors[0].field;

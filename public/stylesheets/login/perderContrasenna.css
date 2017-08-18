@@ -8,8 +8,8 @@
 
 }
 
-.modal {
-	height: 10%;
+.modal{
+	height: 27%;
 	width: 40%;
 	border-radius: 2%;
 
@@ -21,7 +21,7 @@
 }
 
 body {
-	background-color: #d3dbdb;
+	background-color: rgba(245,145,29,0.7);
 
 }
 
