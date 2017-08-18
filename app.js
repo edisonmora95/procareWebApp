@@ -21,11 +21,8 @@ var index = require('./routes/ventanas/index');
 var login = require('./routes/ventanas/login.router');
 var personal = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
-<<<<<<< HEAD
-
-=======
 let perderContrasenna = require('./routes/ventanas/perderContrasenna.ventanas.router');
->>>>>>> personalFront
+
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
