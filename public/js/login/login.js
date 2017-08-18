@@ -1,3 +1,12 @@
+/*
+@Descripcion: 
+@Autor: Jose Viteri
+@FechaCreacion: 01/08/2017
+@UltimaEdicion: --
+
+*/
+
+
 'use strict';
 
 var appLogin = new Vue({

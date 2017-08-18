@@ -38,6 +38,7 @@ let apiAnimadores = require('./routes/api/animadores.api.router.js');
 let apiPersonal = require('./routes/api/personal.api.router');
 let apiCalendario = require('./routes/api/calendario.api.router');
 let apiNinoAccion = require('./routes/api/ninoaccion.api.router');
+let apiCorreo = require('./routes/api/correo.api.router');
 
 var app = express();
 
@@ -93,6 +94,7 @@ app.use('/api/animadores', apiAnimadores);
 app.use('/api/personal', apiPersonal);
 app.use('/api/calendario', apiCalendario);
 app.use('/api/ninos', apiNinoAccion);
+app.use('/api/correo', apiCorreo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

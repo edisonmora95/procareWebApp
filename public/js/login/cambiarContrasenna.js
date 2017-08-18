@@ -1,3 +1,13 @@
+/*
+@Descripcion: 
+@Autor: Jose Viteri
+@FechaCreacion: 06/08/2017
+@UltimaEdicion: --
+
+*/
+
+
+
 'use strict';
 
 import Navbar from './../../components/navbar.vue';
