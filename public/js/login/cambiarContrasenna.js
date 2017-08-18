@@ -1,8 +1,4 @@
 'use strict';
-
-import Navbar from './../../components/navbar.vue';
-Vue.component('navbar', Navbar); 
-
 var appCambio = new Vue({
 	el: '#app-cambioContrasenna',
 	mounted(){
