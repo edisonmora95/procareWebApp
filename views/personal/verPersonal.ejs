@@ -6,11 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="app">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="app">
 				<!--Row ver procariano-->
 				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
 					<div class="col s12">
@@ -124,13 +124,11 @@
 		  </div>
 		</div>
 		<div>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<% include ../partials/scripts %>
 			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
-			<script src="/build/personal/verPersonalScript.js"></script>
+			<script src="/build/personal/verPersonalScript.min.js"></script>
 		</div>
 	</body>
 </html>
