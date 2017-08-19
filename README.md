@@ -1,3 +1,5 @@
+<a href='https://coveralls.io/github/javiteri95/procareWebApp?branch=master'><img src='https://coveralls.io/repos/github/javiteri95/procareWebApp/badge.svg?branch=master' alt='Coverage Status' /></a>
+
 ## Para correr el proyecto
 1) npm install
 2) npm run build

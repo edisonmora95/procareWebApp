@@ -4,14 +4,14 @@ node_js:
 services :
     - mysql
 before_script :
-    - npm install coverall
+    - npm install coveralls
     - npm install -g gulp-cli
     - npm install
 before_install:
     - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db2;'
 script : gulp test
 after_success:
-    - npm run coverall
+    - npm run coveralls
 after_script: "coveralls"
 
 
