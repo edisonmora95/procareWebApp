@@ -38,13 +38,16 @@ let indexApp = new Vue({
 	     		center: 'title',
 	     		right: 'month,agendaWeek,agendaDay'
 	     	},
+	     	dayClick: function(date, jsEvent, view) {
+        		window.location.href = '/home/tarea/';
+    		},
 	     	firstDay: 1,
 	     	showNonCurrentDates: false,
 	      navLinks: true,
 	      eventLimit: true, // for all non-agenda views
 	      events: self.tareasEventos,
 	      //Funciones
-	      eventClick: function(calEvent, jsEvent, view) {
+	      eventMouseover: function(calEvent, jsEvent, view) {
 	        self.eventoSeleccionado = calEvent;
 	    	},
 	    	eventRender: function(evento, elemento){

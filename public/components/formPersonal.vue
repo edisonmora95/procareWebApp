@@ -14,16 +14,16 @@
 				</div>
 			</v-row>
 			<v-row id="rowCedulaFechaNacimiento">
-				<div class="col s6 input-field">
-					<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
-					 <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+				<div class="col s6">
 					<label for="cedula" class="active">Cédula</label>
+					<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
+					<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 				</div>
-				<div class="col s6 input-field">
+				<div class="col s6">
+					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
 					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
 			</v-row>
 			<v-row id="rowDirEmail">
@@ -144,8 +144,16 @@
 			inicializarMaterialize(self){
 				$('.modal').modal();
 				$('.datepicker').pickadate({
-					selectMonths: true, // Creates a dropdown to control month
-					selectYears: 100 // Creates a dropdown of 15 years to control year
+					monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+					monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+					weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+					weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+					today: 'Hoy',
+					clear: 'Limpiar',
+					close: 'Cerrar',
+				    selectMonths: true, // Creates a dropdown to control month
+				    selectYears: 100, // Creates a dropdown of 15 years to control year
+				    closeOnSelect: true // Close upon selecting a date
 				});
 				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
 				let picker = datePickerFechaNacimiento.pickadate('picker');
