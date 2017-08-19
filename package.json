@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "init" : "npm install && npm run build",
+    "init": "npm install && npm run build",
     "start": "npm run gulp",
     "gulp": "gulp",
     "build": "gulp build",
@@ -49,6 +49,7 @@
     "browser-sync": "^2.18.12",
     "chai": "^3.2.0",
     "chai-http": "^1.0.0",
+    "coveralls": "^2.13.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
