@@ -14,7 +14,6 @@
 		  	<div id='calendar' class="col l8 s12"></div>	
 		  	<div id="tareas" class="col l4 s12">
 		  		<div class="card">
-		  			<h4 class="center-align">Selección</h4>
 		  			<h5 class="center-align"><span>Título: </span>{{eventoSeleccionado.title}}</h5>
 		  			<span>Descripción:</span>
 		  			<p>{{eventoSeleccionado.description}}</p>
@@ -46,7 +45,8 @@
 		<% include ../partials/scripts %>
 		<script src="/scripts/moment/min/moment.min.js"></script>
 		<script src="/scripts/moment/locale/es.js"></script>
-		<script src='/scripts/fullcalendar/dist/fullcalendar.min.js'></script>
+		<script src="/scripts/fullcalendar/dist/fullcalendar.min.js"></script>
+		<script src="/scripts/fullcalendar/dist/locale/es.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.js"></script>
 		<script src="/build/index/indexScript.min.js"></script>
 	</div>

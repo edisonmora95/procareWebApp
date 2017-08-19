@@ -1,3 +1,13 @@
+/*
+@Descripcion: 
+@Autor: Jose Viteri
+@FechaCreacion: 06/08/2017
+@UltimaEdicion: --
+
+*/
+
+
+
 'use strict';
 
 import Navbar from './../../components/navbar.vue';
@@ -50,7 +60,9 @@ var appCambio = new Vue({
 			};
 			if ( obj.nuevaContrasenna != obj.nuevaContrasenna2){
 				self.fallaCambio = true;
-				self.msg = "Contraseñas no coinciden"
+				self.msg = "Contraseñas no coinciden";
+				//console.log('este es el fallaCambio: ' +  self.fallaCambio);
+				//console.log('este es el msg: ' +  self.msg);
 			}else{
 				$.ajax({
 					type : 'POST',
@@ -69,18 +81,18 @@ var appCambio = new Vue({
 
 							self.fallaCambio = true;
 							self.msg = res.message;
-							console.log("este es el textContent:" + this.$el);
-							console.log('este es el msg: ' +  self.msg + " " + res.message);
-							console.log(res);
+							//console.log("este es el textContent:" + this.$el);
+							//console.log('este es el msg: ' +  self.msg + " " + res.message);
+							//console.log(res);
 						}
 						
 					},
 					error : function(res){
 						self.fallaCambio = true;
 						self.msg = res.message;
-						console.log("este es el textContent:" + self.$el.textContent);
-						console.log('este es el msg: ' +  self.msg);
-						console.log(res);
+						//console.log("este es el textContent:" + self.$el.textContent);
+						//console.log('este es el msg: ' +  self.msg);
+						//console.log(res);
 						//console.log(self.fallaLogin);
 					}
 				});
@@ -97,7 +109,7 @@ var appCambio = new Vue({
 			let self = this;
 
 			this.$validator.validateAll().then(respuesta => {
-				console.log('esta es respuesta');
+				//console.log('esta es respuesta');
 			  self.cambio();       
 	    }).catch(() => {
 	      self.errorObj.campo = self.errors.errors[0].field;

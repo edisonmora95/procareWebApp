@@ -295,6 +295,10 @@ var main = new Vue({
     		self.procariano.grupo = self.grupoPescadoresSel;
     	}
     },
+    cancelar(){
+    	window.location.href = '/procarianos/'
+    	//console.log('debo agregar esa vista aun');
+    },
     ingresarProcariano(self){
     	let urlApi = '/api/procarianos/';
     	$.ajax({

@@ -179,3 +179,58 @@ module.exports.generarJsonNinoAccion = function(ninoaccion){
     }
     return respuesta;
 }
+/*
+@Descripcion: es una funcion que genera y envia el correo al destinatario
+@Autor: Jose Viteri
+@FechaCreacion: 18/08/2017
+*/
+
+module.exports.generarCorreo = function(mensaje, destinatario, sujeto){
+    //mensaje : el mensaje del correo
+    //destinatario : la persona o personas que se le va a enviar el correo (si son varias, separadas por comas)
+    //sujeto : el tema del correo
+    const nodemailer = require('nodemailer');
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // secure:true for port 465, secure:false for port 587
+        auth: {
+            type: 'OAuth2',
+            user: 'procarewebapp@gmail.com',
+            clientId: '636471246614-f425frovl75hc6971hpq0hbh77iq4dta.apps.googleusercontent.com',
+            clientSecret: "pJBQIxcaEN9BAALMKowo6zld",
+            refreshToken: "1/D0LJMDXjVy3JCB5Wcr7069jLs1-lmtlh2GF-EfqUwVXnCHDk0NJ4sUXqeQuhKk4l"
+            //accessToken: serverConfig.gmail.access_token,
+        },
+        tls:{
+            rejectUnauthorized: false
+        }
+    });
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Procare " <procarewebapp@gmail.com>', // sender address
+        to: destinatario, // list of receivers
+        subject: sujeto, // Subject line
+        text: mensaje // plain text body
+        //html: '<b>Hello world ?</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('este es error: '+ error );
+            return JSON.parse({
+                estado : false,
+                mensaje : error
+            })
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+        return JSON.parse({
+            estado : true,
+            mensaje : info
+        })
+    });
+}

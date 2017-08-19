@@ -84,7 +84,7 @@ let navbarApp = new Vue({
 			});
 		},
 		formarNavbar() {
-			if($.inArray('director ejecutivo', this.usuario.roles) >= 0){
+			if($.inArray('Director Ejecutivo', this.usuario.roles) >= 0){
 		  	this.crearDropdownPAd(this); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
 		  }
 		  this.crearDropdownPA();

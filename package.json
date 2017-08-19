@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "init" : "npm install && npm run build",
+    "init": "npm install && npm run build",
     "start": "npm run gulp",
     "gulp": "gulp",
     "build": "gulp build",
@@ -29,6 +29,7 @@
     "moment": "^2.18.1",
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
+    "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
