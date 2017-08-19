@@ -6,6 +6,7 @@ var browserSync = require('browser-sync').create();
 var babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
+var istanbul = require('gulp-istanbul')
 var mocha = require('gulp-mocha');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
@@ -180,11 +181,19 @@ gulp.task('set-prod-node-env', function(){
 
 //TASK DE MOCHA
 gulp.task('mocha', function(){
-	gulp.src('./test/grupos/*.js', {read: false})
+	gulp.src('./test/etapa/*.js', {read: false})
 		.pipe(mocha());
 });
 
 //SCRIPT PARA CORRER TESTS
 gulp.task('test', function(){
 	runSequence('set-test-node-env', 'mocha');
+});
+
+//TASK DE ISTANBUL
+gulp.task('istanbul', function(){
+	gulp.src('./test/procarianos/*.js', {read: false})
+		.pipe(mocha())
+		.pipe(istanbul.writeReports())
+		.pipe(istanbul.enforceThresholds({ thresholds: {global:90}}));
 });
