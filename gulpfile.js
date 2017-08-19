@@ -7,7 +7,7 @@ var babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 var istanbul = require('gulp-istanbul')
-var coverall = require('gulp-coveralls')
+var coveralls = require('gulp-coveralls')
 var mocha = require('gulp-mocha');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
@@ -193,13 +193,13 @@ gulp.task('test', function(){
 
 //TASK DE ISTANBUL
 gulp.task('istanbul', function(){
-	gulp.src('./test/etapa/*.js', {read: false})
+	gulp.src('./test/grupos/*.js', {read: false})
 		.pipe(mocha())
 		.pipe(istanbul.writeReports())
 		.pipe(istanbul.enforceThresholds({ thresholds: {global:90}}));
 });
 
 gulp.task('coveralls', function() {
-	gulp.src('./coverage/lcov.info')
+	gulp.src('coverage/**/lcov.info')
     	.pipe(coveralls());
 });

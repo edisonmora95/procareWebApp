@@ -12,7 +12,7 @@
     "test-procariano": "node_modules/.bin/mocha ./test/procarianos/procariano-test.js",
     "mocha-test": "gulp test",
     "istanbul-test": "gulp istanbul",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info && gulp coveralls && rm -rf ./coverage"
+    "coveralls": "gulp coveralls"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
