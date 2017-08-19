@@ -71,7 +71,7 @@ var main = new Vue({
 			genero: '',
 			//estado: 'activo',	//deberia estar en persona
 			trabajo: '',
-			sueldo: ''
+			tipo: ''
 
 		}
 	},

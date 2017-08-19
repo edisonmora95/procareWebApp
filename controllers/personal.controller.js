@@ -38,7 +38,7 @@ const crearPersonal = (req, res, next) => {
 		celular : req.body.celular,
 		trabajo : 'personal procare',
 		convencional : req.body.convencional,
-		sueldo : req.body.sueldo
+		tipo : req.body.tipo
 	};
 
 	modelo.Persona.count({
@@ -64,9 +64,9 @@ const crearPersonal = (req, res, next) => {
 					return respuestas.error(res, 'algo sucedio', '', error);
 				});
 
-		}else{ // existe esa persona en la base de datos como procariano, por lo que se actualiza su sueldo
+		}else{ // existe esa persona en la base de datos como procariano, por lo que se actualiza su tipo
 			modelo.Persona.update({
-				sueldo : persona.sueldo
+				tipo : persona.tipo
 			},{
 				where : {
 					cedula : persona.cedula
@@ -85,7 +85,7 @@ const crearPersonal = (req, res, next) => {
 					}).then( resultado2 => {
 
 						//console.log('\n\nesta es persona ' + persona + ' \n\n')
-						return respuestas.okCreate(res, 'se agrego el sueldo a esa persona', resultado2);
+						return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
 
 					}).catch(error2 => {
 						return respuestas.error(res, 'Usuario con esa cédula ya existe', '', error2);
@@ -196,7 +196,7 @@ const editarPersonal = (req,res,next) =>{
 		email : req.body.email,
 		celular : req.body.celular,
 		convencional : req.body.convencional,
-		sueldo : req.body.sueldo
+		tipo : req.body.tipo
 	};
 
 	modelo.Persona.update({
@@ -210,7 +210,7 @@ const editarPersonal = (req,res,next) =>{
 		email : req.body.email,
 		celular : req.body.celular,
 		convencional : req.body.convencional,
-		sueldo : req.body.sueldo
+		tipo : req.body.tipo
 	},{
 		where : {
 			id : id

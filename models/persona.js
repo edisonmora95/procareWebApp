@@ -3,7 +3,7 @@
   @Descripcion: Modelo de persona
   @Autor: jose viteri
   @FechaCreacion: 20/05/2017
-  @UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
+  @UltimaFechaModificacion: 19/08/2017 @JoseViteri se agrego tipo, se quito sueldo
 */
 var bcrypt = require('bcryptjs');
 'use strict';
@@ -55,8 +55,8 @@ module.exports = function(sequelize, DataTypes) {
     trabajo : {
       type : DataTypes.TEXT
     },
-    sueldo : {
-      type : DataTypes.DOUBLE
+    tipo : {
+      type : DataTypes.STRING
     }
   }, {
     classMethods: {
@@ -95,7 +95,7 @@ module.exports = function(sequelize, DataTypes) {
           celular: persona.celular,
           trabajo: persona.trabajo,
           convencional: persona.convencional,
-          sueldo: persona.sueldo
+          tipo: persona.tipo
         }).then(callback).catch(errorCallback);
       }
     }/*, hooks : {

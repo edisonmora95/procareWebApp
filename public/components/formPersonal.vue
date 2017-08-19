@@ -2,59 +2,68 @@
 	<div>
 		<form>
 			<v-row id="rowNombresApellidos">
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="nombres" class="active">Nombres</label>
 					<input type="text" name="nombres" id="nombres" v-model="personal.nombres" v-validate="'required|alpha_spaces'">
 					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
-					<label for="nombres" class="active">Nombres</label>
+					
 				</div>
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="apellidos" class="active">Apellidos</label>
 					<input type="text" name="apellidos" id="apellidos" v-model="personal.apellidos" v-validate="'required|alpha_spaces'">
 					<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
-					<label for="apellidos" class="active">Apellidos</label>
+					
 				</div>
 			</v-row>
 			<v-row id="rowCedulaFechaNacimiento">
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="cedula" class="active">Cédula</label>
 					<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
 					 <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
-					<label for="cedula" class="active">Cédula</label>
+					
 				</div>
-				<div class="col s6 input-field">
+				<div class="col s6 ">
 					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
+					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
+					
 				</div>
 			</v-row>
 			<v-row id="rowDirEmail">
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="direccion" class="active">Dirección</label>
 					<input type="text" name="direccion" id="direccion" v-model="personal.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
-					<label for="direccion" class="active">Dirección</label>
+					
 				</div>
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="email" class="active">Email</label>
 					<input type="email" name="email" id="email" v-model="personal.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
 					<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
-					<label for="email" class="active">Email</label>
+					
 				</div>
 			</v-row>
 			<v-row id="rowTelefonos">
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="celular" class="active">Celular</label>
 					<input type="tel" name="celular" id="celular" v-model="personal.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
-					<label for="celular" class="active">Celular</label>
+					
 				</div>
-				<div class="col s6 input-field">
+				<div class="col s6 ">
+					<label for="convencional" class="active">Convencional</label>
 					<input type="tel" name="convencional" id="convencional" v-model="personal.convencional" v-validate="'numeric'">
 					<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
-					<label for="convencional" class="active">Convencional</label>
+					
 				</div>	
 			</v-row>
-			<v-row id="rowSueldo">
-				<div class="col s12 input-field">
-					<input type="text" name="sueldo" id="sueldo" v-model="personal.sueldo" v-validate="'required|decimal:2'">
-					<span v-show="errors.has('sueldo')" class="help is-danger">{{ errors.first('sueldo') }}</span>
-					<label for="sueldo" class="active">Sueldo</label>
+			<v-row id="rowTipo">
+				<div class="col s12 ">
+					<label for="tipo" class="active">Tipo</label>
+					<input type="text" name="tipo" id="tipo" v-model="personal.tipo" v-validate="'alpha_spaces'">
+					<span v-show="errors.has('tipo')" class="help is-danger">{{ errors.first('tipo') }}</span>
+					
 				</div>
 			</v-row>
 			<v-row id="rowBotones">
@@ -143,10 +152,18 @@
 		methods: {
 			inicializarMaterialize(self){
 				$('.modal').modal();
-				$('.datepicker').pickadate({
-					selectMonths: true, // Creates a dropdown to control month
-					selectYears: 100 // Creates a dropdown of 15 years to control year
-				});
+	    	$('.datepicker').pickadate({
+					monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				  monthsShort: ['En', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+				  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+				  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+				  today: 'Hoy',
+				  clear: 'Limpiar',
+				  close: 'Cerrar',
+			    selectMonths: true, // Creates a dropdown to control month
+			    selectYears: 100, // Creates a dropdown of 15 years to control year,
+			    closeOnSelect: true // Close upon selecting a date,
+			  });
 				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
 				let picker = datePickerFechaNacimiento.pickadate('picker');
 				picker.set('select', self.personal.fechaNacimiento, { format: 'yyyy-mm-dd'});
