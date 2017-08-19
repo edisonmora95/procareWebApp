@@ -8,8 +8,11 @@ before_script :
     - npm install
 before_install:
     - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db2;'
+    - npm install coverall
 script : gulp test
 after_success:
     - npm run coverall
+after_script: "coveralls"
+
 
 
