@@ -11,7 +11,8 @@
     "test": "node_modules/.bin/mocha ./test/etapa/etapa.test.js || true",
     "test-procariano": "node_modules/.bin/mocha ./test/procarianos/procariano-test.js",
     "mocha-test": "gulp test",
-    "istanbul-test": "gulp istanbul"
+    "istanbul-test": "gulp istanbul",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info && gulp coveralls && rm -rf ./coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -55,6 +56,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
+    "gulp-coveralls": "^0.1.4",
     "gulp-istanbul": "^1.1.2",
     "gulp-jshint": "^2.0.4",
     "gulp-mocha": "^4.3.1",
