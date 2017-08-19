@@ -6,9 +6,7 @@
 
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
 import FormPersonal from './../../components/formPersonal.vue';
-Vue.component('navbar', Navbar); 
 Vue.component('editar', FormPersonal);
 
 var app = new Vue({
