@@ -1,5 +1,3 @@
-<a href='https://coveralls.io/github/javiteri95/procareWebApp?branch=BE_asistencias'><img src='https://coveralls.io/repos/github/javiteri95/procareWebApp/badge.svg?branch=BE_asistencias' alt='Coverage Status' /></a>
-
 ## Para correr el proyecto
 1) npm install
 2) npm run build
@@ -189,5 +187,3 @@ function estoEsUnaFuncion(){
 }
 
 ```
-
-# Importante
