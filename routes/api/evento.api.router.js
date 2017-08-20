@@ -13,17 +13,11 @@ router.post('/', controladorEvento.crearEvento);
 
 router.get('/', controladorEvento.mostrarEventos);
 
-
 //Update Evento
 router.put('/:id', controladorEvento.editarEvento);
 
 //Delete Evento
 router.delete('/:id', controladorEvento.eliminarEvento);
 
-
-
-module.exports = router;
-
-module.exports = router;
 
 module.exports = router;

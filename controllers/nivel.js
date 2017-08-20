@@ -35,8 +35,8 @@ const crearNivel = (req, res, next) => {
 }
 
 const eliminarNivel = (req, res, next) => {
-   idNivel = req.params.id;
-   modelo.Nivel.destroy({
+  idNivel = req.params.id;
+  modelo.Nivel.destroy({
     where:{
       id: idNivel
     }

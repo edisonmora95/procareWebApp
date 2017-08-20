@@ -11,7 +11,6 @@ router.post('/nuevo', controladorEtapa.crearEtapa);
 //Ver las etapas
 router.get('/', controladorEtapa.mostrarEtapa);
 
-
 //Modificar una etapa
 router.put('/:id', controladorEtapa.editarEtapa);
 

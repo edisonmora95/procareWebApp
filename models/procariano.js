@@ -72,6 +72,7 @@ module.exports = function(sequelize, DataTypes) {
               attributes: [['id', 'personaId'], 'nombres', 'apellidos']
             }
           ],
+          where:{estado: {$not: 'inactivo'}},
           attributes: [['id', 'procarianoId'], 'estado']
         }).then(successCallback).catch(errorCallback);
       },

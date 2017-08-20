@@ -6,7 +6,6 @@
 
 */
 
-
 /* jshint node: true */
 'use strict';
 
@@ -15,15 +14,15 @@ var express = require('express');
 var router = express.Router();
 var utils = require('../../utils/utils');
 
-
 //API
-
 //Post del procariano
 router.post('/',controladorProcariano.crearProcariano);
 
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.
 router.get('/', controladorProcariano.buscarProcariano);
+
+router.get('/tareas', controladorProcariano.buscarProcarianoTareas);
 
 router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
 
@@ -40,5 +39,6 @@ router.put('/:id', controladorProcariano.editarProcariano);
 //Delete procariano
 //Responde con un status indicando si se pudo eliminar o no
 router.delete('/:id', controladorProcariano.eliminarProcariano);
+
 
 module.exports = router;

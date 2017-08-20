@@ -25,5 +25,4 @@ router.get('/', controladorNinoAccion.buscarNinoAccion);
 router.get('/:id', controladorNinoAccion.buscarNinoAccionPorId);
 
 
-
 module.exports = router;

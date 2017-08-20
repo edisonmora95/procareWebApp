@@ -8,8 +8,6 @@ var modelo = require('../models');
 var utils = require('../utils/utils');
 var respuestas = require('../utils/respuestas.js')
 
-
-
 /*
 Autor : JV
 Creado : 26/06/2017
@@ -99,7 +97,6 @@ const crearPersonal = (req, res, next) => {
 			})
 		}
 	})
-
 }
 
 const obtenerTablaPersonal = (req,res,next) =>{
@@ -135,7 +132,6 @@ const obtenerPersonalIndependiente = (req,res,next) =>{
 }
 
 const eliminarPersonal = (req,res,next) =>{
-
 	var id = req.params.id;
 	//probablemente en benefactor despues habra que ver
 	//tomar en cuenta el trabajo : 'personal procare'
@@ -145,14 +141,16 @@ const eliminarPersonal = (req,res,next) =>{
 		}
 	}).then( contador => {
 		if (contador > 0){ //solo le quito el rol
-			modelo.PersonaRol.destroy({
+			modelo.PersonaRol.update({
+				fechaFin : new Date()
+			},{
 				where : {
 					PersonaId : id,
 					RolNombre : 'Personal'
 				}
 			}).then( respuesta => {
 				console.log(respuesta);
-				return respuestas.okDelete(res, 'se elimino esta persona como parte del personal de la fundación', respuesta);
+				return respuestas.okDelete(res, 'se quito esta persona como parte del personal de la fundación', respuesta);
 			}).error( error => {
 				return respuestas.errorDelete(res, 'un problema ocurrio', error );
 			})
@@ -169,12 +167,10 @@ const eliminarPersonal = (req,res,next) =>{
 			})
 		}
 	})
-
 }
 
 
 const editarPersonal = (req,res,next) =>{
-
 	console.log('entra aqui')
 	console.log(req.params);
 	let id = req.params.id;
@@ -184,7 +180,6 @@ const editarPersonal = (req,res,next) =>{
 	}else{
 		fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
-
 	let persona = {
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -198,7 +193,6 @@ const editarPersonal = (req,res,next) =>{
 		convencional : req.body.convencional,
 		tipo : req.body.tipo
 	};
-
 	modelo.Persona.update({
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -221,9 +215,6 @@ const editarPersonal = (req,res,next) =>{
 	}).catch( error => {
 		return respuestas.error(res, 'hubo un problema', '', error);
 	})
-
-
-
 }
 
 module.exports = {

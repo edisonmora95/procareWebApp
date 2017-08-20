@@ -49,26 +49,24 @@ module.exports.crearGrupo = (req, res, next) => {
 		let mensajeError = errorGrupo.errors[0].message;
 		return respuesta.error(res, 'No se pudo crear el grupo', mensajeError, errorGrupo);
 	});
-
 };
 
 module.exports.editarGrupo = (req, res, next) => {
 	let grupo = {
 		id: req.params.id_grupo,
 		nombre: req.body.nombre,
-    tipo: req.body.tipo,
-    cantidadChicos: req.body.cantidadChicos,
-    numeroReuniones: req.body.numeroReuniones,
-    genero: req.body.genero,
-    etapaAntigua: req.body.etapaAntigua,
-    etapaNueva: req.body.etapaNueva,
-    animadorAntiguo: req.body.animadorAntiguo,
-    animadorNuevo: req.body.animadorNuevo
+    	tipo: req.body.tipo,
+    	cantidadChicos: req.body.cantidadChicos,
+    	numeroReuniones: req.body.numeroReuniones,
+    	genero: req.body.genero,
+    	etapaAntigua: req.body.etapaAntigua,
+    	etapaNueva: req.body.etapaNueva,
+    	animadorAntiguo: req.body.animadorAntiguo,
+    	animadorNuevo: req.body.animadorNuevo
 	};
 	modelo.Grupo.editarGrupo(grupo, (successGrupo) => {
 		let cambioEtapa = ( grupo.etapaNueva !== '' && grupo.etapaNueva !== grupo.etapaAntigua && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
 		let cambioAnimador = ( grupo.animadorNuevo !== '' && grupo.animadorNuevo !== grupo.animadorAntiguo && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
-
 		if(cambioEtapa){
 			modelo.GrupoEtapa.cambiarGrupoDeEtapa(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, (successCambioEtapa) => {
 				//Se pudo cambiar al grupo de etapa
@@ -109,14 +107,12 @@ module.exports.editarGrupo = (req, res, next) => {
 			}else{
 				//Se pudo editar el grupo, no se quiso cambiar de etapa ni de animador
 				return res.status(200).json({estado : true, datos : successGrupo, mensaje: 'Se pudo editar el grupo.'});
-			}
-			
+			}	
 		}
 	}, (errorGrupo) => {
 		//No se pudo editar el grupo
 		return res.status(400).json({estado : false, datos : errorGrupo, mensaje: 'No se pudo editar el grupo.'});
 	});
-
 };
 
 module.exports.eliminarGrupo = (req, res, next) => {

@@ -6,7 +6,6 @@ module.exports.crearReunion = (req,res,next) => {
 	var horaInicio = req.body.horaInicio;
 	var horaSalida = req.body.horaSalida;
 	var descripcion = req.body.descripcion;
-
 	modelo.Reunion.create({
 		fecha : new Date(fechaInicio),
 		horaInincio : new Date(horaInicio),
