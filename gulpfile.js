@@ -195,7 +195,7 @@ gulp.task('test', function(){
 /*
 gulp.task('istanbul', function(){
 	gulp.src('./test/etapa/*.js', {read: false})
-		.pipe(mocha()
+		.pipe(mocha())
 		.pipe(istanbul.writeReports())
 		.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
 });

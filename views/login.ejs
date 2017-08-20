@@ -21,7 +21,7 @@
 	       </div>
 	        <span class="alert" v-show="fallaLogin">¡Usuario o contraseña incorrecta!</span>
 	        <a class="link" href="/perderContrasenna">¿Perdió su contraseña?</a>
-	        <a class="btn waves-effect light-blue darken-4 btn-cancelar" type="button" name="action"  @click="login"  >Entrar</a> 
+	        <a class="btn btn-cancelar" type="button" name="action"  @click="login">Entrar</a> 
 
 	     </div>
 	    </form>
@@ -31,7 +31,6 @@
 		<% include partials/login/loginScripts %>
 		<script src="/build/login/login.min.js"></script>
 	</div>
-
 	</body>
 </html>
 
