@@ -49,6 +49,7 @@ const crearPersonal = (req, res, next) => {
 			console.log(persona);
 
 			modelo.PersonaRol.create({
+				fechaInicio: new Date(),
 				RolNombre : 'Personal',
 				PersonaId : persona.id
 			}).then( personaConRol => {
