@@ -14,7 +14,7 @@ var bcrypt = require('bcryptjs');
 EXPORTACIONES
 */
 /*
-@Descripcion: genera el hash para la contrasenna
+@Descripcion: genera el hash para la contrasenna, usada para el crear con aleaotorio (ya no se usa)
 @Autor: Jose Viteri
 @FechaCreacion: 31/05/2017
 */
@@ -25,6 +25,25 @@ module.exports.generarHash = function(req,res, next){
         bcrypt.hash('posi', salt, function(err, hash) {
             console.log(hash);
             req.body.contrasenna = hash;
+            next();
+
+        });
+    });
+};
+
+
+/*
+@Descripcion: genera el hash para la nueva contrasenna, en el crear contrasenna
+@Autor: Jose Viteri
+@FechaCreacion: 29/06/2017
+*/
+
+module.exports.generarHashNuevaContrasenna = function(req,res, next){
+
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(req.body.nuevaContrasenna, salt, function(err, hash) {
+            console.log(hash);
+            req.body.nuevaContrasenna = hash;
             next();
 
         });
@@ -131,23 +150,7 @@ module.exports.generarJsonGrupo = function(grupo){
     return respuesta;
 }
 
-/*
-@Descripcion: genera el hash para la nueva contrasenna
-@Autor: Jose Viteri
-@FechaCreacion: 29/06/2017
-*/
 
-module.exports.generarHashNuevaContrasenna = function(req,res, next){
-
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.nuevaContrasenna, salt, function(err, hash) {
-            console.log(hash);
-            req.body.nuevaContrasenna = hash;
-            next();
-
-        });
-    });
-};
 
 
 /*

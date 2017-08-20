@@ -28,7 +28,7 @@ const crearProcariano = (req, res, next) => {
 		direccion : req.body.direccion,
 		fechaNacimiento : fechaNacimiento,
 		genero : req.body.genero,
-		contrasenna : req.body.contrasenna,
+		//contrasenna : req.body.contrasenna,
 		email : req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
