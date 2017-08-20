@@ -192,14 +192,31 @@ gulp.task('test', function(){
 });
 
 //TASK DE ISTANBUL
+/*
 gulp.task('istanbul', function(){
-	gulp.src('./test/grupos/*.js', {read: false})
-		.pipe(mocha())
+	gulp.src('./test/etapa/*.js', {read: false})
+		.pipe(mocha()
 		.pipe(istanbul.writeReports())
-		.pipe(istanbul.enforceThresholds({ thresholds: {global:90}}));
+		.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
 });
+*/
+gulp.task('istanbul', function () {
+    return gulp.src('./test/etapa/*.js')
+      // Right there
+      .pipe(istanbul({includeUntested: true}))
+      .on('finish', function () {
+        gulp.src('./test/etapa/*.js')
+          .pipe(mocha({reporter: 'spec'}))
+          .pipe(istanbul.writeReports({
+            dir: './coverage',
+            reporters: [ 'lcov' ],
+            reportOpts: { dir: './coverage'}
+          }));
+      });
+  });
+
 
 gulp.task('coveralls', function() {
-	gulp.src('coverage/**/lcov.info')
+	gulp.src('./coverage/lcov.info')
     	.pipe(coveralls());
 });
