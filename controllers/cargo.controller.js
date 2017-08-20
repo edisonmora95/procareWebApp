@@ -18,7 +18,79 @@ const obtenerUsuarios = (req, res, next) => {
 				where: {fechaFin:null}
 			}
 		}],
-		attributes:['nombres','apellidos','email']
+		attributes:['nombres','apellidos','email'],
+		where: {contrasenna:{$ne: null}}
+	}).then( respuesta => {
+		var status = true;
+		var mensaje = 'Usuarios encontrados'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			usuarios : respuesta
+		}
+		res.json(jsonRespuesta)
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se pudo realizar la busquedad'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			obtenerUsuarios : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+const obtenerDirectoresFormación = (req, res, next) => {
+	modelo.Persona.findAll({
+		include:[{
+			model: modelo.Rol,
+			attributes:[],
+			through:{
+				attributes:[],
+				where: {RolNombre:'Director Procare Formacion',fechaFin:null}
+			},
+			where: {nombre:'Director Procare Formacion'}
+		}],
+		attributes:['nombres','apellidos','email','genero'],
+		where: {contrasenna:{$ne: null}}
+	}).then( respuesta => {
+		var status = true;
+		var mensaje = 'Usuarios encontrados'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			usuarios : respuesta
+		}
+		res.json(jsonRespuesta)
+	}).catch( error => {
+		var status = false;
+		var mensaje = 'No se pudo realizar la busquedad'
+		var jsonRespuesta = {
+			status : status,
+			mensaje : mensaje,
+			obtenerUsuarios : error
+		}
+		res.json(jsonRespuesta);
+	})
+}
+
+
+const obtenerCandidatoDirectores = (req, res, next) => {
+	modelo.Procariano.findAll({
+		include:[{
+			model: modelo.Tipo,
+			attributes:[],
+			through:{
+				attributes:[],
+				where: {fechaFin:{$ne:null}}
+			},
+			where: {nombre:{$not:'Chico Formación'}}
+		},{
+			model: modelo.Persona,
+			attributes:['nombres','apellidos','email','genero']	
+		}],
+		attributes:[]
 	}).then( respuesta => {
 		var status = true;
 		var mensaje = 'Usuarios encontrados'
@@ -117,5 +189,7 @@ nuevoDirectorFormacion = (req,res) => {
 
 module.exports = {
 	obtenerUsuarios,
-	asignarDirectorFormacion
+	asignarDirectorFormacion,
+	obtenerDirectoresFormación,
+	obtenerCandidatoDirectores
 };
