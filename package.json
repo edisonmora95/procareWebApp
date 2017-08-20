@@ -10,7 +10,9 @@
     "sequelize": "node_modules/.bin/sequelize",
     "test": "node_modules/.bin/mocha ./test/etapa/etapa.test.js || true",
     "test-procariano": "node_modules/.bin/mocha ./test/procarianos/procariano-test.js",
-    "mocha-test": "gulp test"
+    "mocha-test": "gulp test",
+    "istanbul-test": "gulp istanbul",
+    "coveralls": "gulp coveralls"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -50,9 +52,12 @@
     "browser-sync": "^2.18.12",
     "chai": "^3.2.0",
     "chai-http": "^1.0.0",
+    "coveralls": "^2.13.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-istanbul": "^1.1.2",
     "gulp-jshint": "^2.0.4",
     "gulp-mocha": "^4.3.1",
     "gulp-nodemon": "^2.2.1",

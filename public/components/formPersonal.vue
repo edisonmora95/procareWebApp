@@ -19,7 +19,7 @@
 				<div class="col s6 ">
 					<label for="cedula" class="active">Cédula</label>
 					<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
-					 <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+					<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 					
 				</div>
 				<div class="col s6 ">
@@ -94,7 +94,6 @@
 		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
-
 	import Materials from 'vue-materials';
 	//import VeeValidate from 'vee-validate';
 	Vue.use(Materials);
@@ -131,7 +130,6 @@
 		}
 	};
 	VeeValidate.Validator.updateDictionary(dictionary);
-
 	module.exports = {
 		props: ['personal', 'habilitaredicion'],
 		data(){

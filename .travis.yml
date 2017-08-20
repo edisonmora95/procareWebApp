@@ -8,7 +8,9 @@ before_script :
     - npm install
 before_install:
     - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db2;'
-script : gulp test
+script : gulp istanbul
+after_script: gulp coveralls
+
 
 
 
