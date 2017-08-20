@@ -24,26 +24,84 @@ module.exports.crearGrupo = (req, res, next) => {
 		let idGrupo = grupo.get('id');
 		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
 			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
-				let datos = {
-					grupo : grupo,
-					grupoEtapa: grupoEtapa,
-					animador: animador
-				};
-				return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+				//se va a asignar el rol :"V
+				modelo.Procariano.findOne({
+					where:{id : idAnimador}
+				}).then( procariano => {
+					modelo.PersonaRol.findOne({
+						where: {
+							fechaFin : null,
+							PersonaId : procariano.get('PersonaId'),
+							RolNombre : 'Animador'
+						}
+					}).then( rolBuscar => {
+						if(rolBuscar!=null){
+							let datos = {
+								grupo : grupo,
+								grupoEtapa: grupoEtapa,
+								animador: animador
+							};
+							return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+						}else{
+							modelo.PersonaRol.create({
+								fechaInicio : new Date(),
+								fechaFin : null,
+								PersonaId : procariano.get('PersonaId'),
+								RolNombre: 'Animador'
+							}).then( rol => {
+								let datos = {
+									grupo : grupo,
+									grupoEtapa: grupoEtapa,
+									animador: animador,
+									rol: rol
+								};
+								return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+							}).catch( errorRol => {
+								let datos = {
+									grupo: grupo,
+									grupoEtapa: grupoEtapa,
+									animador: animador,
+									procariano: procariano,
+									errorRolBuscar: errorRolBuscar,
+									errorRol: errorRol
+								};
+								return respuestas.error(res, 'Error en la nueva asignación', '', datos);
+							});
+						}
+					}).catch( errorRolBuscar => {
+						let datos = {
+							grupo: grupo,
+							grupoEtapa: grupoEtapa,
+							animador: animador,
+							procariano: procariano,
+							errorRolBuscar: errorRolBuscar
+						};
+						return respuestas.error(res, 'Algo sucedio busquedad del Animador', '', datos);
+					})
+				}).catch( errorProcariano => {
+					let datos = {
+						grupo : grupo,
+						grupoEtapa: grupoEtapa,
+						animador: animador,
+						errorProcariano: errorProcariano
+					};
+					return respuestas.error(res, 'Algo sucedio en busquedad de Procariano', '', datos);
+				})
+				//continuamos
 			}, (errorAnimador) => {
 				let datos = {
 					grupo : grupo,
 					grupoEtapa: grupoEtapa,
 					errorAnimador: errorAnimador
 				};
-				return respuesta.error(res, 'No se pudo añadir el animador', datos);
+				return respuesta.error(res, 'No se pudo añadir el animador', '', datos);
 			});
 		}, (errorGrupoEtapa) => {
 			let datos = {
 				grupo: grupo,
 				errorGrupoEtapa : errorGrupoEtapa
 			};
-			return respuesta.error(res, 'No se pudo añadir a la etapa', datos);
+			return respuesta.error(res, 'No se pudo añadir a la etapa', '',datos);
 		});
 	}, (errorGrupo) => {
 		let mensajeError = errorGrupo.errors[0].message;
