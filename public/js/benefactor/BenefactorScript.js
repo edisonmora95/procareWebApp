@@ -112,7 +112,7 @@ var main = new Vue({
             telef_convencional: "(0#)###-####",
             telf_celular: "0##-###-####",
             diaCobroMask: "##",
-            Ruc_Mask: "#-############"
+            Ruc_Mask: "#############"
 
         },
 
@@ -137,6 +137,7 @@ var main = new Vue({
         cambio_text_integerofloat: function() {
 
             let valor = $('#valor_contribucion').val();
+            let valorcedula = $('#cedula').val();
             let diacob = $('#diaCobro').val();
             let result = Number(valor.replace(/[^0-9\.]+/g, ""));
             this.benefactor.tipo_donacion = $('#selectDonacion option:selected').val();
@@ -146,13 +147,19 @@ var main = new Vue({
 
         validateBeforeSubmit() {
             let self = this;
+            var path = window.location.pathname;
+            var parametro = path.split('/')[2];
+
             if (self.validarFechaNacimiento()) {
                 this.cambio_text_integerofloat();
 
                 this.$validator.validateAll().then(() => {
+                    if (parametro == "nuevo") {
+                        self.ingresarBenefactor();
+                    } else {
+                        self.ActualizarBenefactor();
+                    }
 
-                    //   self.ingresarBenefactor();
-                    self.ActualizarBenefactor();
 
                 }).catch(() => {
                     self.errorObj.campo = self.errors.errors[0].field;
@@ -246,15 +253,15 @@ var main = new Vue({
         //INGRESA UN NUEVO BENEFACTOR 
         ActualizarBenefactor() {
 
-            var urlApi = '/api/benefactor/' + this.idDePersona;
-            alert(idDePersona);
+            var urlApi = '/api/benefactor/' + main.$data.idDePersona;
+            alert(main.$data.idDePersona);
             $.ajax({
                 type: 'PUT',
                 url: urlApi,
                 data: self.benefactor,
                 success: function(res) {
-
-                    window.location.href = '/benefactor/';
+                    // location.reload();
+                    //window.location.href = '/benefactor/';
 
                 },
                 error(err) {

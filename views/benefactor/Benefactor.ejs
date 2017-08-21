@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/benefactorStyles.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
   </head>
   <body>
     <div id="main">
@@ -27,7 +29,7 @@
       -->
       
         
-      
+      <h2 id="titulo" class="center-align titulo">Benefactores</h2>
        <div class="row">
     <form class="col s12">
       <div class="row">
@@ -44,7 +46,10 @@
     </form>
     </div>
   
- 
+ <div class="row row-botones">
+            <a href="/benefactor/nuevo" class="modal-action modal-close waves-effect waves-green btn-flat">Nuevo</a>
+                        
+          </div>
 <!-- navegacion de  botones y toda la paginacion 
    <nav class="pagination m-pagination">
     <a class="button" v-on:click="selectPage(this.pagination.currentPage-1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">Previous</a>
@@ -86,7 +91,7 @@
               <td>{{item.cedula}}</td>
               <td>{{item.tipo_donacion}}</td>
               <td>{{item.dia_cobro}}</td>
-              <td class="valores" v-money="money"> $ {{item.valor_contribucion}}</td>
+              <td class="valores"> $ {{item.valor_contribucion}}</td>
               <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
               <i class="material-icons  red-text darken-4">delete</i>
               </td>

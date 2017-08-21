@@ -39,37 +39,81 @@ const crearBenefactor = (req, res, next) => {
         trabajo: req.body.trabajo,
         convencional: req.body.convencional
     };
-    modelo.Persona.crearPersona(persona, (persona) => {
-
-        let benefactor = {
-            PersonaId: persona.get('id'),
-            valor_contribucion: req.body.valor_contribucion,
-            dia_cobro: req.body.dia_cobro,
-            tarjeta_credito: req.body.tarjeta_credito,
-            tipo_donacion: req.body.tipo_donacion,
-            estado: req.body.estado,
-            nombre_gestor: req.body.nombre_gestor,
-            relacion: req.body.relacion,
-            observacion: req.body.observacion
-
+    modelo.Persona.count({
+        where: {
+            cedula: persona.cedula
         }
-        modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+    }).then(contador => {
+        if (contador == 0) { // no existe esa persona por lo que se la crea desde cero
+            modelo.Persona.crearPersona(persona, (persona) => {
 
-        }, (errorProcariano) => {
-            return res.status(400).json({
-                estado: false,
-                errorProcariano: errorProcariano
+                let benefactor = {
+                    PersonaId: persona.get('id'),
+                    valor_contribucion: req.body.valor_contribucion,
+                    dia_cobro: req.body.dia_cobro,
+                    tarjeta_credito: req.body.tarjeta_credito,
+                    tipo_donacion: req.body.tipo_donacion,
+                    estado: req.body.estado,
+                    nombre_gestor: req.body.nombre_gestor,
+                    relacion: req.body.relacion,
+                    observacion: req.body.observacion
+
+                };
+                modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+
+                }, (errorProcariano) => {
+                    return res.status(400).json({
+                        estado: false,
+                        errorProcariano: errorProcariano
+                    });
+                });
+            }, (errorPersona) => {
+                return res.status(400).json({
+                    estado: false,
+                    errorPersona: errorPersona
+                });
             });
-        });
-    }, (errorPersona) => {
-        return res.status(400).json({
-            estado: false,
-            errorPersona: errorPersona
-        });
+        } else {
+            modelo.Persona.find({
+
+                where: {
+                    cedula: persona.cedula
+                }
+            }).then(personaConId => {
+
+
+
+                let personaid = personaConId.id; // se obtiene el id de la persona de benefactor
+                let benefactor = {
+
+                    PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
+                    valor_contribucion: req.body.valor_contribucion,
+                    dia_cobro: req.body.dia_cobro,
+                    tarjeta_credito: req.body.tarjeta_credito,
+                    tipo_donacion: req.body.tipo_donacion,
+                    estado: req.body.estado,
+                    nombre_gestor: req.body.nombre_gestor,
+                    relacion: req.body.relacion,
+                    observacion: req.body.observacion
+
+                };
+                modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+
+                }, (errorProcariano) => {
+                    return res.status(400).json({
+                        estado: false,
+                        errorProcariano: errorProcariano
+                    });
+                });
+            }, (errorPersona) => {
+                return res.status(400).json({
+                    estado: false,
+                    errorPersona: errorPersona
+                });
+            });
+        }
     });
-}
-
-
+};
 /*
 Autor : JV
 Creado : 28/05/2017
@@ -86,8 +130,8 @@ const buscarBenefactor = (req, res, next) => {
                 model: modelo.Persona
             }] //, where : jsonModelo.benefactor//aqui va el where
 
-    }).then(benefactors => {
-        const respuesta = benefactors.map(benefactor => {
+    }).then(personas => {
+        const respuesta = personas.map(benefactor => {
 
             return Object.assign({}, {
                 personaId: benefactor.Persona.id,
@@ -201,14 +245,16 @@ Modificado: 07/07/2017 @JV , agregado date a datos date
 */
 
 const editarBenefactor = (req, res, next) => {
+    console.log("ingresa aqui");
     var id = req.params.id;
-
+    console.log(id);
+    console.log("mostro aqui");
     modelo.Persona.update({
         cedula: req.body.cedula,
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
         direccion: req.body.direccion,
-        razonsocial: req.body.direccion,
+        razonsocial: req.body.razonsocial,
         genero: req.body.genero,
         email: req.body.email,
         celular: req.body.celular,
@@ -220,36 +266,46 @@ const editarBenefactor = (req, res, next) => {
         }
     }).then(result => {
         modelo.Benefactor.update({
-            valor_contribucion: benefactor.valor_contribucion,
-            dia_cobro: benefactor.dia_cobro,
-            tarjeta_credito: benefactor.tarjeta_credito,
-            tipo_donacion: benefactor.tipo_donacion,
-            nombre_gestor: benefactor.nombre_gestor,
-            relacion: benefactor.relacion,
-            observacion: benefactor.observacion
+            valor_contribucion: req.body.valor_contribucion,
+            dia_cobro: req.body.diaCobro,
+            tarjeta_credito: req.body.tarjeta_credito,
+            tipo_donacion: req.body.tipo_donacion,
+            estado: req.body.estado,
+            nombre_gestor: req.body.nombre_gestor,
+            relacion: req.body.relacion,
+            observacion: req.body.observacion
         }, {
             where: {
                 PersonaId: id
             }
-        }).catch(error2 => {
-            var status = false;
-            var mensaje = 'no se pudo actualizar 2'
+        }).then(result2 => {
+            var status = true;
+            var mensaje = 'se pudo actualizar correctamente'
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
-                persona: result,
-                errorProcariano: error2
+                sequelizeStatus: result2
+            }
+            res.json(jsonRespuesta);
+
+        }).catch(err2 => {
+            var status = false;
+            var mensaje = 'no se pudo actualizar'
+            var jsonRespuesta = {
+                status: status,
+                mensaje: mensaje,
+                sequelizeStatus: err2
             }
             res.json(jsonRespuesta);
         });
 
-    }).catch(error1 => {
+    }).catch(err => {
         var status = false;
-        var mensaje = 'no se pudo actualizar 1'
+        var mensaje = 'no se pudo actualizar'
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,
-            errorPersona: error1
+            sequelizeStatus: err
         }
         res.json(jsonRespuesta);
     });
