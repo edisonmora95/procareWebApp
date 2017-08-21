@@ -35,7 +35,7 @@ module.exports.anadirProcarianosAGrupo = (req, res, next) => {
 			}
 			res.json(jsonRespuesta);
 		});
-};
+}
 
 /*
 	@Descripción:

@@ -174,27 +174,58 @@ module.exports.editarGrupo = (req, res, next) => {
 };
 
 module.exports.eliminarGrupo = (req, res, next) => {
-	var id = req.body.id;
-	modelo.Grupo.destroy({
+	var id = req.params.id;
+
+	modelo.Animador.destroy({
 	  	where: {
-	    	id : id
+	    	GrupoId : id
 	  	}
-	}).then( resultado => {
-		var rjson = {
-			status : true,
-			mensaje : 'Grupo eliminado exitosamente',
-			sequelizeStatus : resultado
-		}
-		res.json(rjson)
-	}).catch( err => {
-		var rjson = {
-			status : false,
-			mensaje : 'No se pudo eliminar el Grupo',
-			sequelizeStatus : error
-		}
-		res.json(rjson);
-	});
-};
+	}).then( borrarAnimador => {
+
+		modelo.ProcarianoGrupo.destroy({
+		  	where: {
+		    	GrupoId : id
+		  	}
+		}).then( borrarProcarianos => {
+
+			modelo.GrupoEtapa.destroy({
+			  	where: {
+			    	GrupoId : id
+			  	}
+			}).then( borrarEtapa => {
+				
+				modelo.Grupo.destroy({
+				  	where: {
+				    	id : id
+				  	}
+				}).then( borrarGrupo => {
+					
+					let datos = {
+						grupo: borrarGrupo,
+						etapa: borrarEtapa,
+						procarianos: borrarProcarianos,
+						animador: borrarAnimador
+					};
+					return respuesta.okDelete(res, 'Eliminado exitosamente', datos);
+
+				}).catch( errorGrupo => {
+					return respuestas.errorDelete(res, 'un problema ocurrio', errorGrupo);
+				})
+				
+			}).catch( errorEtapa => {
+				return respuestas.errorDelete(res, 'un problema ocurrio', errorEtapa);
+			})
+
+		}).catch( errorProcariano => {
+			return respuestas.errorDelete(res, 'un problema ocurrio', errorProcariano);
+		})
+
+	}).catch( errorAnimador => {
+		return respuestas.errorDelete(res, 'un problema ocurrio', errorAnimador);
+	})
+
+}
+
 /*
 	@Descripción: Devuelve todos los grupos de la base de datos. Con su etapa.
 */
@@ -202,7 +233,7 @@ module.exports.mostrarGrupos = (req, res, next) => {
 	modelo.Grupo.obtenerTodosLosGrupos((success) => {
 		return respuesta.okGet(res, 'Se obtuvieron los grupos', success);
 	}, (error) => {
-		return respuesta.error(res, 'No se pudieron obtener los grupos', error);
+		return respuesta.error(res, 'No se pudieron obtener los grupos', '', error);
 	});
 };
 
