@@ -97,8 +97,8 @@ var main = new Vue({
             tipo_donacion: '',
             nombre_gestor: '',
             relacion: '',
-            observacion: ''
-
+            observacion: '',
+            valordolares: ''
 
         },
         src: '',

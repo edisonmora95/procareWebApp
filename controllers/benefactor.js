@@ -17,6 +17,7 @@ Modificado: 06/08/2017 @josealcivar	agrega un benefactor
 
 
 const crearBenefactor = (req, res, next) => {
+
     if (req.body.razonsocial == '') {
         razonsocial = req.body.nombres + ' ' + req.body.apellidos;
         fechaNacimiento = null;
@@ -24,7 +25,9 @@ const crearBenefactor = (req, res, next) => {
         razonsocial = req.body.razonsocial;
         fechaNacimiento = new Date(req.body.fechaNacimiento);
     }
-
+    let valor = req.body.valor_contribucion;
+    let result = Number(valor.replace(/[^0-9\.]+/g, ""));
+    valordolares = parseFloat(result);
     let persona = {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -49,7 +52,7 @@ const crearBenefactor = (req, res, next) => {
 
                 let benefactor = {
                     PersonaId: persona.get('id'),
-                    valor_contribucion: req.body.valor_contribucion,
+                    valor_contribucion: valordolares,
                     dia_cobro: req.body.dia_cobro,
                     tarjeta_credito: req.body.tarjeta_credito,
                     tipo_donacion: req.body.tipo_donacion,
