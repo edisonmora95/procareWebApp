@@ -55,12 +55,24 @@ VeeValidate.Validator.updateDictionary(dictionary);
 var main = new Vue({
     el: '#main',
     created() {
-
+        var path = window.location.pathname;
+        var parametro = path.split('/')[2];
+        if (parametro == "nuevo") {
+            $("h2#titulo").html("Ingresar Benefactor");
+        } else {
+            $("h2#titulo").html("Editar Benefactor");
+            this.cargarbenefactorporId();
+        }
     },
     mounted: function() {
+
         this.inicializarMaterialize(this);
+        $('#modalBenfactorCreado').modal();
+        $('#modalError').modal();
+
     },
     data: {
+        idDePersona: '', // esta variable sirve para tomarlo de cargar benefactor y enviarlo a actualizar
         fechaIncorrecta: false,
         errorObj: {
             campo: '',
@@ -80,7 +92,7 @@ var main = new Vue({
             tipo: '', //chico de formación/caminante/pescador/pescador consagrado/sacerdote
             estado: 'activo', //activo/inactivo... Activo por default
             valor_contribucion: '',
-            dia_cobro: '',
+            diaCobro: '',
             tarjeta_credito: '',
             tipo_donacion: '',
             nombre_gestor: '',
@@ -138,7 +150,10 @@ var main = new Vue({
                 this.cambio_text_integerofloat();
 
                 this.$validator.validateAll().then(() => {
-                    self.ingresarBenefactor();
+
+                    //   self.ingresarBenefactor();
+                    self.ActualizarBenefactor();
+
                 }).catch(() => {
                     self.errorObj.campo = self.errors.errors[0].field;
                     self.errorObj.msj = self.errors.errors[0].msg;
@@ -174,6 +189,7 @@ var main = new Vue({
 			*/
             return true;
         },
+        //INGRESA UN NUEVO BENEFACTOR 
         ingresarBenefactor() {
             let self = this;
             let urlApi = '/api/benefactor/';
@@ -196,6 +212,59 @@ var main = new Vue({
                 }
             });
         },
+        //CARGA LA INFORMACION DE UN BENEFACTOR PARA EDITARLO
+        cargarbenefactorporId() {
+            var path = window.location.pathname;
+            let id = path.split('/')[2];
+            var urlApi = '/api/benefactor/' + id;
+            $.ajax({
+                type: 'GET',
+                url: urlApi,
+                success: function(res) {
+                    console.log(res);
+                    main.$data.idDePersona = res[0].personaId;
+                    main.$data.benefactor.nombres = res[0].nombres;
+                    main.$data.benefactor.apellidos = res[0].apellidos;
+                    main.$data.benefactor.cedula = res[0].cedula;
+                    main.$data.benefactor.razonsocial = res[0].razonsocial;
+                    main.$data.benefactor.direccion = res[0].direccion;
+                    main.$data.benefactor.email = res[0].email;
+                    main.$data.benefactor.celular = res[0].celular;
+                    main.$data.benefactor.genero = res[0].genero;
+                    main.$data.benefactor.convencional = res[0].convencional;
+                    main.$data.benefactor.valor_contribucion = res[0].valor_contribucion;
+                    main.$data.benefactor.diaCobro = res[0].dia_cobro;
+                    main.$data.benefactor.tarjeta_credito = res[0].tarjeta_credito;
+                    main.$data.benefactor.tipo_donacion = res[0].tipo_donacion;
+                    main.$data.benefactor.nombre_gestor = res[0].nombre_gestor;
+                    main.$data.benefactor.relacion = res[0].relacion;
+                    main.$data.benefactor.observacion = res[0].observacion;
+
+                }
+            });
+        },
+        //INGRESA UN NUEVO BENEFACTOR 
+        ActualizarBenefactor() {
+
+            var urlApi = '/api/benefactor/' + this.idDePersona;
+            alert(idDePersona);
+            $.ajax({
+                type: 'PUT',
+                url: urlApi,
+                data: self.benefactor,
+                success: function(res) {
+
+                    window.location.href = '/benefactor/';
+
+                },
+                error(err) {
+                    console.log(err);
+                    self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                }
+            });
+        },
+
+
         /*
     formaterDollar(){
 		let valor = $('#valor_contribucion').val();

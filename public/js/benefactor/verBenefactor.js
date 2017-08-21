@@ -8,6 +8,9 @@
 
 import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
+import VueTheMask from 'vue-the-mask';
+import VMoney from 'v-money';
+
 // index.js or main.js
 
 
@@ -16,6 +19,8 @@ import Materials from 'vue-materials';
 
 Vue.component('navbar', Navbar);
 Vue.use(Materials);
+Vue.use(VueTheMask);
+Vue.use(VMoney);
 
 
 
@@ -35,7 +40,8 @@ var main = new Vue({
     },
     data: {
         searchItem: '',
-        items: items2,
+        items: '',
+
         filteredItems: [],
         paginatedItems: [], // paginatedItems arreglo toda la informacion
         key: 0,
@@ -59,8 +65,18 @@ var main = new Vue({
             tipo_donacion: '',
             nombre_gestor: '',
             relacion: '',
-            observacion: ''
+            observacion: '',
 
+
+
+        },
+
+        money: {
+            decimal: '.',
+            thousands: ',',
+            prefix: '$ ',
+            precision: 2,
+            masked: false /* doesn't work with directive */
         },
         arregloBenefactor: [],
         msg: '',
@@ -74,6 +90,7 @@ var main = new Vue({
         filteredItems: []
     },
 
+
     //},
 
     /* ready()
@@ -85,7 +102,7 @@ var main = new Vue({
     methods: {
 
         irAPerfil(persona) {
-            window.location.href = '/benefactor/' + persona.id;
+            window.location.href = '/benefactor/' + persona.benefactorId;
         },
         /*,
                 selectItem(item) {
@@ -99,8 +116,12 @@ var main = new Vue({
               @Descripcion : carga el Benefactor en la tabla
 
             */
-
-
+            var path = window.location.pathname;
+            console.log(path);
+            var id = path.split('/')[3];
+            console.log("AQUI");
+            console.log(id);
+            console.log("segundo");
             let self = this;
             self.arregloBenefactor = [];
 
@@ -109,7 +130,7 @@ var main = new Vue({
                 type: 'GET',
                 url: '/api/benefactor/',
                 success: function(res) {
-
+                    console.log(res[0].nombres);
                     console.log(res.estado);
                     console.log("**********************");
                     $.each(res, function(index, benefactorEncontrado) {
@@ -153,48 +174,8 @@ var main = new Vue({
             this.filteredItems.forEach(function(v, k) {
                 v.key = k + 1;
             })
-        }
-        //  this.buildPagination()
+        },
 
 
-        /*            if (_.isUndefined(currentPage)) {
-                        this.selectPage(1);
-                    } else {
-                        this.selectPage(currentPage);
-                    }
-            }
-            /*,
-
-            selectPage(item) {
-                this.pagination.currentPage = item
-
-                let start = 0
-                let end = 0
-                if (this.pagination.currentPage < this.pagination.range - 2) {
-                    start = 1
-                    end = start + this.pagination.range - 1
-                } else if (this.pagination.currentPage <= this.pagination.items.length && this.pagination.currentPage > this.pagination.items.length - this.pagination.range + 2) {
-                    start = this.pagination.items.length - this.pagination.range + 1
-                    end = this.pagination.items.length
-                } else {
-                    start = this.pagination.currentPage - 2
-                    end = this.pagination.currentPage + 2
-                }
-                if (start < 1) {
-                    start = 1
-                }
-                if (end > this.pagination.items.length) {
-                    end = this.pagination.items.length
-                }
-
-                this.pagination.filteredItems = []
-                for (var i = start; i <= end; i++) {
-                    this.pagination.filteredItems.push(i);
-                }
-
-                this.arregloBenefactor = this.filteredItems.filter((v, k) => {
-                    return Math.ceil((k + 1) / this.pagination.itemPerPage) == this.pagination.currentPage
-                })
-            }*/
     }
 });

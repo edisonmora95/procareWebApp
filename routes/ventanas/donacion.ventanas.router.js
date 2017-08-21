@@ -14,7 +14,7 @@ var controladorDonacion = require('../../controllers/donacion');
 var express = require('express');
 var router = express.Router();
 
-//Responde con la página de ingreso de procarianos
+//Responde con la página de ingreso de Donaciones
 router.get('/nuevo', function(req, res) {
     res.render('donacion/Donacion');
 });

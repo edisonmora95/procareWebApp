@@ -24,6 +24,11 @@ router.get('/', function(req, res) {
     res.render('benefactor/Benefactor');
 });
 
+//Responde con la página de búsqueda de Benefactor seleccionado
+router.get('/:id', function(req, res) {
+    res.render('benefactor/BenefactorPerfil');
+});
+
 //Responde con la página de perfil del procariano
 router.get('/perfil/:cedula', function(req, res) {
     res.render('benefactor/BenefactorPerfil');

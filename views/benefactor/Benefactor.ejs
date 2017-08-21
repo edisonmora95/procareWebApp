@@ -33,7 +33,7 @@
       <div class="row">
   <p class="control is-expanded">
         <div class="input-field col s6 offset-s6 z-depth-1">
-            <i class="material-icons prefix">search</i>
+            <i class="material-icons prefix blue-text darken-2">search</i>
           <input id="icon_prefix" v-model="searchItem" v-on:keyup="searchInTheList(searchItem)" type="text" class="validate">
           <span class="help is-dark"><strong> 1 <!--{{filteredItems.length | numeral}}--></strong> of <!--{{items.length | numeral}} --> 20 person found</span>
           <label for="icon_prefix">Razon Social</label>
@@ -71,8 +71,8 @@
      
         <div class="m-table">
           <table class="table is-bordered responsive-table centered striped">
-             <thead>
-            <tr>
+             <thead class="light-blue darken-4">
+            <tr class="white-text">
               <th>Razon Social</th>
               <th>Cedula / Ruc</th>
               <th>tipo Donacion</th>
@@ -86,9 +86,9 @@
               <td>{{item.cedula}}</td>
               <td>{{item.tipo_donacion}}</td>
               <td>{{item.dia_cobro}}</td>
-              <td> $ {{item.valor_contribucion}}</td>
-              <td @click="irAPerfil(item)"><i class="material-icons">edit</i>
-                <i class="material-icons">delete</i>
+              <td class="valores" v-money="money"> $ {{item.valor_contribucion}}</td>
+              <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
+              <i class="material-icons  red-text darken-4">delete</i>
               </td>
             </tr>
           </table>

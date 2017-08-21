@@ -53,6 +53,7 @@ input[type=number]::-webkit-outer-spin-button {
   .input-field input[type=text].valid {
      border-bottom: 1px solid #21378A;
      box-shadow: 0 1px 0 0 #000;
+     text-transform:uppercase;
    }
 
     .input-field input[type=email].valid {

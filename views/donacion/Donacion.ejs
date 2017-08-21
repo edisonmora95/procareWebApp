@@ -10,6 +10,7 @@
 		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">-->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/donacion/DonacionStyles.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	</head>
 	<body>
 		<div id="app">
@@ -18,65 +19,120 @@
 		</header>
 		<fieldset>
 			<legend>Benefactor:</legend>
+			<autocomplete-input :options="options" @select="onOptionSelect">
+				<template slot="item" scope="option">
+				<article class="media">
+					
+					<p>
+						<strong>{{ option.razonsocial }}</strong>
+						
+					</p>
+				</article>
+				</template>
+			</autocomplete-input>
+			
 			<section class="row row-razon-social">
 				<div class="input-field col s12">
-					<input type="text" name="razonsocial" id="razonsocial" v-model="donacion.razonsocial">
+					<input type="text" name="razonsocial" id="razonsocial" v-model="donacion.razonsocial" :suggestions="NameBenefactor" :selection.sync="value">
 					<span v-show="errors.has('razonsocial')" class="help is-danger">{{ errors.first('razonsocial') }}</span>
-					<label for="direccion">Razon Social</label>
+					<label for="razonsocial">Razon Social</label>
 				</div>
 			</section>
 			<section class="row row-contribucion-dia">
 				<div class="input-field col s6 m4">
-					<input type="tel" name="valor_contribucion" id="valor_contribucion"  v-money="money" placeholder="$ 0.00" v-model="valor" v-validate="'required'" disabled>
+					<input type="tel" name="valor_contribucion" id="valor_contribucion" v-money="money" placeholder="$ 0.00" disabled>
 					<span v-show="errors.has('valor_contribucion')" class="help is-danger">{{ errors.first('valor_contribucion') }}</span>
-					<label for="celular">contribución $</label>
+					<label for="contribución">contribución $</label>
 				</div>
 				<div class="input-field col s6 m4">
-					<input type="tel" name="diacobro" id="diacobro" min=1 max=30 v-model="donacion.diaCobro" disabled>
+					<input type="tel" name="diacobro" id="diacobro" min=1 max=30 v-model="donacion.diacobro" disabled>
 					<span v-show="errors.has('diacobro')" class="help is-danger">{{ errors.first('diacobro') }}</span>
-					<label for="convencional">dia Cobro</label>
+					<label for="diacobro">dia Cobro</label>
 				</div>
 				<div class="input-field col s6 m4">
 					<div class="input-field col s6 m4">
-					<input type="tel" name="tipodonacion" id="tipodonacion" min=1 max=30 v-model="donacion.tipodonacion" disabled>
-					<span v-show="errors.has('tipodonacion')" class="help is-danger">{{ errors.first('tipodonacion') }}</span>
-					<label for="convencional">tipo Donacion</label>
-				</div>
+						<input type="tel" name="tipodonacion" id="tipodonacion" min=1 max=30 disabled>
+						<span v-show="errors.has('tipodonacion')" class="help is-danger">{{ errors.first('tipodonacion') }}</span>
+						<label for="tipodonacion">tipo Donacion</label>
+					</div>
 				</div>
 			</section>
 		</fieldset>
 		<fieldset>
 			<legend>Donación:</legend>
-
-				<section class="row row-contribucion-dia">
-						<div class="input-field col s6 m4">
-							<input type="tel" name="cantidad_donada" id="cantidad_donada"  v-money="money" placeholder="$ 0.00" v-model="valor" v-validate="'required'">
-							<span v-show="errors.has('valor_contribucion')" class="help is-danger">{{ errors.first('valor_contribucion') }}</span>
-							<label for="celular">contribución $</label>
-						</div>
-						<div class="input-field col s6 m8">
-								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="donacion.fechaNacimiento" v-validate="'required'">
-								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
-								<label for="fecha-nacimiento">Fecha de nacimiento</label>
-							</div>
-						<div class="input-field col s12">
-							<v-select id="selectDonacion" name="selectDonacion" v-model="donacion.tipo_donacion" select-text="">
-							<!--<option value="" disabled selected></option> -->
-							<option value="mensual">Mensual</option>
-							<option value="extraordinario">Extraordinaria</option>
-							</v-select>
-							<label>Tipo Donación</label>
-						</div>
-					</section>
-
+			<section class="row row-contribucion-dia">
+				<div class="input-field col s6 m4">
+					<input type="tel" name="cantidad_donada" id="cantidad_donada" v-money="money" placeholder="$ 0.00" v-model="donacion.valor" v-validate="'required|numeric'">
+					<span v-show="errors.has('cantidad_donada')" class="help is-danger">{{ errors.first('cantidad_donada') }}</span>
+					<label for="Donacion">Donacion $</label>
+				</div>
+				<div class="input-field col s6 m8">
+					<input type="date" name="fecha_donacion" id="fecha_donacion" class="datepicker" v-model="donacion.fecha_donacion" v-validate="'required'">
+					<span v-show="errors.has('fecha_donacion')" class="help is-danger">{{ errors.first('fecha_donacion') }}</span>
+					<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
+					<label for="fecha_donacion">Fecha de Donacion</label>
+				</div>
+				<section class="row row-textarea-observacion">
+					<div class="input-field col s12">
+						<textarea name="observacion" id="observacion" v-model="donacion.observacion" class="materialize-textarea"></textarea>
+						<label for="textarea">Observación</label>
+					</div>
+				</section>
+			</section>
 		</fieldset>
-			
+		<!-- Modal Structure -->
+		<div id="modalBenfactorCreado" class="modal">
+			<div class="modal-content">
+				<p class="center-align modal-text">Benefactor creado correctamente.</p>
+			</div>
+			<div class="modal-footer">
+				<a href="/benefactor/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
 		</div>
-	</body>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-	<script src='https://unpkg.com/vue@2.3.3'></script>
-	<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-	<script src="/build/donacion/DonacionScript.js"></script>
+		<!-- Modal Structure -->
+		<div id="modalError" class="modal">
+			<div class="modal-content">
+				<h4 class="center-align">Formulario con errores.</h4>
+				<p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+				<p class="center-align">Con el siguiente mensaje de error: </p>
+				<p class="center-align">"{{errorObj.msj}}"</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+		</div>
+		<!-- Modal Structure -->
+		<div id="modalErrorAjax" class="modal">
+			<div class="modal-content">
+				<h4 class="center-align">{{errorAjax.titulo}}.</h4>
+				<p class="center-align">"{{errorAjax.descripcion}}"</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+		</div>
+	</div>
+	<div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+		<script src='https://unpkg.com/vue@2.3.3'></script>
+		<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+		<script src="/build/donacion/DonacionScript.js"></script>
+		<script id="autocomplete-input-template" type="text/x-template">
+		<div class="autocomplete-input">
+			<p class="control has-icon has-icon-right">
+				<input v-model="keyword" class="input is-large" placeholder="Search..." @input="onInput($event.target.value)" @keyup.esc="isOpen = false" @blur="isOpen = false" @keydown.down="moveDown" @keydown.up="moveUp" @keydown.enter="select">
+				<i class="fa fa-angle-down"></i>
+			</p>
+			<ul v-show="isOpen" class="options-list">
+				<li v-for="(option, index) in fOptions" :class="{
+					'highlighted': index === highlightedPosition
+					}" @mouseenter="highlightedPosition = index" @mousedown="select">
+					<slot name="item" :razonsocial="option.razonsocial">
+				</li>
+			</ul>
+		</div>
+		</script>
+	</div>
+</body>
 </html>

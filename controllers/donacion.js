@@ -9,139 +9,135 @@ var modelo = require('../models');
 
 const Donacion = (req, res, next) => {
 
-        // estado = 'activo';
+    // estado = 'activo';
 
-        if (req.body.fechaNacimiento == '') {
-            fechaNacimiento = null;
-        } else {
-            fecha_donacion = new Date(req.body.fecha_donacion);
+    if (req.body.fechaNacimiento == '') {
+        fechaNacimiento = null;
+    } else {
+        fecha_donacion = new Date(req.body.fecha_donacion);
+        //  cantidad = req.body.valor_contribucion;
+    }
 
+    modelo.Donacion.create({
+        BenefactorId: benefactor.get('id'),
+        cantidad: '',
+        fecha_donacion: fecha_donacion,
+        observacion: req.body.observacion
+
+
+    }).then(repuesta => {
+        var status = true;
+        var mensaje = 'se pudo crear correctamente'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: repuesta
         }
-        modelo.Benefactor.find({
-                    attributes: ['id'],
-                    where: {
-                        cedula: persona.cedula
-                    }
-                    modelo.Donacion.create({
-                        BenefactorId: benefactor.get('id'),
-                        cantidad: req.body.valor_contribucion;
-                        fecha_donacion: fecha_donacion,
-                        observacion: req.body.observacion
+        res.json(jsonRespuesta)
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'no se pudo crear'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: error
+        }
+        res.json(jsonRespuesta);
+    });
+}
 
+const eliminarDonacion = (req, res, next) => {
+    estado = 'inactivo';
+    modelo.Donacion.update({
 
-                    }).then(repuesta => {
-                        var status = true;
-                        var mensaje = 'se pudo crear correctamente'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: repuesta
-                        }
-                        res.json(jsonRespuesta)
-                    }).catch(error => {
-                        var status = false;
-                        var mensaje = 'no se pudo crear'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: error
-                        }
-                        res.json(jsonRespuesta);
-                    });
-                }
+        estado: req.body.estado
+    }, {
+        where: {
+            id: req.params.id
+        }
+    }).then(repuesta => {
+        var status = true;
+        var mensaje = 'se pudo eliminar correctamente'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: repuesta
+        }
+        res.json(jsonRespuesta)
+    }).catch(error => {
+        var json1 = {
+            status: false,
+            mensaje: 'No se puede eliminar la Tarea',
+            error: error
+        }
+        res.send(json1);
+    });
+}
 
-                const eliminarDonacion = (req, res, next) => {
-                    estado = 'inactivo';
-                    modelo.Donacion.update({
+const editarDonacion = (req, res, next) => {
+    modelo.Donacion.update({
 
-                        estado: req.body.estado
-                    }, {
-                        where: {
-                            id: req.params.id
-                        }
-                    }).then(repuesta => {
-                        var status = true;
-                        var mensaje = 'se pudo eliminar correctamente'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: repuesta
-                        }
-                        res.json(jsonRespuesta)
-                    }).catch(error => {
-                        var json1 = {
-                            status: false,
-                            mensaje: 'No se puede eliminar la Tarea',
-                            error: error
-                        }
-                        res.send(json1);
-                    });
-                }
+        id_responsable: req.body.nombre,
+        nombre: req.body.nombre,
+        fecha_publicacion: req.body.fecha_publicacion,
+        fecha_limite: req.body.fecha_limite,
+        prioridad: req.body.prioridad,
+        estado: req.body.estado,
+        descripcion: req.body.descripcion,
+        categoria: req.body.categoria
 
-                const editarDonacion = (req, res, next) => {
-                    modelo.Donacion.update({
+    }, {
+        where: {
+            id: req.params.id
+        }
+    }).then(repuesta => {
+        var status = true;
+        var mensaje = 'se pudo editar correctamente'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: repuesta
+        }
+        res.json(jsonRespuesta)
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'no se pudo eliminar'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: error
+        }
+        res.json(jsonRespuesta);
+    });
+}
 
-                        id_responsable: req.body.nombre,
-                        nombre: req.body.nombre,
-                        fecha_publicacion: req.body.fecha_publicacion,
-                        fecha_limite: req.body.fecha_limite,
-                        prioridad: req.body.prioridad,
-                        estado: req.body.estado,
-                        descripcion: req.body.descripcion,
-                        categoria: req.body.categoria
+const mostrarDonacion = (req, res, next) => {
+    modelo.Donacion.findAll({
 
-                    }, {
-                        where: {
-                            id: req.params.id
-                        }
-                    }).then(repuesta => {
-                        var status = true;
-                        var mensaje = 'se pudo editar correctamente'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: repuesta
-                        }
-                        res.json(jsonRespuesta)
-                    }).catch(error => {
-                        var status = false;
-                        var mensaje = 'no se pudo eliminar'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: error
-                        }
-                        res.json(jsonRespuesta);
-                    });
-                }
+    }).then(repuesta => {
+        var status = true;
+        var mensaje = 'se pudo actualizar correctamente'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: repuesta
+        }
+        res.json(jsonRespuesta)
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'no se pudo eliminar'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            sequelizeStatus: error
+        }
+        res.json(jsonRespuesta);
+    });
+}
 
-                const mostrarDonacion = (req, res, next) => {
-                    modelo.Donacion.findAll({
-
-                    }).then(repuesta => {
-                        var status = true;
-                        var mensaje = 'se pudo actualizar correctamente'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: repuesta
-                        }
-                        res.json(jsonRespuesta)
-                    }).catch(error => {
-                        var status = false;
-                        var mensaje = 'no se pudo eliminar'
-                        var jsonRespuesta = {
-                            status: status,
-                            mensaje: mensaje,
-                            sequelizeStatus: error
-                        }
-                        res.json(jsonRespuesta);
-                    });
-                }
-
-                module.exports = {
-                    Donacion,
-                    eliminarDonacion,
-                    editarDonacion,
-                    mostrarDonacion
-                }
+module.exports = {
+    Donacion,
+    eliminarDonacion,
+    editarDonacion,
+    mostrarDonacion
+}
