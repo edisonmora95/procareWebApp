@@ -5,7 +5,6 @@
 @UltimaFechaModificacion: 29/07/2017 LuisBSC15
 						  02/08/2017 erialper
 */
-
 var modelo = require('../models');
 
 let jsonRespuesta = {};

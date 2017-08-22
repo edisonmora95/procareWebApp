@@ -13,7 +13,16 @@ Css creado para guardar las cosas fundamentales del manual de marca de procare
 	background-color: rgb(0,25,255); /*procare azul debil CMYK(60,55,0,10)*/ 
 }
 
+.picker__date-display{
+  background-color: #fb8c00;
+}
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected{
+  background-color: #fb8c00;
+}
 
+.picker__close, .picker__today{
+  color: #fb8c00; 
+}
 
 /* Colores de formulario
  /* label color */\\

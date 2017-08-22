@@ -7,7 +7,7 @@
 
 var modelo = require('../models');
 
-const CrearParalelo = (req, res, next) => {
+const crearParalelo = (req, res, next) => {
   modelo.Paralelo.create({
     nombre : req.body.nombre,
     cantidadNinios : req.body.cantidadNinios

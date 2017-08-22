@@ -56,8 +56,8 @@ const crearEvento = (req, res, next) => {
 }
 
 const eliminarEvento = (req, res, next) => {
-   estado = 'inactivo';
-   modelo.Evento.update({
+  estado = 'inactivo';
+  modelo.Evento.update({
     
     estado : estado
 
@@ -87,7 +87,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-     idOrganizador : req.body.id_organiador,
+    idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -152,8 +152,6 @@ const mostrarEventos = (req,res,next) =>{
       mensaje : mensaje,
       sequelizeStatus : respuesta2
     })
-
-
 
   }).catch( error => {
     var status = false;

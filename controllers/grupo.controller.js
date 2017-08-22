@@ -24,51 +24,107 @@ module.exports.crearGrupo = (req, res, next) => {
 		let idGrupo = grupo.get('id');
 		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
 			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
-				let datos = {
-					grupo : grupo,
-					grupoEtapa: grupoEtapa,
-					animador: animador
-				};
-				return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+				//se va a asignar el rol :"V
+				modelo.Procariano.findOne({
+					where:{id : idAnimador}
+				}).then( procariano => {
+					modelo.PersonaRol.findOne({
+						where: {
+							fechaFin : null,
+							PersonaId : procariano.get('PersonaId'),
+							RolNombre : 'Animador'
+						}
+					}).then( rolBuscar => {
+						if(rolBuscar!=null){
+							let datos = {
+								grupo : grupo,
+								grupoEtapa: grupoEtapa,
+								animador: animador
+							};
+							return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+						}else{
+							modelo.PersonaRol.create({
+								fechaInicio : new Date(),
+								fechaFin : null,
+								PersonaId : procariano.get('PersonaId'),
+								RolNombre: 'Animador'
+							}).then( rol => {
+								let datos = {
+									grupo : grupo,
+									grupoEtapa: grupoEtapa,
+									animador: animador,
+									rol: rol
+								};
+								return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
+							}).catch( errorRol => {
+								let datos = {
+									grupo: grupo,
+									grupoEtapa: grupoEtapa,
+									animador: animador,
+									procariano: procariano,
+									errorRolBuscar: errorRolBuscar,
+									errorRol: errorRol
+								};
+								return respuestas.error(res, 'Error en la nueva asignación', '', datos);
+							});
+						}
+					}).catch( errorRolBuscar => {
+						let datos = {
+							grupo: grupo,
+							grupoEtapa: grupoEtapa,
+							animador: animador,
+							procariano: procariano,
+							errorRolBuscar: errorRolBuscar
+						};
+						return respuestas.error(res, 'Algo sucedio busquedad del Animador', '', datos);
+					})
+				}).catch( errorProcariano => {
+					let datos = {
+						grupo : grupo,
+						grupoEtapa: grupoEtapa,
+						animador: animador,
+						errorProcariano: errorProcariano
+					};
+					return respuestas.error(res, 'Algo sucedio en busquedad de Procariano', '', datos);
+				})
+				//continuamos
 			}, (errorAnimador) => {
 				let datos = {
 					grupo : grupo,
 					grupoEtapa: grupoEtapa,
 					errorAnimador: errorAnimador
 				};
-				return respuesta.error(res, 'No se pudo añadir el animador', datos);
+				return respuesta.error(res, 'No se pudo añadir el animador', '', datos);
 			});
 		}, (errorGrupoEtapa) => {
 			let datos = {
 				grupo: grupo,
 				errorGrupoEtapa : errorGrupoEtapa
 			};
-			return respuesta.error(res, 'No se pudo añadir a la etapa', datos);
+			return respuesta.error(res, 'No se pudo añadir a la etapa', '',datos);
 		});
 	}, (errorGrupo) => {
 		let mensajeError = errorGrupo.errors[0].message;
 		return respuesta.error(res, 'No se pudo crear el grupo', mensajeError, errorGrupo);
 	});
-
 };
 
 module.exports.editarGrupo = (req, res, next) => {
 	let grupo = {
 		id: req.params.id_grupo,
 		nombre: req.body.nombre,
-    tipo: req.body.tipo,
-    cantidadChicos: req.body.cantidadChicos,
-    numeroReuniones: req.body.numeroReuniones,
-    genero: req.body.genero,
-    etapaAntigua: req.body.etapaAntigua,
-    etapaNueva: req.body.etapaNueva,
-    animadorAntiguo: req.body.animadorAntiguo,
-    animadorNuevo: req.body.animadorNuevo
+    	tipo: req.body.tipo,
+    	cantidadChicos: req.body.cantidadChicos,
+    	numeroReuniones: req.body.numeroReuniones,
+    	genero: req.body.genero,
+    	etapaAntigua: req.body.etapaAntigua,
+    	etapaNueva: req.body.etapaNueva,
+    	animadorAntiguo: req.body.animadorAntiguo,
+    	animadorNuevo: req.body.animadorNuevo
 	};
 	modelo.Grupo.editarGrupo(grupo, (successGrupo) => {
 		let cambioEtapa = ( grupo.etapaNueva !== '' && grupo.etapaNueva !== grupo.etapaAntigua && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
 		let cambioAnimador = ( grupo.animadorNuevo !== '' && grupo.animadorNuevo !== grupo.animadorAntiguo && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
-
 		if(cambioEtapa){
 			modelo.GrupoEtapa.cambiarGrupoDeEtapa(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, (successCambioEtapa) => {
 				//Se pudo cambiar al grupo de etapa
@@ -109,38 +165,67 @@ module.exports.editarGrupo = (req, res, next) => {
 			}else{
 				//Se pudo editar el grupo, no se quiso cambiar de etapa ni de animador
 				return res.status(200).json({estado : true, datos : successGrupo, mensaje: 'Se pudo editar el grupo.'});
-			}
-			
+			}	
 		}
 	}, (errorGrupo) => {
 		//No se pudo editar el grupo
 		return res.status(400).json({estado : false, datos : errorGrupo, mensaje: 'No se pudo editar el grupo.'});
 	});
-
 };
 
 module.exports.eliminarGrupo = (req, res, next) => {
-	var id = req.body.id;
-	modelo.Grupo.destroy({
+	var id = req.params.id;
+
+	modelo.Animador.destroy({
 	  	where: {
-	    	id : id
+	    	GrupoId : id
 	  	}
-	}).then( resultado => {
-		var rjson = {
-			status : true,
-			mensaje : 'Grupo eliminado exitosamente',
-			sequelizeStatus : resultado
-		}
-		res.json(rjson)
-	}).catch( err => {
-		var rjson = {
-			status : false,
-			mensaje : 'No se pudo eliminar el Grupo',
-			sequelizeStatus : error
-		}
-		res.json(rjson);
-	});
-};
+	}).then( borrarAnimador => {
+
+		modelo.ProcarianoGrupo.destroy({
+		  	where: {
+		    	GrupoId : id
+		  	}
+		}).then( borrarProcarianos => {
+
+			modelo.GrupoEtapa.destroy({
+			  	where: {
+			    	GrupoId : id
+			  	}
+			}).then( borrarEtapa => {
+				
+				modelo.Grupo.destroy({
+				  	where: {
+				    	id : id
+				  	}
+				}).then( borrarGrupo => {
+					
+					let datos = {
+						grupo: borrarGrupo,
+						etapa: borrarEtapa,
+						procarianos: borrarProcarianos,
+						animador: borrarAnimador
+					};
+					return respuesta.okDelete(res, 'Eliminado exitosamente', datos);
+
+				}).catch( errorGrupo => {
+					return respuestas.errorDelete(res, 'un problema ocurrio', errorGrupo);
+				})
+				
+			}).catch( errorEtapa => {
+				return respuestas.errorDelete(res, 'un problema ocurrio', errorEtapa);
+			})
+
+		}).catch( errorProcariano => {
+			return respuestas.errorDelete(res, 'un problema ocurrio', errorProcariano);
+		})
+
+	}).catch( errorAnimador => {
+		return respuestas.errorDelete(res, 'un problema ocurrio', errorAnimador);
+	})
+
+}
+
 /*
 	@Descripción: Devuelve todos los grupos de la base de datos. Con su etapa.
 */
@@ -148,7 +233,7 @@ module.exports.mostrarGrupos = (req, res, next) => {
 	modelo.Grupo.obtenerTodosLosGrupos((success) => {
 		return respuesta.okGet(res, 'Se obtuvieron los grupos', success);
 	}, (error) => {
-		return respuesta.error(res, 'No se pudieron obtener los grupos', error);
+		return respuesta.error(res, 'No se pudieron obtener los grupos', '', error);
 	});
 };
 

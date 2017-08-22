@@ -11,6 +11,8 @@ var router = express.Router();
 //Post Director de Formacion
 router.post('/directorF', controladorCargo.asignarDirectorFormacion);
 
+router.post('/animador', controladorCargo.asignarAnimador);
+
 //Devuelve todos los usuarios del sistema
 router.get('/usuarios',controladorCargo.obtenerUsuarios);
 

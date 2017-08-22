@@ -64,9 +64,9 @@ const crearTarea = (req, res, next) => {
 }
 
 const eliminarTarea = (req, res, next) => {
-   estado = 'inactivo';
-   idTarea = req.params.id;
-   modelo.Tarea.update({
+  estado = 'inactivo';
+  idTarea = req.params.id;
+  modelo.Tarea.update({
     
     estado : estado
 
@@ -95,8 +95,7 @@ const eliminarTarea = (req, res, next) => {
 
 const editarTarea = (req, res, next) => {
   modelo.Tarea.update({
-    
-     id_responsable : req.body.nombre,
+    id_responsable : req.body.nombre,
     nombre : req.body.nombre,
     fecha_publicacion : req.body.fecha_publicacion,
     fecha_limite : req.body.fecha_limite,

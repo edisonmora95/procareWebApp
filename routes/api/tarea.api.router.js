@@ -8,25 +8,13 @@ var router = express.Router();
 //Post de la Tareas
 router.post('/', controladorTarea.crearTarea);
 
-//Read Tareas
-
-//router.get('/', controladorTarea.mostrarTareas);
-
-
-/*
-router.get('/', controladorTarea.mostrarTarea);
-*/
-
 //Update Tareas
 router.put('/:id', controladorTarea.editarTarea);
 
 //Delete Tareas
 router.delete('/:id', controladorTarea.eliminarTarea);
 
-
-module.exports = router;
-
-
+//Read Tareas
 //mostrar tareas de todos (para el personal)
 router.get('/', controladorTarea.mostrarTareas);
 

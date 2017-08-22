@@ -127,7 +127,7 @@ let eventoApp = new Vue({
 			@Descripción: Obtiene todos los procarianos de la base de datos. Para mostrarlos en el formulario de evento nueva
 		*/
 		obtenerProcarianos(self){
-			let urlAPi = '/api/procarianos/';
+			let urlAPi = '/api/procarianos/tareas';
 			$.ajax({
 				type: 'GET',
 				url: urlAPi,

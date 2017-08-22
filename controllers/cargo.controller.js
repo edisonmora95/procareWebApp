@@ -39,7 +39,7 @@ const obtenerDirectoresFormación = (req, res, next) => {
 			},
 			where: {nombre:'Director Procare Formacion'}
 		}],
-		attributes:['nombres','apellidos','email','genero'],
+		attributes:['id','nombres','apellidos','email','genero'],
 		where: {contrasenna:{$ne: null}}
 	}).then( director => {
 		return respuestas.okGet(res, 'Usuarios encontrados', director);
@@ -56,7 +56,7 @@ const obtenerCandidatoDirectores = (req, res, next) => {
 			where: {nombre:{$not:'Chico Formación'}}
 		},{
 			model: modelo.Persona,
-			attributes:['nombres','apellidos','email','genero']	
+			attributes:['id','nombres','apellidos','email','genero']	
 		}],
 		attributes:[]
 	}).then( candidato => {
@@ -115,9 +115,43 @@ nuevoDirectorFormacion = (req, res) => {
 	});
 }
 
+const asignarAnimador = (req, res, next) => {
+	modelo.Procariano.findOne({
+		where:{id : req.body.procarianoId}
+	}).then( procariano => {
+		modelo.PersonaRol.findOne({
+			where: {
+				fechaFin : null,
+				PersonaId : procariano.get('PersonaId'),
+				RolNombre : 'Animador'
+			}
+		}).then( animador => {
+			if(animador!=null){
+				return respuestas.errorUpdate(res, 'No se modifica');
+			}else{
+				modelo.PersonaRol.create({
+					fechaInicio : new Date(),
+					fechaFin : null,
+					PersonaId : procariano.get('PersonaId'),
+					RolNombre: 'Animador'
+				}).then( repuesta2 => {
+					return respuestas.okCreate(res, 'Asignado correctamente', repuesta2);
+				}).catch( error2 => {
+					return respuestas.error(res, 'Error en la nueva asignación', '', error2);
+				});
+			}
+		}).catch( error1 => {
+			return respuestas.error(res, 'algo sucedio', '', error1);
+		})
+	}).catch( error => {
+		return respuestas.error(res, 'Algo sucedio en busquedad', '', error);
+	})
+}
+
 module.exports = {
 	obtenerUsuarios,
 	asignarDirectorFormacion,
 	obtenerDirectoresFormación,
-	obtenerCandidatoDirectores
+	obtenerCandidatoDirectores,
+	asignarAnimador
 };

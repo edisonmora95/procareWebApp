@@ -11,4 +11,6 @@ router.get('/:id_grupo', controladorGrupo.obtenerGrupoPorId);
 
 router.put('/:id_grupo', controladorGrupo.editarGrupo);
 
+router.delete('/:id', controladorGrupo.eliminarGrupo);
+
 module.exports = router;
