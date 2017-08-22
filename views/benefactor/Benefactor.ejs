@@ -28,55 +28,44 @@
       
       -->
       
-        
+      
       <h2 id="titulo" class="center-align titulo">Benefactores</h2>
-       <div class="row">
-    <form class="col s12">
       <div class="row">
-  <p class="control is-expanded">
-        <div class="input-field col s6 offset-s6 z-depth-1">
-            <i class="material-icons prefix blue-text darken-2">search</i>
-          <input id="icon_prefix" v-model="searchItem" v-on:keyup="searchInTheList(searchItem)" type="text" class="validate">
-          <span class="help is-dark"><strong> 1 <!--{{filteredItems.length | numeral}}--></strong> of <!--{{items.length | numeral}} --> 20 person found</span>
-          <label for="icon_prefix">Razon Social</label>
-
-        </div>
-        </p>
+        
       </div>
-    </form>
-    </div>
-  
- <div class="row row-botones">
-            <a href="/benefactor/nuevo" class="modal-action modal-close waves-effect waves-green btn-flat">Nuevo</a>
-                        
-          </div>
-<!-- navegacion de  botones y toda la paginacion 
-   <nav class="pagination m-pagination">
-    <a class="button" v-on:click="selectPage(this.pagination.currentPage-1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">Previous</a>
-    <a class="button" v-on:click="selectPage(this.pagination.currentPage+1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">Next page</a>
-    <ul>
-      <li>
-        <a class="button" v-on:click="selectPage(pagination.items[0])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">
-          First
-        </a>
-      </li>
-      <li class="is-space"></li>
-      <li v-for="item in pagination.filteredItems">
-        <a class="button" v-on:click="selectPage(item)" v-bind:class="{'is-info': item == pagination.currentPage}">{{item | numeral}}</a>
-      </li>
-      <li class="is-space"></li>
-      <li>
-        <a class="button" v-on:click="selectPage(pagination.items[pagination.items.length-1])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">
-          Last
-        </a>
-      </li>
-    </ul>
-  </nav>-->
-         <!-- tabla de contenido -->
-     
-        <div class="m-table">
-          <table class="table is-bordered responsive-table centered striped">
-             <thead class="light-blue darken-4">
+      
+      <div class="row row-botones">
+        
+          <a href="/benefactor/nuevo" class="waves-effect waves-light btn orange darken-1">Nuevo</a>
+        
+      </div>
+      <!-- navegacion de  botones y toda la paginacion
+      <nav class="pagination m-pagination">
+        <a class="button" v-on:click="selectPage(this.pagination.currentPage-1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">Previous</a>
+        <a class="button" v-on:click="selectPage(this.pagination.currentPage+1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">Next page</a>
+        <ul>
+          <li>
+            <a class="button" v-on:click="selectPage(pagination.items[0])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">
+              First
+            </a>
+          </li>
+          <li class="is-space"></li>
+          <li v-for="item in pagination.filteredItems">
+            <a class="button" v-on:click="selectPage(item)" v-bind:class="{'is-info': item == pagination.currentPage}">{{item | numeral}}</a>
+          </li>
+          <li class="is-space"></li>
+          <li>
+            <a class="button" v-on:click="selectPage(pagination.items[pagination.items.length-1])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">
+              Last
+            </a>
+          </li>
+        </ul>
+      </nav>-->
+      <!-- tabla de contenido -->
+      
+      <div class="m-table">
+        <table class="bordered">
+          <thead class="light-blue darken-4">
             <tr class="white-text">
               <th>Razon Social</th>
               <th>Cedula / Ruc</th>
@@ -85,34 +74,34 @@
               <th>Contribucion</th>
               <th> opciones </th>
             </tr>
-            </thead>
-            <tr v-for="item in arregloBenefactor">
-              <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
-              <td>{{item.cedula}}</td>
-              <td>{{item.tipo_donacion}}</td>
-              <td>{{item.dia_cobro}}</td>
-              <td class="valores"> $ {{item.valor_contribucion}}</td>
-              <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
+          </thead>
+          <tr v-for="item in arregloBenefactor">
+            <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
+            <td>{{item.cedula}}</td>
+            <td>{{item.tipo_donacion}}</td>
+            <td style="text-align:center;">{{item.dia_cobro}}</td>
+            <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
+            <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
               <i class="material-icons  red-text darken-4">delete</i>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </main>
-    </div>
-    <div>
- 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-      <script src='https://unpkg.com/vue@2.3.3'></script>
-      <script src="https://unpkg.com/vue/dist/vue.js"></script>
-      <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-      <!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-      <script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-      <script src="/build/benefactor/verBenefactor.js"></script>
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
-      </script>
-    </div>
-  </body>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </main>
+  </div>
+  <div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script src='https://unpkg.com/vue@2.3.3'></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+    <!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
+    <script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+    <script src="/build/benefactor/verBenefactor.js"></script>
+    <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
+    </script>
+  </div>
+</body>
 </html>

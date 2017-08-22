@@ -252,6 +252,9 @@ const editarBenefactor = (req, res, next) => {
     var id = req.params.id;
     console.log(id);
     console.log("mostro aqui");
+    let valor = req.body.valor_contribucion;
+    let result = Number(valor.replace(/[^0-9\.]+/g, ""));
+    valordolares = parseFloat(result);
     modelo.Persona.update({
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -269,7 +272,7 @@ const editarBenefactor = (req, res, next) => {
         }
     }).then(result => {
         modelo.Benefactor.update({
-            valor_contribucion: req.body.valor_contribucion,
+            valor_contribucion: valordolares,
             dia_cobro: req.body.diaCobro,
             tarjeta_credito: req.body.tarjeta_credito,
             tipo_donacion: req.body.tipo_donacion,
@@ -284,6 +287,8 @@ const editarBenefactor = (req, res, next) => {
         }).then(result2 => {
             var status = true;
             var mensaje = 'se pudo actualizar correctamente'
+            console.log(mensaje);
+            alert(mensaje);
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
