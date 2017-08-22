@@ -175,15 +175,15 @@ const buscarProcariano = (req, res , next) => {
 	});
 };
 
-
-const buscarProcarianoTareas = (req, res , next) => {
-	modelo.Procariano.findAll({
-	    include: [{
-	        model: modelo.Persona
-	    }], where :{estado:{$not:'inactivo'}}
-	}).then( procarianos => {
-		const respuesta = procarianos.map( procariano => {
-
+/*
+	@Autor: Erick Perez
+	@Descripción: Devuelve solo a los procarianos que estén en estado activo
+	@ÚltimaModificación: 22/08/2017 @edisonmora95, cambio de nombre de función
+																								Pasada función a modelo.
+*/
+const buscarProcarianosActivos = (req, res , next) => {
+	modelo.Procariano.buscarProcarianosActivos( procarianos => {
+		const procarianosMap = procarianos.map( procariano => {
 			return Object.assign(
 				{},
 				{
@@ -205,10 +205,11 @@ const buscarProcarianoTareas = (req, res , next) => {
 					trabajo : procariano.Persona.trabajo,
 					email: procariano.Persona.email,
 					estado: procariano.estado
-				});
+				}
+			);
 		});
-		return res.json(respuesta);
-	}).catch( error => {
+		return respuesta.okGet(res, 'Búsqueda exitosa', procarianosMap);
+	}, error => {
 		return respuesta.error(res, 'Error en la búsqueda', '', error);
 	});
 };
@@ -617,7 +618,7 @@ chicoEnGrupo = (chico, array) => {
 module.exports = {
 	crearProcariano,
 	buscarProcariano,
-	buscarProcarianoTareas,
+	buscarProcarianosActivos,
 	buscarProcarianoPorId,
 	editarProcariano,
 	eliminarProcariano,

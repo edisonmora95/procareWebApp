@@ -65,7 +65,7 @@ module.exports.crearGrupo = (req, res, next) => {
 									errorRolBuscar: errorRolBuscar,
 									errorRol: errorRol
 								};
-								return respuestas.error(res, 'Error en la nueva asignación', '', datos);
+								return respuesta.error(res, 'Error en la nueva asignación', '', datos);
 							});
 						}
 					}).catch( errorRolBuscar => {
@@ -76,7 +76,7 @@ module.exports.crearGrupo = (req, res, next) => {
 							procariano: procariano,
 							errorRolBuscar: errorRolBuscar
 						};
-						return respuestas.error(res, 'Algo sucedio busquedad del Animador', '', datos);
+						return respuesta.error(res, 'Algo sucedio busquedad del Animador', '', datos);
 					})
 				}).catch( errorProcariano => {
 					let datos = {

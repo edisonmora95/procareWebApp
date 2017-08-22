@@ -123,6 +123,17 @@ module.exports = function(sequelize, DataTypes) {
             }
           ]
         }).then(success).catch(error);
+      },
+      buscarProcarianosActivos: function(success, error){
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include : [{
+              model : Persona
+          }], 
+          where : {
+            estado:{$not:'inactivo'}
+          }
+        }).then(success).catch(error);
       }
     }
   });
