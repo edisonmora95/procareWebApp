@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<!--
+ 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+ 		<link rel="stylesheet" href="/stylesheets/usuarios/tableMaterial.css">-->
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
+	</head>
+	<body>
+		<div>
+			<header>
+				<% include ../partials/navbar %>
+			</header>
+			<main class="container" id="main">
+				<section id="section-resultados">
+					<div class="seccionDirectorFormacion">
+						<div class="row">
+							<div class="s4 m4">
+								<h4 style="text-align:center;">Director de procare formación</h4>
+							</div>
+						</div>
+						<div class="row">
+							<form action="">
+								<div class="s12 m12">
+									<div class="row">
+										<div class="col s6 m6">
+											<h5 >Procare Hombres</h5>
+										</div>
+										<div class="col s6 m6">
+											<h5>Procare Mujeres</h5>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col s2 m2">
+											<img src="/images/logoProcareHombres2.png" alt="logo procare" class="responsive-img circle">
+										</div>
+										<div class="input-field col s4 m4">
+									    <select class="icons" v-for="candidatoH in candidatosH">
+									      <option value="candidatoH.Persona" >{{candidatoH.Persona.nombres}} {{candidatoH.Persona.apellidos}}</option>
+									    </select>
+									    <label>Candidatos</label>
+									   </div>
+									   <!--
+										<div class="col s4 m4">
+											<p style="text-align:left;">pepito cardenas</p>
+										</div>
+										-->
+										<div class="col s2 m2">
+											<img src="/images/logoProcareMujeres2.png" alt="logo procare" class="responsive-img circle">
+										</div>
+										<div class="input-field col s4 m4">
+									    <select class="icons" v-for="candidatoM in candidatosM">
+									      <option value="candidatoH.Persona" >{{candidatoM.Persona.nombres}} {{candidatoM.Persona.apellidos}}</option>
+									    </select>
+									    <label>Candidatos</label>
+									  </div>
+									   <!--
+										<div class="col s4 m4">
+											<p style="text-align:left;">pepita directora</p>
+										</div>
+									</div>
+									-->
+									<!--
+									<div class="row">
+										<div class="input-field col s6 m6">
+									    <select class="icons">
+									      <option value="" disabled selected>Choose your option</option>
+									      <option value="" >example 1</option>
+									      <option value="" >example 2</option>
+									      <option value="" >example 3</option>
+									    </select>
+									    <label>Images in select</label>
+									   </div>
+									   <div class="input-field col s6 m6">
+									    <select class="icons">
+									      <option value="" disabled selected>Choose your option</option>
+									      <option value="" >example 1</option>
+									      <option value="" >example 2</option>
+									      <option value="" >example 3</option>
+									    </select>
+									    <label>Images in select</label>
+									  </div>
+									</div>
+									-->
+
+								</div>
+							</form>
+						</div>
+					</div>
+				</section>
+				
+
+				
+			</main>
+			<!-- Modal Structure -->
+			<div class="modalZone">
+				
+			</div>
+		</div>
+		<div id="scripts">
+			<% include ../partials/scripts %>
+			<script src="/build/usuarios/editarUsuarios.min.js"></script>
+		</div>
+	</body>
+</html>
+

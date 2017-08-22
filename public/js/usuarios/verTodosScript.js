@@ -12,165 +12,23 @@ let main = new Vue({
 	mounted(){
 		$('.modal').modal();
 		$('select').material_select();
+		//$('#datatable').DataTable();
+		this.obtenerUsuarios();
 
-
-		/*
-		$('#datatable').DataTable( {
-        "language": {
-            "lengthMenu": "",
-            "zeroRecords": "Nada para mostrar",
-            "info": "Mostrando _PAGE_ de _PAGES_",
-            "infoEmpty": "Nada encontrado",
-            "infoFiltered": "(filtrado de  _MAX_ registros totales)"
-        }
-    } );
-	*/
 	},
 	updated(){
 
 	},
 	data: {
-		usuarios: [
-			{
-			  "id": 1,
-			  "nombres": "Vernor",
-			  "apellidos": "Crolla",
-			  "email": "vcrolla0@engadget.com",
-			  "rolText": ["Geological Engineer"],
-			  "rolId": 1,
-			  "esProcariano" : true,
-			  "genero" : "masculino"
-			}, {
-			  "id": 2,
-			  "nombres": "Roxie",
-			  "apellidos": "MacInnes",
-			  "email": "rmacinnes1@cnbc.com",
-			  "rolText": ["Cost Accountant"],
-			  "rolId": 2,
-			  "esProcariano" : false,
-			  "genero" : "masculino"
-			}, {
-			  "id": 3,
-			  "nombres": "Cooper",
-			  "apellidos": "Robathon",
-			  "email": "crobathon2@slideshare.net",
-			  "rolText": ["Developer III","Director procare formación"],
-			  "rolId": 3,
-			  "esProcariano" : true,
-			  "genero" : "femenino"
-			}, {
-			  "id": 4,
-			  "nombres": "Davita",
-			  "apellidos": "Brobeck",
-			  "email": "dbrobeck3@ihg.com",
-			  "rolText": ["Budget","Accounting Analyst III","Director procare formación"],
-			  "rolId": 4,
-			  "esProcariano" : true,
-			  "genero" : "masculino"
-			}, {
-			  "id": 5,
-			  "nombres": "Lynda",
-			  "apellidos": "Bradburn",
-			  "email": "lbradburn4@live.com",
-			  "rolText": ["Editor"],
-			  "rolId": 5,
-			  "esProcariano" : false,
-			  "genero" : "masculino"
-			}, {
-			  "id": 6,
-			  "nombres": "Feliza",
-			  "apellidos": "Daily",
-			  "email": "fdaily5@ucsd.edu",
-			  "rolText": ["Community Outreach Specialist"],
-			  "rolId": 6,
-			  "esProcariano" : true,
-			  "genero" : "masculino"
-			}, {
-			  "id": 7,
-			  "nombres": "Fons",
-			  "apellidos": "Luckcuck",
-			  "email": "fluckcuck6@gizmodo.com",
-			  "rolText": ["Human Resources Assistant III"],
-			  "rolId": 7,
-			  "esProcariano" : false,
-			  "genero" : "masculino"
-			}, {
-			  "id": 8,
-			  "nombres": "Jolee",
-			  "apellidos": "Ormshaw",
-			  "email": "jormshaw7@slashdot.org",
-			  "rolText": ["Geologist IV"],
-			  "rolId": 8,
-			  "esProcariano" : true,
-			  "genero" : "femenino"
-			}, {
-			  "id": 9,
-			  "nombres": "Addy",
-			  "apellidos": "Gwatkin",
-			  "email": "agwatkin8@abc.net.au",
-			  "rolText": ["Executive Secretary"],
-			  "rolId": 9,
-			  "esProcariano" : true,
-			  "genero" : "masculino"
-			}, {
-			  "id": 10,
-			  "nombres": "Frederik",
-			  "apellidos": "Bulled",
-			  "email": "fbulled9@de.vu",
-			  "rolText":[ "Desktop Support Technician"],
-			  "rolId": 10,
-			  "esProcariano" : true,
-			  "genero" : "femenino"
-			}, {
-			  "id": 11,
-			  "nombres": "Drederik",
-			  "apellidos": "Bulled",
-			  "email": "fbulled9@de.vu",
-			  "rolText":[ "Desktop Support Technician"],
-			  "rolId": 11,
-			  "esProcariano" : true,
-			  "genero" : "masculino"
-			}
-		],
-		roles: [
-			{
-			  "id": 1,
-			  "text": "Paralegal"
-			}, {
-			  "id": 2,
-			  "text": "Budget/Accounting Analyst III"
-			}, {
-			  "id": 3,
-			  "text": "Sales Associate"
-			}, {
-			  "id": 4,
-			  "text": "Food Chemist"
-			}, {
-			  "id": 5,
-			  "text": "Assistant Manager"
-			}, {
-			  "id": 6,
-			  "text": "Account Representative IV"
-			}, {
-			  "id": 7,
-			  "text": "Editor"
-			}, {
-			  "id": 8,
-			  "text": "Software Test Engineer III"
-			}, {
-			  "id": 9,
-			  "text": "Software Test Engineer II"
-			}, {
-			  "id": 10,
-			  "text": "Geologist III"
-			}
-		],
+		usuarios: [],
 		usuarioSeleccionado: {},
 		rolEscogido: {
 			nombre: '',
 			id: ''
 		},
-		valorBotonFormacion : "  Agregar director formación"
+		valorBotonFormacion : "  Agregar director formación",
+		msg : '',
+		fallaCargar: false
 	},
 	computed: {
 		listaUsuarios(){
@@ -235,6 +93,35 @@ let main = new Vue({
 			let self = this;
 			self.usuarioSeleccionado = usuario;
 			return self.usuarioSeleccionado['rolText'].includes('Director procare formación');
+		},
+		obtenerUsuarios: function(){
+			let self = this;
+			self.usuarios = [];
+			$.ajax({
+				type : 'GET',
+				url: '/api/cargo/usuarios',
+				success: function(res){
+					console.log(res);
+					if(res.estado){
+						$.each(res.datos, function(index, usuarioEncontrado){
+							//console.log(personalEncontrado)
+								self.usuarios.push(usuarioEncontrado);
+							});
+						console.log(res)
+					}
+					else{
+							self.fallaCargar = true;
+							self.msg = res.mensaje;
+							console.log(res)
+					}						
+				},
+				error : function(res){
+					self.fallaCargar = true;
+					self.msg = res.mensaje;
+					console.log(res)
+				}
+			});
 		}
+		
 	}
 });
