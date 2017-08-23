@@ -1,6 +1,6 @@
 {
   "name": "procareapp",
-  "version": "1.7",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "init": "npm install && npm run build",
