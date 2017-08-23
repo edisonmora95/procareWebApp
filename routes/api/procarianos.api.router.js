@@ -22,7 +22,7 @@ router.post('/',controladorProcariano.crearProcariano);
 //Esta es la búsqueda en general.
 router.get('/', controladorProcariano.buscarProcariano);
 
-router.get('/tareas', controladorProcariano.buscarProcarianoTareas);
+router.get('/activos', controladorProcariano.buscarProcarianosActivos);
 
 router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
 

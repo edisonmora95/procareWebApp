@@ -1,4 +1,3 @@
-
 /*
   @Descripcion: Modelo de persona
   @Autor: jose viteri
@@ -102,22 +101,7 @@ module.exports = function(sequelize, DataTypes) {
           tipo: persona.tipo
         }).then(callback).catch(errorCallback);
       }
-    }/*, hooks : {
-      beforeCreate : (persona, options) => {
-         bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
-            console.log('este es el hash' + hash)
-            persona.contrasenna = hash;
-          });
-
-      }
-    }/*,instanceMethods: {
-        generateHash: function(password) {
-            return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-        },
-        validPassword: function(password) {
-            return bcrypt.compareSync(password, this.password);
-        },
-    }*/
-  });
-  return Persona;
+    }
+    });
+    return Persona;
 };

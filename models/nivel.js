@@ -7,23 +7,37 @@
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Nivel = sequelize.define('Nivel', {
-    nombre: {
-      type : DataTypes.STRING,
-      allowNull : false
-    },
-    programa: {
-      type : DataTypes.STRING
-    }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        Nivel.belongsToMany(models.Centro , {through: 'CentroNivel'})
-        // associations can be defined here
-      }
-    }
+    var Nivel = sequelize.define('Nivel', {
+        nombre: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                notEmpty: {
+                    msg: 'Nombre no puede ser vacío.'
+                },
+                isIn: {
+                    args: [
+                        ['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4']
+                    ],
+                    msg: 'Nombre no está dentro de los valores válidos.'
+                }
 
-  });
-  return Nivel;
+            }
+        },
+        programa: {
+            type: DataTypes.STRING
+        }
+    }, {
+        classMethods: {
+            associate: function(models) {
+                Nivel.belongsToMany(models.Centro, {
+                        through: 'CentroNivel'
+                    })
+                    // associations can be defined here
+            }
+        }
+
+    });
+    return Nivel;
 };
-
