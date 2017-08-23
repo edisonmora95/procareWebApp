@@ -1,0 +1,26 @@
+body{
+	background-color: #d3dbdb;
+}
+
+#row-responsable{
+	margin-top: 0;
+}
+#tareaApp{
+	padding: 1% 3%;
+	background-color: white;
+	margin-top: 3%;
+	margin-bottom: 3%;
+	border-radius: 2%;
+}
+form{
+	padding: 1%;
+}
+#row-interior{
+	padding-left: 0;
+	padding-right: 0; 
+}
+.help{
+	font-size: small;
+	font-weight: normal;
+	color: red;
+}

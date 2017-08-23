@@ -6,7 +6,6 @@ var express = require('express');
 var router = express.Router();
 var utils = require('../utils/utils')
 
-
 //Create procariano
 //Responde con la página
 router.get('/nuevo',  function(req, res, next){
@@ -34,5 +33,6 @@ router.put('/api/:id', controladorProcariano.editarProcariano);
 //Delete procariano
 //Responde con un status indicando si se pudo eliminar o no
 router.delete('/api/:id', controladorProcariano.eliminarProcariano);
+
 
 module.exports = router;

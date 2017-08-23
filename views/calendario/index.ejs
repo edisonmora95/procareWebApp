@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+ 		<link rel='stylesheet' href='/scripts/fullcalendar/dist/fullcalendar.min.css' />
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+	</head>
+	<body>
+		<header>
+			<% include ../partials/navbar %>
+		</header>
+		<main id="indexApp">
+		  <div class="row">
+		  	<div id='calendar' class="col l8 s12"></div>	
+		  	<div id="tareas" class="col l4 s12">
+		  		<div class="card">
+		  			<h5 class="center-align"><span>Título: </span>{{eventoSeleccionado.title}}</h5>
+		  			<span>Descripción:</span>
+		  			<p>{{eventoSeleccionado.description}}</p>
+		  			<p><span>Hora de inicio: </span>{{date(eventoSeleccionado.start)}}</p>
+		  			<p><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>
+		  		</div>
+		  		<div class="fixed-action-btn horizontal">
+				    <a class="btn-floating btn-large red">
+				      <i class="material-icons">add</i>
+				    </a>
+				    <ul>
+				      <li>
+				      	<a href="/home/evento/" class="btn-floating green btn tooltipped " data-position="top" data-delay="25" data-tooltip="Evento" >
+				      		<i class="material-icons rounded">event</i>
+				      	</a>
+				      </li>
+				      <li>
+				      	<a href="/home/tarea/" class="btn-floating yellow darken-1 btn tooltipped " data-position="top" data-delay="25" data-tooltip="Tarea" id="btnTarea">
+				      		<i class="material-icons rounded">edit</i>
+				      	</a>
+				      </li>
+				    </ul>
+				  </div>
+		  	</div>
+		  </div>
+		</main>
+	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="/scripts/moment/min/moment.min.js"></script>
+		<script src="/scripts/moment/locale/es.js"></script>
+		<script src="/scripts/fullcalendar/dist/fullcalendar.min.js"></script>
+		<script src="/scripts/fullcalendar/dist/locale/es.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.js"></script>
+		<script src="/build/index/indexScript.min.js"></script>
+	</div>
+</html>

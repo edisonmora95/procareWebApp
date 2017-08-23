@@ -1,83 +1,36 @@
 <html>
-	<header>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecs-->
-		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
-  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+		<% include partials/login/loginHead %>
 		<link rel="stylesheet" type="text/css" href="stylesheets/login.css">
 	</head>
-		
-	</header>
-
 	<body>
 	  <div id="appLogin"> 	  
 	    <form>
 	      <div class="login-form">
 	       <img src="images/nuevo_logo_procare.jpg" alt="logo espol" width="100%" heigth = "10%">
 	       <div class="form-group ">
-	         <input type="email" class="form-control " placeholder="Correo " id="UserName" name="correo" v-model="correo">
-	         <i class="fa fa-user"></i>
+	       		<i class="fa fa-user"></i>
+	         	<input type="email" class="form-control " placeholder="Correo " id="UserName" name="correo" v-model="correo">
+	         
 	       </div>
 	       <div class="form-group log-status">
-	         <input type="password" class="form-control " placeholder="Contraseña" id="Password" name="password" v-model="contrasenna">
-	         <i class="fa fa-lock"></i>
+	       		<i class="fa fa-lock"></i>
+	         	<input type="password" class="form-control " placeholder="Contraseña" id="Password" name="password" v-model="contrasenna">
 	       </div>
 	        <span class="alert" v-show="fallaLogin">¡Usuario o contraseña incorrecta!</span>
-	        <a class="link" href="/cambioContrasenna">¿Perdió su contraseña?</a>
-	        <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action"  @click="login"  >Entrar</a> 
+	        <a class="link" href="/perderContrasenna">¿Perdió su contraseña?</a>
+	        <a class="btn btn-cancelar" type="button" name="action"  @click="login">Entrar</a> 
 
 	     </div>
 	    </form>
-	<!--  
-	<body>
-	  <div >
-	    <form >
-		    <div class="login-form">
-		    	<img src="images/nuevo_logo_procare.jpg" alt="logo espol" width="100%" heigth = "10%" class="responsive-img">
-				<div class="row">
-					<div class="col s12">
-						<div class="input-field">
-							<i class="material-icons prefix">account_circle</i>
-					    	<input id="icon_prefix" type="text" class="validate">
-					    	<label for="icon_prefix">Correo</label>	
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s12">
-						<div class="input-field">
-							<i class="material-icons prefix">account_circle</i>
-					    	<input id="icon_prefix" type="password" class="validate">
-					    	<label for="icon_prefix">Contraseña</label>	
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<a class="link" href="#" data-toggle="modal" data-target="#myModal">¿Perdió su contraseña?</a>
-				</div>
-				<div class="row">
-					<button type="submit" class=" center btn-large waves-effect waves-light  " >Entrar</button>  
-				</div>
-				
-			</div>
-	    </form>
-			-->
 	  </div>
 	  
 	<div class="scriptsZone">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<!-- Compiled and minified JavaScript -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-		<script src='https://unpkg.com/vue@2.3.3'></script>
-		<script src="/build/login/login.js"></script>
+		<% include partials/login/loginScripts %>
+		<script src="/build/login/login.min.js"></script>
 	</div>
-
 	</body>
 </html>
 

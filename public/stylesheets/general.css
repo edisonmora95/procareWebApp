@@ -1,0 +1,55 @@
+/*
+Css creado para guardar las cosas fundamentales del manual de marca de procare
+-dirigirse al drive para ver de que se trata
+
+
+*/
+
+.btn {
+	background-color: rgb(92,102,230); /*procare azul debil CMYK(60,55,0,10)*/ 
+}
+
+.btn:hover {
+	background-color: rgb(0,25,255); /*procare azul debil CMYK(60,55,0,10)*/ 
+}
+
+.picker__date-display{
+  background-color: #fb8c00;
+}
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected{
+  background-color: #fb8c00;
+}
+
+.picker__close, .picker__today{
+  color: #fb8c00; 
+}
+
+/* Colores de formulario
+ /* label color */\\
+
+.input-field label {
+     color: rgb(92,102,230);
+}
+   /* label focus color */
+.input-field input[type=text]:focus + label {
+     color: rgb(92,102,230);
+}
+   /* label underline focus color */
+.input-field input[type=text]:focus {
+     border-bottom: 1px solid rgb(92,102,230);
+     box-shadow: 0 1px 0 0 #000;
+}
+   /* valid color */
+.input-field input[type=text].valid {
+     border-bottom: 1px solid rgb(92,102,230);
+     box-shadow: 0 1px 0 0 #000;
+}
+   /* invalid color */
+.input-field input[type=text].invalid {
+     border-bottom: 1px solid red;
+     box-shadow: 0 1px 0 0 #000;
+}
+   /* icon prefix focus color */
+.input-field .prefix.active {
+     color: #000;
+}

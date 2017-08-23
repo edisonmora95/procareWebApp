@@ -6,9 +6,7 @@
 
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
 import FormProcariano from './../../components/formProcariano.vue';
-Vue.component('navbar', Navbar); 
 Vue.component('editar', FormProcariano);
 
 var app = new Vue({
@@ -20,10 +18,7 @@ var app = new Vue({
 	},
 	mounted: function(){
 		//Inicializadores de Materialize
-		$('.tooltipped').tooltip({delay: 50});
 		$('.modal').modal();
-		//this.procariano.fechaNacimiento = new Date(this.procariano.fechaNacimiento)
-		
 	},
 	data: {
 		idProcariano: 0,
@@ -63,7 +58,6 @@ var app = new Vue({
 						text: ''
 					};
 					self.procariano.grupo = '';
-					//self.procariano.tipoId = 0;
 					self.tipoprocariano.id = res[0].tipoId;
 					self.tipoprocariano.text = res[0].tipoNombre;
 					self.fechaNacimiento = new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
@@ -72,13 +66,23 @@ var app = new Vue({
 			});
 		},
 		obtenerGrupoDeProcariano(self, idProcariano){
-			let urlApi = '/api/pg/' + idProcariano;
+			let urlApi = '/api/procarianos/grupo/' + idProcariano;
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success(res){
-					self.grupoprocariano.id = res.grupo.id;
-					self.grupoprocariano.text = res.grupo.nombre;
+					console.log(res)
+					if(res.estado){
+						self.grupoprocariano.id = res.datos.id;
+						self.grupoprocariano.text = res.datos.nombre;
+					}else{
+						self.grupoprocariano.id = '';
+						self.grupoprocariano.text = '';	
+					}
+				},
+				error(err){
+					self.grupoprocariano.id = '';
+					self.grupoprocariano.text = '';	
 				}
 			});
 		},

@@ -1,0 +1,57 @@
+<div class="navbar-fixed">
+	<nav class="orange darken-1">
+		<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
+		<a href="/home" class="brand-logo">Fundación Procare</h4></a>
+	</nav>
+</div>
+<div id="navbarApp">
+	<ul id="slide-out" class="side-nav">
+    <li>
+    	<div class="userView">
+	      
+	    </div>
+    </li>
+    <li>
+    	<img :src="logoImagen" alt="logo procare" class="responsive-img circle" >
+    </li>
+    <li>
+    	<h4> {{usuario.nombre}} {{usuario.apellidos}}</h4>
+    </li>
+    <li class="no-padding"><a class="menu" href="/home">Inicio</a></li>
+    <li class="no-padding">
+    	<ul class="collapsible collapsible-accordion">
+    		<li>
+    			<a class="collapsible-header waves-effect waves-teal">Fundación Procare<i class="material-icons right">arrow_drop_down</i></a>
+    			<div class="collapsible-body">
+            <ul id="ulProcareAdministracion">
+            </ul>
+          </div>
+    		</li>
+    	</ul>
+    </li>
+    <li class="no-padding">
+    	<ul class="collapsible collapsible-accordion">
+    		<li>
+    			<a class="collapsible-header waves-effect waves-teal">Procare Formación<i class="material-icons right">arrow_drop_down</i></a>
+    			<div class="collapsible-body">
+            <ul id="ulProcareFormacion">
+            </ul>
+          </div>
+    		</li>
+    	</ul>
+    </li>
+    <li class="no-padding">
+    	<ul class="collapsible collapsible-accordion">
+    		<li>
+    			<a class="collapsible-header waves-effect waves-teal">Procare Acción<i class="material-icons right">arrow_drop_down</i></a>
+    			<div class="collapsible-body">
+            <ul id="ulProcareAccion">
+            </ul>
+          </div>
+    		</li>
+    	</ul>
+    </li>
+    <li class="no-padding"><a class="menu" href="/cambioContrasenna">Cambiar contraseña</a></li>
+    <li><a class="menu" href="/logout">Salir</a></li>
+  </ul>
+</div>

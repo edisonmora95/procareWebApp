@@ -6,8 +6,6 @@
  
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
-Vue.component('navbar', Navbar); 
 
 var main = new Vue({
 	el: '#main',

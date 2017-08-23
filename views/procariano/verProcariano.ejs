@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecs-->
-		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
-  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+		<% include ../partials/head %>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="app">
+		<div >
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="app">
 				<!--Row ver procariano-->
 				<section class="row rowVer" id="rowVer" v-if="!habilitaredicion">
 					<header>
@@ -84,7 +78,7 @@
 								<section class="row rowVer" id="rowVerTipoGrupo">
 									<div class="col s6" id="verTipo">
 										<label>Tipo</label>
-										<p>{{procariano.tipoNombre}}</p>
+										<p>{{tipoprocariano.text}}</p>
 									</div>
 									<div class="col s6" id="verGrupo">
 										<label>Grupo</label>
@@ -102,10 +96,17 @@
 										<p>{{procariano.universidad}}</p>
 									</div>
 								</section>
+								<!--Trabajo-->
+								<section class="row rowVer" id="rowVerTrabajo">
+									<div class="col s12" id="verTrabajo">
+										<label>Trabajo</label>
+										<p>{{procariano.trabajo}}</p>
+									</div>
+								</section>
 								<!--Botones-->
 								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
-									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
-									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
+									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar</a>
+									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar</a>
 								</div>
 							</div><!--End card content-->
 						</div><!--End card-->
@@ -117,7 +118,37 @@
 						<editar :procariano="procariano" :habilitaredicion="habilitaredicion"  :grupoprocariano="grupoprocariano" :tipoprocariano="tipoprocariano" @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</section>
+				<!-- Modal Structure -->
+			  <div id="modalErrorEliminar" class="modal">
+			    <div class="modal-content">
+			      <h4 class="center-align">¡Error!</h4>
+			      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalConfirmarEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">¿Está seguro de que desea eliminar a este procariano de la base de datos?</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+			      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalExitoEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">Procariano eliminado correctamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
 			</main>
+
 
 			<!-- Modal Structure -->
 		  <div id="modalErrorEliminar" class="modal">
@@ -160,6 +191,14 @@
 			<script src="/scripts/moment/locale/es.js"></script>
 
 			<script src="/build/procariano/verProcarianoScript.js"></script>
+
 		</div>
 	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+		<script src="/scripts/moment/moment.js"></script>
+		<script src="/scripts/moment/locale/es.js"></script>
+		<script src="/build/procariano/verProcarianoScript.min.js"></script>
+	</div>
 </html>

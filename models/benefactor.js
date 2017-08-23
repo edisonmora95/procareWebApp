@@ -5,9 +5,6 @@
 @FechaCreacion: 20/05/2017
 @UltimaFechaModificacion: 03/06/2017 @JoseViteri
 */
-
-
-var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Benefactor = sequelize.define('Benefactor', {
@@ -38,7 +35,6 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.STRING,
       allowNull : true
     },
-
     relacion: {
       type : DataTypes.STRING,
       allowNull : true
@@ -50,7 +46,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-      //  Benefactor.belongsTo(models.Persona)
         // associations can be defined here
       }
     }

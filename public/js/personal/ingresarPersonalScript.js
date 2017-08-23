@@ -6,9 +6,8 @@
 */
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
+
 import Materials from 'vue-materials';
-Vue.component('navbar', Navbar); 
 Vue.use(Materials);
 Vue.use(VeeValidate);
 /*
@@ -72,7 +71,7 @@ var main = new Vue({
 			genero: '',
 			//estado: 'activo',	//deberia estar en persona
 			trabajo: '',
-			sueldo: ''
+			tipo: ''
 
 		}
 	},
@@ -80,7 +79,8 @@ var main = new Vue({
 		validateBeforeSubmit() {
 			let self = this;
 			if(self.validarFechaNacimiento()){
-				this.$validator.validateAll().then(() => {
+				this.$validator.validateAll().then(resultado => {
+					console.log('este es el resultado ' + resultado);
 					self.ingresarPersonal();	        
 	      }).catch(() => {
 	          self.errorObj.campo = self.errors.errors[0].field;
@@ -110,7 +110,7 @@ var main = new Vue({
 			return true;
     },
     ingresarPersonal(){
-    	console.log("ingresado personal correctamente")
+    	//console.log("ingresado personal correctamente")
     	
     	let self = this;
     	console.log(self.personal);
@@ -120,7 +120,7 @@ var main = new Vue({
       	url: '/api/personal/',
       	data: self.personal,
       	success: function(res){
-      		console.log(res)
+      		console.log('este es res: ' + res);
       		if(res.estado){
       			$('#modalPersonalCreado').modal('open');
       		}else{
@@ -141,9 +141,17 @@ var main = new Vue({
     */
     inicializarMaterialize(self){
     	$('.datepicker').pickadate({
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 100 // Creates a dropdown of 15 years to control year
-			});
+				monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			  monthsShort: ['En', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+			  today: 'Hoy',
+			  clear: 'Limpiar',
+			  close: 'Cerrar',
+		    selectMonths: true, // Creates a dropdown to control month
+		    selectYears: 100, // Creates a dropdown of 15 years to control year,
+		    closeOnSelect: true // Close upon selecting a date,
+		  });
 			$(".button-collapse").sideNav();
 			$('.modal').modal();
     },
@@ -152,7 +160,8 @@ var main = new Vue({
 				Solo cancela y redirige a la panatalla de la tabla de personal
     */
     cancelar(){
-    	console.log('debo agregar esa vista aun');
+    	window.location.href = '/personal/'
+    	//console.log('debo agregar esa vista aun');
     }
 	}
 });

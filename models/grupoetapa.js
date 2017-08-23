@@ -1,8 +1,14 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var GrupoEtapa = sequelize.define('GrupoEtapa', {
-    fechaInicio: DataTypes.DATE,
-    fechaFin: DataTypes.DATE
+    fechaInicio : {
+      type : DataTypes.DATE,
+      allowNull : true
+    },
+    fechaFin : {
+      type : DataTypes.DATE,
+      allowNull : true
+    }
   }, {
     classMethods: {
       associate: function(models) {
@@ -33,7 +39,7 @@ module.exports = function(sequelize, DataTypes) {
           }).then(success).catch(errorCreate);
         }).catch(errorUpdate);
       }
-    }, 
+    },
     freezeTableName: true
   });
   return GrupoEtapa;

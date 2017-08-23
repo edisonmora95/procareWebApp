@@ -26,7 +26,10 @@ http://lorenstewart.me/2016/09/12/sequelize-table-associations-joins/
 
 http://mherman.org/blog/2015/09/10/testing-node-js-with-mocha-and-chai/#.WS9s9mg19Eb 
 
-### explicasion basica de como esta organizado la base de datos.
+## Version
+
+La version del proyecto actual es : 0.1.2
+(Terminado el modulo procarianos y dos bugs resueltos)
 
 
 ## Documentacion
@@ -57,7 +60,7 @@ class Poligono {
 }
 ```
 
-Esto tambien debe aplicarse a las funciones cuya fuincionalidad no queda clara con su nombre
+Esto tambien debe aplicarse a las funciones cuya funcionalidad no queda clara con su nombre
 
 ## Estandar de codificacion para el proyecto de procare
 
@@ -184,5 +187,3 @@ function estoEsUnaFuncion(){
 }
 
 ```
-
-# Importante

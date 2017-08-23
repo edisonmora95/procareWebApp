@@ -84,7 +84,6 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 		Devuelve a todos los procarianos que no sean Chico de Formación
 */
 module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
-
 	modelo.Procariano.findAll({
 		include: [
 			{
@@ -97,6 +96,7 @@ module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
 				attributes: [['id', 'personaId'], 'nombres', 'apellidos']
 			}
 		],
+		where:{estado: {$not: 'inactivo'}},
 		attributes: [['id', 'procarianoId']]
 	}).then( result => {
 		return res.status(200).json({status: true, datos: result, mensaje: 'Se pudieron obtener los posibles animadores'});

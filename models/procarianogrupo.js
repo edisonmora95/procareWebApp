@@ -57,6 +57,14 @@ module.exports = function(sequelize, DataTypes) {
             ProcarianoId: idProcariano
           }
         }).then(success).catch(error);
+      },
+      obtenerGrupoActualDeProcariano: function(idProcariano, success, error){
+        this.findOne({
+          where: {
+            ProcarianoId: idProcariano,
+            fechaFin: null
+          }
+        }).then(success).catch(error);
       }
     }
   });

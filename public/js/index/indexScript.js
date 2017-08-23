@@ -4,106 +4,104 @@
 	@FechaCreación: 15/06/2017
 */
 
-import Navbar from './../../components/navbar.vue';
-
-import Tarea from './../../components/tareaNueva.vue';
-
-Vue.component('navbar', Navbar); 
-Vue.component('tarea', Tarea); 
-
 let indexApp = new Vue({
-	el: '#indexApp',
-	created(){
-		this.obtenerProcarianos();
-	},
-	mounted(){
-		let self = this;
-		$('.modal').modal();
-		$.when($.ajax(self.obtenerEventos())).then(function(){
-			$('#calendar').fullCalendar({
-	      //Atributos
-	     	header: {
-	     		left: 'prev,next today',
-	     		center: 'title',
-	     		right: 'month,agendaWeek,agendaDay'
-	     	},
-	     	firstDay: 1,
-	     	showNonCurrentDates: false,
-	      navLinks: true,
-	      eventLimit: true, // for all non-agenda views
-	      events: self.eventos,
-	      //Funciones
-	      eventClick: function(calEvent, jsEvent, view) {
+    el: '#indexApp',
+    created() {
+        this.obtenerTareasEventos(this);
+    },
+    mounted() {
+        $('.modal').modal();
+    },
+    data: {
+        tareasEventos: [],
+        eventoSeleccionado: {},
+    },
+    methods: {
+        /*
+        	@Descripción: Obtiene todas las tareas de la base de datos, luego arma el calendario con ellas
+        */
+        obtenerTareasEventos(self) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/calendario/',
+                success(res) {
+                    self.tareasEventos = res.datos;
+                    self.armarCalendario(self);
+                }
+            });
+        },
+        armarCalendario(self) {
+            $('#calendar').fullCalendar({
+                //Atributos
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                dayClick: function(date, jsEvent, view) {
+                    window.location.href = '/home/tarea/';
+                },
+                firstDay: 1,
+                showNonCurrentDates: false,
+                navLinks: true,
+                eventLimit: true, // for all non-agenda views
+                events: self.tareasEventos,
+                //Funciones
+                eventMouseover: function(calEvent, jsEvent, view) {
+                    self.eventoSeleccionado = calEvent;
+                },
+                eventRender: function(evento, elemento) {
+                    self.renderizarEventos(evento, elemento);
+                }
+            });
+        },
+        //FUNCIONES PARA DAR FORMATO A LAS FECHAS
+        moment(date) {
+            return moment(date);
+        },
+        date(date) {
+            //console.log(date)
+            var es = moment().locale('es');
+            if (date === undefined || date === '') {
+                return '----';
+            }
+            return moment(date).format('DD MMMM YYYY - HH:MM');
+        },
+        /*
+			@Descripción: Muestra los eventos y tareas en el calendario con el formato indicado por Procare
+	  */
+        renderizarEventos(evento, elemento) {
+            let esTarea = (evento.type === 'tarea');
 
-	      	if (event.url) {
-	            window.open(event.url);
-	            return false;
-	        }
-	        self.eventoSeleccionado = calEvent;
-	    	}
-	    });	
-		});
+            let eventoEsFormacion = (evento.categoria === 1);
+            let eventoEsAccion = (evento.categoria === 2);
+            let eventoEsFundacion = (evento.categoria === 3);
 
-	},
-	methods:{
-		obtenerEventos(){
-			let self = this;
-			$.ajax({
-				type: 'GET',
-				url: '/api/tarea/',
-				success(res){
-					console.log(res)
-				}
-			});
-			/*$.getJSON('/api/tarea/', function(data){
-				console.log(data)
-				self.eventos = data.sequelizeStatus;
-				$.each(data.sequelizeStatus, function(index, evento){
-					//console.log("este es el evento " + evento[0]);
-					//console.log("este es el evento 0 " + evento[0][0]);
-					//console.log("este es el evento 1 " + evento[0][1]);
-					self.eventos.push(evento);
-				})
-<<<<<<< HEAD
-			})
+            let eventoPendiente = (evento.estado === 1);
+            let eventoEnProceso = (evento.estado === 2);
+            let eventoCompletado = (evento.estado === 3);
 
-=======
-			})*/
-		},
-		obtenerProcarianos(){
-			let self = this;
-			let urlAPi = '/api/procarianos/';
-			$.ajax({
-				type: 'GET',
-				url: urlAPi,
-				success(res){
-					self.procarianos = res;
-				}
-			});
-		},
-		crearTarea(){
-			this.flag = false;
-		}
-	},
-	data: {
-		flag: true,
-		eventos: [],
-		eventoSeleccionado: {},
-		procarianos: []
-	}
+            if (esTarea) {
+                elemento.addClass('tarea');
+            } else {
+                elemento.addClass('evento');
+            }
+
+            if (eventoEsFormacion) {
+                elemento.addClass('formacion');
+            } else if (eventoEsAccion) {
+                elemento.addClass('accion');
+            } else if (eventoEsFundacion) {
+                elemento.addClass('fundacion');
+            }
+
+            if (eventoPendiente) {
+                elemento.addClass('pendiente');
+            } else if (eventoEnProceso) {
+                elemento.addClass('proceso');
+            } else if (eventoCompletado) {
+                elemento.addClass('completado');
+            }
+        }
+    }
 });
-
-
-
-//Por alguna razón, esto no funciona dentro de la instancia de Vue... 
-	$(document).ready(function(){
-		console.log('sdaf')
-		let datos = {};
-		$.each(indexApp.$data.procarianos, function(index, procariano){
-			let nombreCompleto = procariano.nombres + ' ' + procariano.apellidos;
-			datos[nombreCompleto] = null;
-		});
-	  $('input.autocomplete').autocomplete({
-	     data: datos
-	   });
-	});

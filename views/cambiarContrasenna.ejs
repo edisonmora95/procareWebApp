@@ -1,88 +1,95 @@
 <!DOCTYPE html>
 <html>
 	<head>
-    <title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecss-->
-		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
- 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+   	<% include partials/head %>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/login/cambioContrasenna.css">
-
 	</head>
 	<body>
-		<div class="container">
+		<div>
 			<header>
-				<div class="row">
-					<div class="col s3 m3">
-						<img src="images/nuevo_logo_procare.jpg" class="responsive-img" alt="logo procare">
-					</div>
-					<div class="col s6 m6">
+				<% include ./partials/navbar %>
+			</header>
+			<div class="container" id="app-cambioContrasenna">
+				<div>
+					<div class="row">
 						<h4><b>Cambiar contraseña</b></h4>
 					</div>
 				</div>
-			</header>
-			<section>
-				<div id="app-cambioContrasenna">
-					<div class="row">
-				    <form class="col s12">
-				      <div class="row">
-				        <div class="input-field col s12">
-				          <i class="material-icons prefix">account_circle</i>
-				          <input id="correo" type="text" class="validate" v-model="correo">
-				          <label for="correo">Ingrese correo</label>
-				        </div>
-				      </div>
-				      <div class="row">
-				        <div class="input-field col s12">
-				          <i class="material-icons prefix">lock</i>
-				          <input id="viejaContrasenna" type="password" class="validate" v-model="viejaContrasenna">
-				          <label for="viejaContrasenna">Ingrese su vieja contraseña</label>
-				        </div>
-				      </div>
-				      <div class="row">
-				        <div class="input-field col s12">
-				          <i class="material-icons prefix">lock</i>
-				          <input id="nuevaContrasenna" type="password" class="validate" v-model="nuevaContrasenna">
-				          <label for="nuevaContrasenna">Ingrese su nueva contraseña</label>
-				        </div>
-				      </div>
-				      <div class="row">
-				        <div class="input-field col s12">
-				          <i class="material-icons prefix">lock</i>
-				          <input id="nuevaContrasenna2" type="password" class="validate" v-model="nuevaContrasenna2">
-				          <label for="nuevaContrasenna2">Ingrese su nueva contraseña</label>
-				        </div>
-				      </div>
+				<section>
+					<div >
+						<div class="row">
+					    <form class="col s12">
+					      <div class="row">
+					        <div class="input-field col s12 form-group">
+					          <i class="fa fa-user"></i>
+					          <input id="correo" type="text" name="correo" class="validate" v-model="correo" v-validate="'required|email'">
+					          <span v-show="errors.has('correo')" class="help is-danger">{{ errors.first('correo') }}</span>
+					          <label for="correo">Ingrese correo</label>
+					        </div>
+					      </div>
+					      <div class="row">
+					        <div class="input-field col s12 form-group">
+					          <i class="fa fa-lock"></i>
+					          <input id="viejaContrasenna" name="viejaContrasenna" type="password" class="validate" v-model="viejaContrasenna" v-validate="'required'">
+					          <span v-show="errors.has('viejaContrasenna')" class="help is-danger">{{ errors.first('viejaContrasenna') }}</span>
+					          <label for="viejaContrasenna">Ingrese su vieja contraseña</label>
+					        </div>
+					      </div>
+					      <div class="row">
+					        <div class="input-field col s12 form-group">
+					          <i class="fa fa-lock"></i>
+					          <input id="nuevaContrasenna" name="nuevaContrasenna" type="password" class="validate" v-model="nuevaContrasenna" v-validate="{ rules: { regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ , required: true} }"> <!-- minimo un caracter lower, un caracter upper, y un digito, minimo 8 caracteresen total) -->
+					          <span v-show="errors.has('nuevaContrasenna')" class="help is-danger">{{ errors.first('nuevaContrasenna') }}</span>
+					          <label for="nuevaContrasenna">Ingrese su nueva contraseña</label>
+					        </div>
+					      </div>
+					      <div class="row">
+					        <div class="input-field col s12 form-group">
+					          <i class="fa fa-lock"></i>
+					          <input id="nuevaContrasenna2" name="nuevaContrasenna2" type="password" class="validate" v-model="nuevaContrasenna2" v-validate="{ rules: { regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ , required: true} }"  > <!-- minimo un caracter lower, un caracter upper, y un digito, minimo 8 caracteresen total) -->
+					          <span v-show="errors.has('nuevaContrasenna2')" class="help is-danger">{{ errors.first('nuevaContrasenna2') }}</span>
+					          <label for="nuevaContrasenna2">Ingrese su nueva contraseña</label>
+					        </div>
+					      </div>
 
-							<p class="alert"  v-if="fallaCambio" > {{msg}} </p>
-			      	
-				      <div class="row">
-				      	<div class="col s4 offset-s2">
-				      		<a class="waves-effect waves-light btn" @click="cancelar"  > <i class="material-icons left">not_interested</i>Cancelar</a>
-				      	</div>
-				      	<div class="col s4 ">
-				      		<a class="waves-effect waves-light btn" @click="cambio"  > <i class="material-icons left">done</i>Aceptar</a>
-				      	</div>
-				      </div>
-				    </form>
+								<p class="alert"  v-if="fallaCambio" > {{msg}} </p>
+				      	
+					      <div class="row">
+
+					      	<div class="col s4 offset-s2">
+					      		<a class="waves-effect waves-light btn" @click="validarAntesDeSubir"  > <i class="material-icons left">done</i>Aceptar</a>
+					      	</div>
+					      	<div class="col s4 ">
+					      		<a class="waves-effect waves-light btn" @click="cancelar"  > <i class="material-icons left">not_interested</i>Cancelar</a>
+					      	</div>
+					      </div>
+					    </form>
+					  </div>
+					  <div id="modal1" class="modal modal-fixed-footer">
+					    <div class="modal-content">
+					      <h4 class="center-align">¡Cambio exitoso!</h4>
+					      <p class="center-align"> Sera redirigido a la pantalla de inicio de sesión</p>
+					    </div>
+					  </div>
+					  <div id="modalError" class="modal modal-fixed-footer">
+					    <div class="modal-content">
+					      <h4 class="center-align">¡Error en el formulario!</h4>
+					      <p class="center-align"> uno o más campos del formulario contienen errores</p>
+					    </div>
+					    <div class="modal-footer">
+					      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>
+					    </div>
+					  </div>
 				  </div>
-				  <div id="modal1" class="modal modal-fixed-footer">
-				    <div class="modal-content">
-				      <h4 class="center-align">¡Cambio exitoso!</h4>
-				      <p class="center-align"> Sera redirigido a la pantalla de inicio de sesión</p>
-				    </div>
-				  </div>
-			  </div>
-			</section>
+				</section>
+			</div>
+			<div class="scriptZone">
+				<% include partials/scripts %>
+				<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+				<script src="build/login/cambiarContrasenna.min.js"></script>
+			</div>
+			
 		</div>
-		<div class="scriptZone">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
-			<script src="build/login/cambiarContrasenna.js"></script>
 
 	</body>
 

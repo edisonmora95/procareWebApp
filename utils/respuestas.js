@@ -44,3 +44,10 @@ module.exports.okUpdate = (res, mensaje, datos) => {
 		datos: datos
 	});
 };
+
+module.exports.errorUpdate = (res, mensaje) => {
+	return res.status(400).json({
+		estado: true,
+		mensaje: mensaje
+	});
+};

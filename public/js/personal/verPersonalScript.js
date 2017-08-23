@@ -6,10 +6,8 @@
 
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
-//import FormProcariano from './../../components/formProcariano.vue';
-Vue.component('navbar', Navbar); 
-//Vue.component('editar', FormProcariano);
+import FormPersonal from './../../components/formPersonal.vue';
+Vue.component('editar', FormPersonal);
 
 var app = new Vue({
 	el: '#app',
@@ -58,7 +56,8 @@ var app = new Vue({
 		eliminar: function(){
 			
 			var self = this;
-			var urlApi= '/api/procarianos/' + self.id;
+			console.log('este es el id ' + self.idPersonal);
+			var urlApi= '/api/personal/' + self.idPersonal;
 			$.ajax({
 				type: 'DELETE',
 				url: urlApi,
@@ -68,6 +67,9 @@ var app = new Vue({
 					}else{
 						$('#modalErrorEliminar').modal('open');
 					}
+				},
+				error : function(error){
+
 				}
 			});
 			

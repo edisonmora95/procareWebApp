@@ -3,12 +3,7 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 31/04/2017
 */
- 
 'use strict';
-
-import Navbar from './../../components/navbar.vue';
-Vue.component('navbar', Navbar); 
-
 var main = new Vue({
 	el: '#main',
 	mounted: function(){
@@ -86,7 +81,7 @@ var main = new Vue({
 				id: 'grupo'
 			}
 		],		//Campos que el usuario puede seleccionar para realizar la búsqueda
-		checkboxes: ['Nombre'],		//Campo por default que se encuentra en la búsqueda
+		checkboxes: ['Nombre', 'Apellido'],		//Campo por default que se encuentra en la búsqueda
 		procariano: {
 			nombres: '',
 			apellidos: '',
@@ -119,7 +114,7 @@ var main = new Vue({
 			var self = this;
 			var variableEnCheckboxes = false;
 			$.each(self.checkboxes, function(index, element){
-				if(element===nombre){
+				if( element === nombre ){
 					variableEnCheckboxes = true;
 				}
 			});
@@ -143,6 +138,9 @@ var main = new Vue({
 		},
 		irAPerfil(procariano){
 			window.location.href = '/procarianos/perfil/' + procariano.personaId;
+		},
+		anadirACheckBox(elemento){
+			console.log(elemento)
 		},
 		//Funciones para editar la forma en la que se muestra la fecha
 		moment: function (date) {

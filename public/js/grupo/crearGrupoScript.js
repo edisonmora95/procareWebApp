@@ -3,11 +3,9 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 26-05-2017
 */
-import Navbar from './../../components/navbar.vue';
 import CrearGrupo1 from './../../components/crearGrupo.vue';
 import EscogerChicos from './../../components/escogerChicos.vue';
 
-Vue.component('navbar', Navbar); 
 Vue.component('crear-grupo-1', CrearGrupo1);
 Vue.component('escoger-chicos', EscogerChicos);
 

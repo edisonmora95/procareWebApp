@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-    <title>Procare</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--Materializecss-->
-		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!-- Compiled and minified CSS -->
- 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <% include ../partials/head %>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/buscarProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div >
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="main">
 				<h3 class="center-align">Búsqueda</h3>
 				<!--Busqueda-->	
 				<section id="section-busqueda">
@@ -124,13 +118,12 @@
 									<label for="grupo">Grupo</label>
 								</div>
 							</div>
-							
 						</form>
 						<!--<div class="row">-->
-							<div class="input-field col s12">
-								<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
-								<a class="btn-floating waves-effect waves-light red pull right" id="addFilter" href="#modal1"><i class="material-icons">add</i></a>	
-							</div>
+						<div class="input-field col s12">
+							<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
+							<a class="btn-floating waves-effect waves-light red pull right modal-trigger" id="addFilter" href="#modal1"><i class="material-icons">add</i></a>	
+						</div>
 						<!--</div>-->
 					</div>				
 				</section>
@@ -181,7 +174,7 @@
 			      <div class="row">
 			      	<form>
 			      		<div class="row">
-			      			<div class="input-field col s3" v-for="elemento in checkboxesAux">
+			      			<div class="checkbox col s3" v-for="elemento in checkboxesAux">
 			      				<input type="checkbox" v-bind:id="elemento.id" v-model="checkboxes" v-bind:value="elemento.value">
 			      				<label v-bind:for="elemento.id">{{elemento.value}}</label>
 			      			</div>
@@ -196,17 +189,24 @@
 			  </div>
 			</main>
 		</div>
+ 
 		<div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 			<!-- Compiled and minified JavaScript -->
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 			<script src='https://unpkg.com/vue@2.3.3'></script>
-<<<<<<< HEAD
-=======
+
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
->>>>>>> 74ea86c0eb4652d1ea655c43da1477291cca8bdb
+
 			<script src="/build/procariano/buscarProcarianoScript.js"></script>
 		</div>
+
 	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="/scripts/moment/moment.js"></script>
+		<script src="/scripts/moment/locale/es.js"></script>
+		<script src="/build/procariano/buscarProcarianoScript.min.js"></script>
+	</div>
 </html>

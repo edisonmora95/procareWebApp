@@ -2,25 +2,17 @@
 @Descripcion: Creacion de Donacion.
 @Autor: Jose Alcivar Garcia
 @FechaCreacion: 21/06/2017
-@UltimaFechaModificacion: 21/06/2017 @josealcivar
+@UltimaFechaModificacion: 12/08/2017 @erialper errores de comunicación con el modelo
 */
 
 var modelo = require('../models');
 
-const Donacion = (req, res, next) => {
-
-  estado = 'activo';
-
+const crearDonacion = (req, res, next) => {
   modelo.Donacion.create({
-    id_responsable : req.body.nombre,
-    nombre : req.body.nombre,
-    fecha_publicacion : req.body.fecha_publicacion,
-    fecha_limite : req.body.fecha_limite,
-    prioridad : req.body.prioridad,
-    estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
-
+    id_benefactor : req.body.id_benefactor,
+    cantidad_donada : req.body.cantidad_donada,
+    fecha_donacion : req.body.fecha_donacion,
+    observacion : req.body.observacion,
   }).then( repuesta => {
     var status = true;
     var mensaje = 'se pudo crear correctamente'
@@ -42,12 +34,8 @@ const Donacion = (req, res, next) => {
   });
 }
 
-const eliminarDonacion = (req, res, next) => {
-   estado = 'inactivo';
-   modelo.Donacion.update({
-    {
-      estado: req.body.estado
-    }
+const eliminarDonacion = (req, res, next) => {   
+  modelo.Donacion.destroy({
     where:{
       id: req.params.id
     }
@@ -72,16 +60,10 @@ const eliminarDonacion = (req, res, next) => {
 
 const editarDonacion = (req, res, next) => {
   modelo.Donacion.update({
-
-     id_responsable : req.body.nombre,
-    nombre : req.body.nombre,
-    fecha_publicacion : req.body.fecha_publicacion,
-    fecha_limite : req.body.fecha_limite,
-    prioridad : req.body.prioridad,
-    estado: req.body.estado,
-    descripcion : req.body.descripcion,
-    categoria : req.body.categoria
-
+    id_benefactor : req.body.id_benefactor,
+    cantidad_donada : req.body.cantidad_donada,
+    fecha_donacion : req.body.fecha_donacion,
+    observacion : req.body.observacion,
   },{
     where:{
       id: req.params.id

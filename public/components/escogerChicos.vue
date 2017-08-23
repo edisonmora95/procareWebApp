@@ -15,7 +15,6 @@
 				</ul>
 			</div>
 			<div class="col s12" id="col-btn">
-				<a class="waves-effect waves-light btn" id="btnCancelar" @click="cancelar">Cancelar</a>
 				<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
 			</div>
 		</div>
@@ -90,12 +89,6 @@
 				});
 			},
 			//Eventos de botones
-			cancelar(){
-				//Regresar al menú principal
-				/*this.flagVue = true;
-				this.$emit('flagchanged', this.flagVue);
-				$('select').material_select();*/
-			},
 			aceptar(){
 				let self = this;
 				self.armarArray(self);

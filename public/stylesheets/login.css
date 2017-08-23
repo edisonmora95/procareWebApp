@@ -1,6 +1,11 @@
-@import url("fonts.css");
-@import url("ionicons/css/ionicons.min.css");
-@import url("micons/micons.css");
+.btn {
+  background-color: rgb(92,102,230); /*procare azul debil CMYK(60,55,0,10)*/ 
+}
+
+.btn:hover {
+  background-color: rgb(0,25,255); /*procare azul debil CMYK(60,55,0,10)*/ 
+}
+
 * {
   box-sizing: border-box;
   -moz-box-sizing: border-box;

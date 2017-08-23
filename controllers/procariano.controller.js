@@ -1,13 +1,13 @@
-/*
+﻿/*
 @Descripcion: Clase controladora de todos los procarianos
 @Autor: Jose Viteri
 @FechaCreacion: 26/06/2017
 */
 
 var modelo = require('../models');
-var utils = require('../utils/utils');
+var utils = require('../utils/utils')
 var ControladorGrupo = require('../controllers/grupo.controller');
-
+let respuesta = require('../utils/respuestas');
 
 /*
 Autor : JV
@@ -20,7 +20,6 @@ const crearProcariano = (req, res, next) => {
 	}else{
 		fechaNacimiento = new Date(req.body.fechaNacimiento);	
 	}
-	
 	let persona = {
 		cedula : req.body.cedula,
 		nombres : req.body.nombres,
@@ -28,7 +27,7 @@ const crearProcariano = (req, res, next) => {
 		direccion : req.body.direccion,
 		fechaNacimiento : fechaNacimiento,
 		genero : req.body.genero,
-		contrasenna : req.body.contrasenna,
+		//contrasenna : req.body.contrasenna,
 		email : req.body.email,
 		celular : req.body.celular,
 		trabajo : req.body.trabajo,
@@ -106,8 +105,7 @@ const crearProcariano = (req, res, next) => {
 					persona: persona,
 					procariano: procariano,
 				});
-			}
-			
+			}		
 		}, (errorProcariano) => {
 			return res.status(400).json({
 					estado: false,
@@ -122,14 +120,12 @@ const crearProcariano = (req, res, next) => {
 	});
 }
 
-
 /*
 Autor : JV
 Creado : 28/05/2017
 Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
 			21/07/2017 @erialper, agrego la excepción de busquedad
 */
-
 const buscarProcariano = (req, res , next) => {
 
 	var jsonModelo = utils.generarJsonProcariano(req.query);
@@ -179,6 +175,45 @@ const buscarProcariano = (req, res , next) => {
 	});
 };
 
+/*
+	@Autor: Erick Perez
+	@Descripción: Devuelve solo a los procarianos que estén en estado activo
+	@ÚltimaModificación: 22/08/2017 @edisonmora95, cambio de nombre de función
+																								Pasada función a modelo.
+*/
+const buscarProcarianosActivos = (req, res , next) => {
+	modelo.Procariano.buscarProcarianosActivos( procarianos => {
+		const procarianosMap = procarianos.map( procariano => {
+			return Object.assign(
+				{},
+				{
+					personaId : procariano.Persona.id,
+					procarianoID : procariano.id ,
+					colegio : procariano.colegio ,
+					universidad : procariano.universidad ,
+					parroquia : procariano.parroquia ,
+					fechaOrdenacion : procariano.fechaOrdenacion ,
+					haceParticipacionEstudiantil : procariano.hace_participacion_estudiantil ,
+					cedula : procariano.Persona.cedula ,
+					nombres : procariano.Persona.nombres ,
+					apellidos : procariano.Persona.apellidos ,
+					direccion : procariano.Persona.fechaNacimiento ,
+					genero : procariano.Persona.genero ,
+					fechaNacimiento : procariano.Persona.fechaNacimiento ,
+					convencional : procariano.Persona.convencional ,
+					celular : procariano.Persona.celular ,
+					trabajo : procariano.Persona.trabajo,
+					email: procariano.Persona.email,
+					estado: procariano.estado
+				}
+			);
+		});
+		return respuesta.okGet(res, 'Búsqueda exitosa', procarianosMap);
+	}, error => {
+		return respuesta.error(res, 'Error en la búsqueda', '', error);
+	});
+};
+
 
 /*
 Autor : JV
@@ -187,7 +222,6 @@ Modificado: 07/07/2017 @JV , para que modifique por ID
 			21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad	
 			23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
 */
-
 const buscarProcarianoPorId = (req, res, next) => {
 	//tener cuidado xq cualquiera podra ver este id
 	var id = req.params.id;
@@ -287,7 +321,6 @@ Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , agregado date a datos date
 			22/07/2017 @erialper, agregado el cambio de tipo
 */
-
 const editarProcariano = (req, res, next) => {
 	var id = req.params.id;
 	if(req.body.fechaOrdenacion == '' || req.body.fechaOrdenacion == null){
@@ -392,7 +425,6 @@ Autor : JV
 Creado : 28/05/2017
 Modificado: 21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 */
-
 const eliminarProcariano = (req, res, next) => {
 	console.log('SE VA A ELIMINAR EL PROCARIANO');
 	var id = req.params.id;
@@ -487,10 +519,23 @@ const buscarChicosFormacionSinGrupo =(req, res, next) => {
 			return res.status(200).json({status: true, datos: arrayChicosFormacionSinGrupo, chicosFormacion: chicosFormacion, procarianosEnGrupo: procarianosEnGrupo});
 		});
 	}, (errorProcarianos) => {
-
+		return respuesta.error(res, 'Error en la búsqueda', '', errorProcarianos);
 	});
-}
+};
 
+const obtenerGrupoActualDeProcariano = (req, res, next) => {
+	const idProcariano = req.params.id;
+	modelo.ProcarianoGrupo.obtenerGrupoActualDeProcariano(idProcariano, (procarianogrupo) => {
+		const idGrupo = procarianogrupo.get('GrupoId');
+		modelo.Grupo.obtenerGrupoPorId(idGrupo, (grupo) => {
+			return respuesta.okGet(res, 'Búsqueda exitosa', grupo);
+		}, (errorGrupo) => {
+			return respuesta.error(res, 'Error en la búsqueda', '', errorGrupo);
+		});
+	}, (error) => {
+		return respuesta.error(res, 'Error en la búsqueda', '', error);
+	});
+};
 
 //FUNCIONES INTERNAS
 /*
@@ -551,6 +596,7 @@ agregarNuevoTipo = (req,res,procariano) => {
 		res.json(jsonRespuesta);
 	});
 }
+
 /*
 	@Descripción:
 		Recorre el array de chicosEnGrupo.
@@ -561,8 +607,7 @@ chicoEnGrupo = (chico, array) => {
 	let flag = false;
 	for (let i = 0; i < array.length; i++) {
 		chicoEnGrupo = array[i];
-		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){
-			
+		if(chico.procarianoId === chicoEnGrupo.ProcarianoId){	
 			flag = true;
 			break;
 		}
@@ -573,8 +618,10 @@ chicoEnGrupo = (chico, array) => {
 module.exports = {
 	crearProcariano,
 	buscarProcariano,
+	buscarProcarianosActivos,
 	buscarProcarianoPorId,
 	editarProcariano,
 	eliminarProcariano,
-	buscarChicosFormacionSinGrupo
+	buscarChicosFormacionSinGrupo,
+	obtenerGrupoActualDeProcariano
 };

@@ -14,9 +14,8 @@ module.exports = function(sequelize, DataTypes) {
           msg: 'Nombre no puede ser vacío.'
         },
       }
-    } 
-    
-    //programa: DataTypes.STRING
+    },
+    programa: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
@@ -24,14 +23,13 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       },
       obtenerEtapas: function(callback){
-        this.findAll({
-          
+        this.findAll({     
         }).then(callback);
       },
-      crearEtapa: function(nomrbeEtapa, callback, error){
+      crearEtapa: function(nombreEtapa, callback, error){
         this.create({
-          nombre: nomrbeEtapa,
-          programas: ""
+          nombre: nombreEtapa,
+          programa: ""
         }).then(callback).catch(error);
       },
       eliminarEtapa: function(idEtapa, success, error){
@@ -41,9 +39,7 @@ module.exports = function(sequelize, DataTypes) {
           }
         }).then(success).catch(error);
       }
-
     }
   });
-
   return Etapa;
 };

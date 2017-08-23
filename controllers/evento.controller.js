@@ -8,13 +8,26 @@
 var modelo = require('../models');
 
 const crearEvento = (req, res, next) => {
-
-  estado = 'activo';
+  let fechaInicio = '';
+  let fechaFin = '';
+  //Validar fecha de inicio
+  if(req.body.fechaInicio === ''){
+     fechaInicio = null;
+  }else{
+     fechaInicio = req.body.fechaInicio;
+  }
+  //Validar fecha de fin
+  if(req.body.fechaFin === ''){
+     fechaFin = null;
+  }else{
+     fechaFin = req.body.fechaFin;
+  }
 
   modelo.Evento.create({
     idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
-    fecha : req.body.fecha,
+    fechaInicio : fechaInicio,
+    fechaFin : fechaFin,
     descripcion : req.body.descripcion,
     lugar : req.body.lugar,
     gastos: req.body.gastos,
@@ -43,8 +56,8 @@ const crearEvento = (req, res, next) => {
 }
 
 const eliminarEvento = (req, res, next) => {
-   estado = 'inactivo';
-   modelo.Evento.update({
+  estado = 'inactivo';
+  modelo.Evento.update({
     
     estado : estado
 
@@ -74,7 +87,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-     idOrganizador : req.body.id_organiador,
+    idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -139,8 +152,6 @@ const mostrarEventos = (req,res,next) =>{
       mensaje : mensaje,
       sequelizeStatus : respuesta2
     })
-
-
 
   }).catch( error => {
     var status = false;

@@ -24,3 +24,23 @@ main{
 span{
 	font-weight: bold;
 }
+
+.formacion{
+	background-color: #3da553;
+}
+
+.accion{
+	background-color: orange;
+}
+
+.fundacion{
+	background-color: #7e65bc;
+}
+
+.completado{
+	opacity: 0.5;
+}
+
+.rounded{
+	border-radius: 3%;
+}

@@ -3,13 +3,9 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 3/06/2017
 */
-import Navbar from './../../components/navbar.vue';
 import EditarGrupo from './../../components/editarGrupo.vue';
-import EscogerChicos from './../../components/escogerChicos.vue';
 
-Vue.component('navbar', Navbar);
 Vue.component('editar-grupo', EditarGrupo);
-Vue.component('chicos-grupo', EscogerChicos);
 
 let verGrupoApp = new Vue({
 	el: '#verGrupoApp',
@@ -69,13 +65,23 @@ let verGrupoApp = new Vue({
 		armarArrayIntegrantes(self, procarianos){
 			self.integrantes = [];
 			$.each(procarianos, function(index, procariano){
-				let integranteObj = {
-					idProcariano: procariano.idProcariano,
-					nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
-					idPersona: procariano.Persona.idPersona
-				};
-				self.integrantes.push(integranteObj);
+				if(self.validarProcarianoEnGrupo(procariano)){
+					let integranteObj = {
+						idProcariano: procariano.idProcariano,
+						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
+						idPersona: procariano.Persona.idPersona
+					};
+					self.integrantes.push(integranteObj);
+				}
 			});
+		},
+		validarProcarianoEnGrupo(procariano){
+			let fechaFin = procariano.Grupos[0].ProcarianoGrupo.fechaFin;
+			if(fechaFin === null){
+				return true;
+			}else{
+				return false;
+			}
 		},
 		obtenerEtapaDeGrupo(self, etapas){
 			$.each(etapas, function(index, etapa){

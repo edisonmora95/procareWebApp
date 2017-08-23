@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/tareaNueva.css">
+	</head>
+	<body>
+		<header>
+			<% include ../partials/navbar %>
+		</header>
+		<main class="container" id="tareaApp">
+			<a href="#" @click="regresar"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
+			<header>
+				<h3 class="center-align">Tarea nueva</h3>
+			</header>
+			<form>
+		  	<v-row id="rowNombre">
+		  		<div class="col s12">
+		  			<label for="nombre">Nombre</label>	
+		  			<input name="nombre" id="nombre" v-model="tarea.nombre" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+		  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
+		  		</div>
+		  	</v-row>
+		  	<v-row id="rowDescripcion">
+		  		<div class="col s12">
+		  			<label for="descripcion">Descripción</label>
+			  		<textarea name="descripcion" id="descripcion" v-model="tarea.descripcion" class="materialize-textarea" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'"></textarea>
+			  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
+		  		</div>
+		  	</v-row>
+		  	<v-row id="rowFechaInicio">
+		  		<div class="col s6">
+		  			<label for="fechaInicio">Fecha de inicio</label>
+			      <v-date-input id="fechaInicio" name="fechaInicio"></v-date-input>	
+		  		</div>
+		  		<div class="col s6" id="divHoraInicio">
+		  			<label for="fechaInicio">Hora de inicio</label>
+		  			<input type="text" class="timepicker" id="horaInicio">
+		  		</div>
+		  	</v-row>
+		  	<v-row id="rowFechaFin">
+		  		<div class="col s6">
+		  			<label for="fechaFin">Fecha de fin</label>
+			      <v-date-input id="fechaFin" name="fechaFin"></v-date-input>
+		  		</div>
+		  		<div class="col s6" id="divHoraFin">
+		  			<label for="fechaInicio">Hora de fin</label>
+		  			<input type="text" class="timepicker" id="horaFin">
+		  		</div>
+		  	</v-row>
+		  	<v-row>
+		  		<div class="input-field col s6">
+		  			<v-select name="categoria" id="categoria" v-model="tarea.categoria" select-text="" :items="categoriasTarea"></v-select>
+		  			<label for="categoria">Categoría</label>
+		  		</div>
+		  		<div class="input-field col s6">
+		  			<v-select name="prioridad" id="prioridad" v-model="tarea.prioridad" select-text="" :items="prioridadesTarea"></v-select>
+		  			<label for="prioridad">Prioridad</label>
+		  		</div>
+		  	</v-row>
+		  	<v-row id="row-responsable">
+		  		<div class="col s12">
+		  			<v-row id="row-interior">
+							<div class="input-field col s6" id="esteDiv">
+								<label for="responsable">Responsable</label>
+								<v-text-input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off"></v-text-input>
+							</div>
+							<div class="input-field col s6">
+								<v-select name="estado" id="estado" v-model="tarea.estado" select-text="" :items="estadosTarea"></v-select>
+		  					<label for="estado">Estado</label>
+							</div>
+		  			</v-row>
+		  		</div>
+		  	</v-row>
+		  	<v-row>
+		  		<a class="waves-effect waves-light btn pul right" @click="crearTarea">Crear</a>
+		  	</v-row>
+		  </form>
+		  <v-modal id="modalTareaCreada">
+	      <div slot="content">
+	        <h4 class="center-align">Tarea creada correctamente</h4>
+		      <p class="center-align">¿Desea crear otra tarea?</p>
+	      </div>
+	      <div slot="footer">
+	        <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="limpiarTarea">Si</a>
+		      <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="regresar">No</a>
+	      </div>
+	    </v-modal>
+	    <v-modal id="modalTareaErrorServidor">
+	      <div slot="content">
+	        <h4 class="center-align">Error</h4>
+		      <p class="center-align">No se pudo crear la tarea. Intente recargar la página.</p>
+	      </div>
+	      <div slot="footer">
+	        <a href="/home/tarea" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	      </div>
+	    </v-modal>
+		  <v-modal id="modalTareaError">
+	      <div slot="content">
+	       <h4 class="center-align">Formulario con errores.</h4>
+		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+		      <p class="center-align">Con el siguiente mensaje de error: </p>
+		      <p class="center-align">"{{errorObj.msj}}"</p>
+	      </div>
+	      <div slot="footer">
+	        <a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	      </div>
+	    </v-modal>
+	    <v-modal id="modalFechaIncorrecta">
+	      <div slot="content">
+	        <h4 class="center-align">Error</h4>
+		      <p class="center-align">No puede escoger como fecha de realización una fecha ya pasada.</p>
+	      </div>
+	      <div slot="footer">
+	        <a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	      </div>
+	    </v-modal>
+		</main>
+	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+		<script src="/build/index/tareaNuevaScript.min.js"></script>
+	</div>
+</html>

@@ -4,11 +4,8 @@
 @FechaCreacion: 20/05/2017
 @UltimaFechaModificacion: 03/06/2017 @JoseViteri
 */
-
-var bcrypt = require('bcryptjs');
 'use strict';
 var Sequelize = require('sequelize');
-
 module.exports = function(sequelize, DataTypes) {
   var Procariano = sequelize.define('Procariano', {
     colegio: {
@@ -42,7 +39,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Procariano.belongsTo(models.Persona);
-        Procariano.belongsToMany(models.CargoFormacion, {through: 'ProcarianoCargoFormacion'});
+        Procariano.hasMany(models.Ticket);
         Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
         Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
@@ -75,6 +72,7 @@ module.exports = function(sequelize, DataTypes) {
               attributes: [['id', 'personaId'], 'nombres', 'apellidos']
             }
           ],
+          where:{estado: {$not: 'inactivo'}},
           attributes: [['id', 'procarianoId'], 'estado']
         }).then(successCallback).catch(errorCallback);
       },
@@ -112,9 +110,32 @@ module.exports = function(sequelize, DataTypes) {
           ],
           attributes: [['id', 'procarianoId']]
         }).then(successCallback).catch(errorCallback);
+      },
+      obtenerGrupoDeProcariano: function(idProcariano, success, error){
+        const Grupo = sequelize.import("../models/grupo");
+        this.findOne({
+          where: {
+            id: idProcariano
+          },
+          include: [
+            {
+              model: Grupo
+            }
+          ]
+        }).then(success).catch(error);
+      },
+      buscarProcarianosActivos: function(success, error){
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include : [{
+              model : Persona
+          }], 
+          where : {
+            estado:{$not:'inactivo'}
+          }
+        }).then(success).catch(error);
       }
     }
   });
   return Procariano;
 };
-

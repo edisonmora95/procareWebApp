@@ -2,13 +2,10 @@
 var modelo = require('../models');
 var utils = require('../utils/utils');
 
-
-
 const cambioContrasenna = (req, res , next) => {
 	let	email = req.body.correo;
 	let viejaContrasenna = req.body.viejaContrasenna;
 	let nuevaContrasenna = req.body.nuevaContrasenna;
-
 	modelo.Persona.find({
 		where : {
 			email : email, 
@@ -45,17 +42,13 @@ const cambioContrasenna = (req, res , next) => {
 				});
 			}
 		})
-
-
 	}).catch( err => {
 		res.json({
 			status : false, 
 			message : "No existe usuaario asignado a ese correo"
 		});
 	})
-
 };
-
 
 module.exports = {
 	cambioContrasenna

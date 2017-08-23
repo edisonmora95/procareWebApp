@@ -6,7 +6,7 @@ var utils = require('../../utils/utils');
 //Entrega todos los miembros del personal
 router.get('/', controladorPersonal.obtenerTablaPersonal);
 //Crea un nuevo miembro del personal
-router.post('/', utils.generarHash , controladorPersonal.crearPersonal);
+router.post('/' , controladorPersonal.crearPersonal);
 
 router.get('/:id',controladorPersonal.obtenerPersonalIndependiente);
 

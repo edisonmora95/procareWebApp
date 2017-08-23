@@ -15,14 +15,16 @@ let grupo = {
 	cantidadChicos: 0,
 	numeroReuniones: 0,
 	genero: 'Procare Mujeres',
-	animador: 3,
+	animador: 1,
 	etapa: 1
 };
+
+
 
 describe('Grupos', () => {
 
 	describe('Crear grupo', () => {
-
+		//Volver a inicializar el objeto de grupo después de cada test
 		afterEach(function() {
 	    grupo = {
 				nombre: 'Grupo de prueba',
@@ -47,7 +49,7 @@ describe('Grupos', () => {
 					done();
 				});
 		});
-		/*it('CP2. Id de etapa ingresada es incorrecto', (done) => {
+		it('CP2. Id de etapa ingresada es incorrecto', (done) => {
 			grupo.etapa = 100;
 			chai.request(server)
 				.post('/api/grupos/')
@@ -59,7 +61,7 @@ describe('Grupos', () => {
 					assert.equal(res.body.mensaje, 'No se pudo añadir a la etapa', 'Mensaje incorrecto');
 					done();
 				});
-		});*/
+		});
 		/*it('CP3. Animador es animador de otro grupo', (done) => {
 			grupo.animador = ;
 			chai.request(server)
@@ -253,4 +255,46 @@ describe('Grupos', () => {
 				});
 		});
 	});
+
+	describe('Mostrar grupos', () => {
+		it('CP1. Devuelve todos los grupos', (done) => {
+			chai.request(server)
+				.get('/api/grupos/')
+				.send(grupo)
+				.end( (err, res) => {
+					res.should.be.json;
+					res.should.have.status(200);
+					assert.equal(res.body.estado, true, 'Estado incorrecto');
+					done();
+				});
+		});
+	});
+
+	describe('Mostrar grupos', () => {
+		it('CP1. Devuelve todos los grupos', (done) => {
+			chai.request(server)
+				.get('/api/grupos/')
+				.end( (err, res) => {
+					res.should.be.json;
+					res.should.have.status(200);
+					assert.equal(res.body.estado, true, 'Estado incorrecto');
+					done();
+				});
+		});
+	});
+
+	describe('Obtener grupo por id', () => {
+		let grupoId = 12;
+		it('CP1. Devuelve el grupo requerido', (done) => {
+			chai.request(server)
+				.get('/api/grupos/' + grupoId)
+				.end( (err, res) => {
+					res.should.be.json;
+					res.should.have.status(200);
+					assert.equal(res.body.status, true, 'Estado incorrecto');
+					done();
+				});
+		});
+	});
+
 });
