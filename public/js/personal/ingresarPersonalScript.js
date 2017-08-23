@@ -130,6 +130,8 @@ var main = new Vue({
       		}
       	},
       	error : function(err){
+      		self.errorObj.msj = err.mensaje;
+      		self.errorObj.statusApi = false;
       		console.log(err);
       	}
       });

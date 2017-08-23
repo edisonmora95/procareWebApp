@@ -53,14 +53,14 @@ const crearPersonal = (req, res, next) => {
 				PersonaId : persona.id
 			}).then( personaConRol => {
 				console.log('se creo correctamente');
-				utils.generarUsuarioConCorreo(personaConRol.PersonaId);
-				return respuestas.okCreate(res, 'se agrego una persona correctamente', personaConRol);
+				return utils.generarUsuarioConCorreo(personaConRol.PersonaId, res , 'se agrergo una persona correctamente', 'algo paso', personaConRol );
+				//return respuestas.okCreate(res, 'se agrego una persona correctamente', personaConRol);
 
 			}).catch(error => {
 					return respuestas.error(res, 'algo sucedio', '', error);
 				})
 			}, (errorPersona) => {
-					return respuestas.error(res, 'algo sucedio', '', error);
+					return respuestas.error(res, 'algo sucedio', '', errorPersona);
 				});
 
 		}else{ // existe esa persona en la base de datos como procariano, por lo que se actualiza su tipo
@@ -84,8 +84,8 @@ const crearPersonal = (req, res, next) => {
 					}).then( resultado2 => {
 
 						//console.log('\n\nesta es persona ' + persona + ' \n\n')
-						utils.generarUsuarioConCorreo(resultado2.PersonaId);
-						return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
+						return utils.generarUsuarioConCorreo(resultado2.PersonaId, res , 'se agrego el tipo a esa persona', 'algo paso', resultado2  );
+						//return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
 
 					}).catch(error2 => {
 						return respuestas.error(res, 'Usuario con esa cédula ya existe', '', error2);

@@ -108,19 +108,20 @@
 			      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 			    </div>
 			  </div>
+			  <div id="modalError" class="modal">
+			    <div class="modal-content">
+			      <h4 class="center-align">Formulario con errores.</h4>
+			      <p class="center-align" v-if="errorObj.statusApi">Existe un error del campo: "{{errorObj.campo}}"</p>
+			      <p class="center-align">Con el siguiente mensaje de error: </p>
+			      <p class="center-align">"{{errorObj.msj}}"</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
 			</main>
 			<!-- Modal Structure -->
-		  <div id="modalError" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">Formulario con errores.</h4>
-		      <p class="center-align" v-if="errorObj.statusApi">Existe un error del campo: "{{errorObj.campo}}"</p>
-		      <p class="center-align">Con el siguiente mensaje de error: </p>
-		      <p class="center-align">"{{errorObj.msj}}"</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
+
 		</div>
 		<div>
 			<% include ../partials/scripts %>
