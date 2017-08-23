@@ -44,3 +44,7 @@ span{
 .rounded{
 	border-radius: 3%;
 }
+
+.row > p, .row > span{
+	padding: 0 2%;
+}

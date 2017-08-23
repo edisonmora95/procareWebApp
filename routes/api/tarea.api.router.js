@@ -14,12 +14,12 @@ router.put('/:id', controladorTarea.editarTarea);
 //Delete Tareas
 router.delete('/:id', controladorTarea.eliminarTarea);
 
-//Read Tareas
 //mostrar tareas de todos (para el personal)
 router.get('/', controladorTarea.mostrarTareas);
 
 //mostrar tareas del usuario
 router.get('/:id', controladorTarea.mostrarTareaPorUsuario);
 
+router.put('/cambiarEstado/:id', controladorTarea.cambiarEstado);
 
 module.exports = router;

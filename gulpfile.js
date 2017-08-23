@@ -22,7 +22,7 @@ var stripDebug = require('gulp-strip-debug');
 //CORRER LA APLICACIÓN PARA DEVELOPMENT
 gulp.task('default', ['js-compile', 'vue-compile'], function(){
 		//Por default, el environment será el de development
-		runSequence('set-dev-node-env', 'browser-sync', 'nodemon');
+		runSequence('set-dev-node-env', 'nodemon', 'browser-sync');
 });
 
 //CORRER LA APLICACIÓN PARA TESTING

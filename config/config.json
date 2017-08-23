@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "root",
-    "password": "1234",
-    "database": "procare",
+    "username": "procare_dev",
+    "password": "procare_sw_2",
+    "database": "procare_db_dev",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

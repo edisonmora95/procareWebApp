@@ -34,10 +34,10 @@ function(correo, password, done) {
     }]
   }).then( persona => {
     var roles = persona.Rols
-    console.log({
+    /*console.log({
       estaPersona : persona,
       roles : roles
-    })
+    })*/
     isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
   }).catch( err => {
     console.log('no existe usuario')
@@ -81,7 +81,7 @@ router.post('/',
   function(req, res) {
 
     var rols = req.user.Rols;
-    console.log(req.user.Rols[0].nombre)
+    //console.log(req.user.Rols[0].nombre)
     var rolsJson = [];
     for (i = 0 ; i< rols.length ; i++){
       rolsJson.push(rols[i].nombre);
@@ -102,7 +102,7 @@ router.post('/',
 
 
 
-    console.log(json);
+    //console.log(json);
     res.json(objeto);
     
 

@@ -22,7 +22,6 @@
 				</div>
 				<div class="col s6">
 					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
-					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
 					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 				</div>
@@ -238,15 +237,14 @@
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
 				$.get('/api/grupos/', function(res){
-					const conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
-					if(conexionExitosa){
+					if(res.estado){
 						self.gruposObtenidos = res.datos;
 						self.armarArraysGrupos(self.gruposObtenidos, self);
 					}
 				});
 			},
 			/*
-				@Descripción: Arma los arrays de grupos obtenidos de la base de datos
+				@Descripción: Divide los grupos obtenidos en Formación, Caminantes, etc...
 				@Params:
 					grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
 	    */
@@ -281,7 +279,7 @@
 	    */
 	    formarArrayGruposAMostrar(self){
 	    	let tipoProcariano = self.tipoprocariano.text;
-	    	if(tipoProcariano === 'Chico Formación'){
+	    	if(tipoProcariano === 'Procare Formación'){
 	    		self.grupos = self.gruposFormacion;
 	    	}else if(tipoProcariano === 'Caminante'){
 	    		self.grupos = self.gruposCaminantes;

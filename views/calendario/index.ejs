@@ -10,33 +10,46 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main id="indexApp">
+			<div class="fixed-action-btn horizontal" v-if="esPersonal">
+		    <a class="btn-floating btn-large red">
+		      <i class="material-icons">add</i>
+		    </a>
+		    <ul>
+		      <li>
+		      	<a href="/home/evento/" class="btn-floating green btn tooltipped " data-position="top" data-delay="25" data-tooltip="Evento" >
+		      		<i class="material-icons rounded">event</i>
+		      	</a>
+		      </li>
+		      <li>
+		      	<a href="/home/tarea/" class="btn-floating yellow darken-1 btn tooltipped " data-position="top" data-delay="25" data-tooltip="Tarea" id="btnTarea">
+		      		<i class="material-icons rounded">edit</i>
+		      	</a>
+		      </li>
+		    </ul>
+		  </div>
 		  <div class="row">
-		  	<div id='calendar' class="col l8 s12"></div>	
+		  	<div id='calendar' class="col l12 s12"></div>	
 		  	<div id="tareas" class="col l4 s12">
 		  		<div class="card">
-		  			<h5 class="center-align"><span>Título: </span>{{eventoSeleccionado.title}}</h5>
-		  			<span>Descripción:</span>
-		  			<p>{{eventoSeleccionado.description}}</p>
-		  			<p><span>Hora de inicio: </span>{{date(eventoSeleccionado.start)}}</p>
-		  			<p><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>
+		  			<h5 class="center-align">{{eventoSeleccionado.title}}</h5>
+		  			<main class="row">
+		  				<span>Descripción:</span>
+			  			<p>{{eventoSeleccionado.description}}</p>
+			  			<p><span>Hora de inicio: </span>{{date(eventoSeleccionado.start)}}</p>
+			  			<p><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>	
+		  			</main>
+		  			<div class="row">
+		  				<div class="input-field col s4">
+		  					<label for="selectEstado"><span>Estado</span></label>
+		  				</div>
+		  				<div class="input-field col s8">
+			  				<select id="selectEstado">
+				  				<option value="1">Pendiente</option>
+				  				<option value="2">En proceso</option>
+				  				<option value="3">Completada</option>
+				  			</select>
+			  			</div>	
 		  		</div>
-		  		<div class="fixed-action-btn horizontal">
-				    <a class="btn-floating btn-large red">
-				      <i class="material-icons">add</i>
-				    </a>
-				    <ul>
-				      <li>
-				      	<a href="/home/evento/" class="btn-floating green btn tooltipped " data-position="top" data-delay="25" data-tooltip="Evento" >
-				      		<i class="material-icons rounded">event</i>
-				      	</a>
-				      </li>
-				      <li>
-				      	<a href="/home/tarea/" class="btn-floating yellow darken-1 btn tooltipped " data-position="top" data-delay="25" data-tooltip="Tarea" id="btnTarea">
-				      		<i class="material-icons rounded">edit</i>
-				      	</a>
-				      </li>
-				    </ul>
-				  </div>
 		  	</div>
 		  </div>
 		</main>

@@ -1,17 +1,28 @@
+'use strict';
 var express = require('express');
 var router = express.Router();
-//Create grupo
-//Responde con la página
-router.get('/nuevo', function(req, res, next){
+let autenticacion = require('./../../utils/authentication');
+
+router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+
+/*
+	@Descripción:
+		Responde con la página de ingreso de grupo
+	@Permisos:
+		Usuario
+		Personal
+*/
+router.get('/nuevo', autenticacion.personal, function(req, res, next){
 	res.render('grupo/crearGrupo');
 });
-//Post del grupo. API
-router.post('/nuevo', function(req, res ,next){
 
-});
-
-//Read grupo
-//Responde con la página
+/*
+	@Descripción:
+		Responde con la página de búsqueda de grupos
+	@Permisos:
+		Usuario
+		Personal | Director ejecutivo | Director de Procare Formación
+*/
 router.get('/', function(req, res, next){
 	res.render('grupo/buscarGrupo');
 });

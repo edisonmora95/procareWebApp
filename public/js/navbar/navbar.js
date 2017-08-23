@@ -26,7 +26,6 @@ let navbarApp = new Vue({
 				url: '/api/login/usuarios',
 				success(res){
 					self.usuario = res;
-					console.log(self.usuario)
 					self.formarNavbar();
 					self.generoUsuarioImagen();
 				}
@@ -69,14 +68,11 @@ let navbarApp = new Vue({
 		*/
 		obtenerGrupoDeAnimador(self, idAnimador){
 			const urlApi = '/api/animadores/' + idAnimador;
-			console.log(urlApi)
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success(res){
-					console.log(res)
 					self.grupoId = res.datos.GrupoId;
-					console.log(self.grupoId)
 				},
 				error(err){
 					console.log(err);
@@ -161,8 +157,7 @@ let navbarApp = new Vue({
 			}
 			if(usuarioEsAnimador){
 				$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
-					let idGrupo = self.grupoId;
-					let urlGrupo = '/grupos/' + idGrupo;
+					let urlGrupo = '/grupos/' + self.grupoId;
 					self.crearLi('Grupo', urlGrupo, menuPF);	
 				});
 				

@@ -56,6 +56,15 @@ module.exports = function(sequelize, DataTypes) {
         this.findAll({
 
         }).then(success).catch(error);
+      },
+      cambiarEstado: function(idEvento, estadoNuevo, success, error){
+        this.update({
+          estado: estadoNuevo
+        }, {
+          where: {
+            id: idEvento
+          }
+        }).then(success).catch(error);
       }
     }
 

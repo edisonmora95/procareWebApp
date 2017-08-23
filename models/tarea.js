@@ -74,6 +74,22 @@ module.exports = function(sequelize, DataTypes) {
       },
       obtenerTodasLasTareas: function(success, error){
         this.findAll({}).then(success).catch(error);
+      },
+      obtenerTareasDeUsuario: function(idResponsable, success, error){
+        this.findAll({
+          where: {
+            idResponsable: idResponsable
+          }
+        }).then(success).catch(error);
+      },
+      cambiarEstado: function(idTarea, estadoNuevo, success, error){
+        this.update({
+          estado: estadoNuevo
+        }, {
+          where: {
+            id: idTarea
+          }
+        }).then(success).catch(error);
       }
     }
 

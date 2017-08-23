@@ -50,6 +50,7 @@ let verGrupoApp = new Vue({
 				type: 'GET',
 				url: '/api/grupos/' + self.idGrupo,
 				success(res){
+					console.log(res)
 					self.grupo = res.grupo;
 					self.armarArrayIntegrantes(self, res.procarianos);
 					let animadorObj = {
@@ -74,6 +75,7 @@ let verGrupoApp = new Vue({
 					self.integrantes.push(integranteObj);
 				}
 			});
+			console.log(self.integrantes)
 		},
 		validarProcarianoEnGrupo(procariano){
 			let fechaFin = procariano.Grupos[0].ProcarianoGrupo.fechaFin;

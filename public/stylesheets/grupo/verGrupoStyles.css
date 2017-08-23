@@ -36,7 +36,7 @@ li{
 }
 
 h5{
-	margin-top: 5%;	
+	margin-top: 1rem;	
 }
 
 h3, h4, h5, h6{
@@ -48,10 +48,11 @@ h3, h4, h5, h6{
 	margin-top: 3%;
 }
 
-li p{
+li a{
 	display: inline-block;
   vertical-align: middle;
   margin-left: 3%;
+  color: black;
 }
 
 li i{
@@ -73,4 +74,8 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
+}
+
+img{
+	margin-top: 1.5rem;
 }

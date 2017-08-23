@@ -6,6 +6,7 @@
 */
 
 var modelo = require('../models');
+let respuesta = require('../utils/respuestas')
 
 const crearTarea = (req, res, next) => {
   let fechaInicio = '';
@@ -236,10 +237,35 @@ const mostrarTareas = (req, res, next) =>{
   });
 }
 
+
+const cambiarEstado = (req, res, next) => {
+  const idTarea = req.params.id;
+  const estadoNuevo = req.body.estadoNuevo;
+  let Tarea = modelo.Tarea;
+
+  Tarea.cambiarEstado(idTarea, estadoNuevo, (success) => {
+    
+    const cantidadRegistrosCambiados = parseInt(success);
+    
+    if(cantidadRegistrosCambiados === 1){
+      return respuesta.okUpdate(res, 'Tarea cambiada de estado', success);  
+    }else if( cantidadRegistrosCambiados > 1){
+      return respuesta.error(res, 'Se cambió de estado a ' + success + ' tareas', '', success);
+    }else if( cantidadRegistrosCambiados < 1){
+      return respuesta.error(res, 'Error al intentar cambiar de estado', '', success);
+    }
+
+  }, (error) => {
+    return respuesta.error(res, 'Error al intentar cambiar de estado', '', error);
+  });
+
+};
+
 module.exports = {
   crearTarea,
   eliminarTarea,
   editarTarea,
   mostrarTareaPorUsuario,
-  mostrarTareas
+  mostrarTareas,
+  cambiarEstado
 }
