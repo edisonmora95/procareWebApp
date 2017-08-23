@@ -6,22 +6,24 @@
 */
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Paralelo = sequelize.define('Paralelo', {
-    nombre: {
-      type : DataTypes.STRING,
-      allowNull : true
-    },
-    cantidadNinios: {
-      type : DataTypes.INTEGER,
-      allowNull : true
-    }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
+    var Paralelo = sequelize.define('Paralelo', {
+        nombre: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true
 
-  });
-  return Paralelo;
+        },
+        cantidadNinios: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
+    }, {
+        classMethods: {
+            associate: function(models) {
+                // associations can be defined here
+            }
+        }
+
+    });
+    return Paralelo;
 };

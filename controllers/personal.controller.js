@@ -15,13 +15,14 @@ Modificado: 30
 */
 const crearPersonal = (req, res, next) => {
 
-<<<<<<< HEAD
-
+    console.log('\n\nesta es la fecha de nacimiento ' + req.body.fechaNacimiento);
     if (req.body.fechaNacimiento == '') {
-        fechaNacimiento = null;
+        var fechaNacimiento = null;
     } else {
-        fechaNacimiento = new Date(req.body.fechaNacimiento);
+
+        var fechaNacimiento = new Date(req.body.fechaNacimiento);
     }
+    console.log('\n\nesta es la fecha de nacimiento modificada' + fechaNacimiento);
 
     let persona = {
         cedula: req.body.cedula,
@@ -30,12 +31,12 @@ const crearPersonal = (req, res, next) => {
         direccion: req.body.direccion,
         fechaNacimiento: fechaNacimiento,
         genero: req.body.genero,
-        contrasenna: req.body.contrasenna,
+        //contrasenna : req.body.contrasenna,
         email: req.body.email,
         celular: req.body.celular,
         trabajo: 'personal procare',
         convencional: req.body.convencional,
-        sueldo: req.body.sueldo
+        tipo: req.body.tipo
     };
 
     modelo.Persona.count({
@@ -48,6 +49,7 @@ const crearPersonal = (req, res, next) => {
                 console.log(persona);
 
                 modelo.PersonaRol.create({
+                    fechaInicio: new Date(),
                     RolNombre: 'Personal',
                     PersonaId: persona.id
                 }).then(personaConRol => {
@@ -61,9 +63,9 @@ const crearPersonal = (req, res, next) => {
                 return respuestas.error(res, 'algo sucedio', '', error);
             });
 
-        } else { // existe esa persona en la base de datos como procariano, por lo que se actualiza su sueldo
+        } else { // existe esa persona en la base de datos como procariano, por lo que se actualiza su tipo
             modelo.Persona.update({
-                sueldo: persona.sueldo
+                tipo: persona.tipo
             }, {
                 where: {
                     cedula: persona.cedula
@@ -82,21 +84,20 @@ const crearPersonal = (req, res, next) => {
                     }).then(resultado2 => {
 
                         //console.log('\n\nesta es persona ' + persona + ' \n\n')
-                        return respuestas.okCreate(res, 'se agrego el sueldo a esa persona', resultado2);
+                        return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
 
                     }).catch(error2 => {
                         return respuestas.error(res, 'Usuario con esa cédula ya existe', '', error2);
-                    })
+                    });
 
 
                 }).catch(error => {
                     return respuestas.error(res, 'algo sucedio', '', error2);
-                })
+                });
 
             })
         }
     })
-
 }
 
 const obtenerTablaPersonal = (req, res, next) => {
@@ -109,121 +110,12 @@ const obtenerTablaPersonal = (req, res, next) => {
         }]
     }).then(personal => {
         console.log(personal);
-        return res.status(200).json({
-            status: true,
-            personal: personal
-        })
+        return respuestas.okGet(res, 'aqui esta todo el staff del personal', personal);
 
     }).catch(error => {
         console.log(error);
-        return res.status(400).json({
-            status: false,
-            error: error
-        })
+        return respuestas.error(res, 'algo sucedio', '', error);
     })
-=======
-	console.log('\n\nesta es la fecha de nacimiento ' + req.body.fechaNacimiento);
-	if(req.body.fechaNacimiento == ''){
-		var fechaNacimiento = null;
-	}else{
-
-		var fechaNacimiento = new Date(req.body.fechaNacimiento);	
-	}
-	console.log('\n\nesta es la fecha de nacimiento modificada' + fechaNacimiento);
-	
-	let persona = {
-		cedula : req.body.cedula,
-		nombres : req.body.nombres,
-		apellidos : req.body.apellidos,
-		direccion : req.body.direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero : req.body.genero,
-		//contrasenna : req.body.contrasenna,
-		email : req.body.email,
-		celular : req.body.celular,
-		trabajo : 'personal procare',
-		convencional : req.body.convencional,
-		tipo : req.body.tipo
-	};
-
-	modelo.Persona.count({
-		where : {
-			cedula : persona.cedula
-		}
-	}).then( contador => {
-		if (contador == 0){ // no existe esa persona por lo que se la crea desde cero
-			modelo.Persona.crearPersona(persona, (persona) => {
-			console.log(persona);
-
-			modelo.PersonaRol.create({
-				fechaInicio: new Date(),
-				RolNombre : 'Personal',
-				PersonaId : persona.id
-			}).then( personaConRol => {
-				console.log('se creo correctamente');
-				return respuestas.okCreate(res, 'se agrego una persona correctamente', personaConRol);
-
-			}).catch(error => {
-					return respuestas.error(res, 'algo sucedio', '', error);
-				})
-			}, (errorPersona) => {
-					return respuestas.error(res, 'algo sucedio', '', error);
-				});
-
-		}else{ // existe esa persona en la base de datos como procariano, por lo que se actualiza su tipo
-			modelo.Persona.update({
-				tipo : persona.tipo
-			},{
-				where : {
-					cedula : persona.cedula
-				}
-			}).then( resultado => {
-
-				modelo.Persona.find({
-					attributes: ['id'],
-					where : {
-						cedula : persona.cedula
-					}
-				}).then( personaConId => {
-					modelo.PersonaRol.create({
-						RolNombre : 'Personal',
-						PersonaId : personaConId.id
-					}).then( resultado2 => {
-
-						//console.log('\n\nesta es persona ' + persona + ' \n\n')
-						return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
-
-					}).catch(error2 => {
-						return respuestas.error(res, 'Usuario con esa cédula ya existe', '', error2);
-					});
-
-
-				}).catch( error => {
-					return respuestas.error(res, 'algo sucedio', '', error2);
-				});
-
-			})
-		}
-	})
-}
-
-const obtenerTablaPersonal = (req,res,next) =>{
-	modelo.Persona.findAll({
-		include : [{
-			model : modelo.Rol,
-			where : {
-				nombre : 'Personal'
-			}
-		}]
-	}).then( personal => {
-		console.log(personal);
-		return respuestas.okGet(res,'aqui esta todo el staff del personal',personal);
-
-	}).catch( error => {
-		console.log(error);
-		return respuestas.error(res, 'algo sucedio', '', error);
-	})
->>>>>>> 80fe19d967516cabda64d1f10399c9d18e51f594
 }
 
 const obtenerPersonalIndependiente = (req, res, next) => {
@@ -240,9 +132,7 @@ const obtenerPersonalIndependiente = (req, res, next) => {
     })
 }
 
-<<<<<<< HEAD
 const eliminarPersonal = (req, res, next) => {
-
     var id = req.params.id;
     //probablemente en benefactor despues habra que ver
     //tomar en cuenta el trabajo : 'personal procare'
@@ -252,14 +142,16 @@ const eliminarPersonal = (req, res, next) => {
         }
     }).then(contador => {
         if (contador > 0) { //solo le quito el rol
-            modelo.PersonaRol.destroy({
+            modelo.PersonaRol.update({
+                fechaFin: new Date()
+            }, {
                 where: {
                     PersonaId: id,
                     RolNombre: 'Personal'
                 }
             }).then(respuesta => {
                 console.log(respuesta);
-                return respuestas.okDelete(res, 'se elimino esta persona como parte del personal de la fundación', respuesta);
+                return respuestas.okDelete(res, 'se quito esta persona como parte del personal de la fundación', respuesta);
             }).error(error => {
                 return respuestas.errorDelete(res, 'un problema ocurrio', error);
             })
@@ -276,21 +168,19 @@ const eliminarPersonal = (req, res, next) => {
             })
         }
     })
-
 }
 
 
-const editarPersonal = (res, req, next) => {
-
+const editarPersonal = (req, res, next) => {
     console.log('entra aqui')
-    console.log(req.query.id);
-    let id = req.query.id;
+    console.log(req.params);
+    let id = req.params.id;
+    let fechaNacimiento = '';
     if (req.body.fechaNacimiento == '') {
         fechaNacimiento = null;
     } else {
         fechaNacimiento = new Date(req.body.fechaNacimiento);
     }
-
     let persona = {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -302,10 +192,21 @@ const editarPersonal = (res, req, next) => {
         email: req.body.email,
         celular: req.body.celular,
         convencional: req.body.convencional,
-        sueldo: req.body.sueldo
+        tipo: req.body.tipo
     };
-
-    modelo.Persona.update(persona, {
+    modelo.Persona.update({
+        cedula: req.body.cedula,
+        nombres: req.body.nombres,
+        apellidos: req.body.apellidos,
+        direccion: req.body.direccion,
+        fechaNacimiento: fechaNacimiento,
+        genero: req.body.genero,
+        contrasenna: req.body.contrasenna,
+        email: req.body.email,
+        celular: req.body.celular,
+        convencional: req.body.convencional,
+        tipo: req.body.tipo
+    }, {
         where: {
             id: id
         }
@@ -315,95 +216,6 @@ const editarPersonal = (res, req, next) => {
     }).catch(error => {
         return respuestas.error(res, 'hubo un problema', '', error);
     })
-
-
-
-=======
-const eliminarPersonal = (req,res,next) =>{
-	var id = req.params.id;
-	//probablemente en benefactor despues habra que ver
-	//tomar en cuenta el trabajo : 'personal procare'
-	modelo.Procariano.count({
-		where : {
-			PersonaId : id
-		}
-	}).then( contador => {
-		if (contador > 0){ //solo le quito el rol
-			modelo.PersonaRol.update({
-				fechaFin : new Date()
-			},{
-				where : {
-					PersonaId : id,
-					RolNombre : 'Personal'
-				}
-			}).then( respuesta => {
-				console.log(respuesta);
-				return respuestas.okDelete(res, 'se quito esta persona como parte del personal de la fundación', respuesta);
-			}).error( error => {
-				return respuestas.errorDelete(res, 'un problema ocurrio', error );
-			})
-		}else{ //destruyo a esa persona
-			modelo.Persona.destroy({
-				where : {
-					id : id
-				}
-			}).then( respuesta => {
-				console.log(respuesta);
-				return respuestas.okDelete(res, 'se elimino esta persona como parte de la fundación', respuesta);
-			}).error( error => {
-				return respuestas.errorDelete(res, 'un problema ocurrio', error );
-			})
-		}
-	})
-}
-
-
-const editarPersonal = (req,res,next) =>{
-	console.log('entra aqui')
-	console.log(req.params);
-	let id = req.params.id;
-	let fechaNacimiento = '';
-	if(req.body.fechaNacimiento == ''){
-		fechaNacimiento = null;
-	}else{
-		fechaNacimiento = new Date(req.body.fechaNacimiento);	
-	}
-	let persona = {
-		cedula : req.body.cedula,
-		nombres : req.body.nombres,
-		apellidos : req.body.apellidos,
-		direccion : req.body.direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero : req.body.genero,
-		contrasenna : req.body.contrasenna,
-		email : req.body.email,
-		celular : req.body.celular,
-		convencional : req.body.convencional,
-		tipo : req.body.tipo
-	};
-	modelo.Persona.update({
-		cedula : req.body.cedula,
-		nombres : req.body.nombres,
-		apellidos : req.body.apellidos,
-		direccion : req.body.direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero : req.body.genero,
-		contrasenna : req.body.contrasenna,
-		email : req.body.email,
-		celular : req.body.celular,
-		convencional : req.body.convencional,
-		tipo : req.body.tipo
-	},{
-		where : {
-			id : id
-		}
-	}).then( respuesta => {
-		return respuestas.okUpdate(res, 'se pudo actualizar correctamente', respuesta);
-
-	}).catch( error => {
-		return respuestas.error(res, 'hubo un problema', '', error);
-	})
->>>>>>> 80fe19d967516cabda64d1f10399c9d18e51f594
 }
 
 module.exports = {

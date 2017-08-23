@@ -192,7 +192,7 @@ gulp.task('set-prod-node-env', function() {
 
 //TASK DE MOCHA
 gulp.task('mocha', function() {
-    gulp.src('./test/etapa/*.js', {
+    gulp.src('./test/nivel/*.js', {
             read: false
         })
         .pipe(mocha());

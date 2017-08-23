@@ -7,6 +7,7 @@ var router = express.Router();
 
 //Post de la Centros
 router.post('/nuevo', controladorCentro.crearCentro);
+//Post de la Centros
 
 //Update Centros
 router.put('/:id', controladorCentro.editarCentro);
