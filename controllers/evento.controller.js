@@ -12,11 +12,7 @@ const crearEvento = (req, res, next) => {
   estado = 'activo';
 
   modelo.Evento.create({
-<<<<<<< HEAD
-    id_organizador : req.body.id_organiador,
-=======
     idOrganizador : req.body.id_organiador,
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -49,16 +45,10 @@ const crearEvento = (req, res, next) => {
 const eliminarEvento = (req, res, next) => {
    estado = 'inactivo';
    modelo.Evento.update({
-<<<<<<< HEAD
-    {
-      estado: req.body.estado
-    }
-=======
     
     estado : estado
 
   },{
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     where:{
       id: req.params.id
     }
@@ -84,11 +74,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-<<<<<<< HEAD
-     id_organizador : req.body.id_organiador,
-=======
      idOrganizador : req.body.id_organiador,
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -122,23 +108,6 @@ const editarEvento = (req, res, next) => {
   });
 }
 
-<<<<<<< HEAD
-const mostrarEvento = (req,res,next) =>{
-  modelo.Evento.findAll({
-
-  }).then( repuesta => {
-    var status = true;
-    var mensaje = 'se pudo actualizar correctamente'
-    var jsonRespuesta = {
-      status : status,
-      mensaje : mensaje,
-      sequelizeStatus : repuesta
-    }
-    res.json(jsonRespuesta)
-  }).catch( error => {
-    var status = false;
-    var mensaje = 'no se pudo eliminar'
-=======
 const mostrarEventos = (req,res,next) =>{
   modelo.Evento.findAll({
     include: [{
@@ -176,7 +145,6 @@ const mostrarEventos = (req,res,next) =>{
   }).catch( error => {
     var status = false;
     var mensaje = 'no se puede mostrar'
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
     var jsonRespuesta = {
       status : status,
       mensaje : mensaje,
@@ -190,9 +158,5 @@ module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
-<<<<<<< HEAD
-  mostrarEvento
-=======
   mostrarEventos
->>>>>>> a021634952d17a698d8aaa1d51dce4d47d8b8c32
 }

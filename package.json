@@ -10,7 +10,7 @@
     "vueify": "gulp vueify",
     "sequelize": "node_modules/.bin/sequelize",
 
-    "mocha": "node_modules/.bin/mocha"
+    "mocha": "node_modules/.bin/mocha",
 
     "test": "node_modules/.bin/mocha ./test/etapa/etapa.test.js || true",
     "test-procariano": "node_modules/.bin/mocha ./test/procarianos/procariano-test.js",

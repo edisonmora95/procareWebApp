@@ -8,19 +8,12 @@ var browserify = require('gulp-browserify');
 var runSequence = require('run-sequence');
 const mocha = require('gulp-mocha');
 
- 
-gulp.task('default', ['browser-sync'],function(){
-	//runSequence('babel', 'vueify', 'browser-sync');
-
- 
 //CORRER LA APLICACIÓN PARA DEVELOPMENT
- 
 gulp.task('default', function(){
 		//Por default, el environment será el de development
 		runSequence('set-dev-node-env', 'browser-sync');
 });
 
- 
 //CORRER LA APLICACIÓN PARA TESTING
 gulp.task('build-test', function(){
 	runSequence('set-test-node-env', 'browser-sync');
@@ -29,17 +22,12 @@ gulp.task('build-test', function(){
 //CORRER LA APLICACIÓN PARA PRODUCCIÓN
 gulp.task('build-prod', function(){
 	runSequence('set-prod-node-env', 'browser-sync');
- 
 });
 
 //TASKS INICIALIZACIONES
 gulp.task('browser-sync', ['nodemon'], function(){
 	browserSync.init(null, {
-
-		proxy: "http://localhost/login",
-
 		proxy: "http://localhost/",
-
     files: ["public/**/*.*"],
     browser: "default",
     port: 3001,
@@ -70,18 +58,8 @@ gulp.task('babel', function(){
 });
 gulp.task('vueify', function(){
 	console.log('Importando los módulos con Vueify');
- 
-
-	//var src = './public/js/grupo/crearGrupoScript.js'
-	//var build = './build/grupo/bundle.js'
-
-
-	var src = './public/dist/**/*.js'
-	var build = './public/build/'
- 
 	var src = './public/dist/**/*.js';
 	var build = './public/build/';
-
 	gulp.src(src, { read: false })
 			.pipe(browserify({
 				transform: ['vueify'], //anterior
@@ -117,4 +95,3 @@ gulp.task('mocha', function(){
 gulp.task('test', function(){
 	runSequence('set-test-node-env', 'mocha');
 });
-

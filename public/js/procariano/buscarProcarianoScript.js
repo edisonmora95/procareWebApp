@@ -85,53 +85,8 @@ var main = new Vue({
 				value: 'Grupo',
 				id: 'grupo'
 			}
-
-		],
-		checkboxes: ['Nombre'],
-		/*procarianos: [
-			{
-				nombre: 'Edison',
-				apellido: 'Mora',
-				cedula: '0927102848',
-				direccion: 'Cdla. Coviem',
-				fechaNacimiento: '27/06/1995',
-				genero: 'Masculino',
-				email: 'edanmora@espol.edu.ec',
-				convencional: '042438648',
-				celular: '0992556793',
-				trabajo: '',
-				colegio: 'Liceo Panamericano',
-				universidad: 'Espol',
-				tipo: 'Caminante',
-				anio: '',
-				fechaOrdenacion: '',
-				estado: 'Activo',
-				grupo: ''
-			},
-			{
-				nombre: 'Felipe',
-				apellido: 'Clavijo',
-				cedula: '0954786589',
-				direccion: 'direccion falsa',
-				fechaNacimiento: '26/06/1995',
-				genero: 'Masculino',
-				email: 'felipe@hotmail.com',
-				convencional: '042568748',
-				celular: '0992568748',
-				trabajo: '',
-				colegio: '',
-				universidad: '',
-				tipo: 'Caminante',
-				anio: '',
-				fechaOrdenacion: '',
-				estado: 'Activo',
-				grupo: ''
-			}
-		],*/
-
 		],		//Campos que el usuario puede seleccionar para realizar la búsqueda
 		checkboxes: ['Nombre'],		//Campo por default que se encuentra en la búsqueda
-
 		procariano: {
 			nombres: '',
 			apellidos: '',
@@ -150,18 +105,8 @@ var main = new Vue({
 			fechaOrdenacion: '',
 			estado: '',
 			grupo: ''
-
-		},
-		procarianos: [],
-		resultados: [],
-
 		},												//Objeto que va a almacenar al procariano a buscar
 		procarianos: [],					//Array en el que se almacenarán los resultados de la búsqueda
-
-		//resultados: [],
-
-
-
 		usuario: 'personal'
 	},
 	methods: {
@@ -182,23 +127,13 @@ var main = new Vue({
 		},
 		buscar: function(){
 			var self = this;
-
-			self.procarianos = [];
-			console.log(self.procariano);
-			console.log('Mira Erick que no se recarga la página.')
-
 			self.procarianos = [];		//Primero se vacía el array de resultados
-
 			var urlApi = '/api/procarianos/';
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				data: self.procariano,
 				success: function(res){
-
-					console.log(res);
-
-
 					$.each(res, function(index, procarianoEncontrado){
 						self.procarianos.push(procarianoEncontrado);
 					});
@@ -207,16 +142,6 @@ var main = new Vue({
 			
 		},
 		irAPerfil(procariano){
-
-			let urlApi = '/procarianos/perfil/' + procariano.cedula;
-			/*$.ajax({
-				type: 'GET',
-				url: urlApi
-
-			})*/
-			window.location.href = '/procarianos/perfil/' + procariano.personaId;
-		}
-
 			window.location.href = '/procarianos/perfil/' + procariano.personaId;
 		},
 		//Funciones para editar la forma en la que se muestra la fecha
@@ -230,6 +155,5 @@ var main = new Vue({
       }
       return moment(date).format('DD MMMM YYYY');
     }
-
 	}
 });

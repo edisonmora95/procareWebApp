@@ -9,9 +9,6 @@ var router = express.Router();
 router.post('/nuevo', controladorEvento.crearEvento);
 
 //Read Evento
-
-router.get('/', controladorEvento.mostrarEvento);
-
 router.get('/', controladorEvento.mostrarEventos);
 
 
