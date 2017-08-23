@@ -1,8 +1,8 @@
 'use strict';
 
-process.env.NODE_ENV = 'test';
+/* process.env.NODE_ENV = 'test';
 console.log('Environment: ' + process.env.NODE_ENV);
-
+*/
 var chai = require('chai');
 var assert = require('chai').assert;
 var chaiHttp = require('chai-http');

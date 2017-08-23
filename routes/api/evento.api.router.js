@@ -9,9 +9,10 @@ var router = express.Router();
 router.post('/', controladorEvento.crearEvento);
 
 //Read Evento
-//router.get('/', controladorEvento.mostrarEvento);
 
 router.get('/', controladorEvento.mostrarEventos);
+
+//router.get('/', controladorEvento.mostrarEvento);
 
 //Update Evento
 router.put('/:id', controladorEvento.editarEvento);

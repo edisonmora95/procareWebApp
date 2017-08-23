@@ -118,7 +118,6 @@
 		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
-
 	import Materials from 'vue-materials';
 	Vue.use(Materials);
 	Vue.use(VeeValidate);
@@ -151,7 +150,6 @@
 		}
 	};
 	VeeValidate.Validator.updateDictionary(dictionary);
-
 	module.exports = {
 		props: ['procariano', 'habilitaredicion', 'grupoprocariano', 'tipoprocariano'],
 		data(){
@@ -208,7 +206,6 @@
 				$('#fechaNacimiento').change(function(){
 					self.bindFechaNacimiento();
 				});
-
 				//Asignación de temporales de grupo previo
 				const tempGrupoProcarianoId = self.grupoprocariano.id;
 				const tempGrupoProcarianoText = self.grupoprocariano.text;
@@ -219,7 +216,6 @@
 				const tempTipoPrevioText = self.tipoprocariano.text;
 				self.tempTipoPrevio.id = tempTipoProcarianoId;
 				self.tempTipoPrevio.text = tempTipoPrevioText;
-
 				//Habilidar cambio de grupo
 				$('#grupoSelect').change(function(){
 					self.abrirModalCambioGrupo(self);
@@ -254,7 +250,6 @@
 	    	self.gruposCaminantes = [];
 	    	self.gruposPescadores = [];
 	    	self.gruposMayores = [];
-
 	    	$.each(grupos, function(index, grupo){
 	    		let grupoObj = {
 	  				id: grupo.id,
@@ -392,7 +387,6 @@
 	    abrirModalCambioGrupo(self){
 	    	self.grupoprocariano.text = $('#grupoSelect option:selected').text();
 	    	self.grupoprocariano.id = $('#grupoSelect option:selected').val();
-
 	    	$('#modalCambioGrupo').modal('open');
 	    },
 	    cambiarDeGrupo(){
@@ -411,7 +405,6 @@
 		    		success(res){
 		    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
 		    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
-
 		    			if(res.estado){
 		    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
 		    				self.tempGrupoPrevio.id = $('#grupoSelect option:selected').val();
@@ -432,7 +425,6 @@
 		    				self.grupoprocariano.text = tempGrupoPrevioText;
 		    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 		    			}else{
-
 		    			}
 		    		},
 		    		error(err){

@@ -1,4 +1,3 @@
-
 /*
   @Descripcion: Modelo de persona
   @Autor: jose viteri
@@ -66,7 +65,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err) {
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             if (isMatch){
               return done(null,user, {status : true , message : "Logueado correctamente"});
             }
@@ -77,7 +78,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err){
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             return callback(null , isMatch);
 
         });
@@ -98,22 +101,7 @@ module.exports = function(sequelize, DataTypes) {
           tipo: persona.tipo
         }).then(callback).catch(errorCallback);
       }
-    }/*, hooks : {
-      beforeCreate : (persona, options) => {
-         bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
-            console.log('este es el hash' + hash)
-            persona.contrasenna = hash;
-          });
-
-      }
-    }/*,instanceMethods: {
-        generateHash: function(password) {
-            return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-        },
-        validPassword: function(password) {
-            return bcrypt.compareSync(password, this.password);
-        },
-    }*/
-  });
-  return Persona;
+    }
+    });
+    return Persona;
 };

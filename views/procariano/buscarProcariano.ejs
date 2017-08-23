@@ -150,7 +150,11 @@
 									<td>{{procariano.nombres}}</td>
 									<td>{{procariano.apellidos}}</td>
 									<td>{{procariano.cedula}}</td>
+
+									<td>{{procariano.fechaNacimiento}}</td>
+
 									<td>{{date(procariano.fechaNacimiento)}}</td>
+
 									<td>{{procariano.email}}</td>
 									<td>{{procariano.convencional}}</td>
 									<td>{{procariano.celular}}</td>
@@ -185,6 +189,19 @@
 			  </div>
 			</main>
 		</div>
+ 
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<!-- Compiled and minified JavaScript -->
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+
+			<script src="/scripts/moment/moment.js"></script>
+			<script src="/scripts/moment/locale/es.js"></script>
+
+			<script src="/build/procariano/buscarProcarianoScript.js"></script>
+		</div>
+
 	</body>
 	<div>
 		<% include ../partials/scripts %>

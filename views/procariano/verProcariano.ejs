@@ -25,7 +25,11 @@
 									</div>
 									<p class="center-align">Estado: {{procariano.estado}}</p>
 								</div>-->
+
+								<p class="center-align">Estado: {{procariano.estado}}</p>
+
 								<p class="center-align"><span class="tag">Estado: </span>{{procariano.estado}}</p>
+
 								<!--Nombres-->
 								<section class="row rowVer" id="rowVerNombres">
 									<div class="col s6" id="verNombre">
@@ -101,7 +105,7 @@
 								</section>
 								<!--Botones-->
 								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
-									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar</a>
+									<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalConfirmarEliminar">Eliminar</a>
 									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar</a>
 								</div>
 							</div><!--End card content-->
@@ -144,6 +148,50 @@
 			    </div>
 			  </div>
 			</main>
+
+
+			<!-- Modal Structure -->
+		  <div id="modalErrorEliminar" class="modal">
+		    <div class="modal-content">
+		      <h4 class="center-align">¡Error!</h4>
+		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalConfirmarEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">¿Está seguro de que desea eliminar a este procariano de la base de datos?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+		    </div>
+		  </div>
+		  <!-- Modal Structure -->
+		  <div id="modalExitoEliminar" class="modal">
+		    <div class="modal-content">
+		      <p class="center-align">Procariano eliminado correctamente.</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="/procarianos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </div>
+		  </div>
+		</div>
+		<div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+			<script src="/scripts/moment/moment.js"></script>
+
+
+			<script src="/scripts/moment/locale/es.js"></script>
+
+			<script src="/build/procariano/verProcarianoScript.js"></script>
+
 		</div>
 	</body>
 	<div>

@@ -114,7 +114,8 @@ let navbarApp = new Vue({
 			*/
 			let menuPad = $('#ulProcareAdministracion');
 			//self.crearLi('Personal','/personal/', menuPad);
-			self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
+			self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad, 'Crear', 'Buscar');
+			self.crearDropdown(self, 'Usuarios', 'dropUsuarios', '/usuarios/editarUsuarios','/usuarios',menuPad , 'Editar', 'Ver')
 			//self.crearLi('Cargos', '/usuarios', menuPad);
 			//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 		},
@@ -144,13 +145,13 @@ let navbarApp = new Vue({
 			let usuarioEsDirectorEjecutivo = self.verificarRolDeUsuario(self, 'Director Ejecutivo');
 			
 			if(usuarioEsDirectorEjecutivo){
-				self.crearLi('Usuarios', '/usuarios/', menuPF);
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				//self.crearLi('Usuarios', '/usuarios/', menuPF);
+				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
 			if(usuarioEsDirectorFormacion){
 
@@ -163,7 +164,7 @@ let navbarApp = new Vue({
 				
 			}
 		},
-		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor){
+		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor, opcion1Navbar, opcion2Navbar){
 			//Creo el li exterior
 			let liExterior = $('<li>');
 			let aExterior = $('<a>').html(htmlAnchorExterior)
@@ -172,8 +173,8 @@ let navbarApp = new Vue({
 			//Creo el ul del dropdown
 			let ulDropdown = $('<ul>').attr({ 'id': idDropdown, 'class': 'dropdown-content' });
 			//Creo los li del dropdown. Crear y Buscar
-			self.crearLi('Crear', rutaCrear, ulDropdown);
-			self.crearLi('Buscar', rutaBuscar, ulDropdown);
+			self.crearLi(opcion1Navbar, rutaCrear, ulDropdown);
+			self.crearLi(opcion2Navbar, rutaBuscar, ulDropdown);
 
 			$('#navbarApp').append(ulDropdown);
 			ulContenedor.append(liExterior);

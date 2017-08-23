@@ -80,7 +80,7 @@
 									</div>
 								</section>
 								<div class="row row-botones" v-if="personal.estado!=='inactivo'">
-									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
+									<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
 									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
 								</div>
 							</div><!--End card content-->
@@ -94,37 +94,39 @@
 						<editar :personal="personal" :habilitaredicion="habilitaredicion"  @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
+
+							<!-- Modal Structure -->
+			  <div id="modalErrorEliminar" class="modal">
+			    <div class="modal-content">
+			      <h4 class="center-align">¡Error!</h4>
+			      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalConfirmarEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">¿Está seguro de que desea eliminar a este persona  de su cargo?</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+			      <a href="#" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalExitoEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">Miembro del personal eliminado correctamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
 			</main>
 
-			<!-- Modal Structure -->
-		  <div id="modalErrorEliminar" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">¡Error!</h4>
-		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
-		  <!-- Modal Structure -->
-		  <div id="modalConfirmarEliminar" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align">¿Está seguro de que desea eliminar a este persona  de su cargo?</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
-		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
-		    </div>
-		  </div>
-		  <!-- Modal Structure -->
-		  <div id="modalExitoEliminar" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align">Miembro del personal eliminado correctamente.</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
+
 		</div>
 		<div>
 			<% include ../partials/scripts %>

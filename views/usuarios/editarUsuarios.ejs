@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<!--
+ 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+ 		<link rel="stylesheet" href="/stylesheets/usuarios/tableMaterial.css">-->
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
+	</head>
+	<body>
+		<div>
+			<header>
+				<% include ../partials/navbar %>
+			</header>
+			<main class="container" id="main">
+				<section id="section-resultados">
+					<div class="seccionDirectorFormacion">
+						<div class="row">
+							<div class="s4 m4">
+								<h4 style="text-align:center;">Director de procare formación</h4>
+							</div>
+						</div>
+						<div class="row">
+							<form action="">
+								<div class="s12 m12">
+									<div class="row">
+										<div class="col s6 m6">
+											<h5 >Procare Hombres</h5>
+										</div>
+										<div class="col s6 m6">
+											<h5>Procare Mujeres</h5>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col s2 m2">
+											<img src="/images/logoProcareHombres2.png" alt="logo procare" class="responsive-img circle" v-model="valor">
+										</div>
+										<div class="input-field col s4 m4 divH">
+									    <v-select class="icons" select-text="Seleccione el candidato" :items="candidatosH" id="selectH" >
+									      
+									    </v-select>
+									    <label>Candidatos</label>
+									   </div>
+										<div class="col s2 m2">
+											<img src="/images/logoProcareMujeres2.png" alt="logo procare" class="responsive-img circle">
+										</div>
+										<div class="input-field col s4 m4 divM">
+										
+									    <v-select class="icons" select-text="Seleccione el candidato" :items="candidatosM" id="selectM">									      
+									    </v-select>
+									    <label>Candidatos</label>
+									    
+									  </div>
+								</div>
+								<pre></pre>
+								<pre></pre>
+								<div class="row">
+									<div class=" offset-s2 offset-m2 col s4 m4">
+										<a @click="subirDirectores()" class="btn"> Aceptar</a>
+									</div>
+									<div class=" offset-s1 offset-m1 col s4 m4">
+										<a href="/usuarios" class="btn"> Cancelar</a>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</section>
+				
+
+				
+			</main>
+			<!-- Modal Structure -->
+			<div class="modalZone">
+				<div id="modalError" class="modal">
+				    <div class="modal-content">
+				      <h4 class="center-align">Formulario con errores.</h4>
+				      <p class="center-align">Existio un error y algo ocurrio"</p>
+				    </div>
+				    <div class="modal-footer">
+				      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+				    </div>
+				 </div>
+				 <div id="modalSuccess" class="modal">
+				    <div class="modal-content">
+				      <h4 class="center-align">Éxito</h4>
+				      <p class="center-align">Sera redirigido a la pantalla de ver usuarios</p>
+				    </div>
+				    <div class="modal-footer">
+				      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+				    </div>
+				  </div>
+				
+			</div>
+		</div>
+		<div id="scripts">
+			<% include ../partials/scripts %>
+			<script src="/build/usuarios/editarUsuarios.min.js"></script>
+		</div>
+	</body>
+</html>
+

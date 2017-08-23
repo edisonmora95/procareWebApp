@@ -53,7 +53,7 @@ var app = new Vue({
 				}
 			});
 		},
-		eliminar: function(){
+		eliminar(){
 			
 			var self = this;
 			console.log('este es el id ' + self.idPersonal);
@@ -63,13 +63,17 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.estado) {
+						
 						$('#modalExitoEliminar').modal('open');
 					}else{
+						
 						$('#modalErrorEliminar').modal('open');
 					}
 				},
 				error : function(error){
-
+					console.log(error)
+					
+					$('#modalErrorEliminar').modal('open');
 				}
 			});
 			
