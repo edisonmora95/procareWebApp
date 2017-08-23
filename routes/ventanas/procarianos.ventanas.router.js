@@ -1,29 +1,47 @@
 /*
-
-@Descripcion: Ventanas del procariano
-@Autor: jose viteri
-@FechaCreacion: 20/05/2017
-@UltimaFechaModificacion: 05/06/2017 @EdisonMora (se lo puso bonito)
-
-
+	@Descripcion: Ventanas del procariano
+	@Autor: jose viteri
+	@FechaCreacion: 20/05/2017
+	@UltimaFechaModificacion: 17/08/2017 @edisonmora - Autenticación de rutas
 */
 
-/* jshint node: true */
 'use strict';
-var express = require('express');
-var router = express.Router();
 
-//Responde con la página de ingreso de procarianos
-router.get('/nuevo', function(req, res){
+const express = require('express');
+const router = express.Router();
+let autenticacion = require('./../../utils/authentication');
+
+router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+
+/*
+	@Descripción:
+		Responde con la página de ingreso de procarianos
+	@Permisos:
+		Usuario
+		Personal
+*/
+router.get('/nuevo', autenticacion.personal, function(req, res){
 	res.render('procariano/ingresarProcariano');
 });
 
-//Responde con la página de búsqueda de procarianos
+/*
+	@Descripción:
+		Responde con la página de búsqueda de procarianos
+	@Permisos:
+		Usuario
+		Personal | Director ejecutivo | Director de Procare Formación
+*/
 router.get('/', function(req, res) {
   res.render('procariano/buscarProcariano');
 });
 
-//Responde con la página de perfil del procariano
+/*
+	@Descripción:
+		Responde con la página de perfil del procariano
+	@Permisos:
+		Usuario
+		Personal | Director ejecutivo | Director de Procare Formación: solo si es alguien de Procare o PM | Animador: solo si es suyo o de su grupo
+*/
 router.get('/perfil/:cedula', function(req, res){
 	res.render('procariano/verProcariano');
 });

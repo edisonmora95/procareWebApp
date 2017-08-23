@@ -165,9 +165,34 @@ const mostrarEventos = (req,res,next) =>{
   });
 }
 
+
+const cambiarEstado = (req, res, next) => {
+  const idEvento = req.params.id;
+  const estadoNuevo = req.body.estadoNuevo;
+  let Evento = modelo.Evento;
+
+  Evento.cambiarEstado(idEvento, estadoNuevo, (success) => {
+    
+    const cantidadRegistrosCambiados = parseInt(success);
+
+    if(cantidadRegistrosCambiados === 1){
+      return respuesta.okUpdate(res, 'Evento cambiada de estado', success);  
+    }else if( cantidadRegistrosCambiados > 1){
+      return respuesta.error(res, 'Se cambió de estado a ' + success + ' tareas', '', success);
+    }else if( cantidadRegistrosCambiados < 1){
+      return respuesta.error(res, 'Error al intentar cambiar de estado', '', success);
+    }
+
+  }, (error) => {
+    return respuesta.error(res, 'Error al intentar cambiar de estado', '', error);
+  });
+
+};
+
 module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
-  mostrarEventos
+  mostrarEventos,
+  cambiarEstado
 }

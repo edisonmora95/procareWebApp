@@ -57,12 +57,18 @@ module.exports = function(sequelize, DataTypes) {
                     // associations can be defined here
             },
             obtenerTodosLosEventos: function(success, error) {
-                this.findAll({
-
-                }).then(success).catch(error);
+                this.findAll({}).then(success).catch(error);
+            },
+            cambiarEstado: function(idEvento, estadoNuevo, success, error){
+              this.update({
+                estado: estadoNuevo
+              }, {
+                where: {
+                  id: idEvento
+                }
+              }).then(success).catch(error);
             }
         }
-
     });
     return Evento;
 };

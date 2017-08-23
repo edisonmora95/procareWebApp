@@ -17,40 +17,48 @@
 							<p class="center-align">Etapa actual: {{etapa.text}}</p>	
 						</header>
 						<article class="col s4 center-align">
-							<h5 class="center-align">Animador</h5>
-							<img src="http://via.placeholder.com/150x150" class="responsive-img ">
-							<p class="center-align">{{animador.nombres}}</p>
+							<header>
+								<h5 class="center-align">Animador</h5>	
+							</header>
+							<main>
+								<img :src="logoImagen" alt="logo procare" class=" responsive-img circle">
+								<p class="center-align">{{animador.nombres}}</p>	
+							</main>
 						</article>
-						<article>
+						<article class="col s8">
 							<header>
 								<h5 class="center-align">Lista de chicos</h5>
 							</header>
 							<main>
 								<ul id="listaChicos">
-									<li v-for="chico in integrantes" @click="seleccionChico(chico)" :id="chico.idProcariano"> <i class="material-icons">person</i><p>{{chico.nombre}} {{chico.apellidos}}</p></li>
+									<li v-for="chico in integrantes" @click="seleccionChico(chico)" :id="chico.idProcariano"> 
+										<i class="material-icons">person</i>
+										<a :href="'/procarianos/perfil/' + chico.idPersona">{{chico.nombre}} {{chico.apellidos}}</a>
+									</li>
 								</ul>
 							</main>
 						</article>
 					</section>
 					<div class="row" v-if="puedeEditar" id="row-btns">
-						<a class="waves-effect waves-light btn" href="#modalEliminarGrupo">Eliminar</a>
+						<a class="waves-effect waves-light btn modal-trigger" href="#modalEliminarGrupo">Eliminar</a>
 						<a class="waves-effect waves-light btn pull right" @click="habilitarEditar">Editar</a>
 					</div>
 				</section>
 				<section class="card large" v-if="editar === true">
 					<editar-grupo :grupo="grupo" :integrantes="integrantes" :etapa="etapa" @edicionterminada="editar = $event"></editar-grupo>
 				</section>
+				<!-- Modal Structure -->
+			  <div id="modalEliminarGrupo" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">¿Seguro que desea eliminar este grupo?</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="eliminarGrupo">Si</a>
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+			    </div>
+			  </div>
 			</main>
-			<!-- Modal Structure -->
-		  <div id="modalEliminarGrupo" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align">¿Seguro que desea eliminar este grupo?</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="eliminarGrupo">Si</a>
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
-		    </div>
-		  </div>
+			
 		</div>
 	</body>
 	<div>

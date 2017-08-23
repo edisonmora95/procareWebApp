@@ -74,17 +74,30 @@ module.exports = function(sequelize, DataTypes) {
         }
     }, {
         classMethods: {
-            associate: function(models) {
-                Tarea.belongsTo(models.Persona, {
-                        foreignKey: 'idResponsable'
-                    })
-                    // associations can be defined here
-            },
-            obtenerTodasLasTareas: function(success, error) {
-                this.findAll({}).then(success).catch(error);
-            }
+          associate: function(models) {
+            Tarea.belongsTo(models.Persona, {foreignKey: 'idResponsable'})
+            // associations can be defined here
+          },
+          obtenerTodasLasTareas: function(success, error){
+            this.findAll({}).then(success).catch(error);
+          },
+          obtenerTareasDeUsuario: function(idResponsable, success, error){
+            this.findAll({
+              where: {
+                idResponsable: idResponsable
+              }
+            }).then(success).catch(error);
+          },
+          cambiarEstado: function(idTarea, estadoNuevo, success, error){
+            this.update({
+              estado: estadoNuevo
+            }, {
+              where: {
+                id: idTarea
+              }
+            }).then(success).catch(error);
+          }
         }
-
     });
     return Tarea;
 };

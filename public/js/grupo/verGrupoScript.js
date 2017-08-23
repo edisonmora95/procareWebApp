@@ -10,7 +10,7 @@ Vue.component('editar-grupo', EditarGrupo);
 let verGrupoApp = new Vue({
 	el: '#verGrupoApp',
 	created(){
-		this.obtenerUsuario(this);
+		this.obtenerUsuarioContectado(this);
 		this.obtenerGrupo(this);
 	},
 	mounted(){
@@ -27,10 +27,14 @@ let verGrupoApp = new Vue({
 		integrantes: [],
 		chicoSeleccionado: {},
 		editar: false,
-		puedeEditar: false
+		puedeEditar: false,
+		logoImagen: ''
 	},
 	methods: {
-		obtenerUsuario(self){
+		//////////////////////////////////////////////////
+		//Llamadas a la base de datos
+		//////////////////////////////////////////////////
+		obtenerUsuarioContectado(self){
 			$.ajax({
 				type: 'GET',
 				url: '/api/login/usuarios',
@@ -54,11 +58,13 @@ let verGrupoApp = new Vue({
 					self.armarArrayIntegrantes(self, res.procarianos);
 					let animadorObj = {
 						nombres: res.procarianoAnimador.Persona.nombres + ' ' + res.procarianoAnimador.Persona.apellidos,
-						id: res.procarianoAnimador.procarianoId
+						id: res.procarianoAnimador.procarianoId,
+						genero: res.procarianoAnimador.Persona.genero
 					};
 					self.grupo.animadorId = animadorObj.id;
-					self.animador = animadorObj;	
-					self.obtenerEtapaDeGrupo(self, res.grupo.Etapas);				
+					self.animador = animadorObj;
+					self.obtenerEtapaDeGrupo(self, res.grupo.Etapas);
+					self.generoUsuarioImagen();			
 				}
 			});
 		},
@@ -74,6 +80,7 @@ let verGrupoApp = new Vue({
 					self.integrantes.push(integranteObj);
 				}
 			});
+			console.log(self.integrantes)
 		},
 		validarProcarianoEnGrupo(procariano){
 			let fechaFin = procariano.Grupos[0].ProcarianoGrupo.fechaFin;
@@ -93,6 +100,19 @@ let verGrupoApp = new Vue({
 					return false;
 				}
 			});		
+		},
+		/*
+			creador : JV
+			fecha : 11/08/2017
+			@Descripción: Pone la imagen del logo en la navbar dependiendo si eres mujer u hombre
+		*/
+		generoUsuarioImagen(){
+			let self = this;
+			if (self.animador.genero == 'femenino'){
+				self.logoImagen = '/images/logoProcareMujeres2.png';
+			}else{
+				self.logoImagen = '/images/logoProcareHombres2.png';
+			}
 		},
 		//Eventos
 		seleccionChico(chico){

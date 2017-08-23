@@ -1,3 +1,4 @@
+
 /*
 @Descripcion: esta es la ventana del login , implementa passport para hacerlo
 @Autor: jose viteri
@@ -117,27 +118,17 @@ router.post('/',
         */
     });
 
-
-
 /* GET home page. */
 
 router.get('/', function(req, res, next) {
     res.render('login');
 });
 
-
-
-
-
-
-
-
 // loggedin
 //revisa si esta autenticadno
 router.get("/loggedin", function(req, res) {
     res.send(req.isAuthenticated() ? req.user : '0');
 });
-
 
 //logout
 //deslogea la sesion
@@ -148,13 +139,5 @@ router.get('/logout', function(req, res) {
 
     res.redirect('/');
 });
-
-
-
-
-
-
-
-
 
 module.exports = router;

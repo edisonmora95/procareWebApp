@@ -20,5 +20,6 @@ router.put('/:id', controladorEvento.editarEvento);
 //Delete Evento
 router.delete('/:id', controladorEvento.eliminarEvento);
 
+router.put('/cambiarEstado/:id', controladorEvento.cambiarEstado);
 
 module.exports = router;
