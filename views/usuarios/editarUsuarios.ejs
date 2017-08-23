@@ -34,57 +34,34 @@
 									</div>
 									<div class="row">
 										<div class="col s2 m2">
-											<img src="/images/logoProcareHombres2.png" alt="logo procare" class="responsive-img circle">
+											<img src="/images/logoProcareHombres2.png" alt="logo procare" class="responsive-img circle" v-model="valor">
 										</div>
-										<div class="input-field col s4 m4">
-									    <select class="icons" v-for="candidatoH in candidatosH">
-									      <option value="candidatoH.Persona" >{{candidatoH.Persona.nombres}} {{candidatoH.Persona.apellidos}}</option>
-									    </select>
+										<div class="input-field col s4 m4 divH">
+									    <v-select class="icons" select-text="Seleccione el candidato" :items="candidatosH" id="selectH" >
+									      
+									    </v-select>
 									    <label>Candidatos</label>
 									   </div>
-									   <!--
-										<div class="col s4 m4">
-											<p style="text-align:left;">pepito cardenas</p>
-										</div>
-										-->
 										<div class="col s2 m2">
 											<img src="/images/logoProcareMujeres2.png" alt="logo procare" class="responsive-img circle">
 										</div>
-										<div class="input-field col s4 m4">
-									    <select class="icons" v-for="candidatoM in candidatosM">
-									      <option value="candidatoH.Persona" >{{candidatoM.Persona.nombres}} {{candidatoM.Persona.apellidos}}</option>
-									    </select>
+										<div class="input-field col s4 m4 divM">
+										
+									    <v-select class="icons" select-text="Seleccione el candidato" :items="candidatosM" id="selectM">									      
+									    </v-select>
 									    <label>Candidatos</label>
+									    
 									  </div>
-									   <!--
-										<div class="col s4 m4">
-											<p style="text-align:left;">pepita directora</p>
-										</div>
+								</div>
+								<pre></pre>
+								<pre></pre>
+								<div class="row">
+									<div class=" offset-s2 offset-m2 col s4 m4">
+										<a @click="subirDirectores()" class="btn"> Aceptar</a>
 									</div>
-									-->
-									<!--
-									<div class="row">
-										<div class="input-field col s6 m6">
-									    <select class="icons">
-									      <option value="" disabled selected>Choose your option</option>
-									      <option value="" >example 1</option>
-									      <option value="" >example 2</option>
-									      <option value="" >example 3</option>
-									    </select>
-									    <label>Images in select</label>
-									   </div>
-									   <div class="input-field col s6 m6">
-									    <select class="icons">
-									      <option value="" disabled selected>Choose your option</option>
-									      <option value="" >example 1</option>
-									      <option value="" >example 2</option>
-									      <option value="" >example 3</option>
-									    </select>
-									    <label>Images in select</label>
-									  </div>
+									<div class=" offset-s1 offset-m1 col s4 m4">
+										<a href="/usuarios" class="btn"> Cancelar</a>
 									</div>
-									-->
-
 								</div>
 							</form>
 						</div>
@@ -96,6 +73,24 @@
 			</main>
 			<!-- Modal Structure -->
 			<div class="modalZone">
+				<div id="modalError" class="modal">
+				    <div class="modal-content">
+				      <h4 class="center-align">Formulario con errores.</h4>
+				      <p class="center-align">Existio un error y algo ocurrio"</p>
+				    </div>
+				    <div class="modal-footer">
+				      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+				    </div>
+				 </div>
+				 <div id="modalSuccess" class="modal">
+				    <div class="modal-content">
+				      <h4 class="center-align">Éxito</h4>
+				      <p class="center-align">Sera redirigido a la pantalla de ver usuarios</p>
+				    </div>
+				    <div class="modal-footer">
+				      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+				    </div>
+				  </div>
 				
 			</div>
 		</div>

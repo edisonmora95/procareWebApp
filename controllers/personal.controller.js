@@ -54,6 +54,7 @@ const crearPersonal = (req, res, next) => {
 				PersonaId : persona.id
 			}).then( personaConRol => {
 				console.log('se creo correctamente');
+				utils.generarUsuarioConCorreo(personaConRol.PersonaId);
 				return respuestas.okCreate(res, 'se agrego una persona correctamente', personaConRol);
 
 			}).catch(error => {
@@ -84,6 +85,7 @@ const crearPersonal = (req, res, next) => {
 					}).then( resultado2 => {
 
 						//console.log('\n\nesta es persona ' + persona + ' \n\n')
+						utils.generarUsuarioConCorreo(resultado2.PersonaId);
 						return respuestas.okCreate(res, 'se agrego el tipo a esa persona', resultado2);
 
 					}).catch(error2 => {

@@ -66,7 +66,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err) {
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             if (isMatch){
               return done(null,user, {status : true , message : "Logueado correctamente"});
             }
@@ -77,7 +79,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err){
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             return callback(null , isMatch);
 
         });

@@ -8,6 +8,7 @@
 
 
 var bcrypt = require('bcryptjs');
+var modelo = require('../models');
 
 
 /*
@@ -61,7 +62,7 @@ FUNCIONES
 @FechaCreacion: 05/06/2017
 */
 
-function hacerId()
+function hacerClave()
 {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -236,4 +237,67 @@ module.exports.generarCorreo = function(mensaje, destinatario, sujeto){
             mensaje : info
         })
     });
+}
+
+
+/*
+
+
+*/
+
+module.exports.generarUsuarioConCorreo = function(id){
+    modelo.PersonaRol.count({
+        where : {
+            PersonaId: id
+        }
+    }).then(contador => {
+        if (contador > 0){
+            return {
+                estado : true,
+                mensaje : 'no hubo que asignar un rol'
+            }
+        }else{
+            var nuevaContrasenna = hacerClave();
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(nuevaContrasenna, salt, function(err, hash) {
+                    console.log(hash);
+                    modelo.Persona.update({
+                        contrasenna : hash
+                    },{
+                        where : {
+                            id : id
+                        }
+                    }).then( respuesta => {
+                        modelo.Persona.findOne({
+                            attributes: ['email'],
+                            where : {
+                                id: id
+                            }
+                        }).then( respuesta2 => {
+                            generarCorreo('Su nueva contraseñá para la fundación procare es: ' + nuevaContrasenna + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare", respuesta2.email , 'Creación de cuenta Fundación Procare');
+                             return {
+                                estado : true,
+                                mensaje : 'actualizada contraseña satisfactoriamnete'
+                            }
+
+                        }).catch( error2 => {
+                            return {
+                                estado : false,
+                                mensaje : 'no hubo que asignar un rol'
+                            }
+                        })
+
+                    }).catch( error => {
+                        return {
+                            estado : false,
+                            mensaje : 'no hubo que asignar un rol'
+                        }
+
+                    })
+
+                });
+            });
+
+        }
+    })
 }

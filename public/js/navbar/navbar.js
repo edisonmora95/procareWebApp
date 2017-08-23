@@ -119,7 +119,7 @@ let navbarApp = new Vue({
 			let menuPad = $('#ulProcareAdministracion');
 			//self.crearLi('Personal','/personal/', menuPad);
 			self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad, 'Crear', 'Buscar');
-			self.crearDropdown(self, 'Usuarios', 'dropUsuarios', '/usuarios/editar','/usuarios',menuPad , 'Editar', 'Ver')
+			self.crearDropdown(self, 'Usuarios', 'dropUsuarios', '/usuarios/editarUsuarios','/usuarios',menuPad , 'Editar', 'Ver')
 			//self.crearLi('Cargos', '/usuarios', menuPad);
 			//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 		},

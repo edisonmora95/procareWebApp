@@ -20,7 +20,7 @@ passport.use(new LocalStrategy({
   passwordField : 'password'
 },
 function(correo, password, done) {
-  console.log('entra aqui passport');
+  console.log('entra aqui passport \n\n');
   modelos.Persona.find({
       attributes: ['id','contrasenna','nombres','apellidos','email','genero'],
       where : {
@@ -38,6 +38,7 @@ function(correo, password, done) {
       estaPersona : persona,
       roles : roles
     })
+    console.log('entra aqui 2.0');
     isMatch = modelos.Persona.compararContrasenna(password, persona.contrasenna, done , persona);
   }).catch( err => {
     console.log('no existe usuario')
