@@ -21,7 +21,6 @@
 								<th>Tipo</th>
 								<th>Etapa</th>
 								<th>Género</th>
-								<th>Integrantes</th>
 							</thead>
 							<tbody>
 								<tr v-for="grupo in grupos" @click="irAGrupo(grupo)">
@@ -29,7 +28,6 @@
 									<td>{{grupo.tipo}}</td>
 									<td>{{grupo.etapaNombre}}</td>
 									<td>{{grupo.genero}}</td>
-									<td>{{grupo.integrantes}}</td>
 								</tr>
 							</tbody>
 						</table>

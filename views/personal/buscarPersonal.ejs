@@ -6,11 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/buscarProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container"  id="main">
 				<h3 class="center-align">Personal</h3>
 				<!--Resultados-->
 				<section id="section-resultados">
@@ -24,7 +24,7 @@
 								<th>Email</th>
 								<th>Convencional</th>
 								<th>Celular</th>
-								<th>Sueldo</th>
+								<th>Tipo</th>
 					
 							</thead>
 							<tbody>
@@ -36,7 +36,7 @@
 									<td>{{personal.email}}</td>
 									<td>{{personal.convencional}}</td>
 									<td>{{personal.celular}}</td>
-									<td>{{personal.sueldo}}</td>
+									<td>{{personal.tipo}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -45,13 +45,10 @@
 			</main>
 		</div>
 		<div>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<% include ../partials/scripts %>
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
-			<script src="/build/personal/tablaPersonalScript.js"></script>
+			<script src="/build/personal/tablaPersonalScript.min.js"></script>
 		</div>
 	</body>
 </html>

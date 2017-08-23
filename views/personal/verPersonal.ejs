@@ -6,13 +6,16 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="app">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="app">
 				<!--Row ver procariano-->
 				<div class="row rowVer" id="rowVer" v-if="!habilitaredicion">
+					<header>
+						<h4 class="center-align">Perfil</h4>
+					</header>
 					<div class="col s12">
 						<div class="card">
 							<div class="card-content">
@@ -72,12 +75,12 @@
 								</section>
 								<section class="row rowVer" >
 									<div class="col s6">
-										<label for="sueldo">Sueldo</label>
-										<p>{{personal.sueldo}}</p>
+										<label for="tipo">Tipo</label>
+										<p>{{personal.tipo}}</p>
 									</div>
 								</section>
 								<div class="row row-botones" v-if="personal.estado!=='inactivo'">
-									<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
+									<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalConfirmarEliminar">Eliminar<a>
 									<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="habilitarEditar">Editar<a>
 								</div>
 							</div><!--End card content-->
@@ -91,46 +94,46 @@
 						<editar :personal="personal" :habilitaredicion="habilitaredicion"  @edicionchanged="habilitaredicion"></editar>	
 					</div>
 				</div>
+
+							<!-- Modal Structure -->
+			  <div id="modalErrorEliminar" class="modal">
+			    <div class="modal-content">
+			      <h4 class="center-align">¡Error!</h4>
+			      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalConfirmarEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">¿Está seguro de que desea eliminar a este persona  de su cargo?</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+			      <a href="#" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalExitoEliminar" class="modal">
+			    <div class="modal-content">
+			      <p class="center-align">Miembro del personal eliminado correctamente.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
 			</main>
 
-			<!-- Modal Structure -->
-		  <div id="modalErrorEliminar" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">¡Error!</h4>
-		      <p class="center-align">Ocurrió un error al tratar de eliminar. Intente nuevamente.</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
-		  <!-- Modal Structure -->
-		  <div id="modalConfirmarEliminar" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align">¿Está seguro de que desea eliminar a este persona  de su cargo?</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
-		      <a href="#!" class="right-align modal-action modal-close waves-effect waves-green btn-flat" @click="eliminar">Sí</a>
-		    </div>
-		  </div>
-		  <!-- Modal Structure -->
-		  <div id="modalExitoEliminar" class="modal">
-		    <div class="modal-content">
-		      <p class="center-align">Miembro del personal eliminado correctamente.</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
+
 		</div>
 		<div>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
+			<% include ../partials/scripts %>
 			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
 			<script src="/scripts/moment/moment.js"></script>
 			<script src="/scripts/moment/locale/es.js"></script>
-			<script src="/build/personal/verPersonalScript.js"></script>
+			<script src="/build/personal/verPersonalScript.min.js"></script>
 		</div>
 	</body>
 </html>

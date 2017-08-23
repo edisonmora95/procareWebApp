@@ -1,9 +1,8 @@
-
 /*
   @Descripcion: Modelo de persona
   @Autor: jose viteri
   @FechaCreacion: 20/05/2017
-  @UltimaFechaModificacion: 30/07/2017 @JoseViteri se agrego sueldo
+  @UltimaFechaModificacion: 19/08/2017 @JoseViteri se agrego tipo, se quito sueldo
 */
 var bcrypt = require('bcryptjs');
 'use strict';
@@ -55,8 +54,8 @@ module.exports = function(sequelize, DataTypes) {
     trabajo : {
       type : DataTypes.TEXT
     },
-    sueldo : {
-      type : DataTypes.DOUBLE
+    tipo : {
+      type : DataTypes.STRING
     }
   }, {
     classMethods: {
@@ -66,7 +65,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err) {
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             if (isMatch){
               return done(null,user, {status : true , message : "Logueado correctamente"});
             }
@@ -77,7 +78,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       compararContrasenna2 :  function(candidatePassword, hash, callback){
         bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) throw err;
+            if(err){
+              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+            }
             return callback(null , isMatch);
 
         });
@@ -95,25 +98,10 @@ module.exports = function(sequelize, DataTypes) {
           celular: persona.celular,
           trabajo: persona.trabajo,
           convencional: persona.convencional,
-          sueldo: persona.sueldo
+          tipo: persona.tipo
         }).then(callback).catch(errorCallback);
       }
-    }/*, hooks : {
-      beforeCreate : (persona, options) => {
-         bcrypt.hash(persona.contrasenna, salt, function(err, hash) {
-            console.log('este es el hash' + hash)
-            persona.contrasenna = hash;
-          });
-
-      }
-    }/*,instanceMethods: {
-        generateHash: function(password) {
-            return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-        },
-        validPassword: function(password) {
-            return bcrypt.compareSync(password, this.password);
-        },
-    }*/
-  });
-  return Persona;
+    }
+    });
+    return Persona;
 };

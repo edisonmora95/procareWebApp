@@ -72,6 +72,7 @@ module.exports = function(sequelize, DataTypes) {
               attributes: [['id', 'personaId'], 'nombres', 'apellidos']
             }
           ],
+          where:{estado: {$not: 'inactivo'}},
           attributes: [['id', 'procarianoId'], 'estado']
         }).then(successCallback).catch(errorCallback);
       },
@@ -104,7 +105,7 @@ module.exports = function(sequelize, DataTypes) {
           include: [
             {
               model: Persona,
-              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+              attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero']
             }
           ],
           attributes: [['id', 'procarianoId']]
@@ -121,6 +122,17 @@ module.exports = function(sequelize, DataTypes) {
               model: Grupo
             }
           ]
+        }).then(success).catch(error);
+      },
+      buscarProcarianosActivos: function(success, error){
+        const Persona = sequelize.import("../models/persona");
+        this.findAll({
+          include : [{
+              model : Persona
+          }], 
+          where : {
+            estado:{$not:'inactivo'}
+          }
         }).then(success).catch(error);
       }
     }

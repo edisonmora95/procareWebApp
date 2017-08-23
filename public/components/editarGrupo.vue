@@ -94,7 +94,6 @@
 			$('select').material_select();
 			$('.modal').modal();
 			this.inicializarDOM(this);
-			console.log(this.grupo)
 		},
 		data() {
 			return{
@@ -227,7 +226,7 @@
 				this.quitarChicoDeGrupo(this, chico);
 			},
 			quitarChicoDeGrupo(self, chico){
-				const urlApi = '/api/pg/quitar/' + chico.id;
+				const urlApi = '/api/pg/quitar/' + chico.idProcariano;
 				$.ajax({
 					type: 'PUT',
 					url: urlApi,

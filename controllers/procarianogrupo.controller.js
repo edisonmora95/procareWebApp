@@ -35,7 +35,7 @@ module.exports.anadirProcarianosAGrupo = (req, res, next) => {
 			}
 			res.json(jsonRespuesta);
 		});
-};
+}
 
 /*
 	@Descripción:
@@ -62,7 +62,6 @@ module.exports.obtenerGrupoDeProcariano = (req, res, next) => {
 	@Return:
 		Http response
 */
-
 module.exports.cambiarDeGrupo = (req, res, next) => {
 	let idProcariano = req.params.id_procariano;
 	let idNuevoGrupo = req.body.idGrupoNuevo;
@@ -79,6 +78,7 @@ module.exports.cambiarDeGrupo = (req, res, next) => {
 		return respuesta.error(res, 'No se pudo quitar del grupo anterior.', '' , errorEliminar);
 	});
 }
+
 /*
 	@Descripción:
 		Añade un procariano a un grupo indicado
@@ -93,6 +93,7 @@ module.exports.anadirProcarianoAGrupo = (req, res, next) => {
 		return respuesta.error(res, 'No se pudo añadir a grupo', '', error);
 	});
 }
+
 /*
 	@Descripción:
 		Saca a un procariano de un grupo indicado

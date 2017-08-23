@@ -26,7 +26,6 @@ let navbarApp = new Vue({
 				url: '/api/login/usuarios',
 				success(res){
 					self.usuario = res;
-					console.log(self.usuario)
 					self.formarNavbar();
 					self.generoUsuarioImagen();
 				}
@@ -69,14 +68,11 @@ let navbarApp = new Vue({
 		*/
 		obtenerGrupoDeAnimador(self, idAnimador){
 			const urlApi = '/api/animadores/' + idAnimador;
-			console.log(urlApi)
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
 				success(res){
-					console.log(res)
 					self.grupoId = res.datos.GrupoId;
-					console.log(self.grupoId)
 				},
 				error(err){
 					console.log(err);
@@ -84,7 +80,7 @@ let navbarApp = new Vue({
 			});
 		},
 		formarNavbar() {
-			if($.inArray('director ejecutivo', this.usuario.roles) >= 0){
+			if($.inArray('Director Ejecutivo', this.usuario.roles) >= 0){
 		  	this.crearDropdownPAd(this); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
 		  }
 		  this.crearDropdownPA();
@@ -118,7 +114,8 @@ let navbarApp = new Vue({
 			*/
 			let menuPad = $('#ulProcareAdministracion');
 			//self.crearLi('Personal','/personal/', menuPad);
-			self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
+			self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad, 'Crear', 'Buscar');
+			self.crearDropdown(self, 'Usuarios', 'dropUsuarios', '/usuarios/editarUsuarios','/usuarios',menuPad , 'Editar', 'Ver')
 			//self.crearLi('Cargos', '/usuarios', menuPad);
 			//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 		},
@@ -148,27 +145,26 @@ let navbarApp = new Vue({
 			let usuarioEsDirectorEjecutivo = self.verificarRolDeUsuario(self, 'Director Ejecutivo');
 			
 			if(usuarioEsDirectorEjecutivo){
-				self.crearLi('Usuarios', '/usuarios/', menuPF);
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+				//self.crearLi('Usuarios', '/usuarios/', menuPF);
+				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
-			if(usuarioEsPersonal){
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF);
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF);
+			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
+				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
 			if(usuarioEsDirectorFormacion){
 
 			}
 			if(usuarioEsAnimador){
 				$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
-					let idGrupo = self.grupoId;
-					let urlGrupo = '/grupos/' + idGrupo;
+					let urlGrupo = '/grupos/' + self.grupoId;
 					self.crearLi('Grupo', urlGrupo, menuPF);	
 				});
 				
 			}
 		},
-		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor){
+		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor, opcion1Navbar, opcion2Navbar){
 			//Creo el li exterior
 			let liExterior = $('<li>');
 			let aExterior = $('<a>').html(htmlAnchorExterior)
@@ -177,8 +173,8 @@ let navbarApp = new Vue({
 			//Creo el ul del dropdown
 			let ulDropdown = $('<ul>').attr({ 'id': idDropdown, 'class': 'dropdown-content' });
 			//Creo los li del dropdown. Crear y Buscar
-			self.crearLi('Crear', rutaCrear, ulDropdown);
-			self.crearLi('Buscar', rutaBuscar, ulDropdown);
+			self.crearLi(opcion1Navbar, rutaCrear, ulDropdown);
+			self.crearLi(opcion2Navbar, rutaBuscar, ulDropdown);
 
 			$('#navbarApp').append(ulDropdown);
 			ulContenedor.append(liExterior);

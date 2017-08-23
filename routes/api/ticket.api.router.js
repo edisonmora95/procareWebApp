@@ -27,4 +27,5 @@ router.delete('/todos/noGanadores', controladorticket.eliminarNoGanadores);
 //Read ticket(solo ganadores)
 router.get('/ganadores', controladorticket.mostrarGanadores);
 
+
 module.exports = router;

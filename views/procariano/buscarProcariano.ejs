@@ -118,13 +118,12 @@
 									<label for="grupo">Grupo</label>
 								</div>
 							</div>
-							
 						</form>
 						<!--<div class="row">-->
-							<div class="input-field col s12">
-								<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
-								<a class="btn-floating waves-effect waves-light red pull right" id="addFilter" href="#modal1"><i class="material-icons">add</i></a>	
-							</div>
+						<div class="input-field col s12">
+							<a class="waves-effect waves-light btn pull right" @click="buscar">Buscar</a>
+							<a class="btn-floating waves-effect waves-light red pull right modal-trigger" id="addFilter" href="#modal1"><i class="material-icons">add</i></a>	
+						</div>
 						<!--</div>-->
 					</div>				
 				</section>
@@ -151,7 +150,7 @@
 									<td>{{procariano.nombres}}</td>
 									<td>{{procariano.apellidos}}</td>
 									<td>{{procariano.cedula}}</td>
-									<td>{{date(procariano.fechaNacimiento)}}</td>
+									<td>{{procariano.fechaNacimiento}}</td>
 									<td>{{procariano.email}}</td>
 									<td>{{procariano.convencional}}</td>
 									<td>{{procariano.celular}}</td>
@@ -171,7 +170,7 @@
 			      <div class="row">
 			      	<form>
 			      		<div class="row">
-			      			<div class="input-field col s3" v-for="elemento in checkboxesAux">
+			      			<div class="checkbox col s3" v-for="elemento in checkboxesAux">
 			      				<input type="checkbox" v-bind:id="elemento.id" v-model="checkboxes" v-bind:value="elemento.value">
 			      				<label v-bind:for="elemento.id">{{elemento.value}}</label>
 			      			</div>

@@ -8,8 +8,8 @@
 
 }
 
-#modal1 {
-	height: 27%;
+.modal {
+	height: 10%;
 	width: 40%;
 	border-radius: 2%;
 
@@ -23,6 +23,10 @@
 body {
 	background-color: #d3dbdb;
 
+}
+
+.is-danger{
+	color: red;
 }
 
 .form-group .fa {

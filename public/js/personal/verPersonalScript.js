@@ -6,9 +6,7 @@
 
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
 import FormPersonal from './../../components/formPersonal.vue';
-Vue.component('navbar', Navbar); 
 Vue.component('editar', FormPersonal);
 
 var app = new Vue({
@@ -55,7 +53,7 @@ var app = new Vue({
 				}
 			});
 		},
-		eliminar: function(){
+		eliminar(){
 			
 			var self = this;
 			console.log('este es el id ' + self.idPersonal);
@@ -65,13 +63,17 @@ var app = new Vue({
 				url: urlApi,
 				success: function(res){
 					if (res.estado) {
+						
 						$('#modalExitoEliminar').modal('open');
 					}else{
+						
 						$('#modalErrorEliminar').modal('open');
 					}
 				},
 				error : function(error){
-
+					console.log(error)
+					
+					$('#modalErrorEliminar').modal('open');
 				}
 			});
 			

@@ -56,8 +56,8 @@ const crearEvento = (req, res, next) => {
 }
 
 const eliminarEvento = (req, res, next) => {
-   estado = 'inactivo';
-   modelo.Evento.update({
+  estado = 'inactivo';
+  modelo.Evento.update({
     
     estado : estado
 
@@ -87,7 +87,7 @@ const eliminarEvento = (req, res, next) => {
 const editarEvento = (req, res, next) => {
   modelo.Evento.update({
     
-     idOrganizador : req.body.id_organiador,
+    idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
     fecha : req.body.fecha,
     descripcion : req.body.descripcion,
@@ -153,8 +153,6 @@ const mostrarEventos = (req,res,next) =>{
       sequelizeStatus : respuesta2
     })
 
-
-
   }).catch( error => {
     var status = false;
     var mensaje = 'no se puede mostrar'
@@ -167,9 +165,34 @@ const mostrarEventos = (req,res,next) =>{
   });
 }
 
+
+const cambiarEstado = (req, res, next) => {
+  const idEvento = req.params.id;
+  const estadoNuevo = req.body.estadoNuevo;
+  let Evento = modelo.Evento;
+
+  Evento.cambiarEstado(idEvento, estadoNuevo, (success) => {
+    
+    const cantidadRegistrosCambiados = parseInt(success);
+
+    if(cantidadRegistrosCambiados === 1){
+      return respuesta.okUpdate(res, 'Evento cambiada de estado', success);  
+    }else if( cantidadRegistrosCambiados > 1){
+      return respuesta.error(res, 'Se cambió de estado a ' + success + ' tareas', '', success);
+    }else if( cantidadRegistrosCambiados < 1){
+      return respuesta.error(res, 'Error al intentar cambiar de estado', '', success);
+    }
+
+  }, (error) => {
+    return respuesta.error(res, 'Error al intentar cambiar de estado', '', error);
+  });
+
+};
+
 module.exports = {
   crearEvento,
   eliminarEvento,
   editarEvento,
-  mostrarEventos
+  mostrarEventos,
+  cambiarEstado
 }

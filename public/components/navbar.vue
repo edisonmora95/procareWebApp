@@ -223,8 +223,8 @@
 				let menuPad = $('#ulProcareAdministracion');
 				//self.crearLi('Personal','/personal/', menuPad);
 				self.crearDropdown(self, 'Personal', 'dropPersonal', '/personal/nuevo', '/personal/', menuPad);
-				//self.crearLi('Cargos', '/usuarios', menuPad);
-				//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
+				self.crearLi('Cargos', '/usuarios', menuPad);
+				self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 			},
 			crearDropdownPA() {
 				//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
@@ -326,7 +326,8 @@
 						 			}else if ( element.genero == 'femenino') {
 						 					self.elegidoFormacionMujer = element;
 						 			}
-						 		}								
+						 		}		"nombre, apellido, genero, id, correos ,  y la tabla de cargos	"
+						 		"se creo "				
 							});
 
 						}else{

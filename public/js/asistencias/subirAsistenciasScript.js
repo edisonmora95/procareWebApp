@@ -24,8 +24,16 @@ var app = new Vue({
 	methods: {
     inicializarDOM(self){
       $('.datepicker').pickadate({
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        today: 'Hoy',
+        clear: 'Limpiar',
+        close: 'Cerrar',
         selectMonths: true, // Creates a dropdown to control month
-        selectYears: 100 // Creates a dropdown of 50 years to control year
+        selectYears: 100, // Creates a dropdown of 15 years to control year,
+        closeOnSelect: true // Close upon selecting a date,
       });
       $(".button-collapse").sideNav();
       $('.modal').modal();
@@ -65,7 +73,11 @@ var app = new Vue({
       @Descripción: Valida que la fecha ingresada sea correcta dependiendo del grupo seleccionado.
     */
     validarFechaAsistencia(self){
-      let fechaSeleccionada = new Date($('#fechaAsistencia').val());
+      var year = $('#fechaAsistencia').pickadate('picker').get('highlight', 'yyyy');
+      var day = $('#fechaAsistencia').pickadate('picker').get('highlight', 'dd');
+      var month = $('#fechaAsistencia').pickadate('picker').get('highlight', 'mm');
+      var fecha = year + '/' + month + '/' + day;
+      let fechaSeleccionada = new Date(fecha);
       let diaSeleccionado = fechaSeleccionada.getDay();
       let jueves = 4;
       let martes = 2;
@@ -234,4 +246,3 @@ var app = new Vue({
 	}
 });
 //2 way data binding de la fecha-asistencia
-

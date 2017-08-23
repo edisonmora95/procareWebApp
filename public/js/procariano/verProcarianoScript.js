@@ -86,19 +86,25 @@ var app = new Vue({
 				}
 			});
 		},
-		eliminar: function(){
+		eliminar(){
+			console.log('entra en eliminar')
 			var self = this;
-			var urlApi= '/api/procarianos/' + self.id;
+			var urlApi= '/api/procarianos/' + self.idProcariano;
 			$.ajax({
 				type: 'DELETE',
 				url: urlApi,
 				success: function(res){
+					console.log(res);
 					if (res.status) {
 						self.procariano.estado = 'inactivo';
+						console.log('')
 						$('#modalExitoEliminar').modal('open');
 					}else{
 						$('#modalErrorEliminar').modal('open');
 					}
+				},
+				error : function(error){
+					$('#modalErrorEliminar').modal('open');
 				}
 			});
 		},

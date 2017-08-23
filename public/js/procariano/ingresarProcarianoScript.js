@@ -98,8 +98,8 @@ var main = new Vue({
     */
     inicializarMaterialize(self){
     	$('.datepicker').pickadate({
-				monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-			  monthsShort: ['En', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			  monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			  monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
 			  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
 			  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
 			  today: 'Hoy',
@@ -294,6 +294,10 @@ var main = new Vue({
     	}else if( tipoProcariano === '3' ){
     		self.procariano.grupo = self.grupoPescadoresSel;
     	}
+    },
+    cancelar(){
+    	window.location.href = '/procarianos/'
+    	//console.log('debo agregar esa vista aun');
     },
     ingresarProcariano(self){
     	let urlApi = '/api/procarianos/';

@@ -6,91 +6,95 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/ingresarProcarianoStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
 			<!--<button @click="llenarBaseDeDatos">Llenar base</button>-->
-			<main class="container">
+			<main class="container"  id="main">
 				<div class="row" id="row-form">
 					<h2 class="center-align titulo">Ingresar personal</h2>
 					<form class="col s12" @submit.prevent="validateBeforeSubmit">
 						<!--Row nombres y apellidos-->
 						<section class="row row-nombres-apellidos">
-							<div class="input-field col s6">
-								<input type="text" name="nombres" id="nombres" v-model="personal.nombres" v-validate="'required|alpha_spaces'">
-								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+							<div class="col s6">
 								<label for="nombres">Nombres</label>
+								<input type="text" name="nombres" id="nombres" v-model="personal.nombres" v-validate="'required|alpha_spaces'">
+								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>			
 							</div>
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="apellidos">Apellidos</label>
 								<input type="text" name="apellidos" id="apellidos" v-model="personal.apellidos" v-validate="'required|alpha_spaces'">
 								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
-								<label for="apellidos">Apellidos</label>
+								
 							</div>
 						</section>
 						<!--Row cedula y fecha nacimiento-->
 						<section class="row row-cedula-fecha">
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="fecha-nacimiento">Fecha de nacimiento</label>
 								<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="personal.fechaNacimiento" v-validate="'required'">
 								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 18 años.</span>
-								<label for="fecha-nacimiento">Fecha de nacimiento</label>
+								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar menores de 18 años.</span>
+								
 							</div>
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="cedula">Cédula</label>
 								<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
 								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
-								<label for="cedula">Cédula</label>
+								
 							</div>
 						</section>
 						<!--Row direccion y email-->
 						<section class="row row-direccion-email">
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="direccion">Dirección</label>
 								<input type="text" name="direccion" id="direccion" v-model="personal.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
 								<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
-								<label for="direccion">Dirección</label>
+								
 							</div>
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="email">Email</label>
 								<input type="email" name="email" id="email" v-model="personal.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
 								<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
-								<label for="email">Email</label>
+								
 							</div>
 						</section>
 						<!--Row celular y convencional-->
 						<section class="row row-celular-convencional">
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="celular">Celular</label>
 								<input type="tel" name="celular" id="celular" v-model="personal.celular" v-validate="'numeric'">
 								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
-								<label for="celular">Celular</label>
+								
 							</div>
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="convencional">Convencional</label>
 								<input type="tel" name="convencional" id="convencional" v-model="personal.convencional" v-validate="'numeric'">
 								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
-								<label for="convencional">Convencional</label>
+								
 							</div>
 						</section>
 						<!--Row genero y tipo-->
 						<section class="row row-genero-tipo">
-							<div class="input-field col s6">
+							<div class="col s6">
+								<label for="selectGenero">Género</label>
 								<v-select id="selectGenero" name="selectGenero" v-model="personal.genero" select-text="">
-									<option value="" disabled selected></option>	
 									<option value="masculino">Masculino</option>
 									<option value="femenino">Femenino</option>
 								</v-select>
-								<label for="selectGenero">Género</label>
+								
 							</div>
-							<div class="input-field col s6">
-								<input type="tel" name="sueldo" id="sueldo" v-model="personal.sueldo" v-validate="'required|decimal:2'">
-								<span v-show="errors.has('sueldo')" class="help is-danger">{{ errors.first('sueldo') }}</span>
-								<label for="sueldo">Sueldo</label>
+							<div class="col s6">
+								<label for="tipo">Tipo</label>
+								<input type="tel" name="tipo" id="tipo" v-model="personal.tipo" >
+								<span v-show="errors.has('tipo')" class="help is-danger">{{ errors.first('tipo') }}</span>
+								
 							</div>
 						</section>
-						<!--Chico formacion-->
-						<!--Caminante-->
-						<!--Pescador-->
-						<!--Sacerdote-->
 						<!--Botones-->
 						<div class="row row-botones">
-							<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="cancelar" >Cancelar<a>
+							<a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" @click="cancelar">Cancelar<a>
 							<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="validateBeforeSubmit">Crear<a>
 						</div>
 					</form>
@@ -104,28 +108,25 @@
 			      <a href="/personal/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 			    </div>
 			  </div>
+			  <div id="modalError" class="modal">
+			    <div class="modal-content">
+			      <h4 class="center-align">Formulario con errores.</h4>
+			      <p class="center-align" v-if="errorObj.statusApi">Existe un error del campo: "{{errorObj.campo}}"</p>
+			      <p class="center-align">Con el siguiente mensaje de error: </p>
+			      <p class="center-align">"{{errorObj.msj}}"</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			    </div>
+			  </div>
 			</main>
 			<!-- Modal Structure -->
-		  <div id="modalError" class="modal">
-		    <div class="modal-content">
-		      <h4 class="center-align">Formulario con errores.</h4>
-		      <p class="center-align" v-if="errorObj.statusApi">Existe un error del campo: "{{errorObj.campo}}"</p>
-		      <p class="center-align">Con el siguiente mensaje de error: </p>
-		      <p class="center-align">"{{errorObj.msj}}"</p>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-		    </div>
-		  </div>
+
 		</div>
 		<div>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-			<!-- Compiled and minified JavaScript -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-			<script src='https://unpkg.com/vue@2.3.3'></script>
-			<!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-			<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-			<script src="/build/personal/ingresarPersonalScript.js"></script>
+			<% include ../partials/scripts %>
+			<script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+			<script src="/build/personal/ingresarPersonalScript.min.js"></script>
 		</div>
 	</body>
 </html>

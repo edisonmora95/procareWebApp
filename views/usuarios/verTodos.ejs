@@ -2,25 +2,32 @@
 <html>
 	<head>
 		<% include ../partials/head %>
+		<!--
  		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
- 		<link rel="stylesheet" href="/stylesheets/usuarios/tableMaterial.css">
+ 		<link rel="stylesheet" href="/stylesheets/usuarios/tableMaterial.css">-->
  		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
  		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
 	</head>
 	<body>
-		<div id="main">
+		<div>
 			<header>
-				<navbar></navbar>
+				<% include ../partials/navbar %>
 			</header>
-			<main class="container">
+			<main class="container" id="main">
 				<section id="section-resultados">
 					<div class="row">
 					  <div id="admin" class="col s12">
+					  	<div class="row">
+					  		<div class="s4 m4" >
+					  			<h2 style="text-align: center;">Usuarios</h3>
+					  		</div>
+					  	</div>
+					  	
 					    <div class="material-table">
 					      <div class="table-header">
-					        <span class="table-title">Tabla de Cargos</span>
+					        <!--<span class="table-title">Tabla de Cargos</span>
 					        <div class="actions">
-					          <a href="#modalFormacion" class="modal-trigger waves-effect btn-flat no-uppercase"> {{valorBotonFormacion}}</a>
+					          <a href="#modalFormacion" class="modal-trigger waves-effect btn-flat no-uppercase"> {{valorBotonFormacion}}</a>-->
 					          <!--<a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>-->
 					        </div>
 					      </div>
@@ -30,7 +37,7 @@
 										<th>Apellidos</th>
 										<th>Email</th>
 										<th>Rol</th>
-										<th>Acción</th>
+										<!--<th>Acción</th>-->
 									</thead>
 									<tbody>
 										<tr v-for="usuario in listaUsuarios">
@@ -41,21 +48,23 @@
 												<a  class='dropdown-button' href='#' :data-activates='usuario.id' data-constrainWidth="false" >
 													<i class="material-icons">remove_red_eye</i>
 												</a>
-												<ul :id='usuario.id' class='dropdown-content' >
-													<div v-for="rol in usuario.rolText">
-														<li><a href="#!">{{rol}}</a></li>	
+												<ul class='dropdown-content' >
+													<div v-for="rol in usuario.Rols">
+														<li><a href="#!">{{rol.nombre}}</a></li>	
 														<li class="divider"></li>
 													</div>
 												</ul>
 											</td>
-											<td>
+											<!--<td>
 												<a href="#modalEditarUsuario" class="waves-effect waves-light">
 													<i class="material-icons" @click="seleccionarUsuario(usuario)">mode_edit</i>
 												</a>
-											</td>
+											</td>-->
 										</tr>
 									</tbody>
 								</table>
+								<pre></pre>
+
 					    </div>
 					  </div>
 					</div>
@@ -79,7 +88,7 @@
 		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Agree</a>
 		    </div>
 		  </div>
-
+			<!--
 		  <div id="modalFormacion" class="modal">
 		    <div class="modal-content" id="modal-content">
 		      <h4 class="center-align">Asignación de directores de formación </h4>
@@ -104,12 +113,14 @@
 		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Aceptar</a>
 		    </div>
 		  </div>
+		  -->
 		</div>
 		<div id="scripts">
 			<% include ../partials/scripts %>
-  		<script src="/js/libs/jquery.dataTables.min.js"></script>
-			<script src="/js/usuarios/tableMaterial.js"></script>
-			<script src="/build/usuarios/verTodosScript.js"></script>
+  			<!--<script src="/js/libs/jquery.dataTables.min.js"></script>
+  			<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+			<script src="/js/usuarios/tableMaterial.js"></script>-->
+			<script src="/build/usuarios/verTodosScript.min.js"></script>
 		</div>
 	</body>
 </html>

@@ -15,16 +15,15 @@
 				</div>
 			</v-row>
 			<v-row id="rowCedulaFechaNacimiento">
-				<div class="col s6 input-field">
-					<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
-					 <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+				<div class="col s6">
 					<label for="cedula" class="active">Cédula</label>
+					<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
+					<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 				</div>
-				<div class="col s6 input-field">
-					<!--<v-date-input id="fechaNacimiento" name="fechaNacimiento" v-model="fechaAux" v-validate="'required'"></v-date-input>-->
+				<div class="col s6">
+					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-					<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
 				</div>
 			</v-row>
 			<v-row id="rowDirEmail">
@@ -119,7 +118,6 @@
 		@FechaCreación: *-06-2017
 	*/
 	'use strict'; 
-
 	import Materials from 'vue-materials';
 	Vue.use(Materials);
 	Vue.use(VeeValidate);
@@ -152,7 +150,6 @@
 		}
 	};
 	VeeValidate.Validator.updateDictionary(dictionary);
-
 	module.exports = {
 		props: ['procariano', 'habilitaredicion', 'grupoprocariano', 'tipoprocariano'],
 		data(){
@@ -191,8 +188,16 @@
 			inicializarMaterialize(self){
 				$('.modal').modal();
 				$('.datepicker').pickadate({
-					selectMonths: true, // Creates a dropdown to control month
-					selectYears: 100 // Creates a dropdown of 15 years to control year
+					monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+					monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+					weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+					weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+					today: 'Hoy',
+					clear: 'Limpiar',
+					close: 'Cerrar',
+				    selectMonths: true, // Creates a dropdown to control month
+				    selectYears: 100, // Creates a dropdown of 15 years to control year
+				    closeOnSelect: true // Close upon selecting a date
 				});
 				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
 				let picker = datePickerFechaNacimiento.pickadate('picker');
@@ -201,7 +206,6 @@
 				$('#fechaNacimiento').change(function(){
 					self.bindFechaNacimiento();
 				});
-
 				//Asignación de temporales de grupo previo
 				const tempGrupoProcarianoId = self.grupoprocariano.id;
 				const tempGrupoProcarianoText = self.grupoprocariano.text;
@@ -212,7 +216,6 @@
 				const tempTipoPrevioText = self.tipoprocariano.text;
 				self.tempTipoPrevio.id = tempTipoProcarianoId;
 				self.tempTipoPrevio.text = tempTipoPrevioText;
-
 				//Habilidar cambio de grupo
 				$('#grupoSelect').change(function(){
 					self.abrirModalCambioGrupo(self);
@@ -230,15 +233,14 @@
 			obtenerTodosLosGrupos(self){
 				self.grupos = [];
 				$.get('/api/grupos/', function(res){
-					const conexionExitosa = (res.estado && res.mensaje === 'Se obtuvieron los grupos');
-					if(conexionExitosa){
+					if(res.estado){
 						self.gruposObtenidos = res.datos;
 						self.armarArraysGrupos(self.gruposObtenidos, self);
 					}
 				});
 			},
 			/*
-				@Descripción: Arma los arrays de grupos obtenidos de la base de datos
+				@Descripción: Divide los grupos obtenidos en Formación, Caminantes, etc...
 				@Params:
 					grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
 	    */
@@ -248,7 +250,6 @@
 	    	self.gruposCaminantes = [];
 	    	self.gruposPescadores = [];
 	    	self.gruposMayores = [];
-
 	    	$.each(grupos, function(index, grupo){
 	    		let grupoObj = {
 	  				id: grupo.id,
@@ -273,7 +274,7 @@
 	    */
 	    formarArrayGruposAMostrar(self){
 	    	let tipoProcariano = self.tipoprocariano.text;
-	    	if(tipoProcariano === 'Chico Formación'){
+	    	if(tipoProcariano === 'Procare Formación'){
 	    		self.grupos = self.gruposFormacion;
 	    	}else if(tipoProcariano === 'Caminante'){
 	    		self.grupos = self.gruposCaminantes;
@@ -386,7 +387,6 @@
 	    abrirModalCambioGrupo(self){
 	    	self.grupoprocariano.text = $('#grupoSelect option:selected').text();
 	    	self.grupoprocariano.id = $('#grupoSelect option:selected').val();
-
 	    	$('#modalCambioGrupo').modal('open');
 	    },
 	    cambiarDeGrupo(){
@@ -405,7 +405,6 @@
 		    		success(res){
 		    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
 		    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
-
 		    			if(res.estado){
 		    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
 		    				self.tempGrupoPrevio.id = $('#grupoSelect option:selected').val();
@@ -426,7 +425,6 @@
 		    				self.grupoprocariano.text = tempGrupoPrevioText;
 		    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 		    			}else{
-
 		    			}
 		    		},
 		    		error(err){

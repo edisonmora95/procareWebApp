@@ -6,9 +6,8 @@
 */
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
+
 import Materials from 'vue-materials';
-Vue.component('navbar', Navbar); 
 Vue.use(Materials);
 Vue.use(VeeValidate);
 /*
@@ -72,7 +71,7 @@ var main = new Vue({
 			genero: '',
 			//estado: 'activo',	//deberia estar en persona
 			trabajo: '',
-			sueldo: ''
+			tipo: ''
 
 		}
 	},
@@ -131,6 +130,8 @@ var main = new Vue({
       		}
       	},
       	error : function(err){
+      		self.errorObj.msj = err.mensaje;
+      		self.errorObj.statusApi = false;
       		console.log(err);
       	}
       });
@@ -142,9 +143,17 @@ var main = new Vue({
     */
     inicializarMaterialize(self){
     	$('.datepicker').pickadate({
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 100 // Creates a dropdown of 15 years to control year
-			});
+				monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			  monthsShort: ['En', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+			  today: 'Hoy',
+			  clear: 'Limpiar',
+			  close: 'Cerrar',
+		    selectMonths: true, // Creates a dropdown to control month
+		    selectYears: 100, // Creates a dropdown of 15 years to control year,
+		    closeOnSelect: true // Close upon selecting a date,
+		  });
 			$(".button-collapse").sideNav();
 			$('.modal').modal();
     },

@@ -1,3 +1,4 @@
+ 
 /*
 @Descripcion: Modelo de procariano
 @Autor: jose viteri
@@ -51,4 +52,7 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   return Benefactor;
+ 
 };
+ 
+

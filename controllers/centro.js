@@ -39,9 +39,9 @@ const crearCentro = (req, res, next) => {
 }
 
 const eliminarCentro = (req, res, next) => {
-   estado = 'inactivo';
-   idCentro = req.params.id;
-   modelo.Centro.update({
+  estado = 'inactivo';
+  idCentro = req.params.id;
+  modelo.Centro.update({
     estado : estado
   },{
     where:{
