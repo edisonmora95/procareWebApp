@@ -67,9 +67,9 @@ var main = new Vue({
 					console.log(res);
 					if(res.estado){
 						$.each(res.datos, function(index, personalEncontrado){
-							  console.log('HOLA');
+							  //console.log('HOLA');
 							  console.log(personalEncontrado);
-							  console.log('bien');
+							  //console.log('bien');
 								self.arregloPersonal.push(personalEncontrado);
 							});
 						console.log(res)
