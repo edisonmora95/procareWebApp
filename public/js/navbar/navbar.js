@@ -146,9 +146,8 @@
 			
 			if(usuarioEsDirectorEjecutivo){
 				//self.crearLi('Usuarios', '/usuarios/', menuPF);
-				//self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
 				//self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/nuevo','/asistencias/', menuPF,'Crear','Buscar');
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
+				self.crearDropdownUn(self, 'Procarianos', 'dropProcarianos','/procarianos/', menuPF,'Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
 				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
@@ -158,12 +157,26 @@
 
 			}
 			if(usuarioEsAnimador){
-				$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
+				/*$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
 					let urlGrupo = '/grupos/' + self.grupoId;
 					self.crearLi('Grupo', urlGrupo, menuPF);	
 				});
-				
+				*/
 			}
+		},
+		crearDropdownUn(self, htmlAnchorExterior, idDropdown, rutaBuscar, ulContenedor, opcion1Navbar){
+			//Creo el li exterior
+			let liExterior = $('<li>');
+			let aExterior = $('<a>').html(htmlAnchorExterior)
+															.attr({'class':'dropdown-button', 'href':'#', 'data-activates':idDropdown, 'data-hover':'hover'});
+			liExterior.append(aExterior);
+			//Creo el ul del dropdown
+			let ulDropdown = $('<ul>').attr({ 'id': idDropdown, 'class': 'dropdown-content' });
+			//Creo li del dropdown. Buscar
+			self.crearLi(opcion1Navbar, rutaBuscar, ulDropdown);
+
+			$('#navbarApp').append(ulDropdown);
+			ulContenedor.append(liExterior);
 		},
 		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor, opcion1Navbar, opcion2Navbar){
 			//Creo el li exterior
