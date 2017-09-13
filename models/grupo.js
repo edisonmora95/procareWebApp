@@ -128,7 +128,27 @@ module.exports = function(sequelize, DataTypes) {
             id: grupo.id
           }
         }).then(success).catch(error);
-      }
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON TRANSACCIONES
+      ///////////////////////////////////////
+      crearGrupoT: function(grupo, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            nombre: grupo.nombre,
+            tipo: grupo.tipo,
+            cantidadChicos: grupo.cantidadChicos,
+            numeroReuniones: grupo.numeroReuniones,
+            genero: grupo.genero
+          }, { transaction : transaction })
+          .then( grupo => {
+            return resolve(grupo);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
     },
     hooks : {
       

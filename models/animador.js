@@ -57,7 +57,28 @@ module.exports = function(sequelize, DataTypes) {
             fechaFin: null
           }).then(success).catch(errorCreate);
         }).catch(errorUpdate);
-      }
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON TRANSACCIONES
+      ///////////////////////////////////////
+      agregarAnimadorAGrupoT: function(idAnimador, idGrupo, transaction){
+        return new Promise( (resolve, reject) => {
+          if(!idAnimador) return reject('No ingresó el animador');
+          if(!idGrupo) return reject('No ingresó el grupo');
+          return this.create({
+            ProcarianoId: idAnimador,
+            GrupoId: idGrupo,
+            fechaInicio: new Date(),
+            fechaFin: null
+          }, { transaction : transaction })
+          .then( registro => {
+            return resolve(registro);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
     }
   });
   return Animador;

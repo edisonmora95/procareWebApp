@@ -19,9 +19,46 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+      },
+      buscarRolDePersonaPorId: function(idPersona){
+        return new Promise( (resolve, reject) => {
+          return this.findOne({
+            where: {
+              fechaFin : null,
+              PersonaId : idPersona,
+              RolNombre : 'Animador'
+            }
+          })
+          .then( registro => {
+            return resolve(registro);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      ////////////////////////////////////
+      //FUNCIONES CON TRANSACCIONES
+      ////////////////////////////////////
+      asignarRolT: function(idPersona, rol, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            fechaInicio : new Date(),
+            fechaFin : null,
+            PersonaId : idPersona,
+            RolNombre : rol
+          }, { transaction : transaction })
+          .then( registro => {
+            return resolve(registro);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
       }
     },
     freezeTableName: true
   });
+
   return PersonaRol;
 };

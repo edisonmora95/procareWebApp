@@ -38,7 +38,26 @@ module.exports = function(sequelize, DataTypes) {
             fechaFin: null
           }).then(success).catch(errorCreate);
         }).catch(errorUpdate);
-      }
+      },
+      ////////////////////////////////////
+      //FUNCIONES CON TRANSACCIONES
+      ////////////////////////////////////
+      crearGrupoEtapaT: function(idGrupo, idEtapa, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            EtapaId: idEtapa,
+            GrupoId: idGrupo,
+            fechaInicio: new Date(),
+            fechaFin: null
+          }, { transaction : transaction})
+          .then( (registro) => {
+            return resolve(registro);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
     },
     freezeTableName: true
   });

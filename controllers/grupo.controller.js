@@ -5,11 +5,17 @@
 @UltimaFechaModificacion: 31/05/2017 @GustavoTotoy
 */
 'use strict';
+//const sequelize = require('sequelize');
 var modelo = require('../models');
-let respuesta = require('../utils/respuestas');
+const ModeloGrupo = require('../models/').Grupo;
+const ModeloGrupoEtapa = require('../models/').GrupoEtapa;
+const ModeloAnimador = require('../models/').Animador;
+const ModeloProcariano = require('../models/').Procariano;
+const ModeloPersonaRol = require('../models/').PersonaRol;
+const respuesta = require('../utils/respuestas');
+const co = require('co');
 
-
-module.exports.crearGrupo = (req, res, next) => {
+module.exports.crearGrupo = (req, res) => {
 	let grupoObj = {
 		nombre : req.body.nombre,
 		tipo : req.body.tipo,
@@ -19,93 +25,31 @@ module.exports.crearGrupo = (req, res, next) => {
 	};
 	let idEtapa = req.body.etapa;
 	let idAnimador = req.body.animador;
-	
-	modelo.Grupo.crearGrupo(grupoObj, (grupo) => {
-		let idGrupo = grupo.get('id');
-		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
-			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
-				//se va a asignar el rol :"V
-				modelo.Procariano.findOne({
-					where:{id : idAnimador}
-				}).then( procariano => {
-					modelo.PersonaRol.findOne({
-						where: {
-							fechaFin : null,
-							PersonaId : procariano.get('PersonaId'),
-							RolNombre : 'Animador'
-						}
-					}).then( rolBuscar => {
-						if(rolBuscar!=null){
-							let datos = {
-								grupo : grupo,
-								grupoEtapa: grupoEtapa,
-								animador: animador
-							};
-							return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
-						}else{
-							modelo.PersonaRol.create({
-								fechaInicio : new Date(),
-								fechaFin : null,
-								PersonaId : procariano.get('PersonaId'),
-								RolNombre: 'Animador'
-							}).then( rol => {
-								let datos = {
-									grupo : grupo,
-									grupoEtapa: grupoEtapa,
-									animador: animador,
-									rol: rol
-								};
-								return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
-							}).catch( errorRol => {
-								let datos = {
-									grupo: grupo,
-									grupoEtapa: grupoEtapa,
-									animador: animador,
-									procariano: procariano,
-									errorRolBuscar: errorRolBuscar,
-									errorRol: errorRol
-								};
-								return respuesta.error(res, 'Error en la nueva asignación', '', datos);
-							});
-						}
-					}).catch( errorRolBuscar => {
-						let datos = {
-							grupo: grupo,
-							grupoEtapa: grupoEtapa,
-							animador: animador,
-							procariano: procariano,
-							errorRolBuscar: errorRolBuscar
-						};
-						return respuesta.error(res, 'Algo sucedio busquedad del Animador', '', datos);
-					})
-				}).catch( errorProcariano => {
-					let datos = {
-						grupo : grupo,
-						grupoEtapa: grupoEtapa,
-						animador: animador,
-						errorProcariano: errorProcariano
-					};
-					return respuestas.error(res, 'Algo sucedio en busquedad de Procariano', '', datos);
-				})
-				//continuamos
-			}, (errorAnimador) => {
-				let datos = {
-					grupo : grupo,
-					grupoEtapa: grupoEtapa,
-					errorAnimador: errorAnimador
-				};
-				return respuesta.error(res, 'No se pudo añadir el animador', '', datos);
-			});
-		}, (errorGrupoEtapa) => {
-			let datos = {
-				grupo: grupo,
-				errorGrupoEtapa : errorGrupoEtapa
-			};
-			return respuesta.error(res, 'No se pudo añadir a la etapa', '',datos);
-		});
-	}, (errorGrupo) => {
-		let mensajeError = errorGrupo.errors[0].message;
-		return respuesta.error(res, 'No se pudo crear el grupo', mensajeError, errorGrupo);
+	let datosRespuesta = {};
+
+	co(function* (){
+		let t 					= 	yield inicializarTransaccion();
+    let grupo 			= 	yield ModeloGrupo.crearGrupoT(grupoObj, t);
+    let idGrupo 		= 	grupo.get('id');
+    let grupoetapa 	= 	yield ModeloGrupoEtapa.crearGrupoEtapaT(idGrupo, idEtapa, t);
+  	let animador 		= 	yield ModeloAnimador.agregarAnimadorAGrupoT(idAnimador, idGrupo, t);
+  	let procariano 	= 	yield ModeloProcariano.buscarProcarianoPorId(idAnimador);
+  	const idPersona = 	procariano.get('PersonaId');
+  	let rolAsignado = 	yield ModeloPersonaRol.buscarRolDePersonaPorId(idPersona);
+
+  	if(rolAsignado === null){
+  		let rol = yield ModeloPersonaRol.asignarRolT(idPersona, 'Animador', t);
+  		datosRespuesta.rol = rol;
+  	}
+
+    t.commit();
+    datosRespuesta.grupo = grupo;
+    datosRespuesta.grupoetapa = grupoetapa;
+    datosRespuesta.animador = animador;
+    return respuesta.okCreate(res, datosRespuesta);
+
+	}).catch( fail => {
+		return respuesta.error(res, 'No se pudo crear el grupo', '', fail);
 	});
 };
 
@@ -289,9 +233,19 @@ module.exports.obtenerGrupoPorId = (req, res, next) => {
 	});
 };
 
-
+////////////////////////////////////////////////////////////
 //FUNCIONES INTERNAS
-/*
-cambiarAnimadorDeGrupo(){
-
-}*/
+////////////////////////////////////////////////////////////
+function inicializarTransaccion(){
+	return new Promise( (resolve, reject) => {
+		modelo.sequelize.transaction({
+			autocommit: false,
+		})
+		.then( result => {
+			return resolve(result);
+		})
+		.catch( fail => {
+			return reject(fail);
+		});
+	});
+}

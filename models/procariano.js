@@ -134,6 +134,20 @@ module.exports = function(sequelize, DataTypes) {
             estado:{$not:'inactivo'}
           }
         }).then(success).catch(error);
+      },
+      buscarProcarianoPorId: function(idProcariano){
+        return new Promise( (resolve, reject) => {
+          if (!idProcariano) return reject('No ingresó el id del procariano a buscar.');
+          return this.findOne({
+            where : { id : idProcariano }
+          })
+          .then( procariano => {
+            return resolve(procariano);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        })
       }
     }
   });
