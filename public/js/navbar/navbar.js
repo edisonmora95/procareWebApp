@@ -1,4 +1,4 @@
-let navbarApp = new Vue({
+﻿let navbarApp = new Vue({
 	el: '#navbarApp',
 	created(){
 		this.obtenerUsuarioLogeado(this);
@@ -83,7 +83,7 @@ let navbarApp = new Vue({
 			if($.inArray('Director Ejecutivo', this.usuario.roles) >= 0){
 		  	this.crearDropdownPAd(this); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
 		  }
-		  this.crearDropdownPA();
+		  //this.crearDropdownPA();
 			this.crearDropdownPF(this);
 		},
 		crearDropdownPAd(self){
@@ -119,21 +119,21 @@ let navbarApp = new Vue({
 			//self.crearLi('Cargos', '/usuarios', menuPad);
 			//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 		},
-		crearDropdownPA() {
+		/*crearDropdownPA() {
 			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
 			let liAsistencias = $('<li>');
 			let aAsistencias = $('<a>').html('Asistencias');
 			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
+			//$('#ulProcareAccion').append(liAsistencias);
 			let liParalelos = $('<li>');
 			let aParalelos = $('<a>').html('Paralelos');
 			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
+			//$('#ulProcareAccion').append(liParalelos);
 			let liNinos = $('<li>');
 			let aNinos = $('<a>').html('Niños');
 			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
+			//$('#ulProcareAccion').append(liNinos);
+		},*/
 		crearDropdownPF(self) {
 			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
 			let menuPF = $('#ulProcareFormacion');
@@ -146,7 +146,8 @@ let navbarApp = new Vue({
 			
 			if(usuarioEsDirectorEjecutivo){
 				//self.crearLi('Usuarios', '/usuarios/', menuPF);
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				//self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
+				//self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/nuevo','/asistencias/', menuPF,'Crear','Buscar');
 				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
