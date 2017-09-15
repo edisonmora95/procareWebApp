@@ -67,8 +67,7 @@ var main = new Vue({
     mounted: function() {
 
         this.inicializarMaterialize(this);
-        $('#modalBenfactorCreado').modal();
-        $('#modalError').modal();
+
 
     },
     data: {
@@ -156,8 +155,12 @@ var main = new Vue({
                 this.$validator.validateAll().then(() => {
                     if (parametro == "nuevo") {
                         self.ingresarBenefactor();
+
+
                     } else {
                         self.ActualizarBenefactor();
+
+
                     }
 
 
@@ -205,6 +208,7 @@ var main = new Vue({
                 url: urlApi,
                 data: self.benefactor,
                 success: function(res) {
+                    // $('#modalBenfactorCreado').modal('open');
                     console.log(res.estado);
                     console.log("QUE PASO?");
                     if (res.estado) {
@@ -254,15 +258,13 @@ var main = new Vue({
         ActualizarBenefactor() {
 
             var urlApi = '/api/benefactor/' + main.$data.idDePersona;
-            alert(main.$data.idDePersona);
+            alert(urlApi);
             $.ajax({
                 type: 'PUT',
-                url: urlApi,
                 data: self.benefactor,
+                url: urlApi,
                 success: function(res) {
-                    // location.reload();
-                    //window.location.href = '/benefactor/';
-
+                    $('#modalBenfactorEditar').modal('open');
                 },
                 error(err) {
                     console.log(err);

@@ -81,8 +81,8 @@
             <td>{{item.tipo_donacion}}</td>
             <td style="text-align:center;">{{item.dia_cobro}}</td>
             <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
-            <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
-              <i class="material-icons  red-text darken-4">delete</i>
+            <td><button @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></button>
+             <button> <i class="material-icons  red-text darken-4">delete</i></button>
             </td>
           </tr>
         </table>

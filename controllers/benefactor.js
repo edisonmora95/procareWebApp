@@ -23,11 +23,12 @@ const crearBenefactor = (req, res, next) => {
         fechaNacimiento = null;
     } else {
         razonsocial = req.body.razonsocial;
-        fechaNacimiento = new Date(req.body.fechaNacimiento);
+        fechaNacimiento = null;
     }
     let valor = req.body.valor_contribucion;
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log(valordolares);
     let persona = {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -42,6 +43,7 @@ const crearBenefactor = (req, res, next) => {
         trabajo: req.body.trabajo,
         convencional: req.body.convencional
     };
+
     modelo.Persona.count({
         where: {
             cedula: persona.cedula
@@ -62,6 +64,9 @@ const crearBenefactor = (req, res, next) => {
                     observacion: req.body.observacion
 
                 };
+
+
+
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
 
                 }, (errorProcariano) => {
@@ -87,19 +92,47 @@ const crearBenefactor = (req, res, next) => {
 
 
                 let personaid = personaConId.id; // se obtiene el id de la persona de benefactor
-                let benefactor = {
 
-                    PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
-                    valor_contribucion: req.body.valor_contribucion,
-                    dia_cobro: req.body.dia_cobro,
-                    tarjeta_credito: req.body.tarjeta_credito,
-                    tipo_donacion: req.body.tipo_donacion,
-                    estado: req.body.estado,
-                    nombre_gestor: req.body.nombre_gestor,
-                    relacion: req.body.relacion,
-                    observacion: req.body.observacion
+                modelo.Benefactor.count({
+                    where: {
+                        PersonaId: personaid
+                    }
+                }).then(contbenefactor => {
+                    console.log(contbenefactor);
+                    if (contbenefactor > 0) {
 
-                };
+                        let benefactor = {
+
+                            PersonaId: 'a', // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: req.body.valor_contribucion,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
+
+                    } else {
+                        let benefactor = {
+
+                            PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: req.body.valor_contribucion,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
+                    }
+                });
+
+
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
 
                 }, (errorProcariano) => {
@@ -241,7 +274,7 @@ const buscarBenefactorPorId = (req, res, next) => {
 };
 
 /*
-Autor : JV
+Autor : JoseAlcivar
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , agregado date a datos date
 			22/07/2017 @erialper, agregado el cambio de tipo
@@ -253,8 +286,10 @@ const editarBenefactor = (req, res, next) => {
     console.log(id);
     console.log("mostro aqui");
     let valor = req.body.valor_contribucion;
+    console.log(valor);
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log(valordolares);
     modelo.Persona.update({
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -286,9 +321,9 @@ const editarBenefactor = (req, res, next) => {
             }
         }).then(result2 => {
             var status = true;
-            var mensaje = 'se pudo actualizar correctamente'
+            var mensaje = 'se pudo actualizar correctamente';
             console.log(mensaje);
-            alert(mensaje);
+
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
@@ -298,7 +333,8 @@ const editarBenefactor = (req, res, next) => {
 
         }).catch(err2 => {
             var status = false;
-            var mensaje = 'no se pudo actualizar'
+            var mensaje = 'no se pudo actualizar';
+            console.log(mensaje);
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
@@ -309,7 +345,8 @@ const editarBenefactor = (req, res, next) => {
 
     }).catch(err => {
         var status = false;
-        var mensaje = 'no se pudo actualizar'
+        var mensaje = 'no se pudo actualizar';
+        console.log(mensaje);
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,
