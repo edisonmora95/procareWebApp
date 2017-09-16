@@ -12,22 +12,24 @@ var utils = require('../utils/utils')
 /*
 Autor : JOSE ALCIVAR
 Creado : 06/08/2017
-Modificado: 06/08/2017 @josealcivar	agrega un benefactor
+Modificado: 06/08/2017 @josealcivar agrega un benefactor
 */
 
 
 const crearBenefactor = (req, res, next) => {
 
+    console.log(req.body.razonsocial);
     if (req.body.razonsocial == '') {
         razonsocial = req.body.nombres + ' ' + req.body.apellidos;
         fechaNacimiento = null;
     } else {
         razonsocial = req.body.razonsocial;
-        fechaNacimiento = new Date(req.body.fechaNacimiento);
+        fechaNacimiento = null;
     }
     let valor = req.body.valor_contribucion;
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log(valordolares);
     let persona = {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -68,6 +70,12 @@ const crearBenefactor = (req, res, next) => {
 
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
 
+                    return res.json({
+                        estado: true
+
+                    });
+
+
                 }, (errorProcariano) => {
                     return res.status(400).json({
                         estado: false,
@@ -99,31 +107,45 @@ const crearBenefactor = (req, res, next) => {
                 }).then(contbenefactor => {
                     console.log(contbenefactor);
                     if (contbenefactor > 0) {
-                        /* HAY QUE CORREGIR AQUI PORQUE SE INGRESA REPETIDO LOS BENEFACTORES
-                         return res.status(400).json({
-                             estado: false,
-                             errorProcariano: errorProcariano
-                         });
-                         */
-                    } else {
 
+                        let benefactor = {
+
+                            PersonaId: 'a', // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: valordolares,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
+
+                    } else {
+                        let benefactor = {
+
+                            PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: valordolares,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
                     }
                 });
 
-                let benefactor = {
 
-                    PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
-                    valor_contribucion: req.body.valor_contribucion,
-                    dia_cobro: req.body.dia_cobro,
-                    tarjeta_credito: req.body.tarjeta_credito,
-                    tipo_donacion: req.body.tipo_donacion,
-                    estado: req.body.estado,
-                    nombre_gestor: req.body.nombre_gestor,
-                    relacion: req.body.relacion,
-                    observacion: req.body.observacion
-
-                };
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+
+                    return res.json({
+                        estado: true
+
+                    });
 
                 }, (errorProcariano) => {
                     return res.status(400).json({
@@ -144,7 +166,7 @@ const crearBenefactor = (req, res, next) => {
 Autor : JV
 Creado : 28/05/2017
 Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
-			21/07/2017 @erialper, agrego la excepción de busquedad
+            21/07/2017 @erialper, agrego la excepción de busquedad
 */
 
 const buscarBenefactor = (req, res, next) => {
@@ -183,7 +205,7 @@ const buscarBenefactor = (req, res, next) => {
                 estado: benefactor.estado
             });
         });
-        //	console.log('hola');
+        //  console.log('hola');
         //console.log(respuesta);
         return res.json(respuesta);
     }).catch(error => {
@@ -203,8 +225,8 @@ const buscarBenefactor = (req, res, next) => {
 Autor : JV
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , para que modifique por ID
-			21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad	
-			23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
+            21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad    
+            23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
 */
 
 const buscarBenefactorPorId = (req, res, next) => {
@@ -248,8 +270,8 @@ const buscarBenefactorPorId = (req, res, next) => {
                 estado: benefactor.estado
             });
         });
-        //  console.log('hola');
-        console.log(respuesta);
+        //console.log('hola');
+        // console.log(respuesta);
         return res.json(respuesta);
     }).catch(error => {
         var status = false;
@@ -264,20 +286,25 @@ const buscarBenefactorPorId = (req, res, next) => {
 };
 
 /*
-Autor : JV
+Autor : JoseAlcivar
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , agregado date a datos date
-			22/07/2017 @erialper, agregado el cambio de tipo
+            22/07/2017 @erialper, agregado el cambio de tipo
 */
 
 const editarBenefactor = (req, res, next) => {
     console.log("ingresa aqui");
     var id = req.params.id;
+
     console.log(id);
     console.log("mostro aqui");
     let valor = req.body.valor_contribucion;
+    console.log("valor");
+    console.log(valor);
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log("valores");
+    console.log(valordolares);
     modelo.Persona.update({
         cedula: req.body.cedula,
         nombres: req.body.nombres,
@@ -309,8 +336,7 @@ const editarBenefactor = (req, res, next) => {
             }
         }).then(result2 => {
             var status = true;
-            var mensaje = 'se pudo actualizar correctamente'
-            console.log(mensaje);
+            var mensaje = 'se pudo actualizar correctamente';
 
             var jsonRespuesta = {
                 status: status,
@@ -321,7 +347,8 @@ const editarBenefactor = (req, res, next) => {
 
         }).catch(err2 => {
             var status = false;
-            var mensaje = 'no se pudo actualizar'
+            var mensaje = 'no se pudo actualizar';
+
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
@@ -332,7 +359,8 @@ const editarBenefactor = (req, res, next) => {
 
     }).catch(err => {
         var status = false;
-        var mensaje = 'no se pudo actualizar'
+        var mensaje = 'no se pudo actualizar';
+
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,

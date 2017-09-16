@@ -15,6 +15,7 @@ var flash = require('connect-flash');
 //Ventanas
 var usuarios = require('./routes/ventanas/usuarios.ventanas.router');
 var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
+var benefactor = require('./routes/ventanas/benefactor.ventanas.router');
 var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
 var grupos = require('./routes/ventanas/grupos.ventanas.router');
 var index = require('./routes/ventanas/index.ventanas.router');
@@ -25,6 +26,7 @@ let perderContrasenna = require('./routes/ventanas/perderContrasenna.ventanas.ro
 
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');
+let apiBenefactor = require('./routes/api/benefactor.api.router');
 let apiEtapa = require('./routes/api/etapa.api.router');
 let apiTicket = require('./routes/api/ticket.api.router');
 let apiTipo = require('./routes/api/tipo.api.router');
@@ -75,6 +77,7 @@ app.use(flash());
 app.use('/home', index);
 app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
+app.use('/benefactor', benefactor);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
 app.use('/personal', personal);
@@ -84,6 +87,7 @@ app.use('/', login);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
+app.use('/api/benefactor', apiBenefactor);
 app.use('/api/etapa', apiEtapa);
 app.use('/api/cargo', apiCargo);
 app.use('/api/login', apiLogin);

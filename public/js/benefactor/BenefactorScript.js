@@ -6,13 +6,13 @@
 */
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
+//import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
 import VueTheMask from 'vue-the-mask';
 import VMoney from 'v-money';
 
 
-Vue.component('navbar', Navbar);
+//Vue.component('navbar', Navbar);
 Vue.use(Materials);
 Vue.use(VeeValidate);
 Vue.use(VueTheMask);
@@ -67,8 +67,7 @@ var main = new Vue({
     mounted: function() {
 
         this.inicializarMaterialize(this);
-        $('#modalBenfactorCreado').modal();
-        $('#modalError').modal();
+
 
     },
     data: {
@@ -89,7 +88,7 @@ var main = new Vue({
             celular: '',
             convencional: '',
             genero: '',
-            tipo: '', //chico de formación/caminante/pescador/pescador consagrado/sacerdote
+            tipo: '',
             estado: 'activo', //activo/inactivo... Activo por default
             valor_contribucion: '',
             diaCobro: '',
@@ -101,7 +100,9 @@ var main = new Vue({
             valordolares: ''
 
         },
+
         src: '',
+
         errorAjax: {
             titulo: '',
             descripcion: ''
@@ -205,6 +206,7 @@ var main = new Vue({
                 url: urlApi,
                 data: self.benefactor,
                 success: function(res) {
+                    // $('#modalBenfactorCreado').modal('open');
                     console.log(res.estado);
                     console.log("QUE PASO?");
                     if (res.estado) {
@@ -254,19 +256,51 @@ var main = new Vue({
         ActualizarBenefactor() {
 
             var urlApi = '/api/benefactor/' + main.$data.idDePersona;
-            alert(main.$data.idDePersona);
+            //alert(urlApi);
+            console.log("muestra el json");
+
+            console.log(main.$data.benefactor);
             $.ajax({
                 type: 'PUT',
                 url: urlApi,
-                data: self.benefactor,
+                data: main.$data.benefactor,
                 success: function(res) {
-                    // location.reload();
-                    //window.location.href = '/benefactor/';
 
+                        if (res.status) {
+                            $('#modalBenfactorEditar').modal('open');
+                        } else {
+                            self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de editar el registro seleccionado. Intente nuevamente.');
+                        }
+
+                    } //,
+                    //error(err) {
+                    //  console.log(err);
+                    // self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                    //}
+            });
+        },
+
+
+
+        eliminar() {
+            console.log('entra en eliminar')
+            var self = this;
+            var urlApi = '/api/benefactor/' + self.idBenefactor;
+            $.ajax({
+                type: 'DELETE',
+                url: urlApi,
+                success: function(res) {
+                    console.log(res);
+                    if (res.status) {
+                        self.benefactor.estado = 'inactivo';
+                        console.log('')
+                            //  $('#modalExitoEliminar').modal('open');
+                    } else {
+                        //$('#modalErrorEliminar').modal('open');
+                    }
                 },
-                error(err) {
-                    console.log(err);
-                    self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                error: function(error) {
+                    // $('#modalErrorEliminar').modal('open');
                 }
             });
         },
@@ -299,6 +333,7 @@ var main = new Vue({
                 //self.filtrarGruposPorGenero(self, generoSeleccionado);
             });
         },
+
         mostrarMensajeDeErrorAjax(self, titulo, descripcion) {
             self.errorAjax.titulo = titulo;
             self.errorAjax.descripcion = descripcion;

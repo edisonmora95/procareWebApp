@@ -16,7 +16,7 @@ var utils = require('../../utils/utils');
 
 //API
 
-//Post del procariano
+//Post del benefactor
 router.post('/', utils.generarHash, controladorBenefactor.crearBenefactor);
 
 //Responde con los procarianos encontrados.
@@ -27,11 +27,11 @@ router.get('/', controladorBenefactor.buscarBenefactor);
 //Esto es usado para ver el perfil del Procariano
 router.get('/:id', controladorBenefactor.buscarBenefactorPorId);
 
-//Update procariano
+//Update benefactor
 //Responde con un status indicando si se pudo actualizar o no
 router.put('/:id', controladorBenefactor.editarBenefactor);
 
-//Delete procariano
+//Delete benefactor
 //Responde con un status indicando si se pudo eliminar o no
 router.delete('/:id', controladorBenefactor.eliminarBenefactor);
 

@@ -4,9 +4,9 @@
   @FechaCreación: 30/07/2017
 */
 
-//'use strict';
+'use strict';
 
-import Navbar from './../../components/navbar.vue';
+//import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
 import VueTheMask from 'vue-the-mask';
 import VMoney from 'v-money';
@@ -17,7 +17,7 @@ import VMoney from 'v-money';
 
 
 
-Vue.component('navbar', Navbar);
+//Vue.component('navbar', Navbar);
 Vue.use(Materials);
 Vue.use(VueTheMask);
 Vue.use(VMoney);
@@ -118,7 +118,7 @@ var main = new Vue({
             */
             var path = window.location.pathname;
             console.log(path);
-            var id = path.split('/')[3];
+            var id = path.split('/')[1];
             console.log("AQUI");
             console.log(id);
             console.log("segundo");
@@ -130,8 +130,8 @@ var main = new Vue({
                 type: 'GET',
                 url: '/api/benefactor/',
                 success: function(res) {
-                    console.log(res[0].nombres);
-                    console.log(res.estado);
+                    // console.log(res[0].nombres);
+                    console.log(res.status);
                     console.log("**********************");
                     $.each(res, function(index, benefactorEncontrado) {
 
@@ -156,10 +156,8 @@ var main = new Vue({
                 }
 
             });
-            this.key = arregloBenefactor.length();
-            console.log("valor de la clave");
-            console.log(key);
-            console.log("fin de valor");
+            // this.key = arregloBenefactor.length();
+
         },
         searchInTheList(searchText, currentPage) {
             if (_.isUndefined(searchText)) {

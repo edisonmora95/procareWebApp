@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Procare</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Materializecs-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+       <% include ../partials/head %>
+       <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/benefactorStyles.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
   </head>
   <body>
     <div id="main">
-      <header>
-      <navbar></navbar>
-    </header>
+       <header>
+                <% include ../partials/navbar %>
+            </header>
     <main class="container">
       <!--
       <div class="input-field col s6">
@@ -81,8 +75,8 @@
             <td>{{item.tipo_donacion}}</td>
             <td style="text-align:center;">{{item.dia_cobro}}</td>
             <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
-            <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
-              <i class="material-icons  red-text darken-4">delete</i>
+            <td><button @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></button>
+             <button> <i class="material-icons  red-text darken-4">delete</i></button>
             </td>
           </tr>
         </table>
@@ -91,15 +85,11 @@
   </div>
   <div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-    <script src='https://unpkg.com/vue@2.3.3'></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-    <!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-    <script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-    <script src="/build/benefactor/verBenefactor.js"></script>
+      <% include ../partials/scripts %>
+        <script src="/scripts/moment/moment.js"></script>
+        <script src="/scripts/moment/locale/es.js"></script>
+        <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+    <script src="/build/benefactor/verBenefactor.min.js"></script>
     <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
     </script>
   </div>
