@@ -137,7 +137,7 @@
 		crearDropdownPF(self) {
 			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
 			let menuPF = $('#ulProcareFormacion');
-			self.crearLi('Asistencias', '/asistencias/formacion', menuPF);
+			//self.crearLi('Asistencias', '/asistencias/formacion', menuPF);
 
 			let usuarioEsPersonal = self.verificarRolDeUsuario(self, 'Personal');
 			let usuarioEsAnimador = self.verificarRolDeUsuario(self, 'Animador');
@@ -146,7 +146,8 @@
 			
 			if(usuarioEsDirectorEjecutivo){
 				//self.crearLi('Usuarios', '/usuarios/', menuPF);
-				//self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/nuevo','/asistencias/', menuPF,'Crear','Buscar');
+				//self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
+				self.crearDropdownUn(self, 'Asistencias', 'dropAsistencias','/asistencias/formacion', menuPF,'Subir');
 				self.crearDropdownUn(self, 'Procarianos', 'dropProcarianos','/procarianos/', menuPF,'Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){

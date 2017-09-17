@@ -219,6 +219,29 @@ var app = new Vue({
 				}
       });
       //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
+	  console.log(asistencias);
+	  //console.log(asistencias: JSON.stringify(self.asistencias));
+	  $.ajax({
+      	type:'POST',
+      	url: '/api/reuniones/',
+      	data: {asistencias: JSON.stringify(self.asistencias)},
+      	success: function(res){
+      		console.log('este es res: ' + res);
+      		if(res.estado){
+      			$('#modalAsistenciaSubida').modal('open');
+      		}else{
+      			self.errorObj.msj = res.mensaje;
+      			self.errorObj.statusApi = false;
+      			$('#modalError').modal('open');
+      		}
+      	},
+      	error : function(err){
+      		self.errorObj.msj = err.mensaje;
+      		self.errorObj.statusApi = false;
+      		console.log(err);
+      	}
+      });
+	  
 			//Abre el modal de confirmación en caso de éxito
 			if(flag){
 				$('#modalConfirmacion').modal('open');

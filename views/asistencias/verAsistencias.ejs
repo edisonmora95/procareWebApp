@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/buscarGrupoStyles.css">
+	</head>
+	<body>
+		<div>
+			<header>
+				<% include ../partials/navbar %>
+			</header>
+			<main class="container" id="BuscarGrupoApp">
+				<header>
+					<h4 class="center-align titulo">Asistencias</h4>
+				</header>
+				<section id="section-resultados" class="card large">
+					<article class="row" id="row-resultados">
+						<table class="stripped bordered responsive-table centered highlight">
+							<thead>
+								<th>Grupo</th>
+								<th>Fecha</th>
+								<th>Hora de Inicio</th>
+								<th>Hora de Salida</th>
+								<th>Descripcion</th>
+							</thead>
+							<tbody>
+								<tr v-for="reunion in reuniones" @click="irAReunion(reunion)">
+									<td>{{reunion.grupo}}</td>
+									<td>{{reunion.fecha}}</td>
+									<td>{{reunion.horaInicio}}</td>
+									<td>{{reunion.horaSalida}}</td>
+									<td>{{reunion.descripcion}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</article>
+				</section>
+			</main>
+		</div>
+	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src='/build/grupo/buscarGrupoScript.min.js'></script> <!-- aqui va la ruta del js o del min que es el js comprimido)
+	</div>
+</html>

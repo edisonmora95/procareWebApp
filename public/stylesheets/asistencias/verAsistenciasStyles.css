@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:700');
+
+body{
+	background-color: #d3dbdb;
+}
+
+.card{
+	margin-top: 5%;
+	padding: 3%;
+	border-radius: 2%;
+	height: auto !important;
+}
+
+li:hover{
+	background-color: #d3dbdb;
+}
+
+li{
+	/*border: 1px solid red;*/
+	padding: 3%;
+	/*border-bottom: 1px solid #d3dbdb;*/
+}
+
+.row{
+	padding: 0 3%;
+}
+
+#listaChicos, #chicosSinGrupo, #integrantes{
+	height: 250px;
+	overflow:hidden;
+	overflow-y: scroll;
+}
+
+.s6 h6{
+	margin-top: 10%;
+}
+
+h5{
+	margin-top: 1rem;	
+}
+
+h3, h4, h5, h6{
+	font-weight: bold;
+	font-family: 'Merriweather', serif;
+}
+
+#row-btns{
+	margin-top: 3%;
+}
+
+li a{
+	display: inline-block;
+  vertical-align: middle;
+  margin-left: 3%;
+  color: black;
+}
+
+li i{
+	vertical-align: middle;
+}
+
+.headerNombreGrupo{
+	padding: 3% 0;
+}
+
+body::-webkit-scrollbar {
+    width: 1em;
+}
+ 
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+img{
+	margin-top: 1.5rem;
+}

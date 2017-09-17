@@ -1,8 +1,8 @@
-/*
-@Descripcion: Controlador paro las asistencias de Procare Formación.
+﻿/*
+@Descripcion: Controlador para las asistencias de Procare Formación.
 @Autor: Erick Pérez
 @FechaCreacion: 18/08/2017
-@UltimaFechaModificacion: ---
+@UltimaFechaModificacion: 13/09/2017 @LuisBSC15 Luis Lainez
 */
 var modelo = require('../models');
 var respuestas = require('../utils/respuestas.js')
