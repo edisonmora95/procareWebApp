@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 import Materials from 'vue-materials';
 Vue.use(Materials);
 
@@ -219,16 +219,14 @@ var app = new Vue({
 				}
       });
       //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
-	  console.log(asistencias);
-	  //console.log(asistencias: JSON.stringify(self.asistencias));
-	  $.ajax({
+	$.ajax({
       	type:'POST',
       	url: '/api/reuniones/',
       	data: {asistencias: JSON.stringify(self.asistencias)},
       	success: function(res){
       		console.log('este es res: ' + res);
       		if(res.estado){
-      			$('#modalAsistenciaSubida').modal('open');
+			$('#modalConfirmacion').modal('open');
       		}else{
       			self.errorObj.msj = res.mensaje;
       			self.errorObj.statusApi = false;
@@ -243,9 +241,9 @@ var app = new Vue({
       });
 	  
 			//Abre el modal de confirmación en caso de éxito
-			if(flag){
-				$('#modalConfirmacion').modal('open');
-			}
+			//if(flag){
+			//	$('#modalConfirmacion').modal('open');
+			//}
 			//Luego de subir las asistencias, se debe actualizar la parte del grupo
     }
 
