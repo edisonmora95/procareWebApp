@@ -20,10 +20,10 @@ const crearBenefactor = (req, res, next) => {
 
     console.log(req.body.razonsocial);
     if (req.body.razonsocial == '') {
-        razonsocial = req.body.nombres + ' ' + req.body.apellidos;
+        ll_razonsocial = req.body.nombres + ' ' + req.body.apellidos;
         fechaNacimiento = null;
     } else {
-        razonsocial = req.body.razonsocial;
+        ll_razonsocial = req.body.razonsocial;
         fechaNacimiento = null;
     }
     let valor = req.body.valor_contribucion;
@@ -34,7 +34,7 @@ const crearBenefactor = (req, res, next) => {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
-        razonsocial: razonsocial,
+        razonsocial: ll_razonsocial,
         direccion: req.body.direccion,
         fechaNacimiento: fechaNacimiento,
         genero: req.body.genero,
@@ -172,12 +172,17 @@ Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
 const buscarBenefactor = (req, res, next) => {
 
     //var jsonModelo = utils.generarJsonProcariano(req.query);
+    var ll_estado = "activo";
+
 
     modelo.Benefactor.findAll({
         include: [{
-                model: modelo.Persona
-            }] //, where : jsonModelo.benefactor//aqui va el where
+            model: modelo.Persona
+        }], //, where : jsonModelo.benefactor//aqui va el where
 
+        where: {
+            estado: ll_estado
+        }
     }).then(personas => {
         const respuesta = personas.map(benefactor => {
 
@@ -295,7 +300,16 @@ Modificado: 07/07/2017 @JV , agregado date a datos date
 const editarBenefactor = (req, res, next) => {
     console.log("ingresa aqui");
     var id = req.params.id;
+    console.log(req.body.razonsocial);
+    if (req.body.razonsocial == '') {
+        razonsocial = req.body.nombres + ' ' + req.body.apellidos;
 
+    } else {
+        razonsocial = req.body.razonsocial;
+
+    }
+    console.log("razon social");
+    console.log(razonsocial);
     console.log(id);
     console.log("mostro aqui");
     let valor = req.body.valor_contribucion;
@@ -310,7 +324,7 @@ const editarBenefactor = (req, res, next) => {
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
         direccion: req.body.direccion,
-        razonsocial: req.body.razonsocial,
+        razonsocial: razonsocial,
         genero: req.body.genero,
         email: req.body.email,
         celular: req.body.celular,
@@ -377,81 +391,38 @@ Modificado: 21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 */
 
 const eliminarBenefactor = (req, res, next) => {
-    console.log('SE VA A ELIMINAR EL PROCARIANO');
+    console.log('SE VA A ELIMINAR EL BENEFACTOR');
     var id = req.params.id;
     console.log(id);
-    modelo.Procariano.update({
-        estado: 'inactivo'
+    var ll_estado = "inactivo";
+    modelo.Benefactor.update({
+        estado: ll_estado
     }, {
         where: {
             PersonaId: id
         }
     }).then(result => {
-        modelo.Procariano.findOne({
-            where: {
-                PersonaId: id
-            }
-        }).then(procariano => {
-            modelo.ProcarianoTipo.update({
-                fechaFin: new Date()
-            }, {
-                where: {
-                    fechaFin: null,
-                    ProcarianoId: procariano.get('id')
-                }
-            }).then(tipo => {
-                modelo.ProcarianoGrupo.update({
-                    fechaFin: new Date()
-                }, {
-                    where: {
-                        fechaFin: null,
-                        ProcarianoId: procariano.get('id')
-                    }
-                }).then(grupo => {
-                    var status = true;
-                    var mensaje = 'eliminado correctamente';
-                    var jsonRespuesta = {
-                        status: status,
-                        mensaje: mensaje,
-                        procariano: result,
-                        tipo: tipo,
-                        grupo: grupo
-                    }
-                    res.json(jsonRespuesta);
-                }).catch(error2 => {
-                    var status = true;
-                    var mensaje = 'Elimino procariano no esta en un grupo';
-                    var jsonRespuesta = {
-                        status: status,
-                        mensaje: mensaje,
-                        procariano: result,
-                        tipo: tipo,
-                        errorgrupo: error2
-                    }
-                    res.json(jsonRespuesta);
-                });
-            }).catch(error1 => {
-                var status = true;
-                var mensaje = 'Elimino procariano no tiene un tipo';
-                var jsonRespuesta = {
-                    status: status,
-                    mensaje: mensaje,
-                    procariano: result,
-                    errortipo: error1
-                }
-                res.json(jsonRespuesta);
-            });
-        });
-    }).catch(error => {
-        var status = false;
-        var mensaje = 'no se pudo eliminar';
+        var status = true;
+        var mensaje = 'Benefator Eliminado Correctamente';
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,
-            errorProcariano: error
+            errorBenefactor: result
+        }
+        res.json(jsonRespuesta);
+
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'NO se Pudo Eliminar El Benefactor';
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            errorBenefactor: error
         }
         res.json(jsonRespuesta);
     });
+
+
 };
 
 

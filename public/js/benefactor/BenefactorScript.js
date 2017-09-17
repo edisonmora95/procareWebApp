@@ -282,28 +282,6 @@ var main = new Vue({
 
 
 
-        eliminar() {
-            console.log('entra en eliminar')
-            var self = this;
-            var urlApi = '/api/benefactor/' + self.idBenefactor;
-            $.ajax({
-                type: 'DELETE',
-                url: urlApi,
-                success: function(res) {
-                    console.log(res);
-                    if (res.status) {
-                        self.benefactor.estado = 'inactivo';
-                        console.log('')
-                            //  $('#modalExitoEliminar').modal('open');
-                    } else {
-                        //$('#modalErrorEliminar').modal('open');
-                    }
-                },
-                error: function(error) {
-                    // $('#modalErrorEliminar').modal('open');
-                }
-            });
-        },
 
 
         /*

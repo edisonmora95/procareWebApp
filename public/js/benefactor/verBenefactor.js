@@ -36,6 +36,7 @@ var main = new Vue({
 
     },
     mounted: function() {
+        this.inicializarMaterialize(this);
 
     },
     data: {
@@ -44,8 +45,8 @@ var main = new Vue({
 
         filteredItems: [],
         paginatedItems: [], // paginatedItems arreglo toda la informacion
-        key: 0,
-
+        id_benefactor_eliminar: 0,
+        nombre_eliminado: '',
         persona: {
             id: '',
             nombres: '',
@@ -70,7 +71,10 @@ var main = new Vue({
 
 
         },
-
+        errorAjax: {
+            titulo: '',
+            descripcion: ''
+        },
         money: {
             decimal: '.',
             thousands: ',',
@@ -116,6 +120,7 @@ var main = new Vue({
               @Descripcion : carga el Benefactor en la tabla
 
             */
+
             var path = window.location.pathname;
             console.log(path);
             var id = path.split('/')[1];
@@ -138,8 +143,6 @@ var main = new Vue({
                         console.log(benefactorEncontrado);
 
                         self.arregloBenefactor.push(benefactorEncontrado);
-
-
 
                     });
                     console.log(res);
@@ -173,6 +176,56 @@ var main = new Vue({
                 v.key = k + 1;
             })
         },
+
+        PreguntaparaEliminar(persona) {
+            this.nombre_eliminado = persona.razonsocial;
+            this.id_benefactor_eliminar = persona.personaId;
+            $('#modalBenfactorEliminar').modal('open');
+        },
+        //INGRESA UN NUEVO BENEFACTOR 
+        EliminarBenefactor() {
+
+            var urlApi = '/api/benefactor/' + this.id_benefactor_eliminar;
+            //alert(urlApi);
+
+            console.log(urlApi);
+            $.ajax({
+                type: 'DELETE',
+                url: urlApi,
+                success: function(res) {
+                        console.log(res.status);
+                        console.log(res.mensaje);
+                        if (res.status) {
+                            $('#modalBenfactorEliminado').modal('open');
+                        } else {
+                            self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de eliminar el registro seleccionado. Intente nuevamente.');
+                        }
+
+                    } //,
+                    //error(err) {
+                    //  console.log(err);
+                    // self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                    //}
+            });
+        },
+        inicializarMaterialize(self) {
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 100 // Creates a dropdown of 15 years to control year
+            });
+            $(".button-collapse").sideNav();
+            $('.modal').modal();
+            $('#selectGenero').change(function() {
+                let generoSeleccionado = $('#selectGenero option:selected').val();
+                //let donacionSeleccionado = $('#selectDonacion option:selected').val();
+                //self.filtrarGruposPorGenero(self, generoSeleccionado);
+            });
+        },
+        mostrarMensajeDeErrorAjax(self, titulo, descripcion) {
+            self.errorAjax.titulo = titulo;
+            self.errorAjax.descripcion = descripcion;
+            $('#modalErrorAjax').modal('open');
+        }
 
 
     }
