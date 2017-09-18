@@ -1,5 +1,12 @@
 ﻿'use strict';
 import Materials from 'vue-materials';
+/*1
+import CrearReunion from './../../components/crearGrupo.vue';
+import AnadirChicos from './../../components/anadirChicos.vue';
+
+Vue.component('crear-reunion', CrearReunion);
+Vue.component('anadir-chicos', AnadirChicos);
+*/
 Vue.use(Materials);
 
 var app = new Vue({
@@ -219,7 +226,7 @@ var app = new Vue({
 				}
       });
       //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
-	$.ajax({
+$.ajax({
       	type:'POST',
       	url: '/api/reuniones/formacion',
       	data: {asistencias: JSON.stringify(self.asistencias)},
