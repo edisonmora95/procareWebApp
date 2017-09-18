@@ -2,44 +2,82 @@
 <html>
 	<head>
 		<% include ../partials/head %>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/buscarGrupoStyles.css">
+		<!--
+ 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+ 		<link rel="stylesheet" href="/stylesheets/usuarios/tableMaterial.css">-->
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+ 		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
 	</head>
 	<body>
 		<div>
 			<header>
 				<% include ../partials/navbar %>
 			</header>
-			<main class="container" id="BuscarGrupoApp">
-				<header>
-					<h4 class="center-align titulo">Asistencias</h4>
-				</header>
-				<section id="section-resultados" class="card large">
-					<article class="row" id="row-resultados">
-						<table class="stripped bordered responsive-table centered highlight">
-							<thead>
-								<th>Grupo</th>
-								<th>Fecha</th>
-								<th>Hora de Inicio</th>
-								<th>Hora de Salida</th>
-								<th>Descripcion</th>
-							</thead>
-							<tbody>
-								<tr v-for="reunion in reuniones" @click="irAReunion(reunion)">
-									<td>{{reunion.grupo}}</td>
-									<td>{{reunion.fecha}}</td>
-									<td>{{reunion.horaInicio}}</td>
-									<td>{{reunion.horaSalida}}</td>
-									<td>{{reunion.descripcion}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</article>
+			<main class="container" id="main">
+				<section id="section-resultados">
+					<div class="row">
+					  <div id="admin" class="col s12">
+					  	<div class="row">
+					  		<div class="s4 m4" >
+					  			<h2 style="text-align: center;">Asistencias</h3>
+					  		</div>
+					  	</div>
+					  	
+					    <div class="material-table">
+					      <div class="table-header">
+					        </div>
+					      </div>
+								<table class="tripped bordered responsive-table centered highlight" id="datatable" >
+									<thead>
+										<th>Fecha</th>
+										<th>Hora Inicio</th>
+										<th>Hora Salida</th>
+										<th>Descripcion</th>
+										<!--<th>Acción</th>-->
+									</thead>
+									<tbody>
+										<tr v-for="asistencia in listaAsistencias">
+											<td>{{asistencia.fecha}}</td>
+											<td>{{asistencia.horaInicio}}</td>
+											<td>{{asistencia.horaSalida}}</td>
+											<td>{{asistencia.descripcion}}</td>
+											<!--<td>
+												<div v-for="rol in usuario.Rols"><p> {{rol.nombre}}</p></div>
+												<ul class='dropdown-content' id="dropDownRols">
+													<div v-for="rol in usuario.Rols">
+														<li><a href="#!">{{rol.nombre}}</a></li>	
+														<li class="divider"></li>
+													</div>
+												</ul>
+											</td>-->
+											<!--<td>
+												<a href="#modalEditarUsuario" class="waves-effect waves-light">
+													<i class="material-icons" @click="seleccionarUsuario(usuario)">mode_edit</i>
+												</a>
+											</td>-->
+										</tr>
+									</tbody>
+								</table>
+								<pre></pre>
+
+					    </div>
+					  </div>
+					</div>
+
 				</section>
+				
+
+				
 			</main>
 		</div>
+		<div id="scripts">
+			<% include ../partials/scripts %>
+  			<!--<script src="/js/libs/jquery.dataTables.min.js"></script>
+  			<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+			<script src="/js/usuarios/tableMaterial.js"></script>-->
+			<script src="/build/asistencias/verAsistenciasScript.min.js"></script>
+		</div>
 	</body>
-	<div>
-		<% include ../partials/scripts %>
-		<script src='/build/grupo/buscarGrupoScript.min.js'></script> <!-- aqui va la ruta del js o del min que es el js comprimido)
-	</div>
 </html>
+
+

@@ -1,9 +1,9 @@
-var controladorReunionGrupo = require('../../controllers/reunion.controller');
+﻿var controladorReunionGrupo = require('../../controllers/reunion.controller');
 var express = require('express');
 var router = express.Router();
 
 //Creación de las reuniones
-router.post('/', controladorReunionGrupo.crearReunion);
+router.post('/formacion', controladorReunionGrupo.crearReunion);
 
 //Añadir los  procarianos ausentes a la reunion
 router.post('/ausentes', controladorReunionGrupo.anadirProcarianosAReunion);

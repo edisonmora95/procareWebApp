@@ -146,8 +146,8 @@
 			
 			if(usuarioEsDirectorEjecutivo){
 				//self.crearLi('Usuarios', '/usuarios/', menuPF);
-				//self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
-				self.crearDropdownUn(self, 'Asistencias', 'dropAsistencias','/asistencias/formacion', menuPF,'Subir');
+				self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
+				//self.crearDropdownUn(self, 'Asistencias', 'dropAsistencias','/asistencias/formacion', menuPF,'Subir');
 				self.crearDropdownUn(self, 'Grupos', 'dropGrupos','/grupos/', menuPF,'Buscar');
 				self.crearDropdownUn(self, 'Procarianos', 'dropProcarianos','/procarianos/', menuPF,'Buscar');
 			}

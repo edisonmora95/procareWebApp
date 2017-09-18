@@ -221,7 +221,7 @@ var app = new Vue({
       //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
 	$.ajax({
       	type:'POST',
-      	url: '/api/reuniones/',
+      	url: '/api/reuniones/formacion',
       	data: {asistencias: JSON.stringify(self.asistencias)},
       	success: function(res){
       		console.log('este es res: ' + res);
@@ -241,9 +241,9 @@ var app = new Vue({
       });
 	  
 			//Abre el modal de confirmación en caso de éxito
-			//if(flag){
-			//	$('#modalConfirmacion').modal('open');
-			//}
+			if(flag){
+				$('#modalConfirmacion').modal('open');
+			}
 			//Luego de subir las asistencias, se debe actualizar la parte del grupo
     }
 
