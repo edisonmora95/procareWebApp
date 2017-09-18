@@ -207,6 +207,9 @@ var main = new Vue({
             console.log("aqui");
             //this.benefactor.razonsocial = "hola";
             // console.log(this.benefactor.razonsocial);
+            console.log(this.benefactor.nombres);
+            console.log(this.benefactor.apellidos);
+
             console.log("despues aqui");
             let urlApi = '/api/benefactor/';
             console.log(self.benefactor);
