@@ -38,12 +38,13 @@
 								<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar menores de 18 años.</span>
 								
 							</div>
+
 							<div class="col s6">
 								<label for="cedula">Cédula</label>
-								<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-validate="'required|digits:10'">
+								<input type="text" name="cedula" id="cedula" v-model="personal.cedula" v-mask="mask_format.Ruc_Mask" v-validate="'required'">
 								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
-								
 							</div>
+							
 						</section>
 						<!--Row direccion y email-->
 						<section class="row row-direccion-email">
@@ -61,20 +62,20 @@
 							</div>
 						</section>
 						<!--Row celular y convencional-->
+
 						<section class="row row-celular-convencional">
-							<div class="col s6">
-								<label for="celular">Celular</label>
-								<input type="tel" name="celular" id="celular" v-model="personal.celular" v-validate="'numeric'">
-								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
-								
-							</div>
-							<div class="col s6">
-								<label for="convencional">Convencional</label>
-								<input type="tel" name="convencional" id="convencional" v-model="personal.convencional" v-validate="'numeric'">
-								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
-								
-							</div>
-						</section>
+                            <div class="input-field col s6">
+                                <input type="tel" name="celular" id="celular" v-model="personal.celular" v-mask="mask_format.telf_celular">
+                                <span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
+                                <label for="celular">Telf. Celular</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input type="tel" name="convencional" id="convencional" v-model="personal.convencional" v-mask="mask_format.telef_convencional">
+                                <span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
+                                <label for="convencional">Telf. Convencional</label>
+                            </div>
+                        </section>
+                       
 						<!--Row genero y tipo-->
 						<section class="row row-genero-tipo">
 							<div class="col s6">

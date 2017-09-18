@@ -25,6 +25,7 @@ module.exports.generarHash = function(req, res, next) {
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash('posi', salt, function(err, hash) {
             console.log(hash);
+            console.log("ff");
             req.body.contrasenna = hash;
             next();
 
@@ -61,8 +62,7 @@ FUNCIONES
 @Autor: Jose Viteri
 @FechaCreacion: 05/06/2017
 */
-function hacerClave()
-{
+function hacerClave() {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -259,37 +259,37 @@ module.exports.generarCorreo = function(mensaje, destinatario, sujeto, res, mens
 
 
 /*
+ 
+ 
+ */
 
-
-*/
-
-module.exports.generarUsuarioConCorreo = function(id, res, mensajeExito, mensajeError, resultado){
+module.exports.generarUsuarioConCorreo = function(id, res, mensajeExito, mensajeError, resultado) {
     modelo.PersonaRol.count({
-        where : {
+        where: {
             PersonaId: id
         }
     }).then(contador => {
-        if (contador > 1){
-            return respuestas.okCreate(res,mensajeExito,resultado);
-        }else{
+        if (contador > 1) {
+            return respuestas.okCreate(res, mensajeExito, resultado);
+        } else {
             var nuevaContrasenna = hacerClave();
             console.log('esta es la nueva clave ' + nuevaContrasenna);
             bcrypt.genSalt(10, function(err, salt) {
                 bcrypt.hash(nuevaContrasenna, salt, function(err, hash) {
                     console.log(hash);
                     modelo.Persona.update({
-                        contrasenna : hash
-                    },{
-                        where : {
-                            id : id
+                        contrasenna: hash
+                    }, {
+                        where: {
+                            id: id
                         }
-                    }).then( respuesta => {
+                    }).then(respuesta => {
                         modelo.Persona.findOne({
                             attributes: ['email'],
-                            where : {
+                            where: {
                                 id: id
                             }
-                        }).then( respuesta2 => {
+                        }).then(respuesta2 => {
                             const nodemailer = require('nodemailer');
                             console.log('entra aqui en este lugar \n')
                             console.log(respuesta2.email);
@@ -319,7 +319,7 @@ module.exports.generarUsuarioConCorreo = function(id, res, mensajeExito, mensaje
                                 from: '"Procare " <procarewebapp@gmail.com>', // sender address
                                 to: respuesta2.email, // list of receivers
                                 subject: 'Creación de cuenta Fundación Procare', // Subject line
-                                text: 'Su nueva contraseña para la fundación procare es: ' + nuevaContrasenna + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare"// plain text body
+                                text: 'Su nueva contraseña para la fundación procare es: ' + nuevaContrasenna + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare" // plain text body
                                     //html: '<b>Hello world ?</b>' // html body
                             };
 
@@ -335,12 +335,12 @@ module.exports.generarUsuarioConCorreo = function(id, res, mensajeExito, mensaje
                             });
                             //return respuestas.okCreate(res,mensajeExito,resultado);
 
-                        }).catch( error2 => {
-                            return respuestas.error(res,mensajeError,'',error2);
+                        }).catch(error2 => {
+                            return respuestas.error(res, mensajeError, '', error2);
                         })
 
-                    }).catch( error => {
-                        return respuestas.error(res,mensajeError,'',error);
+                    }).catch(error => {
+                        return respuestas.error(res, mensajeError, '', error);
 
                     })
 

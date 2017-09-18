@@ -4,9 +4,9 @@
   @FechaCreación: 30/07/2017
 */
 
-//'use strict';
+'use strict';
 
-import Navbar from './../../components/navbar.vue';
+//import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
 import VueTheMask from 'vue-the-mask';
 import VMoney from 'v-money';
@@ -17,7 +17,7 @@ import VMoney from 'v-money';
 
 
 
-Vue.component('navbar', Navbar);
+//Vue.component('navbar', Navbar);
 Vue.use(Materials);
 Vue.use(VueTheMask);
 Vue.use(VMoney);
@@ -36,6 +36,7 @@ var main = new Vue({
 
     },
     mounted: function() {
+        this.inicializarMaterialize(this);
 
     },
     data: {
@@ -44,8 +45,8 @@ var main = new Vue({
 
         filteredItems: [],
         paginatedItems: [], // paginatedItems arreglo toda la informacion
-        key: 0,
-
+        id_benefactor_eliminar: 0,
+        nombre_eliminado: '',
         persona: {
             id: '',
             nombres: '',
@@ -70,7 +71,10 @@ var main = new Vue({
 
 
         },
-
+        errorAjax: {
+            titulo: '',
+            descripcion: ''
+        },
         money: {
             decimal: '.',
             thousands: ',',
@@ -116,9 +120,10 @@ var main = new Vue({
               @Descripcion : carga el Benefactor en la tabla
 
             */
+
             var path = window.location.pathname;
             console.log(path);
-            var id = path.split('/')[3];
+            var id = path.split('/')[1];
             console.log("AQUI");
             console.log(id);
             console.log("segundo");
@@ -130,16 +135,14 @@ var main = new Vue({
                 type: 'GET',
                 url: '/api/benefactor/',
                 success: function(res) {
-                    console.log(res[0].nombres);
-                    console.log(res.estado);
+                    // console.log(res[0].nombres);
+                    console.log(res.status);
                     console.log("**********************");
                     $.each(res, function(index, benefactorEncontrado) {
 
                         console.log(benefactorEncontrado);
 
                         self.arregloBenefactor.push(benefactorEncontrado);
-
-
 
                     });
                     console.log(res);
@@ -156,25 +159,98 @@ var main = new Vue({
                 }
 
             });
-            this.key = arregloBenefactor.length();
-            console.log("valor de la clave");
-            console.log(key);
-            console.log("fin de valor");
+            // this.key = arregloBenefactor.length();
+
         },
-        searchInTheList(searchText, currentPage) {
-            if (_.isUndefined(searchText)) {
-                this.filteredItems = _.filter(this.arregloBenefactor, function(v, k) {
-                    return !v.selected;
-                })
-            } else {
-                this.filteredItems = _.filter(this.arregloBenefactor, function(v, k) {
-                    return !v.selected && v.razonsocial.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-                })
-            }
-            this.filteredItems.forEach(function(v, k) {
-                v.key = k + 1;
-            })
+
+        searchInTheList() {
+
+
+            let self = this;
+            self.filteredItems = [];
+            console.log(this.searchItem);
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/benefactor/nombres/',
+                data: this.searchItem,
+
+                success: function(res) {
+
+                    console.log(res.status);
+                    console.log("**********************");
+                    $.each(res, function(index, filteredItems) {
+
+                        console.log(filteredItems);
+
+                        self.arregloBenefactor.push(filteredItems);
+
+                    });
+                    console.log(res);
+                    /*
+                         self.fallaCargar = true;
+                         self.msg = res.mensaje;
+                         console.log(res)
+                      */
+                },
+                error: function(res) {
+                    self.fallaCargar = true;
+                    self.msg = res.mensaje;
+                    console.log(res)
+                }
+
+            });
         },
+
+        PreguntaparaEliminar(persona) {
+            this.nombre_eliminado = persona.razonsocial;
+            this.id_benefactor_eliminar = persona.personaId;
+            $('#modalBenfactorEliminar').modal('open');
+        },
+        //INGRESA UN NUEVO BENEFACTOR 
+        EliminarBenefactor() {
+
+            var urlApi = '/api/benefactor/' + this.id_benefactor_eliminar;
+            //alert(urlApi);
+
+            console.log(urlApi);
+            $.ajax({
+                type: 'DELETE',
+                url: urlApi,
+                success: function(res) {
+                        console.log(res.status);
+                        console.log(res.mensaje);
+                        if (res.status) {
+                            $('#modalBenfactorEliminado').modal('open');
+                        } else {
+                            self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de eliminar el registro seleccionado. Intente nuevamente.');
+                        }
+
+                    } //,
+                    //error(err) {
+                    //  console.log(err);
+                    // self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                    //}
+            });
+        },
+        inicializarMaterialize(self) {
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 100 // Creates a dropdown of 15 years to control year
+            });
+            $(".button-collapse").sideNav();
+            $('.modal').modal();
+            $('#selectGenero').change(function() {
+                let generoSeleccionado = $('#selectGenero option:selected').val();
+                //let donacionSeleccionado = $('#selectDonacion option:selected').val();
+                //self.filtrarGruposPorGenero(self, generoSeleccionado);
+            });
+        },
+        mostrarMensajeDeErrorAjax(self, titulo, descripcion) {
+            self.errorAjax.titulo = titulo;
+            self.errorAjax.descripcion = descripcion;
+            $('#modalErrorAjax').modal('open');
+        }
 
 
     }

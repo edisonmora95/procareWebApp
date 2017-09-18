@@ -6,13 +6,13 @@
 */
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
+//import Navbar from './../../components/navbar.vue';
 import Materials from 'vue-materials';
 import VueTheMask from 'vue-the-mask';
 import VMoney from 'v-money';
 
 
-Vue.component('navbar', Navbar);
+//Vue.component('navbar', Navbar);
 Vue.use(Materials);
 Vue.use(VeeValidate);
 Vue.use(VueTheMask);
@@ -59,16 +59,18 @@ var main = new Vue({
         var parametro = path.split('/')[2];
         if (parametro == "nuevo") {
             $("h2#titulo").html("Ingresar Benefactor");
+            $("a#guardar").html("Crear");
+
         } else {
             $("h2#titulo").html("Editar Benefactor");
+            $("a#guardar").html("Guardar");
             this.cargarbenefactorporId();
         }
     },
     mounted: function() {
 
         this.inicializarMaterialize(this);
-        $('#modalBenfactorCreado').modal();
-        $('#modalError').modal();
+
 
     },
     data: {
@@ -89,7 +91,7 @@ var main = new Vue({
             celular: '',
             convencional: '',
             genero: '',
-            tipo: '', //chico de formación/caminante/pescador/pescador consagrado/sacerdote
+            tipo: '',
             estado: 'activo', //activo/inactivo... Activo por default
             valor_contribucion: '',
             diaCobro: '',
@@ -101,7 +103,9 @@ var main = new Vue({
             valordolares: ''
 
         },
+
         src: '',
+
         errorAjax: {
             titulo: '',
             descripcion: ''
@@ -199,13 +203,23 @@ var main = new Vue({
         //INGRESA UN NUEVO BENEFACTOR 
         ingresarBenefactor() {
             let self = this;
+
+            console.log("aqui");
+            //this.benefactor.razonsocial = "hola";
+            // console.log(this.benefactor.razonsocial);
+            console.log(this.benefactor.nombres);
+            console.log(this.benefactor.apellidos);
+
+            console.log("despues aqui");
             let urlApi = '/api/benefactor/';
+            console.log(self.benefactor);
             $.ajax({
                 type: 'POST',
                 url: urlApi,
                 data: self.benefactor,
                 success: function(res) {
-                    console.log(res.estado);
+                    // $('#modalBenfactorCreado').modal('open');
+                    console.log(res.status);
                     console.log("QUE PASO?");
                     if (res.estado) {
                         $('#modalBenfactorCreado').modal('open');
@@ -254,22 +268,32 @@ var main = new Vue({
         ActualizarBenefactor() {
 
             var urlApi = '/api/benefactor/' + main.$data.idDePersona;
-            alert(main.$data.idDePersona);
+            //alert(urlApi);
+            console.log("muestra el json");
+
+            console.log(main.$data.benefactor);
             $.ajax({
                 type: 'PUT',
                 url: urlApi,
-                data: self.benefactor,
+                data: main.$data.benefactor,
                 success: function(res) {
-                    // location.reload();
-                    //window.location.href = '/benefactor/';
 
-                },
-                error(err) {
-                    console.log(err);
-                    self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
-                }
+                        if (res.status) {
+                            $('#modalBenfactorEditar').modal('open');
+                        } else {
+                            self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de editar el registro seleccionado. Intente nuevamente.');
+                        }
+
+                    } //,
+                    //error(err) {
+                    //  console.log(err);
+                    // self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+                    //}
             });
         },
+
+
+
 
 
         /*
@@ -299,6 +323,7 @@ var main = new Vue({
                 //self.filtrarGruposPorGenero(self, generoSeleccionado);
             });
         },
+
         mostrarMensajeDeErrorAjax(self, titulo, descripcion) {
             self.errorAjax.titulo = titulo;
             self.errorAjax.descripcion = descripcion;

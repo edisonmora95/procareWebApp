@@ -19,7 +19,9 @@ hr {
   height: 1px;
   background-color: orange;
 }
-
+input, textarea{
+  text-transform:uppercase;
+}
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
