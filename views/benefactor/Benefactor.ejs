@@ -8,17 +8,12 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
   </head>
   <body>
-    <div id="main">
-      <header>
-        <% include ../partials/navbar %>
-      </header>
-      <main class="container">
-        
-        
-        
-        
-        
-        
+    <header>
+      <% include ../partials/navbar %>
+    </header>
+    
+      <main class="container" id="main">
+      
         <h2 id="titulo" class="center-align titulo">Benefactores</h2>
         
         <div class="row row-botones">
@@ -41,12 +36,12 @@
           <table class="bordered">
             <thead class="light-blue darken-4">
               <tr class="white-text">
-                <th>Razon Social</th>
-                <th>Cedula / Ruc</th>
-                <th>tipo Donacion</th>
-                <th>Dia de Cobro</th>
-                <th>Contribucion</th>
-                <th> opciones </th>
+                <th>Razón Social</th>
+                <th>Cédula/RUC</th>
+                <th>Tipo de Donación</th>
+                <th>DÍa de Cobro</th>
+                <th>Contribución</th>
+                <th>Opciones </th>
               </tr>
             </thead>
             <tr v-for="item in arregloBenefactor">
@@ -80,8 +75,6 @@
         <div class="modal-footer">
           <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
           <a href="#" class="modal-action modal-close waves-effect waves-orange btn-flat" @click="EliminarBenefactor">Aceptar</a>
-          
-          
         </div>
       </div>
       <!-- Modal Structure -->
@@ -94,11 +87,8 @@
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
         </div>
       </div>
-      
-    </div>
     
-    <div>
-      
+    <div>      
       <% include ../partials/scripts %>
       <script src="/scripts/moment/moment.js"></script>
       <script src="/scripts/moment/locale/es.js"></script>

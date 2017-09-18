@@ -87,9 +87,7 @@ legend {
     padding: 3px;    
 }
 
-
 .modal-text{
-
 	color: black;
 }
 
@@ -105,12 +103,5 @@ legend {
 .titulo{
 	font-family: 'Merriweather', serif;
 	font-size: 3rem;
-}
-/*Navbar*/
-li a{
-	padding: 0 16px !important;
-}
-#ulProcareAccion li a, #ulProcareFormacion li a{
-	padding: 0 15% !important;
 }
 
