@@ -156,6 +156,7 @@
 				self.crearDropdownUn(self, 'Procarianos', 'dropProcarianos','/procarianos/', menuPF,'Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
+				self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
 				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
 				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
