@@ -1,5 +1,12 @@
-'use strict';
+﻿'use strict';
 import Materials from 'vue-materials';
+/*1
+import CrearReunion from './../../components/crearGrupo.vue';
+import AnadirChicos from './../../components/anadirChicos.vue';
+
+Vue.component('crear-reunion', CrearReunion);
+Vue.component('anadir-chicos', AnadirChicos);
+*/
 Vue.use(Materials);
 
 var app = new Vue({
@@ -219,6 +226,27 @@ var app = new Vue({
 				}
       });
       //CODIGO PARA ENVIAR LOS DATOS A LA BASE DE DATOS
+$.ajax({
+      	type:'POST',
+      	url: '/api/reuniones/formacion',
+      	data: {asistencias: JSON.stringify(self.asistencias)},
+      	success: function(res){
+      		console.log('este es res: ' + res);
+      		if(res.estado){
+			$('#modalConfirmacion').modal('open');
+      		}else{
+      			self.errorObj.msj = res.mensaje;
+      			self.errorObj.statusApi = false;
+      			$('#modalError').modal('open');
+      		}
+      	},
+      	error : function(err){
+      		self.errorObj.msj = err.mensaje;
+      		self.errorObj.statusApi = false;
+      		console.log(err);
+      	}
+      });
+	  
 			//Abre el modal de confirmación en caso de éxito
 			if(flag){
 				$('#modalConfirmacion').modal('open');

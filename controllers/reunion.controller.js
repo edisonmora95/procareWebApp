@@ -1,8 +1,8 @@
-/*
-@Descripcion: Controlador paro las asistencias de Procare Formación.
+﻿/*
+@Descripcion: Controlador para las asistencias de Procare Formación.
 @Autor: Erick Pérez
 @FechaCreacion: 18/08/2017
-@UltimaFechaModificacion: ---
+@UltimaFechaModificacion: 13/09/2017 @LuisBSC15 Luis Lainez
 */
 var modelo = require('../models');
 var respuestas = require('../utils/respuestas.js')
@@ -65,11 +65,11 @@ module.exports.anadirProcarianosAReunion = (req, res, next) => {
 
 module.exports.obtenerReuniones = (req, res, next) => {
     modelo.Reunion.findAll({
-
+	attributes:['fecha','horaInicio','horaSalida','descripcion']
     }).then(reuniones => {
-        return respuesta.okGet(res, 'Se obtuvieron las reuniones', reuniones);
+        return respuestas.okGet(res, 'Se obtuvieron las reuniones', reuniones);
     }).catch(error => {
-        return respuesta.error(res, 'No se pudieron obtener las reuniones', '', error);
+        return respuestas.error(res, 'No se pudieron obtener las reuniones', '', error);
     })
 }
 
@@ -94,17 +94,17 @@ module.exports.obtenerReunionPorId = (req, res, next) => {
                     procariano: procariano,
                     ausentes: ausentes
                 };
-                return respuesta.okGet(res, 'Grupo creado exitosamente', datos);
+                return respuestas.okGet(res, 'Grupo creado exitosamente', datos);
             }).catch(errorAusentes => {
-                return respuesta.error(res, 'No se pudieron obtener la reunion', '', errorAusentes);
+                return respuestas.error(res, 'No se pudieron obtener la reunion', '', errorAusentes);
             })
 
         }, (errorProcarianos) => {
-            return respuesta.error(res, 'No se pudieron obtener la reunion', '', errorProcarianos);
+            return respuestas.error(res, 'No se pudieron obtener la reunion', '', errorProcarianos);
         })
 
     }).catch(errorBuscarReunion => {
-        return respuesta.error(res, 'No se pudieron obtener la reunion', '', errorBuscarReunion);
+        return respuestas.error(res, 'No se pudieron obtener la reunion', '', errorBuscarReunion);
     })
 }
 
@@ -125,7 +125,7 @@ module.exports.eliminarReunion = (req, res, next) => {
                 reunion: borrarReunion,
                 ausentes: borrarAusentes
             };
-            return respuesta.okDelete(res, 'Eliminado exitosamente', datos);
+            return respuestas.okDelete(res, 'Eliminado exitosamente', datos);
         }).catch(errorReunion => {
             return respuestas.errorDelete(res, 'un problema ocurrio', errorReunion);
         });

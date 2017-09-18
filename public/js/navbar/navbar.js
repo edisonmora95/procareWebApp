@@ -1,4 +1,4 @@
-let navbarApp = new Vue({
+﻿let navbarApp = new Vue({
 	el: '#navbarApp',
 	created(){
 		this.obtenerUsuarioLogeado(this);
@@ -80,10 +80,14 @@ let navbarApp = new Vue({
 			});
 		},
 		formarNavbar() {
+			if($.inArray('Personal', this.usuario.roles) >= 0){
+		  	$('#PACCION').hide();
+		  }
+
 			if($.inArray('Director Ejecutivo', this.usuario.roles) >= 0){
 		  	this.crearDropdownPAd(this); // agrega la parte de procare adminsitracion que es basicamnete cargo, benefactor/donacion, y personal (exclusivo para procare administracion)
 		  }
-		  this.crearDropdownPA();
+		  //this.crearDropdownPA();
 			this.crearDropdownPF(this);
 		},
 		crearDropdownPAd(self){
@@ -119,25 +123,25 @@ let navbarApp = new Vue({
 			//self.crearLi('Cargos', '/usuarios', menuPad);
 			//self.crearLi('Director de procare formacion', '#modalFormacion', menuPad);
 		},
-		crearDropdownPA() {
+		/*crearDropdownPA() {
 			//Esta función crea las pestañas del dropdown de Procare Acción del navbar.
 			let liAsistencias = $('<li>');
 			let aAsistencias = $('<a>').html('Asistencias');
 			liAsistencias.append(aAsistencias);
-			$('#ulProcareAccion').append(liAsistencias);
+			//$('#ulProcareAccion').append(liAsistencias);
 			let liParalelos = $('<li>');
 			let aParalelos = $('<a>').html('Paralelos');
 			liParalelos.append(aParalelos);
-			$('#ulProcareAccion').append(liParalelos);
+			//$('#ulProcareAccion').append(liParalelos);
 			let liNinos = $('<li>');
 			let aNinos = $('<a>').html('Niños');
 			liNinos.append(aNinos);
-			$('#ulProcareAccion').append(liNinos);
-		},
+			//$('#ulProcareAccion').append(liNinos);
+		},*/
 		crearDropdownPF(self) {
 			//Esta función crea las pestañas del dropdown de Procare Formación del navbar.
 			let menuPF = $('#ulProcareFormacion');
-			self.crearLi('Asistencias', '/asistencias/formacion', menuPF);
+			//self.crearLi('Asistencias', '/asistencias/formacion', menuPF);
 
 			let usuarioEsPersonal = self.verificarRolDeUsuario(self, 'Personal');
 			let usuarioEsAnimador = self.verificarRolDeUsuario(self, 'Animador');
@@ -146,10 +150,13 @@ let navbarApp = new Vue({
 			
 			if(usuarioEsDirectorEjecutivo){
 				//self.crearLi('Usuarios', '/usuarios/', menuPF);
-				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
-				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
+				self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
+				//self.crearDropdownUn(self, 'Asistencias', 'dropAsistencias','/asistencias/formacion', menuPF,'Subir');
+				self.crearDropdownUn(self, 'Grupos', 'dropGrupos','/grupos/', menuPF,'Buscar');
+				self.crearDropdownUn(self, 'Procarianos', 'dropProcarianos','/procarianos/', menuPF,'Buscar');
 			}
 			if(usuarioEsPersonal && !usuarioEsDirectorEjecutivo){
+				self.crearDropdown(self, 'Asistencias', 'dropAsistencias', '/asistencias/formacion','/asistencias/buscar', menuPF,'Subir','Buscar');
 				self.crearDropdown(self, 'Grupos', 'dropGrupos', '/grupos/nuevo', '/grupos/', menuPF,'Crear','Buscar');
 				self.crearDropdown(self, 'Procarianos', 'dropProcarianos', '/procarianos/nuevo/','/procarianos/', menuPF,'Crear','Buscar');
 			}
@@ -157,12 +164,26 @@ let navbarApp = new Vue({
 
 			}
 			if(usuarioEsAnimador){
-				$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
+				/*$.when( $.ajax(self.obtenerInformacionDeProcariano(self, self.usuario.id)) ).then(function(){
 					let urlGrupo = '/grupos/' + self.grupoId;
 					self.crearLi('Grupo', urlGrupo, menuPF);	
 				});
-				
+				*/
 			}
+		},
+		crearDropdownUn(self, htmlAnchorExterior, idDropdown, rutaBuscar, ulContenedor, opcion1Navbar){
+			//Creo el li exterior
+			let liExterior = $('<li>');
+			let aExterior = $('<a>').html(htmlAnchorExterior)
+															.attr({'class':'dropdown-button', 'href':'#', 'data-activates':idDropdown, 'data-hover':'hover'});
+			liExterior.append(aExterior);
+			//Creo el ul del dropdown
+			let ulDropdown = $('<ul>').attr({ 'id': idDropdown, 'class': 'dropdown-content' });
+			//Creo li del dropdown. Buscar
+			self.crearLi(opcion1Navbar, rutaBuscar, ulDropdown);
+
+			$('#navbarApp').append(ulDropdown);
+			ulContenedor.append(liExterior);
 		},
 		crearDropdown(self, htmlAnchorExterior, idDropdown, rutaCrear, rutaBuscar, ulContenedor, opcion1Navbar, opcion2Navbar){
 			//Creo el li exterior
