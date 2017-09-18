@@ -12,36 +12,41 @@ var utils = require('../utils/utils')
 /*
 Autor : JOSE ALCIVAR
 Creado : 06/08/2017
-Modificado: 06/08/2017 @josealcivar	agrega un benefactor
+Modificado: 06/08/2017 @josealcivar agrega un benefactor
 */
 
-
 const crearBenefactor = (req, res, next) => {
-
+    console.log("muestra razon social");
+    console.log(req.body.razonsocial);
     if (req.body.razonsocial == '') {
-        razonsocial = req.body.nombres + ' ' + req.body.apellidos;
+        ll_razonsocial = req.body.nombres + ' ' + req.body.apellidos;
         fechaNacimiento = null;
     } else {
-        razonsocial = req.body.razonsocial;
-        fechaNacimiento = new Date(req.body.fechaNacimiento);
+        ll_razonsocial = req.body.razonsocial;
+        fechaNacimiento = null;
     }
+
+    console.log("aqui va");
+    console.log(ll_razonsocial);
     let valor = req.body.valor_contribucion;
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log(valordolares);
     let persona = {
         cedula: req.body.cedula,
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
-        razonsocial: razonsocial,
+        razonsocial: ll_razonsocial,
         direccion: req.body.direccion,
         fechaNacimiento: fechaNacimiento,
         genero: req.body.genero,
-        contrasenna: req.body.contrasenna,
+        contrasenna: '',
         email: req.body.email,
         celular: req.body.celular,
         trabajo: req.body.trabajo,
         convencional: req.body.convencional
     };
+    console.log(persona);
 
     modelo.Persona.count({
         where: {
@@ -67,6 +72,12 @@ const crearBenefactor = (req, res, next) => {
 
 
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+
+                    return res.json({
+                        estado: true
+
+                    });
+
 
                 }, (errorProcariano) => {
                     return res.status(400).json({
@@ -99,31 +110,45 @@ const crearBenefactor = (req, res, next) => {
                 }).then(contbenefactor => {
                     console.log(contbenefactor);
                     if (contbenefactor > 0) {
-                        /* HAY QUE CORREGIR AQUI PORQUE SE INGRESA REPETIDO LOS BENEFACTORES
-                         return res.status(400).json({
-                             estado: false,
-                             errorProcariano: errorProcariano
-                         });
-                         */
-                    } else {
 
+                        let benefactor = {
+
+                            PersonaId: 'a', // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: valordolares,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
+
+                    } else {
+                        let benefactor = {
+
+                            PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
+                            valor_contribucion: valordolares,
+                            dia_cobro: req.body.dia_cobro,
+                            tarjeta_credito: req.body.tarjeta_credito,
+                            tipo_donacion: req.body.tipo_donacion,
+                            estado: req.body.estado,
+                            nombre_gestor: req.body.nombre_gestor,
+                            relacion: req.body.relacion,
+                            observacion: req.body.observacion
+
+                        };
                     }
                 });
 
-                let benefactor = {
 
-                    PersonaId: personaid, // se asigna la variable de persona a benefactor para crearlo
-                    valor_contribucion: req.body.valor_contribucion,
-                    dia_cobro: req.body.dia_cobro,
-                    tarjeta_credito: req.body.tarjeta_credito,
-                    tipo_donacion: req.body.tipo_donacion,
-                    estado: req.body.estado,
-                    nombre_gestor: req.body.nombre_gestor,
-                    relacion: req.body.relacion,
-                    observacion: req.body.observacion
-
-                };
                 modelo.Benefactor.crearBenefactor(benefactor, (benefactor) => {
+
+                    return res.json({
+                        estado: true
+
+                    });
 
                 }, (errorProcariano) => {
                     return res.status(400).json({
@@ -139,23 +164,32 @@ const crearBenefactor = (req, res, next) => {
             });
         }
     });
+
+
 };
+
+
 /*
-Autor : JV
+Autor : JA
 Creado : 28/05/2017
 Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
-			21/07/2017 @erialper, agrego la excepción de busquedad
+            21/07/2017 @erialper, agrego la excepción de busquedad
 */
 
 const buscarBenefactor = (req, res, next) => {
 
     //var jsonModelo = utils.generarJsonProcariano(req.query);
+    var ll_estado = "activo";
+
 
     modelo.Benefactor.findAll({
         include: [{
-                model: modelo.Persona
-            }] //, where : jsonModelo.benefactor//aqui va el where
+            model: modelo.Persona
+        }], //, where : jsonModelo.benefactor//aqui va el where
 
+        where: {
+            estado: ll_estado
+        }
     }).then(personas => {
         const respuesta = personas.map(benefactor => {
 
@@ -183,7 +217,75 @@ const buscarBenefactor = (req, res, next) => {
                 estado: benefactor.estado
             });
         });
-        //	console.log('hola');
+        //  console.log('hola');
+        //console.log(respuesta);
+        return res.json(respuesta);
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'No se obtuvieron benefactor'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            errorBenefactor: error
+        }
+        res.json(jsonRespuesta);
+    });
+};
+
+/*
+Autor : JA
+Creado : 28/05/2017
+Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
+            21/07/2017 @erialper, agrego la excepción de busquedad
+*/
+
+
+const buscarBenefactorNombres = (req, res, next) => {
+    //var jsonModelo = utils.generarJsonProcariano(req.query);
+    var ll_estado = "activo";
+    console.log(ll_estado);
+    var llrazon = req.body.searchItem;
+    console.log(llrazon);
+    modelo.Benefactor.findAll({
+        include: [{
+            model: modelo.Persona
+        }], //, where : jsonModelo.benefactor//aqui va el where
+
+        where: {
+            razonsocial: {
+                $like: '%' + llrazon + '%'
+            },
+            estado: ll_estado
+
+        }
+    }).then(personas => {
+        const respuesta = personas.map(benefactor => {
+
+            return Object.assign({}, {
+                personaId: benefactor.Persona.id,
+                benefactorId: benefactor.id,
+                valor_contribucion: benefactor.valor_contribucion,
+                dia_cobro: benefactor.dia_cobro,
+                tarjeta_credito: benefactor.tarjeta_credito,
+                tipo_donacion: benefactor.tipo_donacion,
+                nombre_gestor: benefactor.nombre_gestor,
+                relacion: benefactor.relacion,
+                observacion: benefactor.observacion,
+                cedula: benefactor.Persona.cedula,
+                nombres: benefactor.Persona.nombres,
+                apellidos: benefactor.Persona.apellidos,
+                razonsocial: benefactor.Persona.razonsocial,
+                direccion: benefactor.Persona.direccion,
+                genero: benefactor.Persona.genero,
+                fechaNacimiento: benefactor.Persona.fechaNacimiento,
+                convencional: benefactor.Persona.convencional,
+                celular: benefactor.Persona.celular,
+                trabajo: benefactor.Persona.trabajo,
+                email: benefactor.Persona.email,
+                estado: benefactor.estado
+            });
+        });
+        //  console.log('hola');
         //console.log(respuesta);
         return res.json(respuesta);
     }).catch(error => {
@@ -203,8 +305,8 @@ const buscarBenefactor = (req, res, next) => {
 Autor : JV
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , para que modifique por ID
-			21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad	
-			23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
+            21/07/2017 @erialper , para que devuelva el tipo de procariano, agrego la excepción de busquedad    
+            23/07/2017 @edanmora , luego de obtener el id del tipo, también obtiene el nombre del tipo
 */
 
 const buscarBenefactorPorId = (req, res, next) => {
@@ -248,8 +350,8 @@ const buscarBenefactorPorId = (req, res, next) => {
                 estado: benefactor.estado
             });
         });
-        //  console.log('hola');
-        console.log(respuesta);
+        //console.log('hola');
+        // console.log(respuesta);
         return res.json(respuesta);
     }).catch(error => {
         var status = false;
@@ -264,26 +366,40 @@ const buscarBenefactorPorId = (req, res, next) => {
 };
 
 /*
-Autor : JV
+Autor : JoseAlcivar
 Creado : 28/05/2017
 Modificado: 07/07/2017 @JV , agregado date a datos date
-			22/07/2017 @erialper, agregado el cambio de tipo
+            22/07/2017 @erialper, agregado el cambio de tipo
 */
 
 const editarBenefactor = (req, res, next) => {
     console.log("ingresa aqui");
     var id = req.params.id;
+    console.log(req.body.razonsocial);
+    if (req.body.razonsocial == '') {
+        razonsocial = req.body.nombres + ' ' + req.body.apellidos;
+
+    } else {
+        razonsocial = req.body.razonsocial;
+
+    }
+    console.log("razon social");
+    console.log(razonsocial);
     console.log(id);
     console.log("mostro aqui");
     let valor = req.body.valor_contribucion;
+    console.log("valor");
+    console.log(valor);
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
+    console.log("valores");
+    console.log(valordolares);
     modelo.Persona.update({
         cedula: req.body.cedula,
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
         direccion: req.body.direccion,
-        razonsocial: req.body.razonsocial,
+        razonsocial: razonsocial,
         genero: req.body.genero,
         email: req.body.email,
         celular: req.body.celular,
@@ -309,8 +425,7 @@ const editarBenefactor = (req, res, next) => {
             }
         }).then(result2 => {
             var status = true;
-            var mensaje = 'se pudo actualizar correctamente'
-            console.log(mensaje);
+            var mensaje = 'se pudo actualizar correctamente';
 
             var jsonRespuesta = {
                 status: status,
@@ -321,7 +436,8 @@ const editarBenefactor = (req, res, next) => {
 
         }).catch(err2 => {
             var status = false;
-            var mensaje = 'no se pudo actualizar'
+            var mensaje = 'no se pudo actualizar';
+
             var jsonRespuesta = {
                 status: status,
                 mensaje: mensaje,
@@ -332,7 +448,8 @@ const editarBenefactor = (req, res, next) => {
 
     }).catch(err => {
         var status = false;
-        var mensaje = 'no se pudo actualizar'
+        var mensaje = 'no se pudo actualizar';
+
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,
@@ -349,81 +466,38 @@ Modificado: 21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 */
 
 const eliminarBenefactor = (req, res, next) => {
-    console.log('SE VA A ELIMINAR EL PROCARIANO');
+    console.log('SE VA A ELIMINAR EL BENEFACTOR');
     var id = req.params.id;
     console.log(id);
-    modelo.Procariano.update({
-        estado: 'inactivo'
+    var ll_estado = "inactivo";
+    modelo.Benefactor.update({
+        estado: ll_estado
     }, {
         where: {
             PersonaId: id
         }
     }).then(result => {
-        modelo.Procariano.findOne({
-            where: {
-                PersonaId: id
-            }
-        }).then(procariano => {
-            modelo.ProcarianoTipo.update({
-                fechaFin: new Date()
-            }, {
-                where: {
-                    fechaFin: null,
-                    ProcarianoId: procariano.get('id')
-                }
-            }).then(tipo => {
-                modelo.ProcarianoGrupo.update({
-                    fechaFin: new Date()
-                }, {
-                    where: {
-                        fechaFin: null,
-                        ProcarianoId: procariano.get('id')
-                    }
-                }).then(grupo => {
-                    var status = true;
-                    var mensaje = 'eliminado correctamente';
-                    var jsonRespuesta = {
-                        status: status,
-                        mensaje: mensaje,
-                        procariano: result,
-                        tipo: tipo,
-                        grupo: grupo
-                    }
-                    res.json(jsonRespuesta);
-                }).catch(error2 => {
-                    var status = true;
-                    var mensaje = 'Elimino procariano no esta en un grupo';
-                    var jsonRespuesta = {
-                        status: status,
-                        mensaje: mensaje,
-                        procariano: result,
-                        tipo: tipo,
-                        errorgrupo: error2
-                    }
-                    res.json(jsonRespuesta);
-                });
-            }).catch(error1 => {
-                var status = true;
-                var mensaje = 'Elimino procariano no tiene un tipo';
-                var jsonRespuesta = {
-                    status: status,
-                    mensaje: mensaje,
-                    procariano: result,
-                    errortipo: error1
-                }
-                res.json(jsonRespuesta);
-            });
-        });
-    }).catch(error => {
-        var status = false;
-        var mensaje = 'no se pudo eliminar';
+        var status = true;
+        var mensaje = 'Benefator Eliminado Correctamente';
         var jsonRespuesta = {
             status: status,
             mensaje: mensaje,
-            errorProcariano: error
+            errorBenefactor: result
+        }
+        res.json(jsonRespuesta);
+
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'NO se Pudo Eliminar El Benefactor';
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            errorBenefactor: error
         }
         res.json(jsonRespuesta);
     });
+
+
 };
 
 
@@ -433,5 +507,6 @@ module.exports = {
     buscarBenefactor,
     buscarBenefactorPorId,
     editarBenefactor,
-    eliminarBenefactor
+    eliminarBenefactor,
+    buscarBenefactorNombres
 }

@@ -7,101 +7,118 @@
 var bcrypt = require('bcryptjs');
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Persona = sequelize.define('Persona', {
-    cedula: {
-      type : DataTypes.STRING,
-      unique : true,
-      allowNull : false
-    },
-    nombres: {
-      type : DataTypes.STRING,
-      allowNull : true
-    },
-    apellidos: {
-      type : DataTypes.STRING,
-      allowNull : true
-    },
-    razonSocial : {
-      type : DataTypes.STRING,
-      allowNull : true
-    },
-    direccion: {
-      type : DataTypes.TEXT
-    },
-    fechaNacimiento: {
-      type : DataTypes.DATE
-    },
-    contrasenna : {
-      type : DataTypes.STRING
-    },
-    genero : {
-      type : DataTypes.STRING,
-      allowNull : false,
-      validate : {
-        isIn : [['masculino', 'femenino']]
-      }
-    },
-    email : {
-      type : DataTypes.STRING,
-      unique : true
-    },
-    convencional : {
-      type : DataTypes.STRING
-    },
-    celular : {
-      type : DataTypes.STRING
-    },
-    trabajo : {
-      type : DataTypes.TEXT
-    },
-    tipo : {
-      type : DataTypes.STRING
-    }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
-        // associations can be defined here
-      },
-      compararContrasenna :  function(candidatePassword, hash, done, user){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err) {
-              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
+    var Persona = sequelize.define('Persona', {
+        cedula: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+        },
+        nombres: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        apellidos: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        razonsocial: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        direccion: {
+            type: DataTypes.TEXT
+        },
+        fechaNacimiento: {
+            type: DataTypes.DATE
+        },
+        contrasenna: {
+            type: DataTypes.STRING
+        },
+        genero: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [
+                    ['masculino', 'femenino']
+                ]
             }
-            if (isMatch){
-              return done(null,user, {status : true , message : "Logueado correctamente"});
-            }
-            else{
-              return done(null, false , { status : false ,  message : "Contraseña inválida"});
-            }
-        });
-      },
-      compararContrasenna2 :  function(candidatePassword, hash, callback){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err){
-              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
-            }
-            return callback(null , isMatch);
+        },
+        email: {
+            type: DataTypes.STRING,
+            unique: true
+        },
+        convencional: {
+            type: DataTypes.STRING
+        },
+        celular: {
+            type: DataTypes.STRING
+        },
+        trabajo: {
+            type: DataTypes.TEXT
+        },
+        tipo: {
+            type: DataTypes.STRING
+        }
+    }, {
+        classMethods: {
+            associate: function(models) {
+                Persona.belongsToMany(models.Rol, {
+                        through: 'PersonaRol'
+                    })
+                    // associations can be defined here
+            },
+            compararContrasenna: function(candidatePassword, hash, done, user) {
+                bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+                    if (err) {
+                        return done(null, false, {
+                            status: false,
+                            message: "Usuario no registrado en el sistema"
+                        });
+                    }
+                    if (isMatch) {
+                        return done(null, user, {
+                            status: true,
+                            message: "Logueado correctamente"
+                        });
+                    } else {
+                        return done(null, false, {
+                            status: false,
+                            message: "Contraseña inválida"
+                        });
+                    }
+                });
+            },
+            compararContrasenna2: function(candidatePassword, hash, callback) {
+                bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+                    if (err) {
+                        return done(null, false, {
+                            status: false,
+                            message: "Usuario no registrado en el sistema"
+                        });
+                    }
+                    return callback(null, isMatch);
 
-        });
-      },
-      crearPersona: function(persona, callback, errorCallback){
-        this.create({
-          cedula: persona.cedula,
-          nombres: persona.nombres,
-          apellidos: persona.apellidos,
-          direccion: persona.direccion,
-          fechaNacimiento: persona.fechaNacimiento,
-          genero: persona.genero,
-          contrasenna: persona.contrasenna,
-          email: persona.email,
-          celular: persona.celular,
-          trabajo: persona.trabajo,
-          convencional: persona.convencional,
-          tipo: persona.tipo
-        }).then(callback).catch(errorCallback);
-      }
-    }
+                });
+            },
+            crearPersona: function(persona, callback, errorCallback) {
+
+                this.create({
+                    cedula: persona.cedula,
+                    nombres: persona.nombres,
+                    apellidos: persona.apellidos,
+                    razonsocial: persona.razonsocial,
+                    direccion: persona.direccion,
+                    fechaNacimiento: persona.fechaNacimiento,
+                    genero: persona.genero,
+                    contrasenna: persona.contrasenna,
+                    email: persona.email,
+                    celular: persona.celular,
+                    trabajo: persona.trabajo,
+                    convencional: persona.convencional,
+                    tipo: persona.tipo
+                }).then(callback).catch(errorCallback);
+            }
+        }
     });
     return Persona;
 };

@@ -136,8 +136,7 @@ let main = new Vue({
 			let self = this;
     	console.log(self.personal);
     	var data = {
-    		genero : genero,
-    		id : id
+    		nuevoPersonaId : id
     	}
     	//let urlApi = '/api/procarianos/';
     	$.ajax({

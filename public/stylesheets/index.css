@@ -1,7 +1,9 @@
 body{
-	background-color: #d3dbdb;
+	background-color: #F2F2F2;
 }
-
+h2{
+	color: #21378A;
+}
 main{
 	padding: 0 3%;
 	margin: 3% 0;
