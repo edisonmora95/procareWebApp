@@ -1,11 +1,11 @@
  /*
-  @Descripcion: Modelo de procariano
-  /*
-  @Descripcion: Modelo de procariano
-  @Autor: jose viteri
-  @FechaCreacion: 20/05/2017
-  @UltimaFechaModificacion: 03/06/2017 @JoseViteri
-  */
+    @Descripcion: Modelo de procariano
+    /*
+    @Descripcion: Modelo de procariano
+    @Autor: jose viteri
+    @FechaCreacion: 20/05/2017
+    @UltimaFechaModificacion: 03/06/2017 @JoseViteri
+    */
 
 
  var bcrypt = require('bcryptjs');

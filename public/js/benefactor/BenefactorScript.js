@@ -59,8 +59,11 @@ var main = new Vue({
         var parametro = path.split('/')[2];
         if (parametro == "nuevo") {
             $("h2#titulo").html("Ingresar Benefactor");
+            $("a#guardar").html("Crear");
+
         } else {
             $("h2#titulo").html("Editar Benefactor");
+            $("a#guardar").html("Guardar");
             this.cargarbenefactorporId();
         }
     },
@@ -200,14 +203,20 @@ var main = new Vue({
         //INGRESA UN NUEVO BENEFACTOR 
         ingresarBenefactor() {
             let self = this;
+
+            console.log("aqui");
+            //this.benefactor.razonsocial = "hola";
+            // console.log(this.benefactor.razonsocial);
+            console.log("despues aqui");
             let urlApi = '/api/benefactor/';
+            console.log(self.benefactor);
             $.ajax({
                 type: 'POST',
                 url: urlApi,
                 data: self.benefactor,
                 success: function(res) {
                     // $('#modalBenfactorCreado').modal('open');
-                    console.log(res.estado);
+                    console.log(res.status);
                     console.log("QUE PASO?");
                     if (res.estado) {
                         $('#modalBenfactorCreado').modal('open');

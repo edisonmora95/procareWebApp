@@ -101,10 +101,12 @@ module.exports = function(sequelize, DataTypes) {
                 });
             },
             crearPersona: function(persona, callback, errorCallback) {
+
                 this.create({
                     cedula: persona.cedula,
                     nombres: persona.nombres,
                     apellidos: persona.apellidos,
+                    razonsocial: persona.razonsocial,
                     direccion: persona.direccion,
                     fechaNacimiento: persona.fechaNacimiento,
                     genero: persona.genero,

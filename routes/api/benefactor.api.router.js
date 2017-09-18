@@ -17,7 +17,7 @@ var utils = require('../../utils/utils');
 //API
 
 //Post del benefactor
-router.post('/', utils.generarHash, controladorBenefactor.crearBenefactor);
+//router.post('/', utils.generarHash, controladorBenefactor.crearBenefactor);
 
 //Responde con los procarianos encontrados.
 //Esta es la búsqueda en general.
@@ -26,7 +26,7 @@ router.get('/', controladorBenefactor.buscarBenefactor);
 
 //Responde con los benefactores encontrados.
 //Esta es la búsqueda por nombres.
-router.post('/nombres/', controladorBenefactor.buscarBenefactorNombres);
+router.post('/', controladorBenefactor.crearBenefactor);
 
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano

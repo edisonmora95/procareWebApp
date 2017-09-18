@@ -15,9 +15,8 @@ Creado : 06/08/2017
 Modificado: 06/08/2017 @josealcivar agrega un benefactor
 */
 
-
 const crearBenefactor = (req, res, next) => {
-
+    console.log("muestra razon social");
     console.log(req.body.razonsocial);
     if (req.body.razonsocial == '') {
         ll_razonsocial = req.body.nombres + ' ' + req.body.apellidos;
@@ -26,6 +25,9 @@ const crearBenefactor = (req, res, next) => {
         ll_razonsocial = req.body.razonsocial;
         fechaNacimiento = null;
     }
+
+    console.log("aqui va");
+    console.log(ll_razonsocial);
     let valor = req.body.valor_contribucion;
     let result = Number(valor.replace(/[^0-9\.]+/g, ""));
     valordolares = parseFloat(result);
@@ -38,12 +40,13 @@ const crearBenefactor = (req, res, next) => {
         direccion: req.body.direccion,
         fechaNacimiento: fechaNacimiento,
         genero: req.body.genero,
-        contrasenna: req.body.contrasenna,
+        contrasenna: '',
         email: req.body.email,
         celular: req.body.celular,
         trabajo: req.body.trabajo,
         convencional: req.body.convencional
     };
+    console.log(persona);
 
     modelo.Persona.count({
         where: {
@@ -161,7 +164,11 @@ const crearBenefactor = (req, res, next) => {
             });
         }
     });
+
+
 };
+
+
 /*
 Autor : JA
 Creado : 28/05/2017
