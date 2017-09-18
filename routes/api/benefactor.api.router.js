@@ -23,6 +23,11 @@ router.post('/', utils.generarHash, controladorBenefactor.crearBenefactor);
 //Esta es la búsqueda en general.
 router.get('/', controladorBenefactor.buscarBenefactor);
 
+
+//Responde con los benefactores encontrados.
+//Esta es la búsqueda por nombres.
+router.post('/nombres/', controladorBenefactor.buscarBenefactorNombres);
+
 //Responde con la información del procariano indicado
 //Esto es usado para ver el perfil del Procariano
 router.get('/:id', controladorBenefactor.buscarBenefactorPorId);

@@ -163,7 +163,7 @@ const crearBenefactor = (req, res, next) => {
     });
 };
 /*
-Autor : JV
+Autor : JA
 Creado : 28/05/2017
 Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
             21/07/2017 @erialper, agrego la excepción de busquedad
@@ -182,6 +182,74 @@ const buscarBenefactor = (req, res, next) => {
 
         where: {
             estado: ll_estado
+        }
+    }).then(personas => {
+        const respuesta = personas.map(benefactor => {
+
+            return Object.assign({}, {
+                personaId: benefactor.Persona.id,
+                benefactorId: benefactor.id,
+                valor_contribucion: benefactor.valor_contribucion,
+                dia_cobro: benefactor.dia_cobro,
+                tarjeta_credito: benefactor.tarjeta_credito,
+                tipo_donacion: benefactor.tipo_donacion,
+                nombre_gestor: benefactor.nombre_gestor,
+                relacion: benefactor.relacion,
+                observacion: benefactor.observacion,
+                cedula: benefactor.Persona.cedula,
+                nombres: benefactor.Persona.nombres,
+                apellidos: benefactor.Persona.apellidos,
+                razonsocial: benefactor.Persona.razonsocial,
+                direccion: benefactor.Persona.direccion,
+                genero: benefactor.Persona.genero,
+                fechaNacimiento: benefactor.Persona.fechaNacimiento,
+                convencional: benefactor.Persona.convencional,
+                celular: benefactor.Persona.celular,
+                trabajo: benefactor.Persona.trabajo,
+                email: benefactor.Persona.email,
+                estado: benefactor.estado
+            });
+        });
+        //  console.log('hola');
+        //console.log(respuesta);
+        return res.json(respuesta);
+    }).catch(error => {
+        var status = false;
+        var mensaje = 'No se obtuvieron benefactor'
+        var jsonRespuesta = {
+            status: status,
+            mensaje: mensaje,
+            errorBenefactor: error
+        }
+        res.json(jsonRespuesta);
+    });
+};
+
+/*
+Autor : JA
+Creado : 28/05/2017
+Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
+            21/07/2017 @erialper, agrego la excepción de busquedad
+*/
+
+
+const buscarBenefactorNombres = (req, res, next) => {
+    //var jsonModelo = utils.generarJsonProcariano(req.query);
+    var ll_estado = "activo";
+    console.log(ll_estado);
+    var llrazon = req.body.searchItem;
+    console.log(llrazon);
+    modelo.Benefactor.findAll({
+        include: [{
+            model: modelo.Persona
+        }], //, where : jsonModelo.benefactor//aqui va el where
+
+        where: {
+            razonsocial: {
+                $like: '%' + llrazon + '%'
+            },
+            estado: ll_estado
+
         }
     }).then(personas => {
         const respuesta = personas.map(benefactor => {
@@ -432,5 +500,6 @@ module.exports = {
     buscarBenefactor,
     buscarBenefactorPorId,
     editarBenefactor,
-    eliminarBenefactor
+    eliminarBenefactor,
+    buscarBenefactorNombres
 }

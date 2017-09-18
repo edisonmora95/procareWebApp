@@ -162,19 +162,44 @@ var main = new Vue({
             // this.key = arregloBenefactor.length();
 
         },
-        searchInTheList(searchText, currentPage) {
-            if (_.isUndefined(searchText)) {
-                this.filteredItems = _.filter(this.arregloBenefactor, function(v, k) {
-                    return !v.selected;
-                })
-            } else {
-                this.filteredItems = _.filter(this.arregloBenefactor, function(v, k) {
-                    return !v.selected && v.razonsocial.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-                })
-            }
-            this.filteredItems.forEach(function(v, k) {
-                v.key = k + 1;
-            })
+
+        searchInTheList() {
+
+
+            let self = this;
+            self.filteredItems = [];
+            console.log(this.searchItem);
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/benefactor/nombres/',
+                data: this.searchItem,
+
+                success: function(res) {
+
+                    console.log(res.status);
+                    console.log("**********************");
+                    $.each(res, function(index, filteredItems) {
+
+                        console.log(filteredItems);
+
+                        self.arregloBenefactor.push(filteredItems);
+
+                    });
+                    console.log(res);
+                    /*
+                         self.fallaCargar = true;
+                         self.msg = res.mensaje;
+                         console.log(res)
+                      */
+                },
+                error: function(res) {
+                    self.fallaCargar = true;
+                    self.msg = res.mensaje;
+                    console.log(res)
+                }
+
+            });
         },
 
         PreguntaparaEliminar(persona) {

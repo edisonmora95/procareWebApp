@@ -1,116 +1,110 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <% include ../partials/head %>
-       <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <% include ../partials/head %>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/benefactorStyles.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
   </head>
   <body>
     <div id="main">
-       <header>
-                <% include ../partials/navbar %>
-            </header>
-    <main class="container">
-      <!--
-      <div class="input-field col s6">
-        <input type="text" name="busqueda" value="">
-        <label for="Buscar">Buscar Benefactor: </label>
+      <header>
+        <% include ../partials/navbar %>
+      </header>
+      <main class="container">
         
-      </div>
-      
-      -->
-      
-      
-      <h2 id="titulo" class="center-align titulo">Benefactores</h2>
-      <div class="row">
         
-      </div>
-      
-      <div class="row row-botones">
         
-          <a href="/benefactor/nuevo" class="waves-effect waves-light btn orange darken-1">Nuevo</a>
         
-      </div>
- 
-      <!-- tabla de contenido -->
-      
-      <div class="m-table">
-        <table class="bordered">
-          <thead class="light-blue darken-4">
-            <tr class="white-text">
-              <th>Razon Social</th>
-              <th>Cedula / Ruc</th>
-              <th>tipo Donacion</th>
-              <th>Dia de Cobro</th>
-              <th>Contribucion</th>
-              <th> opciones </th>
-            </tr>
-          </thead>
-          <tr v-for="item in arregloBenefactor">
-            <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
-            <td>{{item.cedula}}</td>
-            <td>{{item.tipo_donacion}}</td>
-            <td style="text-align:center;">{{item.dia_cobro}}</td>
-            <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
-            <td><button @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></button>
-             <button @click="PreguntaparaEliminar(item)"> <i class="material-icons  red-text darken-4">delete</i></button>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </main>
-
-              <!-- Modal Structure Eliminar  -->
-                  <div id="modalBenfactorEliminado" class="modal">
-                      <div class="modal-content">
-                          <p class="center-align modal-text"> El Benefactor <h6>{{ nombre_eliminado }}</h6> ha sido Eliminado correctamente.</p>
-
-                      </div>
-                      <div class="modal-footer">
-                        <a href="/benefactor/" class="modal-action modal-close waves-effect waves-orange btn-flat">Aceptar</a>
-                           
-                      </div>
-                  </div>
-
-                  <!-- Modal Structure Eliminar  -->
-                  <div id="modalBenfactorEliminar" class="modal">
-                      <div class="modal-content">
-                          <p class="center-align modal-text">Desea Eliminar el Benefactor:  <h5>{{ nombre_eliminado }}</h5></p>
-
-                      </div>
-                      <div class="modal-footer">
-                        <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-                         <a href="#" class="modal-action modal-close waves-effect waves-orange btn-flat" @click="EliminarBenefactor">Aceptar</a>
-                          
-                          
-                      </div>
-                  </div>
-
-                  <!-- Modal Structure -->
-            <div id="modalErrorAjax" class="modal">
-                <div class="modal-content">
-                    <h4 class="center-align">{{errorAjax.titulo}}.</h4>
-                    <p class="center-align">"{{errorAjax.descripcion}}"</p>
-                </div>
-                <div class="modal-footer">
-                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-                </div>
+        
+        
+        <h2 id="titulo" class="center-align titulo">Benefactores</h2>
+         <!--
+        <div class="row row-botones">
+          <div class="col s4">
+            <a href="/benefactor/nuevo" class="waves-effect waves-light btn orange darken-1">Nuevo</a>
+          </div>
+          
+            <div class="input-field col s6">
+              <input type="text" v-model="searchItem" name="busqueda" value="">
+              <label for="Buscar">Buscar Benefactor: </label>
             </div>
-  
-  </div>
-
-  
-  <div>
+          <div class="col s2">
+             <button @click="searchInTheList"> <i class="medium material-icons prefix">search</i></button>
+          </div>
+        </div>-->
+        <!-- tabla de contenido -->
+        
+        <div class="m-table">
+          <table class="bordered">
+            <thead class="light-blue darken-4">
+              <tr class="white-text">
+                <th>Razon Social</th>
+                <th>Cedula / Ruc</th>
+                <th>tipo Donacion</th>
+                <th>Dia de Cobro</th>
+                <th>Contribucion</th>
+                <th> opciones </th>
+              </tr>
+            </thead>
+            <tr v-for="item in arregloBenefactor">
+              <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
+              <td>{{item.cedula}}</td>
+              <td>{{item.tipo_donacion}}</td>
+              <td style="text-align:center;">{{item.dia_cobro}}</td>
+              <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
+              <td><button @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></button>
+                <button @click="PreguntaparaEliminar(item)"> <i class="material-icons  red-text darken-4">delete</i></button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </main>
+      <!-- Modal Structure Eliminar  -->
+      <div id="modalBenfactorEliminado" class="modal">
+        <div class="modal-content">
+          <p class="center-align modal-text"> El Benefactor <h6>{{ nombre_eliminado }}</h6> ha sido Eliminado correctamente.</p>
+        </div>
+        <div class="modal-footer">
+          <a href="/benefactor/" class="modal-action modal-close waves-effect waves-orange btn-flat">Aceptar</a>
+          
+        </div>
+      </div>
+      <!-- Modal Structure Eliminar  -->
+      <div id="modalBenfactorEliminar" class="modal">
+        <div class="modal-content">
+          <p class="center-align modal-text">Desea Eliminar el Benefactor:  <h5>{{ nombre_eliminado }}</h5></p>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+          <a href="#" class="modal-action modal-close waves-effect waves-orange btn-flat" @click="EliminarBenefactor">Aceptar</a>
+          
+          
+        </div>
+      </div>
+      <!-- Modal Structure -->
+      <div id="modalErrorAjax" class="modal">
+        <div class="modal-content">
+          <h4 class="center-align">{{errorAjax.titulo}}.</h4>
+          <p class="center-align">"{{errorAjax.descripcion}}"</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </div>
+      </div>
+      
+    </div>
     
+    <div>
+      
       <% include ../partials/scripts %>
-        <script src="/scripts/moment/moment.js"></script>
-        <script src="/scripts/moment/locale/es.js"></script>
-        <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
-    <script src="/build/benefactor/verBenefactor.min.js"></script>
-    <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
-    </script>
-  </div>
-</body>
+      <script src="/scripts/moment/moment.js"></script>
+      <script src="/scripts/moment/locale/es.js"></script>
+      <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+      <script src="/build/benefactor/verBenefactor.min.js"></script>
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
+      </script>
+    </div>
+  </body>
 </html>
