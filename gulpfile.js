@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
@@ -192,7 +192,7 @@ gulp.task('set-prod-node-env', function() {
 
 //TASK DE MOCHA
 gulp.task('mocha', function() {
-    gulp.src('./test/nivel/*.js', {
+    gulp.src('./test/asistencias/*.js', {
             read: false
         })
         .pipe(mocha());
