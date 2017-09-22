@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     horaSalida : {
       type : DataTypes.DATE,
-      allowNull : false
+      allowNull : true
     },
     descripcion : {
       type : DataTypes.STRING(300),
