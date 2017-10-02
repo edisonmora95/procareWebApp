@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var ProcarianoGrupo = sequelize.define('ProcarianoGrupo', {
+  let ProcarianoGrupo = sequelize.define('ProcarianoGrupo', {
     fechaInicio : {
       type : DataTypes.DATE,
       allowNull : true
@@ -19,10 +19,10 @@ module.exports = function(sequelize, DataTypes) {
       },
       anadirProcarianoAGrupo: function(idGrupo, idProcariano, fechaInicio, callback, errorCallback){
         this.create({
-          GrupoId: idGrupo,
-          ProcarianoId: idProcariano,
-          fechaInicio: fechaInicio,
-          fechaFin: null
+          GrupoId       : idGrupo,
+          ProcarianoId  : idProcariano,
+          fechaInicio   : fechaInicio,
+          fechaFin      : null
         }).then(callback).catch(errorCallback);
       },
       /*
@@ -65,8 +65,98 @@ module.exports = function(sequelize, DataTypes) {
             fechaFin: null
           }
         }).then(success).catch(error);
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON PROMESAS
+      ///////////////////////////////////////
+      obtenerGrupoActualDeProcarianoP: function(idProcariano){
+        return new Promise( (resolve, reject) => {
+          return this.findOne({
+            where: {
+              ProcarianoId: idProcariano,
+              fechaFin: null
+            }
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      buscarProcarianosConGrupoP: function(){
+        return new Promise( (resolve, reject) => {
+          return this.findAll({
+            where : {
+              fechaFin : null
+            }
+          })
+          .then( procarianos => {
+            return resolve(procarianos);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON TRANSACCIONES
+      ///////////////////////////////////////
+      eliminarRegistrosDeGrupoT: function(idGrupo, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.destroy({
+            where : {
+              GrupoId : idGrupo
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      anadirProcarianoAGrupoT: function(idGrupo, idProcariano, transaction){
+        let errors = [];
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            GrupoId       : idGrupo,
+            ProcarianoId  : idProcariano,
+            fechaInicio   : new Date(),
+            fechaFin      : null
+          }, { transaction : transaction })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      anadirFechaFinT: function(idProcariano, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.update({
+            fechaFin : new Date()
+          }, {
+            where : {
+              fechaFin      : null,
+              ProcarianoId  : idProcariano
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
       }
     }
   });
   return ProcarianoGrupo;
 };
+

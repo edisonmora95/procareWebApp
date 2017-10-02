@@ -13,15 +13,15 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
 //Ventanas
-var usuarios = require('./routes/ventanas/usuarios.ventanas.router');
-var procarianos = require('./routes/ventanas/procarianos.ventanas.router');
-var asistencias = require('./routes/ventanas/asistencias.ventanas.router');
-var grupos = require('./routes/ventanas/grupos.ventanas.router');
-var index = require('./routes/ventanas/index.ventanas.router');
-var login = require('./routes/ventanas/login.router');
-var personal = require('./routes/ventanas/personal.ventanas.router');
-let cambioContrasenna = require('./routes/ventanas/cambioContrasenna.ventanas.router');
-let perderContrasenna = require('./routes/ventanas/perderContrasenna.ventanas.router');
+var usuarios            = require('./routes/ventanas/usuarios.ventanas.router');
+var procarianos         = require('./routes/ventanas/procarianos.ventanas.router');
+var asistencias         = require('./routes/ventanas/asistencias.ventanas.router');
+var grupos              = require('./routes/ventanas/grupos.ventanas.router');
+var index               = require('./routes/ventanas/index.ventanas.router');
+var login               = require('./routes/ventanas/login.router');
+var personal            = require('./routes/ventanas/personal.ventanas.router');
+let cambioContrasenna   = require('./routes/ventanas/cambioContrasenna.ventanas.router');
+let perderContrasenna   = require('./routes/ventanas/perderContrasenna.ventanas.router');
 
 //Api
 let apiProcarianos = require('./routes/api/procarianos.api.router');

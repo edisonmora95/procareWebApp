@@ -150,7 +150,7 @@
 									<td>{{procariano.nombres}}</td>
 									<td>{{procariano.apellidos}}</td>
 									<td>{{procariano.cedula}}</td>
-									<td>{{procariano.fechaNacimiento}}</td>
+									<td>{{date(procariano.fechaNacimiento)}}</td>
 									<td>{{procariano.email}}</td>
 									<td>{{procariano.convencional}}</td>
 									<td>{{procariano.celular}}</td>
@@ -181,6 +181,17 @@
 			    <div class="modal-footer">
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
 			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+			    </div>
+			  </div>
+			  <!-- Modal Structure -->
+			  <div id="modalErrorBusqueda" class="modal">
+			    <div class="modal-content center-align">
+			      <h4>¡Error!</h4>
+			      <p>Hubo un error al realizar la búsqueda.</p>
+			      <p>Recargue la página e intente de nuevo.</p>
+			    </div>
+			    <div class="modal-footer">
+			      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>
 			    </div>
 			  </div>
 			</main>

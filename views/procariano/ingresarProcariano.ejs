@@ -71,14 +71,17 @@
 						<section class="row row-genero-tipo">
 							<div class="col s6">
 								<label for="selectGenero">Género</label>
-								<v-select id="selectGenero" name="selectGenero" v-model="procariano.genero" select-text="">
+								<select id="selectGenero" name="selectGenero">
+									<option value="" disabled selected></option>
 									<option value="masculino">Masculino</option>
 									<option value="femenino">Femenino</option>
-								</v-select>
+								</select>
 							</div>
 							<div class="col s6">
 								<label for="selectTipo">Tipo</label>
-								<v-select id="selectTipo" name="selectTipo" v-model="procariano.tipo" select-text="" :items="tipos"></v-select>
+								<select id="selectTipo" name="selectTipo">
+									<option value="" disabled selected></option>
+								</select>
 							</div>
 						</section>
 						<!--Chico formacion-->
@@ -90,8 +93,9 @@
 							</div>
 							<div class="col s6" id="div-select-grupo-formacion">
 								<label class="active" for="selectGrupoFormacion">Grupo de Formación</label>
-								<v-select id="selectGrupoFormacion" name="selectGrupoFormacion" v-model="grupoFormacionSel" select-text="" :items="gruposFormacion">
-								</v-select>
+								<select id="selectGrupoFormacion" name="selectGrupoFormacion">
+									<option value="" disabled selected></option>
+								</select>
 							</div>
 						</section>
 						<!--Caminante-->
@@ -113,8 +117,9 @@
 							</div>
 							<div class="col s6" id="div-select-grupo-caminantes">
 								<label class="active" for="selectGrupoCaminantes">Grupo de caminantes</label>
-								<v-select id="selectGrupoCaminantes" name="selectGrupoCaminantes" v-model="grupoCaminantesSel" select-text="" :items="gruposCaminantes">
-								</v-select>
+								<select id="selectGrupoCaminantes" name="selectGrupoCaminantes">
+									<option value="" disabled selected></option>
+								</select>
 							</div>
 						</section>
 						<!--Pescador-->
@@ -136,8 +141,9 @@
 							</div>
 							<div class="col s6" id="div-select-grupo-pescadores">
 								<label class="active">Grupo de pescadores</label>
-								<v-select id="selectGrupoPescadores" name="selectGrupoPescadores" v-model="grupoPescadoresSel" select-text="" :items="gruposPescadores">
-								</v-select>
+								<select id="selectGrupoPescadores" name="selectGrupoPescadores">
+									<option value="" disabled selected></option>
+								</select>
 							</div>
 						</section>
 						<!--Sacerdote-->

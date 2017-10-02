@@ -7,28 +7,52 @@
 'use strict';
 var Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  var Procariano = sequelize.define('Procariano', {
+  let Procariano = sequelize.define('Procariano', {
     colegio: {
-      type : DataTypes.STRING,
-      allowNull : true
+      type      : DataTypes.STRING,
+      allowNull : true,
+      validate  : {
+        not : {
+          args : /[`~,.<>;':"/[\]|{}()=_+-]/,
+          msg  : 'No puede ingresar caracteres especiales en "Colegio"'
+        }
+      }
     },
     universidad: {
-      type : DataTypes.STRING,
-      allowNull : true
+      type      : DataTypes.STRING,
+      allowNull : true,
+      validate  : {
+        not : {
+          args : /[`~,.<>;':"/[\]|{}()=_+-]/,
+          msg  : 'No puede ingresar caracteres especiales en "Universidad"'
+        }
+      }
     },
     parroquia: {
-      type : DataTypes.STRING,
-      allowNull : true
+      type      : DataTypes.STRING,
+      allowNull : true,
+      validate  : {
+        not : {
+          args : /[`~,.<>;':"/[\]|{}()=_+-]/,
+          msg  : 'No puede ingresar caracteres especiales en "Parroquia"'
+        }
+      }
     },
     fechaOrdenacion: {
-      type : DataTypes.DATE,
+      type      : DataTypes.DATE,
       allowNull : true
     },
     estado: {
-      type : DataTypes.STRING,
+      type      : DataTypes.STRING,
       allowNull : false,
-      validate : {
-        isIn : [['activo', 'inactivo' ]]
+      validate  : {
+        notEmpty: {
+          msg: 'Estado del grupo no puede estar vacío.'
+        },
+        isIn : {
+          args  : [['activo', 'inactivo' ]],
+          msg   : 'Valor ingresado de "estado" no es válido'
+        }
       }
     },
     haceParticipacionEstudiantil: {
@@ -44,73 +68,6 @@ module.exports = function(sequelize, DataTypes) {
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
         Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
       },
-      crearProcariano: function(procariano, callback, errorCallback){
-        this.create({
-          PersonaId: procariano.PersonaId,
-          colegio: procariano.colegio,
-          universidad: procariano.universidad,
-          parroquia: procariano.parroquia,
-          fechaOrdenacion: procariano.fechaOrdenacion,
-          estado: procariano.estado,
-          haceParticipacionEstudiantil: procariano.haceParticipacionEstudiantil
-        }).then(callback).catch(errorCallback);
-      },
-      buscarChicosFormacion: function(successCallback, errorCallback){
-        const Tipo = sequelize.import("../models/tipo");
-        const Persona = sequelize.import("../models/persona");
-        this.findAll({
-          include: [
-            {
-              model: Tipo,
-              where: {
-                id: 1   //Id de Chico Formación es 1
-              },
-              attributes: ['id', 'nombre']
-            },
-            {
-              model: Persona,
-              attributes: [['id', 'personaId'], 'nombres', 'apellidos']
-            }
-          ],
-          where:{estado: {$not: 'inactivo'}},
-          attributes: [['id', 'procarianoId'], 'estado']
-        }).then(successCallback).catch(errorCallback);
-      },
-      obtenerProcarianosDeGrupo: function(idGrupo, successCallback, errorCallback){
-        const Grupo = sequelize.import("../models/grupo");
-        const Persona = sequelize.import("../models/persona");
-        this.findAll({
-          include: [
-            {
-              model: Grupo,
-              where: {
-                id: idGrupo
-              },
-              attributes: [ ['id', 'idGrupo']]
-            },
-            {
-              model: Persona,
-              attributes: [ ['id', 'idPersona'], 'nombres', 'apellidos', ]
-            }
-          ],
-          attributes:[['id', 'idProcariano']]
-        }).then(successCallback).catch(errorCallback);
-      },
-      obtenerProcarianoPorId: function(idProcariano, successCallback, errorCallback){
-        const Persona = sequelize.import("../models/persona");
-        this.findOne({
-          where: {
-            id: idProcariano
-          },
-          include: [
-            {
-              model: Persona,
-              attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero']
-            }
-          ],
-          attributes: [['id', 'procarianoId']]
-        }).then(successCallback).catch(errorCallback);
-      },
       obtenerGrupoDeProcariano: function(idProcariano, success, error){
         const Grupo = sequelize.import("../models/grupo");
         this.findOne({
@@ -124,22 +81,29 @@ module.exports = function(sequelize, DataTypes) {
           ]
         }).then(success).catch(error);
       },
-      buscarProcarianosActivos: function(success, error){
+      ///////////////////////////////////////
+      //FUNDIONES CON PROMESAS
+      ///////////////////////////////////////
+      /*
+        @Descripción: Devuelve la información del procariano con el id de Procariano
+        @Return: Promesa con info de Procariano y Persona
+      */
+      obtenerProcarianoPorIdP: function(idProcariano){
         const Persona = sequelize.import("../models/persona");
-        this.findAll({
-          include : [{
-              model : Persona
-          }], 
-          where : {
-            estado:{$not:'inactivo'}
-          }
-        }).then(success).catch(error);
-      },
-      buscarProcarianoPorId: function(idProcariano){
         return new Promise( (resolve, reject) => {
-          if (!idProcariano) return reject('No ingresó el id del procariano a buscar.');
+          if( !idProcariano )     return reject('No ingresó el id del procariano');
+          if( idProcariano < 0 )  return reject('Id de procariano a buscar no puede ser negativo');
           return this.findOne({
-            where : { id : idProcariano }
+            where: {
+              id: idProcariano
+            },
+            include: [
+              {
+                model: Persona,
+                attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero']
+              }
+            ],
+            attributes: [['id', 'procarianoId']]
           })
           .then( procariano => {
             return resolve(procariano);
@@ -147,7 +111,228 @@ module.exports = function(sequelize, DataTypes) {
           .catch( error => {
             return reject(error);
           });
-        })
+        });
+      },
+      /*
+        @Descripción: Busca a todos los procarianos pertenecientes al grupo inicado por el idGrupo
+        @Return: Promesa con info de Procariano, Persona, Grupo y ProcarianoGrupo
+      */
+      obtenerProcarianosDeGrupoP: function(idGrupo){
+        const Grupo = sequelize.import("../models/grupo");
+        const Persona = sequelize.import("../models/persona");
+        return new Promise( (resolve, reject) => {
+          if( !idGrupo )    return reject('No ingresó el id del grupo');
+          if( idGrupo < 0 ) return reject('Id de grupo no puede ser negativo');
+          return this.findAll({
+            include: [
+              {
+                model: Grupo,
+                where: {
+                  id: idGrupo
+                },
+                attributes: [ ['id', 'idGrupo']]
+              },
+              {
+                model: Persona,
+                attributes: [ ['id', 'idPersona'], 'nombres', 'apellidos', ]
+              }
+            ],
+            attributes:[['id', 'idProcariano']]
+          })
+          .then( procarianos => {
+            return resolve(procarianos);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      /*
+        @Descripción : Busca la información del procariano por el id de la Persona
+        @Return      : Promesa con la información de Procariano, Persona, Tipo y Grupo
+      */
+      obtenerProcarianoPorIdPersonaP: function(idPersona){
+        const Persona = sequelize.import("../models/persona");
+        const Tipo    = sequelize.import("../models/tipo");
+        const Grupo   = sequelize.import("../models/grupo");
+        return new Promise( (resolve, reject) => {
+          if( !idPersona )    return reject('No ingresó el id a buscar');
+          if( idPersona < 0 ) return reject('Ingresó un id negativo');
+          return this.findOne({
+            include : [
+              {
+                model : Persona
+              },
+              {
+                model : Tipo
+              },
+              {
+                model : Grupo
+              }
+            ],
+            where : {
+              PersonaId : idPersona
+            }  
+          })
+          .then( procariano => {
+            return resolve(procariano);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      /*
+        @Descripción : Busca a los procarianos activos
+        @Return      : Devuelve la información de: Procariano, Persona y Tipo
+      */
+      obtenerProcarianosActivosP: function(){
+        const Persona = sequelize.import("../models/persona");
+        const Tipo    = sequelize.import("../models/tipo");
+        const Grupo   = sequelize.import("../models/grupo");
+        return new Promise( (resolve, reject) => {
+          return this.findAll({
+            include : [
+              {
+                model : Persona
+              },
+              {
+                model : Tipo
+              },
+              {
+                model : Grupo
+              }
+            ],
+            where : {
+              estado : 'activo'
+            }
+          })
+          .then( procarianos => {
+            return resolve(procarianos);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      buscarChicosFormacionP: function(){
+        const Tipo = sequelize.import("../models/tipo");
+        const Persona = sequelize.import("../models/persona");
+        return new Promise( (resolve, reject) => {
+          return this.findAll({
+            include : [
+              {
+                model : Tipo,
+                where : {
+                  id  : 1 //Id de Chico Formación es 1
+                },
+                attributes: ['id', 'nombre']
+              },
+              {
+                model       : Persona,
+                attributes  : [['id', 'personaId'], 'nombres', 'apellidos']
+              }
+            ],
+            where : {
+              estado  : {
+                $not  : 'inactivo'
+              }
+            },
+            attributes: [['id', 'procarianoId'], 'estado']
+          })
+          .then( procarianos => {
+            return resolve(procarianos);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON TRANSACCIONES
+      ///////////////////////////////////////
+      /*
+        @Descripción : Crea un registro en la tabla Procarianos de la base de datos a partir de una transacción
+        @Params      : 
+          procariano  : Objeto con la información del Procariano a crear
+          transaction : Transacción para crear el Procariano
+        @Return      : Promesa con la información del Procariano creado
+      */
+      crearProcarianoT: function(procariano, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            PersonaId       : procariano.PersonaId,
+            colegio         : procariano.colegio,
+            universidad     : procariano.universidad,
+            parroquia       : procariano.parroquia,
+            fechaOrdenacion : procariano.fechaOrdenacion,
+            estado          : procariano.estado,
+          }, { transaction : transaction })
+          .then( procariano => {
+            return resolve(procariano);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      /*
+        @Descripción : Edita un registro en la tabla Procarianos de la base de datos a partir de una transacción
+        @Params      : 
+          idPersona   : Id de la Persona para editar el registro
+          procariano  : Objeto con la información del Procariano a crear
+          transaction : Transacción para crear el Procariano
+        @Return      : Promesa con el número de registros editados
+      */
+      editarProcarianoT: function(idPersona, procariano, transaction){
+        return new Promise( (resolve, reject) => {
+          if( !idPersona )     return reject('No ingresó id');
+          if( idPersona < 0 )  return reject('Id debe ser mayor a 0');
+          return this.update({
+            colegio         : procariano.colegio,
+            universidad     : procariano.universidad,
+            parroquia       : procariano.parroquia,
+            fechaOrdenacion : procariano.fechaOrdenacion,
+            estado          : procariano.estado,
+          },
+          {
+            where : {
+              PersonaId : idPersona
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      /*
+        @Descripción : Cambia el estado a inactivo de un Procariano en la base a partir de una transacción
+        @Params      : 
+          idPersona   : id de la Persona para realizar el cambio de estado
+          transaction : Transacción para crear el Procariano
+        @Return      : Promesa con el número de registros afectados
+      */
+      eliminarProcarianoT: function(idPersona, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.update({
+            estado : 'inactivo'
+          }, {
+            where : {
+              PersonaId : idPersona
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
       }
     }
   });

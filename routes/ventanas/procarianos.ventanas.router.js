@@ -11,7 +11,7 @@ const express = require('express');
 const router = express.Router();
 let autenticacion = require('./../../utils/authentication');
 
-router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+//router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
 
 /*
 	@Descripción:
@@ -20,7 +20,7 @@ router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario
 		Usuario
 		Personal
 */
-router.get('/nuevo', autenticacion.personal, function(req, res){
+router.get('/nuevo',  function(req, res){
 	res.render('procariano/ingresarProcariano');
 });
 
@@ -42,8 +42,12 @@ router.get('/', function(req, res) {
 		Usuario
 		Personal | Director ejecutivo | Director de Procare Formación: solo si es alguien de Procare o PM | Animador: solo si es suyo o de su grupo
 */
-router.get('/perfil/:cedula', function(req, res){
+router.get('/perfil/:id', function(req, res){
 	res.render('procariano/verProcariano');
+});
+
+router.get('/perfil/:id/editar', function(req, res){
+	res.render('procariano/editarProcariano');
 });
 
 module.exports = router;

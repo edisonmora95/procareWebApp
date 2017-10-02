@@ -6,8 +6,6 @@
 */
 'use strict';
 
-import Materials from 'vue-materials';
-Vue.use(Materials);
 Vue.use(VeeValidate);
 /*
 	Validaciones. Cambio de mensajes de error
@@ -15,25 +13,25 @@ Vue.use(VeeValidate);
 const dictionary = {
 	en: {
 		messages: {
-			email : function(){
+			email(){
 				return 'Ingrese un correo válido.';
 			},
-			required: function(){
+			required(){
 				return 'Este campo es obligatorio.';
 			},
-			alpha_spaces: function(){
+			alpha_spaces(){
 				return 'Este campo sólo puede contener letras y espacios.';
 			},
-			digits: function(field, length){
+			digits(field, length){
 				return 'Este campo sólo puede contener ' + length + ' números.';
 			},
-			numeric: function(){
+			numeric(){
 				return 'Este campo sólo puede contener números.';
 			},
-			alpha_num: function(){
+			alpha_num(){
 				return 'Este campo sólo puede contener letras y números.';
 			},
-			regex: function(field, val){
+			regex(field, val){
 				return 'No ingrese caracteres especiales.';
 			}
 		}
@@ -51,45 +49,45 @@ var main = new Vue({
 		this.inicializarMaterialize(this);
 	},
 	data: {
-		fechaIncorrecta: false,
-		errorObj: {
-			campo: '',
-			msj: ''
+		fechaIncorrecta : false,
+		errorObj 				: {
+			campo : '',
+			msj 	: ''
 		},
-		procariano: {
-			nombres: '',
-			apellidos: '',
-			fechaNacimiento: '',
-			cedula: '',
-			direccion: '',
-			email: '',
-			celular: '',
-			convencional: '',
-			genero: '',
-			tipo: '',	//chico de formación/caminante/pescador/pescador consagrado/sacerdote
-			estado: 'activo',	//activo/inactivo... Activo por default
-			colegio: '',
-			universidad: '',
-			grupo: '',
-			trabajo: '',
-			parroquia: '',
-			fechaOrdenacion: ''
+		procariano 			: {
+			nombres					: '',
+			apellidos				: '',
+			fechaNacimiento : '',
+			cedula 					: '',
+			direccion 			: '',
+			email						: '',
+			celular					: '',
+			convencional		: '',
+			genero 					: '',
+			tipo 						: '',				//chico de formación/caminante/pescador/pescador consagrado/sacerdote
+			estado 					: 'activo',	//activo/inactivo... Activo por default
+			colegio 				: '',
+			universidad 		: '',
+			grupo 					: '',
+			trabajo 				: '',
+			parroquia 			: '',
+			fechaOrdenacion : ''
 		},
 		src: '',
-		gruposObtenidos: [],
-		gruposCaminantes: [],
-		grupoCaminantesSel: '',
-		gruposFormacion: [],
-		grupoFormacionSel: '',
-		gruposPescadores: [],
-		grupoPescadoresSel: '',
-		gruposMayores: [],
-		grupoMayoresSel: '',
-		tipos: [],
-		errorAjax: {
-			titulo: '',
-			descripcion: ''
-		}
+		gruposObtenidos 		: [],
+		gruposCaminantes 		: [],
+		grupoCaminantesSel 	: '',
+		gruposFormacion 		: [],
+		grupoFormacionSel 	: '',
+		gruposPescadores 		: [],
+		grupoPescadoresSel 	: '',
+		gruposMayores 			: [],
+		grupoMayoresSel 		: '',
+		errorAjax 					: {
+			titulo 			: '',
+			descripcion : ''
+		},
+		cargoTipos : false
 	},
 	methods: {
 		/*
@@ -98,22 +96,36 @@ var main = new Vue({
     */
     inicializarMaterialize(self){
     	$('.datepicker').pickadate({
-			  monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-			  monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-			  weekdaysFull: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-			  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-			  today: 'Hoy',
-			  clear: 'Limpiar',
-			  close: 'Cerrar',
-		    selectMonths: true, // Creates a dropdown to control month
-		    selectYears: 100, // Creates a dropdown of 15 years to control year,
-		    closeOnSelect: true // Close upon selecting a date,
+			  monthsFull 		: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			  monthsShort 	: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			  weekdaysFull 	: ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			  weekdaysShort : ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+			  today 				: 'Hoy',
+			  clear 				: 'Limpiar',
+			  close 				: 'Cerrar',
+		    selectMonths 	: true, // Creates a dropdown to control month
+		    selectYears 	: 100,  // Creates a dropdown of 15 years to control year,
+		    closeOnSelect : true  // Close upon selecting a date,
 		  });
 			$(".button-collapse").sideNav();
 			$('.modal').modal();
-			$('#selectGenero').change(function(){
-				let generoSeleccionado = $('#selectGenero option:selected').val();
-				self.filtrarGruposPorGenero(self, generoSeleccionado);
+			$('select').material_select();
+			/* Funciones on change de selects */
+			$('#selectGenero').change( () => {
+				self.procariano.genero = $('#selectGenero option:selected').val();
+				self.filtrarGruposPorGenero(self, self.procariano.genero);
+			});
+			$('#selectTipo').change( () => {
+				self.procariano.tipo = $('#selectTipo option:selected').val();
+			});
+			$('#selectGrupoFormacion').change( () => {
+				self.grupoFormacionSel = $('#selectGrupoFormacion option:selected').val();
+			});
+			$('#selectGrupoCaminantes').change( () => {
+				self.grupoCaminantesSel = $('#selectGrupoCaminantes option:selected').val();
+			});
+			$('#selectGrupoPescadores').change( () => {
+				self.grupoPescadoresSel = $('#selectGrupoPescadores option:selected').val();
 			});
     },
 		//////////////////////////////////
@@ -122,23 +134,24 @@ var main = new Vue({
 		/*
 			@Descripción:
 				Obtiene todos los grupos existentes en la base de datos.
-				Los almacena en self.grupos
+				Los almacena en self.gruposObtenidos
+				Luego divide los grupos de acuerdo a su tipo
     */
     obtenerTodosLosGrupos(self){
     	$.ajax({
-    		type: 'GET',
-    		url: '/api/grupos/',
+    		type  : 'GET',
+    		url 	: '/api/grupos/',
     		success(res){
-    			if(res.estado){
+    			if( res.estado ){
     				self.gruposObtenidos = res.datos;
-	    			self.armarArraysGrupos(self.gruposObtenidos, self);	
+	    			self.armarArraysGrupos(self, self.gruposObtenidos);	
     			}else{
     				self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', res.mensaje);
     			}
     		},
     		error(err){
     			console.log(err);
-    			self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+    			self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor para obtener los grupos. Intente nuevamente.');
     		}
     	});
     },
@@ -149,10 +162,10 @@ var main = new Vue({
     */
     obtenerTiposProcariano(self){
     	$.ajax({
-    		type: 'GET',
-    		url: '/api/tipo/',
+    		type : 'GET',
+    		url  : '/api/tipo/',
     		success(res){
-    			self.armarArrayTipos(res.sequelizeStatus, self);
+    			self.armarSelect(self, res.datos, '#selectTipo');
     		},
     		error(err){
     			console.log(err);
@@ -170,96 +183,102 @@ var main = new Vue({
     */
     filtrarGruposPorGenero(self, generoSeleccionado){
     	//Primero hay que volver a armar los arrays de los grupos
-    	self.armarArraysGrupos(self.gruposObtenidos, self);
-    	 let generoGrupoSeleccionado = '';
+    	let aux = [];
+    	let generoGrupoSeleccionado = '';		//Género del grupo a mostrar
     	if( generoSeleccionado !== '' ){
+    		//Indica el genero del grupo a mostrar
     		if( generoSeleccionado == 'masculino' ){
     			generoGrupoSeleccionado = 'Procare';
     		}else{
     			generoGrupoSeleccionado = 'Procare Mujeres';
     		}
-    		self.gruposFormacion = $.grep(self.gruposFormacion, function(grupo, index){
+    		//De los grupos obtenidos, se muestran solo los grupos con el género seleccionado
+    		aux = $.grep(self.gruposObtenidos, (grupo, index) => {
     			return grupo.genero === generoGrupoSeleccionado;
     		});
-    		self.gruposCaminantes = $.grep(self.gruposCaminantes, function(grupo, index){
-    			return grupo.genero === generoGrupoSeleccionado;
-    		});
-    		self.gruposPescadores = $.grep(self.gruposPescadores, function(grupo, index){
-    			return grupo.genero === generoGrupoSeleccionado;
-    		});
-    		self.gruposMayores = $.grep(self.gruposMayores, function(grupo, index){
-    			return grupo.genero === generoGrupoSeleccionado;
-    		});
+    		self.armarArraysGrupos(self, aux);
     	}
     },
     /*
-			@Descripción: Arma los arrays de grupos obtenidos de la base de datos
+			@Descripción: 
+				Divide los grupos obtenidos de la base de datos en arrays de acuerdo a su tipo
 			@Params:
 				grupos -> grupos obtenidos de la base de datos al hacer la llamada a la api.
     */
-    armarArraysGrupos(grupos, self){
-    	//No borrar esto. Sirve cuando se eejcuta este método dentro del filtro de grupos
-    	self.gruposFormacion = [];
+    armarArraysGrupos(self, grupos){
+    	//No borrar esto. Sirve cuando se ejecuta este método dentro del filtro de grupos
+    	self.gruposFormacion 	= [];
     	self.gruposCaminantes = [];
     	self.gruposPescadores = [];
-    	self.gruposMayores = [];
-
+    	self.gruposMayores 		= [];
+    	//Se ubica el grupo en el array correspondiente por su tipo
     	$.each(grupos, function(index, grupo){
-    		let grupoObj = {
-  				id: grupo.id,
-  				text: grupo.nombre,
-  				genero: grupo.genero
-  			};
-    		if(grupo.tipo === 'Formación'){
-    			self.gruposFormacion.push(grupoObj);
-    		}else if(grupo.tipo === 'Caminantes'){
-    			self.gruposCaminantes.push(grupoObj);
-    		}else if(grupo.tipo === 'Pescadores'){
-    			self.gruposPescadores.push(grupoObj);
-    		}else if(grupo.tipo === 'Mayores'){
-    			self.gruposMayores.push(grupoObj);
+    		if( grupo.tipo === 'Formación' ){
+    			self.gruposFormacion.push(grupo);
+    		}else if( grupo.tipo === 'Caminantes' ){
+    			self.gruposCaminantes.push(grupo);
+    		}else if( grupo.tipo === 'Pescadores' ){
+    			self.gruposPescadores.push(grupo);
+    		}else if( grupo.tipo === 'Mayores' ){
+    			self.gruposMayores.push(grupo);
     		}
     	});
+    	self.armarSelect(self, self.gruposFormacion, '#selectGrupoFormacion');
+    	self.armarSelect(self, self.gruposCaminantes, '#selectGrupoCaminantes');
+    	self.armarSelect(self, self.gruposPescadores, '#selectGrupoPescadores');
     },
     /*
 			@Descripción:
-				Arma el array de tipos obtenidos de la base de datos
+				Arma un select con los datos de un array
 			@Params:
-				tipos -> tipos obtenidos de la base de datos
+				array -> datos obtenidos de la base de datos
+				idselect -> id del elemento con #
     */
-    armarArrayTipos(tipos, self){
-    	$.each(tipos, function(index, tipo){
-    		let tipoObj = {
-    			id: tipo.id,
-    			text: tipo.nombre
-    		};
-    		self.tipos.push(tipoObj);
+    armarSelect(self, array, idSelect){
+    	$(idSelect).empty();
+    	$(idSelect).append('<option value=""  disabled selected></option>');
+    	$.each(array, (index, elemento) => {
+    		$(idSelect).append('<option value=' + elemento.id + '>' + elemento.nombre + '</option>');
     	});
-    	//console.log('Array de tipos de procarianos: ');
-    	//console.log(self.tipos);
+    	$('select').material_select();
     },
     mostrarMensajeDeErrorAjax(self, titulo, descripcion){
-    	self.errorAjax.titulo = titulo;
-			self.errorAjax.descripcion = descripcion;
+    	self.errorAjax.titulo 			= titulo;
+			self.errorAjax.descripcion	= descripcion;
 			$('#modalErrorAjax').modal('open');
     },
     mostrarErrorValidacion(self, campo, msj){
     	self.errorObj.campo = campo;
-      self.errorObj.msj = msj;
+      self.errorObj.msj 	= msj;
       $('#modalError').modal('open');
     },
 		//////////////////////////////////
 		//EVENTOS
 		//////////////////////////////////
+		/*
+			@Descripción:
+				* Primero valida la fecha de nacimiento
+		*/
 		validateBeforeSubmit() {
 			let self = this;
-			if(self.validarFechaNacimiento()){
-				self.bindGrupoSeleccionado(self);
-				this.$validator.validateAll().then(() => {
-					self.ingresarProcariano(self);	        
-	      }).catch(() => {
-	      	self.mostrarErrorValidacion(self, self.errors.errors[0].field, self.errors.errors[0].msg);
+			const anioIngresado = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
+			if( self.validarFechaNacimiento(self, anioIngresado) ){
+				
+				self.bindGrupoSeleccionado(self, self.procariano.tipo);
+				this.$validator.validateAll().then( (result) => {
+					if( result ){
+						self.ingresarProcariano(self);
+					}else{
+						console.log(self.errors)
+						self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
+					}
+						        
+	      }).catch( () => {
+	      	self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
 	      });
+
+			}else{
+				$('#modalError').modal('open');
 			}
     },
     /*
@@ -268,15 +287,12 @@ var main = new Vue({
 				True si es una fecha válida (>11)
 				False si es inválida
     */
-    validarFechaNacimiento(){
-    	let self = this;
-    	let year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
-			let actualYear = new Date().getFullYear();
-			let diferencia = actualYear - year;
-			if(diferencia < 11){
+    validarFechaNacimiento(self, year){
+			let actualYear 	= new Date().getFullYear();
+			let diferencia 	= actualYear - year;
+			if( diferencia < 11 ){
 				self.errorObj.campo = 'Fecha de nacimiento';
-				self.errorObj.msj = 'No puede ingresar a alguien con menos de 11 años.';
-				$('#modalError').modal('open');
+				self.errorObj.msj 	= 'No puede ingresar a alguien con menos de 11 años.';
 				return false;
 			}
 			return true;
@@ -285,31 +301,29 @@ var main = new Vue({
 			@Descripción:
 				Dependiendo del tipo de procariano seleccionado, se hace el binding con el grupo seleccionado.
     */
-    bindGrupoSeleccionado(self){
-    	let tipoProcariano = self.procariano.tipo;
-    	if( tipoProcariano === '1' ){
+    bindGrupoSeleccionado(self, tipoSeleccionado){
+    	if( tipoSeleccionado === '1' ){
     		self.procariano.grupo = self.grupoFormacionSel;
-    	}else if( tipoProcariano === '2' ){
+    	}else if( tipoSeleccionado === '2' ){
     		self.procariano.grupo = self.grupoCaminantesSel;
-    	}else if( tipoProcariano === '3' ){
+    	}else if( tipoSeleccionado === '3' ){
     		self.procariano.grupo = self.grupoPescadoresSel;
     	}
     },
     cancelar(){
     	window.location.href = '/procarianos/'
-    	//console.log('debo agregar esa vista aun');
     },
     ingresarProcariano(self){
     	let urlApi = '/api/procarianos/';
     	$.ajax({
-      	type:'POST',
-      	url: urlApi,
-      	data: self.procariano,
+      	type	:'POST',
+      	url 	: urlApi,
+      	data	: self.procariano,
       	success: function(res){
       		if(res.estado){
       			$('#modalProcarianoCreado').modal('open');
       		}else{
-      			self.mostrarMensajeDeErrorAjax(self, 'Error de base de datos', 'Error al tratar de ingresar en la base de datos. Intente nuevamente.');
+      			self.mostrarMensajeDeErrorAjax(self, res.mensaje,res.mensajeError);
       		}
       	},
       	error: function(err){
@@ -323,8 +337,8 @@ var main = new Vue({
 
 //2 way data binding de los date pickers
 $('#fecha-nacimiento').change(function(){
-	var year = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
-	var day = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
+	var year 	= $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
+	var day 	= $('#fecha-nacimiento').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'mm');
 	//Primero valida que la fecha ingresada no sea de alguien menor a 11 años
 	let actualYear = new Date().getFullYear();
@@ -339,8 +353,8 @@ $('#fecha-nacimiento').change(function(){
 	main.$data.procariano.fechaNacimiento = fecha;
 });
 $('#fecha-ordenacion').change(function(){
-	var year = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'yyyy');
-	var day = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'dd');
+	var year 	= $('#fecha-ordenacion').pickadate('picker').get('highlight', 'yyyy');
+	var day 	= $('#fecha-ordenacion').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'mm');
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaOrdenacion = fecha;

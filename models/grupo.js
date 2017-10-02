@@ -1,11 +1,13 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Grupo = sequelize.define('Grupo', {
+  let Grupo = sequelize.define('Grupo', {
     nombre : {
       type : DataTypes.STRING,
-      allowNull : false,
+      allowNull: false,
       validate: {
-        notEmpty: true
+        notEmpty: {
+          msg : 'Nombre del grupo no puede estar vacío.'
+        },
       }
     },
     tipo : {
@@ -13,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false,
       validate : {
         notEmpty: {
-          msg: 'Tipo no puede ser vacío.'
+          msg: 'Tipo del grupo no puede estar vacío.'
         },
         isIn: {
           args: [['Formación', 'Caminantes', 'Pescadores', 'Mayores']],
@@ -130,6 +132,67 @@ module.exports = function(sequelize, DataTypes) {
         }).then(success).catch(error);
       },
       ///////////////////////////////////////
+      //FUNDIONES CON PROMESAS
+      ///////////////////////////////////////
+      crearGrupoP: function(grupo){
+        return new Promise( (resolve, reject) => {
+          return this.create({
+            nombre: grupo.nombre,
+            tipo: grupo.tipo,
+            cantidadChicos: grupo.cantidadChicos,
+            numeroReuniones: grupo.numeroReuniones,
+            genero: grupo.genero
+          })
+          .then( grupo => {
+            return resolve(grupo);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      obtenerGrupoPorIdP: function(idGrupo){
+        const Etapa = sequelize.import("../models/etapa");
+        return new Promise( (resolve, reject) => {
+          if( !idGrupo )    return reject('No envió id de grupo');
+          if( idGrupo < 0 ) return reject('ID de grupo a buscar no puede ser negativo');
+          return this.findOne({
+            where: {
+              id: idGrupo
+            },
+            include: [
+              {
+                model: Etapa,
+              }
+            ]
+          })
+          .then( grupo => {
+            return resolve(grupo);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      obtenerTodosLosGruposP: function(){
+        const Etapa = sequelize.import("../models/etapa");
+        return new Promise( (resolve, reject) => {
+          return this.findAll({
+            include: [
+              {
+                model: Etapa
+              }
+            ]
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      ///////////////////////////////////////
       //FUNDIONES CON TRANSACCIONES
       ///////////////////////////////////////
       crearGrupoT: function(grupo, transaction){
@@ -149,6 +212,44 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      editarGrupoT: function(grupo, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.update({
+            nombre: grupo.nombre,
+            tipo: grupo.tipo,
+            cantidadChicos: grupo.cantidadChicos,
+            numeroReuniones: grupo.numeroReuniones,
+            genero: grupo.genero
+          }, {
+            where: {
+              id: grupo.id
+            },
+            transaction : transaction 
+          })
+          .then( result => {
+            return resolve(result);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      eliminarGrupoT: function(idGrupo, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.destroy({
+            where : {
+              id : idGrupo
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      }
     },
     hooks : {
       

@@ -109,6 +109,8 @@ var main = new Vue({
 			@Descripción: Función utilizada para mostrar los campos de búsqueda según los campos que se encuentran en el array checkboxes
 			@Autor: @edisonmora95
 			@FechaCreacion: 20-05-2017
+			@ÚltimaModificación
+				19/09/2017	@edisonmora95		Acomodada para que lea el nuevo formato de respuesta de la api.
 		*/
 		checkArray: function(nombre){
 			var self = this;
@@ -129,12 +131,15 @@ var main = new Vue({
 				url: urlApi,
 				data: self.procariano,
 				success: function(res){
-					$.each(res, function(index, procarianoEncontrado){
+					$.each(res.datos, function(index, procarianoEncontrado){
 						self.procarianos.push(procarianoEncontrado);
 					});
+				},
+				error: function(jqXHR, exception){
+					console.log(jqXHR);
+					$('#modalErrorBusqueda').modal('open');
 				}
 			});
-			
 		},
 		irAPerfil(procariano){
 			window.location.href = '/procarianos/perfil/' + procariano.personaId;

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head %>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
+	</head>
+	<body>
+		<div>
+			<header>
+				<% include ../partials/navbar %>
+			</header>
+		</div>
+		<main id="editarApp" class="container">
+			<section class="card">
+				<div class="card-content">
+					<h4 class="center-align">Editar perfil</h4>
+					<form>
+						<section id="rowNombresApellidos" class="row">
+							<article class="col s6 input-field">
+								<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
+								<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+								<label for="nombres" class="active">Nombres</label>
+							</article>
+							<article class="col s6 input-field">
+								<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'">
+								<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
+								<label for="apellidos" class="active">Apellidos</label>
+							</article>
+						</section>
+						<section id="rowCedulaFechaNacimiento" class="row">
+							<article class="col s6">
+								<label for="cedula" class="active">Cédula</label>
+								<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
+								<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+							</article>
+							<article class="col s6">
+								<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
+								<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
+								<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
+							</article>
+						</section>
+						<section id="rowDirEmail" class="row">
+							<article class="col s6 input-field">
+								<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
+								<label for="direccion" class="active">Dirección</label>
+							</article>
+							<article class="col s6 input-field">
+								<input type="email" name="email" id="email" v-model="procariano.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
+								<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
+								<label for="email" class="active">Email</label>
+							</article>
+						</section>
+						<section id="rowTelefonos" class="row">
+							<article class="col s6 input-field">
+								<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
+								<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
+								<label for="celular" class="active">Celular</label>
+							</article>
+							<article class="col s6 input-field">
+								<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
+								<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
+								<label for="convencional" class="active">Convencional</label>
+							</article>	
+						</section>
+						<section id="rowTipoGrupo" class="row">
+							<article class="col s6 input-field">
+								<label class="active">Tipo</label>
+								<select id="selectTipo" name="selectTipo">
+						      <option value="" disabled selected></option>
+						    </select>
+							</article>
+							<div class=" input-field col s6">
+								<label class="active">Grupo</label>
+								<select id="selectGrupo" name="selectGrupo">
+						      <option value="" disabled selected></option>
+						    </select>
+							</div>
+						</section>
+						<section id="rowColegioUniversidad" class="row">
+							<article class="col s6 input-field">
+								<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
+								<label for="colegio" class="active">Colegio</label>
+							</article>
+							<article class="col s6 input-field">
+								<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
+								<label for="universidad" class="active">Universidad</label>
+							</article>
+						</section>
+						<section id="rowTrabajo" class="row">
+							<article class="col s12 input-field">
+								<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
+								<label for="trabajo" class="active">Trabajo</label>
+							</article>
+						</section>
+						<section id="rowBotones" class="row">
+							<a class="waves-effect waves-light btn" @click="cancelarEdicion">Cancelar</a>
+							<a class="waves-effect waves-light btn pull right" @click="aceptarEdicion">Aceptar</a>
+						</section>
+					</form>
+				</div>
+			</section>
+		</main>
+	</body>
+	<div>
+		<% include ../partials/scripts %>
+		<script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
+		<script src="/scripts/moment/moment.js"></script>
+		<script src="/scripts/moment/locale/es.js"></script>
+		<script src="/build/procariano/editarProcarianoScript.min.js"></script>
+	</div>
+</html>

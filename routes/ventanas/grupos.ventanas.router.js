@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 let autenticacion = require('./../../utils/authentication');
 
-router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+//router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
 
 /*
 	@Descripción:
@@ -12,7 +12,7 @@ router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario
 		Usuario
 		Personal
 */
-router.get('/nuevo', autenticacion.personal, function(req, res, next){
+router.get('/nuevo', function(req, res, next){
 	res.render('grupo/crearGrupo');
 });
 
