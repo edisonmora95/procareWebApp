@@ -7,10 +7,6 @@
 	@FechaCreación: 31/05/2017
 */
 
-import Materials from 'vue-materials';
-
-Vue.use(Materials);
-
 let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
 	created: function(){
@@ -60,31 +56,27 @@ let BuscarGrupoApp = new Vue({
 		armarArrayGrupos(self, grupos){
 			$.each(grupos, function(index, grupo){
 				let grupoObj = {
-					id: grupo.id,
-					nombre: grupo.nombre,
-					tipo: grupo.tipo,
+					id 				 : grupo.id,
+					nombre 		 : grupo.nombre,
+					tipo 			 : grupo.tipo,
 					integrantes: grupo.cantidadChicos,
-					genero: grupo.genero,
-					etapaId: '',
+					genero 		 : grupo.genero,
+					etapaId 	 : '',
 					etapaNombre: ''
 				};
-
 				//Se busca la etapa actual del grupo
 				$.each(grupo.Etapas, function(j, etapa){
 					let fechaFin = etapa.GrupoEtapa.fechaFin;
 					//La etapa actual es aquella que tenga fecha fin null
-					if(fechaFin === null){
+					if( fechaFin === null ){
 						grupoObj.etapaId = etapa.id;
 						grupoObj.etapaNombre = etapa.nombre;
 					}
 				});
-
 				//Solo se añaden los grupos que pertenezcan actualmente a una etapa
-				if(grupoObj.etapaId !== ''){
+				if( grupoObj.etapaId !== '' ){
 					self.grupos.push(grupoObj);
 				}
-
-
 			});
 		},
 		//Eventos

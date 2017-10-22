@@ -169,7 +169,7 @@
 			*/
 			continuar(){
 				if(this.formCompleto()){
-					this.crearRegistroGrupo();
+					this.crearRegistroGrupo(this);
 				}else{
 					$('#modalCamposIncompletos').modal('open');
 				}
@@ -196,13 +196,13 @@
 					return true;	
 				}
 			},
-			crearRegistroGrupo(){
-				let self = this;
+			crearRegistroGrupo(self){
 				$.ajax({
 					type: 'POST',
 					url: '/api/grupos/',
 					data: self.grupo,
 					success(res){
+						console.log(res)
 						if(res.estado){
 							self.grupo.id = res.datos.grupo.id;
 							self.flagVue = false;

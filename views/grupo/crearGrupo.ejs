@@ -9,13 +9,97 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="app">
-			<div class="card large">
-				<div class="row">
+			<section class="card large">
+				<header>
 					<h3 class="center-align titulo">Creación de grupo de Procare Formación</h3>
-				</div>
-				<crear-grupo-1 v-if="flag" :flag="flag" @flagchanged="flag = $event" :grupo="grupo"></crear-grupo-1>
-				<escoger-chicos v-if="!flag" :grupo="grupo"></escoger-chicos>
-			</div>
+				</header>
+				<!-- Información general -->
+				<main class="row" v-show="estado==='info'">
+					<header class="center-align">
+						<h5>Información general</h5>
+					</header>
+					<form class="col s12">
+						<section class="row" id="rowNombreGenero">
+							<article class="input-field col s6">
+								<input type="text" name="nombre" id="nombre" v-model="grupo.nombre" required v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+								<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
+								<label for="nombre">Nombre del grupo</label>
+							</article>
+							<article class="input-field col s6">
+								<select id="selectGenero" name="selectGenero">
+									<option value="" disabled selected></option>
+									<option value="Procare">Masculino</option>
+									<option value="Procare Mujeres">Femenino</option>
+								</select>
+								<span v-show="error==='genero'" class="help is-danger">{{mensaje}}</span>
+								<label for="selectGenero" class="active">Género</label>
+							</article>
+						</section>
+						<section class="row" id="rowEtapaAnimador">
+							<article class="input-field col s6">
+								<select id="selectEtapa" name="selectEtapa">
+								</select>
+								<span v-show="error==='etapa'" class="help is-danger">{{mensaje}}</span>
+								<label for="selectEtapa" class="active">Etapa</label>
+							</article>
+							<article class="input-field col s6">
+								<select id="selectAnimador" name="selectAnimador">
+								</select>
+								<span v-show="error==='animador'" class="help is-danger">{{mensaje}}</span>
+								<label for="selectAnimador" class="active">Animador</label>
+							</article>
+						</section>
+						<section class="row" id="rowBtns">
+							<a class="waves-effect waves-light btn" id="btnCancelar" @click="cancelar()">Cancelar</a>
+							<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="continuar()">Continuar</a>
+						</section>
+					</form>
+				</main>
+				<!-- Seleccionar chicos -->
+				<main class="row" v-show="estado==='seleccion'">
+					<header class="center-align">
+						<h5>Selección de integrantes</h5>
+					</header>
+					<section class="row">
+						<header><h4 class="center-align">{{grupo.nombre}}</h4></header>
+						<article class="col s5 col-chicos" id="col-sin-grupo">
+							<h5 class="center-align">Chicos sin grupo</h5>
+							<ul>
+								<li v-for="chico in sinGrupo" :id="chico.id" @click="anadir(chico)">{{chico.nombre}}</li>
+							</ul>
+						</article>
+						<article class="col s5  col-chicos pull right" id="col-con-grupo">
+							<h5 class="center-align">Chicos en grupo</h5>
+							<ul>
+								<li v-for="chico in conGrupo" :id="chico.id" @click="quitar(chico)">{{chico.nombre}}</li>
+							</ul>
+						</article>
+					</section>
+					<footer class="row">
+						<div class="col s12" id="col-btn">
+							<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
+						</div>
+					</footer>
+				</main>
+			</section>
+			<!-- MODALS -->
+		  <section id="modalGrupoCreado" class="modal">
+		    <main class="modal-content center-align">
+		      <h4>El grupo fue creado de manera correcta.</h4>
+		    </main>
+		    <footer class="modal-footer">
+		      <a href="/grupos/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </footer>
+		  </section>
+		  <section id="mensajeError" class="modal">
+		    <main class="modal-content center-align">
+		      <h5 class="center-align">¡Error!</h5>
+	      	<p class="center-align">{{mensajeError}}</p>
+		    </main>
+		    <footer class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </footer>
+		  </section>
 		</main>
 	</body>
 	<div>

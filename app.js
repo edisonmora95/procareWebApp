@@ -1,45 +1,45 @@
 /* jshint node: true */
 'use strict';
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var flash = require('connect-flash');
+let express       = require('express');
+let path          = require('path');
+let favicon       = require('serve-favicon');
+let logger        = require('morgan');
+let cookieParser  = require('cookie-parser');
+let bodyParser    = require('body-parser');
+let session       = require('express-session');
+let passport      = require('passport');
+let LocalStrategy = require('passport-local').Strategy;
+let flash         = require('connect-flash');
 
 //Ventanas
-var usuarios            = require('./routes/ventanas/usuarios.ventanas.router');
-var procarianos         = require('./routes/ventanas/procarianos.ventanas.router');
-var asistencias         = require('./routes/ventanas/asistencias.ventanas.router');
-var grupos              = require('./routes/ventanas/grupos.ventanas.router');
-var index               = require('./routes/ventanas/index.ventanas.router');
-var login               = require('./routes/ventanas/login.router');
-var personal            = require('./routes/ventanas/personal.ventanas.router');
+let usuarios            = require('./routes/ventanas/usuarios.ventanas.router');
+let procarianos         = require('./routes/ventanas/procarianos.ventanas.router');
+let asistencias         = require('./routes/ventanas/asistencias.ventanas.router');
+let grupos              = require('./routes/ventanas/grupos.ventanas.router');
+let index               = require('./routes/ventanas/index.ventanas.router');
+let login               = require('./routes/ventanas/login.router');
+let personal            = require('./routes/ventanas/personal.ventanas.router');
 let cambioContrasenna   = require('./routes/ventanas/cambioContrasenna.ventanas.router');
 let perderContrasenna   = require('./routes/ventanas/perderContrasenna.ventanas.router');
 
 //Api
-let apiProcarianos = require('./routes/api/procarianos.api.router');
-let apiEtapa = require('./routes/api/etapa.api.router');
-let apiTicket = require('./routes/api/ticket.api.router');
-let apiTipo = require('./routes/api/tipo.api.router');
-let apiCargo = require('./routes/api/cargo.api.router');
-let apiGrupos = require('./routes/api/grupos.api.router');
+let apiProcarianos       = require('./routes/api/procarianos.api.router');
+let apiEtapa             = require('./routes/api/etapa.api.router');
+let apiTicket            = require('./routes/api/ticket.api.router');
+let apiTipo              = require('./routes/api/tipo.api.router');
+let apiCargo             = require('./routes/api/cargo.api.router');
+let apiGrupos            = require('./routes/api/grupos.api.router');
 let apiProcarianosGrupos = require('./routes/api/procarianogrupo.api.router');
-let apiLogin = require('./routes/api/login.api.router');
-let apiTareas = require('./routes/api/tarea.api.router');
-let apiEventos = require('./routes/api/evento.api.router.js');
-let apiAnimadores = require('./routes/api/animadores.api.router.js');
-let apiPersonal = require('./routes/api/personal.api.router');
-let apiCalendario = require('./routes/api/calendario.api.router');
-let apiNinoAccion = require('./routes/api/ninoaccion.api.router');
-let apiCorreo = require('./routes/api/correo.api.router');
-let apiReuniones = require('./routes/api/reuniones.api.router');
+let apiLogin             = require('./routes/api/login.api.router');
+let apiTareas            = require('./routes/api/tarea.api.router');
+let apiEventos           = require('./routes/api/evento.api.router.js');
+let apiAnimadores        = require('./routes/api/animadores.api.router.js');
+let apiPersonal          = require('./routes/api/personal.api.router');
+let apiCalendario        = require('./routes/api/calendario.api.router');
+let apiNinoAccion        = require('./routes/api/ninoaccion.api.router');
+let apiCorreo            = require('./routes/api/correo.api.router');
+let apiReuniones         = require('./routes/api/reuniones.api.router');
 
 var app = express();
 
@@ -58,6 +58,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 // Express Session
+
 app.use(session({
     secret: 'Ya_ya_posi_Posi',
     saveUninitialized: true,

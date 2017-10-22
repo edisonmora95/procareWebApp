@@ -58,6 +58,52 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      cambiarGrupoDeEtapaT: function(idGrupo, idEtapaAntigua, idEtapaNueva, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.update({
+            fechaFin : new Date()
+          }, {
+            where : {
+              GrupoId: idGrupo,
+              EtapaId:  idEtapaAntigua
+            },
+            transaction : transaction 
+          })
+          .then( registro => {
+            return this.create({
+              GrupoId: idGrupo,
+              EtapaId: idEtapaNueva,
+              fechaInicio: new Date(),
+              fechaFin: null
+            }, { transaction : transaction })
+            .then( registro2 => {
+              return resolve(registro2);
+            })
+            .catch( error2 => {
+              return reject(error2);
+            });
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      eliminarRegistrosDeGrupoT: function(idGrupo, transaction){
+        return new Promise( (resolve, reject) => {
+          return this.destroy({
+            where : {
+              GrupoId : idGrupo
+            },
+            transaction : transaction
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      }
     },
     freezeTableName: true
   });

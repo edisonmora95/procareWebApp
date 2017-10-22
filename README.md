@@ -1,7 +1,7 @@
 ## Para correr el proyecto
 1) npm install
-2) npm run build
-3) npm start
+2) npm run dev (development)
+3) npm run prod (production)
 
 ## Analizador de codigo
 

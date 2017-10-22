@@ -372,9 +372,9 @@ const eliminarProcariano = (req, res) => {
 const buscarChicosFormacionSinGrupo = (req, res) => {
 	co(function* (){
 		let chicosFormacion 							= yield ModeloProcariano.buscarChicosFormacionP();
-		let procarianosEnGrupo 						=	yield ModeloProcariano.buscarProcarianosConGrupoP();
+		let procarianosEnGrupo 						=	yield ModeloProcarianoGrupo.buscarProcarianosConGrupoP();
 		let arrayChicosFormacionSinGrupo 	= [];
-		chicosFormacion.forEach(function(chico){
+		chicosFormacion.forEach( chico => {
 			if( !chicoEnGrupo(chico.dataValues, procarianosEnGrupo) ){
 				arrayChicosFormacionSinGrupo.push(chico);
 			}

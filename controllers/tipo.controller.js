@@ -5,6 +5,10 @@
 @UltimaFechaModificacion: 17/06/2017 @erialper
 */
 var modelo = require('../models');
+const ModeloTipo 	= require('../models/').Tipo;
+const respuesta 	= require('../utils/respuestas');
+
+
 
 let jsonRespuesta = {};
 
@@ -74,28 +78,24 @@ const editarTipo = (req, res, next) => {
 		res.json(jsonRespuesta);
 	});
 }
-
+/*
+	@Autor : Erick Perez
+	@api {get} /api/tipo/
+	@apiDescription
+		Devuelve todos los tipos de la base de datos
+	@apiGroup Tipo
+	@apiName mostrarTipo
+	@apiversion 0.1.2
+	@Modificado: 
+		24/09/2017 @edisonmora95	promesas
+*/
 const mostrarTipo = (req,res,next) =>{
-	modelo.Tipo.findAll({
-
-	}).then( repuesta => {
-		var status = true;
-		var mensaje = 'Se obtuvieron los tipos correctamente'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : repuesta
-		}
-		res.json(jsonRespuesta)
-	}).catch( error => {
-		var status = false;
-		var mensaje = 'No se pudieron obtener los tipos'
-		var jsonRespuesta = {
-			status : status,
-			mensaje : mensaje,
-			sequelizeStatus : error
-		}
-		res.json(jsonRespuesta);
+	ModeloTipo.obtenerTodosLosTiposP()
+	.then( resultado => {
+		return respuesta.okGet(res, 'Búsqueda exitosa', resultado);
+	})
+	.catch( error => {
+		return respuesta.error(res, 'Error en la búsqueda', '', error);
 	});
 }
 

@@ -31,4 +31,8 @@ router.get('/:id', function(req, res, next){
 	res.render('grupo/verGrupo');
 });
 
+router.get('/:id/editar', function(req, res, next){
+	res.render('grupo/editarGrupo');
+});
+
 module.exports = router;
