@@ -17,22 +17,18 @@ const ModeloProcarianoTipo 	= require('../models/').ProcarianoTipo;
 const ModeloTipo 						= require('../models/').Tipo;
 const ModeloGrupo 					= require('../models/').Grupo;
 
+
 /*
 	@Autor : JV
 	@FechaCreacion : 26/06/2017
-	@api {post} /api/procarianos/
-	@apiDescription
+	@Descripción:
 		* Primero se crea el registro de persona
 		* Luego se crea el registro de procariano
 		* Si el usuario ingresó un grupo, se crea su registro en ProcarianoGrupo
 		* Si el usuario ingresó un tipo, se crea su registro en ProcarianoTipo
 		* Es obligatorio que ingrese un tipo. Si no se ingresa, no se crea el Procariano.
-	@apiGroup Procariano
-	@apiName crearProcariano
-	@apiversion 0.1.2
 	@Modificado: 21/07/2017 @edisonmora95	promesas y transacciones
 */
-
 const crearProcariano = (req, res) => {
 	let datos 					= {};
 	let fechaNacimiento = ( req.body.fechaNacimiento === '' ) ? null : new Date(req.body.fechaNacimiento);
@@ -94,7 +90,7 @@ const crearProcariano = (req, res) => {
 			t.rollback();
 			return respuesta.error(res, 'No se pudo crear procariano', 'No ingresó tipo', null);
 		}
-
+		//Se hace commit y se envíá su respuesta
 		datos.persona 		= personaCreada;
 		datos.procariano 	= procarianoCreado;
 		t.commit();
@@ -108,13 +104,9 @@ const crearProcariano = (req, res) => {
 /*
 	@Autor : JV
 	@FechaCreacion : 28/05/2017
-	@api {get} /api/procarianos/
-	@apiDescription Retorna a los procarianos que coinciden con los campos de búsqueda
-	@apiGroup Procariano
-	@apiName buscarProcariano
-	@apiVersion 0.1.2
-	@Modificado: 07/07/2017 @Jv , agregado metodo generar JsonProcariano
-				21/07/2017 @erialper, agrego la excepción de busquedad
+	@Modificado: 
+		07/07/2017 @Jv , agregado metodo generar JsonProcariano
+		21/07/2017 @erialper, agrego la excepción de busquedad
 */
 const buscarProcariano = (req, res) => {
 
@@ -159,14 +151,10 @@ const buscarProcariano = (req, res) => {
 
 /*
 	@Autor: Erick Perez
-	@api {get} /api/procarianos/activos
-	@apiDescription Devuelve solo a los procarianos que estén en estado activo
-	@apiGroup Procariano
-	@apiName buscarProcarianosActivos
-	@apiVersion 0.1.2
-	@Modificado: 	22/08/2017 	@edisonmora95,	Cambio de nombre de función
-																						Pasada función a modelo.
-								16/09/2017	@edisonmora95,	Cambiado a promesas. Una sola función en ModeloProcariano
+	@Modificado: 	
+		22/08/2017 	@edisonmora95,	Cambio de nombre de función
+																Pasada función a modelo.
+		16/09/2017	@edisonmora95,	Cambiado a promesas. Una sola función en ModeloProcariano
 */
 const buscarProcarianosActivos = (req, res) => {
 	ModeloProcariano.obtenerProcarianosActivosP()
@@ -181,11 +169,8 @@ const buscarProcarianosActivos = (req, res) => {
 /*
 	@Autor : JV
 	@FechaCreacion : 28/05/2017
-	@api {get} /api/procarianos/:id
-	@apiDescription Devuelve toda la información del procariano con el id indicado
-	@apiGroup Procariano
-	@apiName buscarProcarianoPorId
-	@apiVersion 0.1.2
+	@Descripción:
+		Devuelve la información de Persona, Procariano, ProcarianoGrupo y ProcarianoTipo
 	@Modificado: 
 		07/07/2017 @JV , 						para que modifique por ID
 		21/07/2017 @erialper , 			para que devuelva el tipo de procariano, agrego la excepción de busquedad	
@@ -217,13 +202,9 @@ const buscarProcarianoPorId = (req, res) => {
 /*
 	@Autor : JV
 	@FechaCreacion : 28/05/2017
-	@api {put} /api/procarianos/:id
-	@apiDescription Actualiza información del procariano
+	@Descripción:
 		*	Primero actualiza la información de la Persona
 		*	Luego actualiza la información del Procariano
-	@apiGroup Procarianos
-	@apiName editarProcariano
-	@apiVersion 0.1.2
 	@Modificado: 
 		07/07/2017 @JV , agregado date a datos date
 		22/07/2017 @erialper, agregado el cambio de tipo
@@ -303,15 +284,10 @@ const editarProcariano = (req, res) => {
 /*
 	@Autor : JV
 	@FechaCreacion : 28/05/2017
-	@api {delete} /api/procarianos/:id
-	@apiDescription Cambia el estado de un procariano a inactivo
+	@Descripción:
 		*	Primero cambio el estado
 		*	Luego, pongo fechaFin al tipo del procariano
 		*	Luego, pongo fechaFin al grupo del procariano
-
-	@apiGroup Procarianos
-	@apiName eliminarProcariano
-	@apiVersion 0.1.2
 	@Modificado: 
 		21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
@@ -360,11 +336,10 @@ const eliminarProcariano = (req, res) => {
 
 /*
 	@Autor : @edisonmora95
-	@api {get} /api/procarianos/formacion
-	@apiDescription Busca a los procarianos de Formacion sin grupo
-	@apiGroup Procarianos
-	@apiName buscarChicosFormacionSinGrupo
-	@apiVersion 0.1.2
+	@Descripción:
+		Primero busca a todos los chicos de Procare Formación
+		Luego busca a los que estan en grupo
+		Filtra los que no tienen grupo actualmente
 	@Modificado: 
 		21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
@@ -387,11 +362,6 @@ const buscarChicosFormacionSinGrupo = (req, res) => {
 
 /*
 	@Autor : @edisonmora95
-	@api {get} /api/procarianos/:id/grupo
-	@apiDescription Busca el grupo actual del procariano
-	@apiGroup Procarianos
-	@apiName obtenerGrupoActualDeProcariano
-	@apiVersion 0.1.2
 	@Modificado: 
 		21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.

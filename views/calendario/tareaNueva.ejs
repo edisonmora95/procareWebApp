@@ -9,116 +9,130 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="tareaApp">
-			<a href="/home" ><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
 			<header>
 				<h3 class="center-align">Tarea nueva</h3>
 			</header>
 			<form>
-		  	<v-row id="rowNombre">
-		  		<div class="col s12">
+		  	<section id="rowNombre" class="row">
+		  		<article class="col s12">
 		  			<label for="nombre">Nombre(*)</label>	
 		  			<input name="nombre" id="nombre" v-model="tarea.nombre" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'">
 		  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
-		  		</div>
-		  	</v-row>
-		  	<v-row id="rowDescripcion">
-		  		<div class="col s12">
+		  		</article>
+		  	</section>
+		  	<section id="rowDescripcion" class="row">
+		  		<article class="col s12">
 		  			<label for="descripcion">Descripción(*)</label>
 			  		<textarea name="descripcion" id="descripcion" v-model="tarea.descripcion" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
 			  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
-		  		</div>
-		  	</v-row>
-		  	<v-row id="rowFechaInicio">
-		  		<div class="col s6">
+		  		</article>
+		  	</section>
+		  	<section id="rowFechaInicio" class="row">
+		  		<article class="col s6">
 		  			<label for="fechaInicio">Fecha de inicio</label>
-			      <v-date-input id="fechaInicio" name="fechaInicio"></v-date-input>	
-			      <span v-show="fechaInicioPasada" class="help">{{msjFechaPasada}}</span>
-		  		</div>
-		  		<div class="col s6" id="divHoraInicio">
+			      <input id="fechaInicio" name="fechaInicio" type="date" class="datepicker"/>	
+			      <span v-show="errorFechaInicio" class="help">{{msjFechaInicio}}</span>
+		  		</article>
+		  		<article class="col s6" id="divHoraInicio">
 		  			<label for="horaInicio">Hora de inicio</label>
 		  			<input type="text" class="timepicker" id="horaInicio">
-		  		</div>
-		  	</v-row>
-		  	<v-row id="rowFechaFin">
-		  		<div class="col s6">
+		  		</article>
+		  	</section>
+		  	<section id="rowFechaFin" class="row">
+		  		<article class="col s6">
 		  			<label for="fechaFin">Fecha de fin</label>
-			      <v-date-input id="fechaFin" name="fechaFin"></v-date-input>
-			      <span v-show="fechaFinPasada" class="help">{{msjFechaPasada}}</span>
-			      <span v-show="fechaFinMenor && !fechaFinPasada" class="help">La fecha fin no puede ser antes de la fecha inicio</span>
-		  		</div>
-		  		<div class="col s6" id="divHoraFin">
+			      <input id="fechaFin" name="fechaFin" type="date" class="datepicker" />
+			      <span v-show="errorFechaFin" class="help">{{msjFechaFin}}</span>
+		  		</article>
+		  		<article class="col s6" id="divHoraFin">
 		  			<label for="horaFin">Hora de fin</label>
 		  			<input type="text" class="timepicker" id="horaFin">
-		  		</div>
-		  	</v-row>
-		  	<v-row>
-		  		<div class="input-field col s6">
-		  			<v-select name="categoria" id="categoria" v-model="tarea.categoria" select-text="" :items="categoriasTarea"></v-select>
+		  		</article>
+		  	</section>
+		  	<section class="row">
+		  		<article class="input-field col s6">
+		  			<select name="categoria" id="categoria">
+		  				<option value="" disabled selected></option>
+		  				<option value="1">Formación</option>
+		  				<option value="2">Acción</option>
+		  				<option value="3">Fundación</option>
+		  			</select>
 		  			<label for="categoria">Categoría(*)</label>
-		  		</div>
-		  		<div class="input-field col s6">
-		  			<v-select name="prioridad" id="prioridad" v-model="tarea.prioridad" select-text="" :items="prioridadesTarea"></v-select>
+		  		</article>
+		  		<article class="input-field col s6">
+		  			<select name="prioridad" id="prioridad">
+		  				<option value="" disabled selected></option>
+		  				<option value="1">Alta</option>
+		  				<option value="2">Media</option>
+		  				<option value="3">Baja</option>
+		  			</select>
+		  			</select>
 		  			<label for="prioridad">Prioridad(*)</label>
-		  		</div>
-		  	</v-row>
-		  	<v-row id="row-responsable">
+		  		</article>
+		  	</section>
+		  	<section id="row-responsable" class="row">
 		  		<div class="col s12">
-		  			<v-row id="row-interior">
-							<div class="input-field col s6" id="esteDiv">
+		  			<section id="row-interior" class="row">
+							<article class="input-field col s6" id="esteDiv">
 								<label for="responsable">Responsable(*)</label>
 								<input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off" v-validate="'required'">
 								<span v-show="errors.has('responsable')" class="help is-danger">{{ errors.first('responsable') }}</span>
-							</div>
-							<div class="input-field col s6">
-								<v-select name="estado" id="estado" v-model="tarea.estado" select-text="" :items="estadosTarea"></v-select>
+							</article>
+							<article class="input-field col s6">
+								<select name="estado" id="estado">
+									<option value="" disabled selected></option>
+				  				<option value="1">Pendiente</option>
+				  				<option value="2">En proceso</option>
+				  				<option value="3">Completada</option>
+								</select>
 		  					<label for="estado">Estado</label>
-							</div>
-		  			</v-row>
+							</article>
+		  			</section>
 		  		</div>
-		  	</v-row>
-		  	<v-row>
+		  	</section>
+		  	<section class="row">
 		  		<a class="waves-effect waves-light btn pul right" @click="validarAntesDeEnviar">Crear</a>
-		  	</v-row>
+		  	</section>
 		  </form>
-		  <v-modal id="modalTareaCreada">
-	      <div slot="content">
+		  <section id="modalTareaCreada" class="modal">
+	      <main class="modal-content">
 	        <h4 class="center-align">Tarea creada correctamente</h4>
 		      <p class="center-align">¿Desea crear otra tarea?</p>
-	      </div>
-	      <div slot="footer">
+	      </main>
+	      <footer class="modal-footer">
 	        <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="limpiarTarea">Si</a>
 		      <a class="modal-action modal-close waves-effect waves-green btn-flat" @click="regresar">No</a>
-	      </div>
-	    </v-modal>
-	    <v-modal id="modalTareaErrorServidor">
-	      <div slot="content">
+	      </footer>
+	    </section>
+	    <section id="modalTareaErrorServidor" class="modal">
+	      <main class="modal-content">
 	        <h4 class="center-align">Error</h4>
-		      <p class="center-align">No se pudo crear la tarea. Intente recargar la página.</p>
-	      </div>
-	      <div slot="footer">
+		      <p class="center-align">{{msjErrorServer}}</p>
+	      </main>
+	      <footer class="modal-footer">
 	        <a href="/home/tarea" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-	      </div>
-	    </v-modal>
-		  <v-modal id="modalTareaError">
-	      <div slot="content">
+	      </footer>
+	    </section>
+		  <section id="modalTareaError" class="modal">
+	      <main class="modal-content">
 	       <h4 class="center-align">Formulario con errores.</h4>
 		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
 		      <p class="center-align">Con el siguiente mensaje de error: </p>
 		      <p class="center-align">"{{errorObj.msj}}"</p>
-	      </div>
-	      <div slot="footer">
+	      </main>
+	      <footer class="modal-footer">
 	        <a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-	      </div>
-	    </v-modal>
-	    <v-modal id="modalFechaIncorrecta">
-	      <div slot="content">
+	      </footer>
+	    </section>
+	    <section id="modalFechaIncorrecta" class="modal">
+	      <main class="modal-content">
 	        <h4 class="center-align">Error</h4>
 		      <p class="center-align">No puede escoger como fecha de realización una fecha ya pasada.</p>
-	      </div>
-	      <div slot="footer">
+	      </main>
+	      <footer class="modal-footer">
 	        <a class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-	      </div>
-	    </v-modal>
+	      </footer>
+	    </section>
 		</main>
 	</body>
 	<div>

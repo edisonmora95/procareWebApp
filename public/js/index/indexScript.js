@@ -4,7 +4,7 @@
 	@FechaCreación: 15/06/2017
 */
 
-let indexApp = new Vue({
+let App = new Vue({
 	el: '#indexApp',
 	created(){
 		this.obtenerUsuarioLoggeado(this);
@@ -36,14 +36,11 @@ let indexApp = new Vue({
 				type: 'GET',
 				url: '/api/login/usuarios',
 				success(res){
-					self.usuario = res;
-					const esPersonal = self.verificarRolDeUsuario(self, 'Personal');
-					if( esPersonal ){
-						//Si es personal se muestran tooodas las tareas y eventos
-						self.esPersonal = true;
-						self.obtenerTareasEventos(self);
+					self.usuario 		 = res;
+					self.esPersonal  = self.verificarRolDeUsuario('Personal');
+					if( self.esPersonal ){
+						self.obtenerTareasEventos();
 					}else{
-						//Si no es personal, se muestran todos los eventos y solo las tareas asignadas al usuario
 						self.obtenerTareasEventosDeUsuario(self, self.usuario.id);
 					}
 				}
@@ -55,11 +52,11 @@ let indexApp = new Vue({
 			@Params:
 				rolIndicado -> String -> Rol que se quiere averiguar.
 		*/
-		verificarRolDeUsuario(self, rolIndicado){
-			let roles = self.usuario.roles;
-			let flag = false;
+		verificarRolDeUsuario(rolIndicado){
+			let roles = App.usuario.roles;
+			let flag 	= false;
 			$.each(roles, function(index, rol){
-				if(rol === rolIndicado){
+				if( rol === rolIndicado ){
 					flag = true;
 					return false;
 				}
@@ -69,16 +66,16 @@ let indexApp = new Vue({
 		/*
 			@Descripción: Obtiene todas las tareas de la base de datos, luego arma el calendario con ellas
 		*/
-		obtenerTareasEventos(self){
+		obtenerTareasEventos(){
 			$.ajax({
 				type: 'GET',
 				url: '/api/calendario/',
 				success(res){
-					self.tareasEventos = res.datos;
-					self.armarCalendario(self);
+					App.tareasEventos = res.datos;
+					App.armarCalendario(App.tareasEventos);
 				}
 			});
-		},
+		}, 
 		/*
 			@Descripción: Obtiene todas las tareas de la base de datos del usuario loggeado, luego arma el calendario con ellas
 		*/
@@ -100,28 +97,28 @@ let indexApp = new Vue({
 				}
 			})
 		},
-		armarCalendario(self){
+		armarCalendario(tareasEventos){
 			$('#calendar').fullCalendar({
 	      //Atributos
 	     	header: {
-	     		left: 'prev,next today',
+	     		left	: 'prev,next today',
 	     		center: 'title',
-	     		right: 'month,agendaWeek,agendaDay'
+	     		right	: 'month,agendaWeek,agendaDay'
 	     	},
 	     	firstDay: 1,
 	     	showNonCurrentDates: false,
-	      navLinks: true,
+	      navLinks	: true,
 	      eventLimit: true, // for all non-agenda views
-	      events: self.tareasEventos,
+	      events 		: tareasEventos,
 	      //Funciones
 	      eventMouseover: function(calEvent, jsEvent, view) {
-	        self.eventoSeleccionado = calEvent;
-	        $('#selectEstado').val(self.eventoSeleccionado.estado);
+	        App.eventoSeleccionado = calEvent;
+	        $('#selectEstado').val(App.eventoSeleccionado.estado);
 	        $('#selectEstado').material_select();
-	        self.cambiarClase(self.eventoSeleccionado);
+	        App.cambiarClase(App.eventoSeleccionado);
 	    	},
 	    	eventRender: function(evento, elemento){
-	    		self.renderizarEventos(evento, elemento);
+	    		App.renderizarEventos(evento, elemento);
 	    	}
 	    });	
 		},
@@ -141,7 +138,7 @@ let indexApp = new Vue({
 	  /////////////////////////////////////////////////////////////
 	  cambiarClase(eventoSeleccionado){
 	  	let divCalendario = $('#calendar');
-	  	let divSeleccion = $('#tareas');
+	  	let divSeleccion 	= $('#tareas');
 
 	  	divCalendario.removeClass('l12');
 	  	divCalendario.addClass('l8');
@@ -149,16 +146,16 @@ let indexApp = new Vue({
 	  	divSeleccion.show();
 	  },
 	  cambiarEstado(evento, estadoNuevo){
-	  	const esTarea = ( evento.type === 'tarea' );
-	  	const esEvento = ( evento.type === 'evento' );
+	  	const esTarea 	 = ( evento.type === 'tarea' );
+	  	const esEvento 	 = ( evento.type === 'evento' );
 	  	let mensajeExito = '';
 	  	let urlApi = '';
 	  	if( esTarea ){
-	  		urlApi = '/api/tareas/cambiarEstado/' + evento.id;
+	  		urlApi 			 = '/api/tareas/cambiarEstado/' + evento.id;
 	  		mensajeExito = 'Tarea realizada'
 	  	}
 	  	if ( esEvento ) {
-	  		urlApi = '/api/eventos/cambiarEstado/' + evento.id;
+	  		urlApi 			 = '/api/eventos/cambiarEstado/' + evento.id;
 	  		mensajeExito = 'Evento completado'
 	  	}
 
@@ -178,38 +175,38 @@ let indexApp = new Vue({
 	  /*
 			@Descripción: Muestra los eventos y tareas en el calendario con el formato indicado por Procare
 	  */
-        renderizarEventos(evento, elemento) {
-            let esTarea = (evento.type === 'tarea');
+    renderizarEventos(evento, elemento) {
+      let esTarea = (evento.type === 'tarea');
 
-            let eventoEsFormacion = (evento.categoria === 1);
-            let eventoEsAccion = (evento.categoria === 2);
-            let eventoEsFundacion = (evento.categoria === 3);
+      let eventoEsFormacion = (evento.categoria === 1);
+      let eventoEsAccion 		= (evento.categoria === 2);
+      let eventoEsFundacion = (evento.categoria === 3);
 
-            let eventoPendiente = (evento.estado === 1);
-            let eventoEnProceso = (evento.estado === 2);
-            let eventoCompletado = (evento.estado === 3);
+      let eventoPendiente  = (evento.estado === 1);
+      let eventoEnProceso  = (evento.estado === 2);
+      let eventoCompletado = (evento.estado === 3);
 
-            if (esTarea) {
-                elemento.addClass('tarea');
-            } else {
-                elemento.addClass('evento');
-            }
+      if (esTarea) {
+        elemento.addClass('tarea');
+      } else {
+        elemento.addClass('evento');
+      }
 
-            if (eventoEsFormacion) {
-                elemento.addClass('formacion');
-            } else if (eventoEsAccion) {
-                elemento.addClass('accion');
-            } else if (eventoEsFundacion) {
-                elemento.addClass('fundacion');
-            }
+      if (eventoEsFormacion) {
+        elemento.addClass('formacion');
+      } else if (eventoEsAccion) {
+        elemento.addClass('accion');
+      } else if (eventoEsFundacion) {
+        elemento.addClass('fundacion');
+      }
 
-            if (eventoPendiente) {
-                elemento.addClass('pendiente');
-            } else if (eventoEnProceso) {
-                elemento.addClass('proceso');
-            } else if (eventoCompletado) {
-                elemento.addClass('completado');
-            }
-        }
+      if (eventoPendiente) {
+        elemento.addClass('pendiente');
+      } else if (eventoEnProceso) {
+        elemento.addClass('proceso');
+      } else if (eventoCompletado) {
+        elemento.addClass('completado');
+      }
     }
+  }
 });

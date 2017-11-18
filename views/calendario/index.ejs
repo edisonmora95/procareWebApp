@@ -10,7 +10,7 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main id="indexApp">
-			<div class="fixed-action-btn horizontal" v-if="esPersonal">
+			<section class="fixed-action-btn horizontal" v-if="esPersonal">
 		    <a class="btn-floating btn-large red">
 		      <i class="material-icons">add</i>
 		    </a>
@@ -26,17 +26,18 @@
 		      	</a>
 		      </li>
 		    </ul>
-		  </div>
-		  <div class="row">
-		  	<div id='calendar' class="col l12 s12"></div>	
-		  	<div id="tareas" class="col l4 s12">
+		  </section>
+		  <section class="row">
+		  	<section id='calendar' class="col l12 s12"></section>	
+		  	<aside id="tareas" class="col l4 s12">
 		  		<div class="card">
 		  			<h5 class="center-align">{{eventoSeleccionado.title}}</h5>
 		  			<main class="row">
 		  				<span>Descripción:</span>
 			  			<p>{{eventoSeleccionado.description}}</p>
 			  			<p><span>Hora de inicio: </span>{{date(eventoSeleccionado.start)}}</p>
-			  			<p><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>	
+			  			<p v-if="eventoSeleccionado.end!=null"><span>Hora de salida: </span>{{date(eventoSeleccionado.end)}}</p>
+			  			<p v-if="eventoSeleccionado.end==null"><span>Hora de salida: ----</span></p>	
 		  			</main>
 		  			<div class="row">
 		  				<div class="input-field col s4">
@@ -50,8 +51,8 @@
 				  			</select>
 			  			</div>	
 		  		</div>
-		  	</div>
-		  </div>
+		  	</aside>
+		  </section>
 		</main>
 	</body>
 	<div>

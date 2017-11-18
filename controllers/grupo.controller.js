@@ -9,7 +9,6 @@
 
 const respuesta 						= require('../utils/respuestas');
 const co 										= require('co');
-
 const modelo 								= require('../models');
 const ModeloGrupo 					= require('../models/').Grupo;
 const ModeloGrupoEtapa 			= require('../models/').GrupoEtapa;
@@ -21,15 +20,11 @@ const ModeloProcarianoGrupo = require('../models/').ProcarianoGrupo;
 
 /*
 	@Autor: @GustavoTotoy
-	@api {post} /api/grupos/
-	@apiDescription:
+	@Descripción:
 		Primero se crea el registro en la tabla Grupos
 		Luego se lo añade al grupo a una etapa, se crea el registro en la tabla GrupoEtapa
 		Luego se crea el registro de su animador en la tabla Animador
 			Si el procariano ingresado como animador no consta en la base como uno, se lo añade en PersonaRol
-	@apiGroup Grupo
-	@apiName crearGrupo
-	@apiversion 0.1.2
 	@ÚltimaModificación: 
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
@@ -72,16 +67,12 @@ module.exports.crearGrupo = (req, res) => {
 
 /*
 	@Autor: @GustavoTotoy
-	@api {put} /api/grupos/:id_grupo
-	@apiDescription:
+	@Descripción:
 		Primero se edita la información general del grupo
 		Luego se cambia de etapa, si el usuario ingresó una etapa nueva
 		Luego se cambia al animador, si el usuario ingresó un animador nuevo.
 			Queda por revisar lo siguiente:
 			Si el nuevo animador no está registrado como usuario, debe registrarse
-	@apiGroup Grupo
-	@apiName editarGrupo
-	@apiversion 0.1.2
 	@ÚltimaModificación: 
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
@@ -126,15 +117,11 @@ module.exports.editarGrupo = (req, res) => {
 
 /*
 	@Autor: @GustavoTotoy
-	@api {delete} /api/grupos/:id
-	@apiDescription:
+	@Descripción:
 		Primero se eliminan todos los registros del grupo de la tabla de Animadores
 		Luego se eliminan todos los registros del grupo de la tabla de ProcarianoGRupo
 		Luego se eliminan todos los registros del grupo de la tabla EtapaGrupo
 		Finalmente se elimina el grupo
-	@apiGroup Grupo
-	@apiName eliminarGrupo
-	@apiversion 0.1.2
 	@ÚltimaModificación: 
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
@@ -161,14 +148,8 @@ module.exports.eliminarGrupo = (req, res) => {
 	});
 };
 
-
 /*
 	@Autor: @GustavoTotoy
-	@api {get} /api/grupos/
-	@apiDescription Devuelve todos los grupos de la base de datos. Con su etapa.
-	@apiGroup Grupo
-	@apiName mostrarGrupos
-	@apiversion 0.1.2
 	@ÚltimaModificación: 
 */
 module.exports.mostrarGrupos = (req, res) => {
@@ -207,12 +188,12 @@ module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) =>
 
 /*
 	@Autor: @GustavoTotoy
-	@ÚltimaModificación: 13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 	@Descripción:
 		Primero se obtiene la información del grupo
 		Luego se obtiene la información del animador
 		Luego la información completa del animador
 		Finalmente los procarianos del grupo
+	@ÚltimaModificación: 13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
 module.exports.obtenerGrupoPorId = (req, res, next) => {
 	let idGrupo = req.params.id_grupo;
