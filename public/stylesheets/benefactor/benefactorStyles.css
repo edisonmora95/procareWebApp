@@ -1,6 +1,9 @@
 body{
 	background-color: #F2F2F2;
 	font-family: sans-serif;
-		}
+}
 
-		
+i:hover{
+
+   box-shadow: 0 4px 0 0 silver;
+}

@@ -405,7 +405,6 @@ function inicializarTransaccion(){
 			return reject(fail);
 		});
 	});
-}
 
 /*
 	@Descripción:

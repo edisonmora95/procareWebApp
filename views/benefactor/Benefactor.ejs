@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Procare</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Materializecs-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <% include ../partials/head %>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/benefactorStyles.css">
@@ -16,92 +10,102 @@
   <body>
     <div id="main">
       <header>
-      <navbar></navbar>
-    </header>
-    <main class="container">
-      <!--
-      <div class="input-field col s6">
-        <input type="text" name="busqueda" value="">
-        <label for="Buscar">Buscar Benefactor: </label>
+        <% include ../partials/navbar %>
+      </header>
+      <main class="container">
         
-      </div>
-      
-      -->
-      
-      
-      <h2 id="titulo" class="center-align titulo">Benefactores</h2>
-      <div class="row">
         
-      </div>
-      
-      <div class="row row-botones">
         
-          <a href="/benefactor/nuevo" class="waves-effect waves-light btn orange darken-1">Nuevo</a>
         
-      </div>
-      <!-- navegacion de  botones y toda la paginacion
-      <nav class="pagination m-pagination">
-        <a class="button" v-on:click="selectPage(this.pagination.currentPage-1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">Previous</a>
-        <a class="button" v-on:click="selectPage(this.pagination.currentPage+1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">Next page</a>
-        <ul>
-          <li>
-            <a class="button" v-on:click="selectPage(pagination.items[0])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">
-              First
-            </a>
-          </li>
-          <li class="is-space"></li>
-          <li v-for="item in pagination.filteredItems">
-            <a class="button" v-on:click="selectPage(item)" v-bind:class="{'is-info': item == pagination.currentPage}">{{item | numeral}}</a>
-          </li>
-          <li class="is-space"></li>
-          <li>
-            <a class="button" v-on:click="selectPage(pagination.items[pagination.items.length-1])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">
-              Last
-            </a>
-          </li>
-        </ul>
-      </nav>-->
-      <!-- tabla de contenido -->
-      
-      <div class="m-table">
-        <table class="bordered">
-          <thead class="light-blue darken-4">
-            <tr class="white-text">
-              <th>Razon Social</th>
-              <th>Cedula / Ruc</th>
-              <th>tipo Donacion</th>
-              <th>Dia de Cobro</th>
-              <th>Contribucion</th>
-              <th> opciones </th>
+        
+        
+        <h2 id="titulo" class="center-align titulo">Benefactores</h2>
+        
+        <div class="row row-botones">
+          <div class="col s4">
+            <a href="/benefactor/nuevo" class="waves-effect waves-light btn orange darken-1">Nuevo</a>
+          </div>
+        </div>
+           <!--
+            <div class="input-field col s6">
+              <input type="text" v-model="searchItem" name="busqueda" value="">
+              <label for="Buscar">Buscar Benefactor: </label>
+            </div>
+          <div class="col s2">
+             <button @click="searchInTheList"> <i class="medium material-icons prefix">search</i></button>
+          </div>
+        </div>-->
+        <!-- tabla de contenido -->
+        
+        <div class="m-table">
+          <table class="bordered">
+            <thead class="light-blue darken-4">
+              <tr class="white-text">
+                <th>Razon Social</th>
+                <th>Cedula / Ruc</th>
+                <th>tipo Donacion</th>
+                <th>Dia de Cobro</th>
+                <th>Contribucion</th>
+                <th> opciones </th>
+              </tr>
+            </thead>
+            <tr v-for="item in arregloBenefactor">
+              <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
+              <td>{{item.cedula}}</td>
+              <td>{{item.tipo_donacion}}</td>
+              <td style="text-align:center;">{{item.dia_cobro}}</td>
+              <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
+              <td><button @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></button>
+                <button @click="PreguntaparaEliminar(item)"> <i class="material-icons  red-text darken-4">delete</i></button>
+              </td>
             </tr>
-          </thead>
-          <tr v-for="item in arregloBenefactor">
-            <td @click="irAPerfil(item)">{{item.razonsocial}}</td>
-            <td>{{item.cedula}}</td>
-            <td>{{item.tipo_donacion}}</td>
-            <td style="text-align:center;">{{item.dia_cobro}}</td>
-            <td style="text-align:center;"> $ {{item.valor_contribucion}}</td>
-            <td @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i>
-              <i class="material-icons  red-text darken-4">delete</i>
-            </td>
-          </tr>
-        </table>
+          </table>
+        </div>
+      </main>
+      <!-- Modal Structure Eliminar  -->
+      <div id="modalBenfactorEliminado" class="modal">
+        <div class="modal-content">
+          <p class="center-align modal-text"> El Benefactor <h6>{{ nombre_eliminado }}</h6> ha sido Eliminado correctamente.</p>
+        </div>
+        <div class="modal-footer">
+          <a href="/benefactor/" class="modal-action modal-close waves-effect waves-orange btn-flat">Aceptar</a>
+          
+        </div>
       </div>
-    </main>
-  </div>
-  <div>
+      <!-- Modal Structure Eliminar  -->
+      <div id="modalBenfactorEliminar" class="modal">
+        <div class="modal-content">
+          <p class="center-align modal-text">Desea Eliminar el Benefactor:  <h5>{{ nombre_eliminado }}</h5></p>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+          <a href="#" class="modal-action modal-close waves-effect waves-orange btn-flat" @click="EliminarBenefactor">Aceptar</a>
+          
+          
+        </div>
+      </div>
+      <!-- Modal Structure -->
+      <div id="modalErrorAjax" class="modal">
+        <div class="modal-content">
+          <h4 class="center-align">{{errorAjax.titulo}}.</h4>
+          <p class="center-align">"{{errorAjax.descripcion}}"</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </div>
+      </div>
+      
+    </div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-    <script src='https://unpkg.com/vue@2.3.3'></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-    <!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-    <script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-    <script src="/build/benefactor/verBenefactor.js"></script>
-    <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
-    </script>
-  </div>
-</body>
+    <div>
+      
+      <% include ../partials/scripts %>
+      <script src="/scripts/moment/moment.js"></script>
+      <script src="/scripts/moment/locale/es.js"></script>
+      <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+      <script src="/build/benefactor/verBenefactor.min.js"></script>
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
+      </script>
+    </div>
+  </body>
 </html>

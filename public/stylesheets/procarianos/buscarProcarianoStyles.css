@@ -36,8 +36,11 @@ table{
 
 h3, h4, th, label{
 	font-family: 'Merriweather', serif;
+	color: #21378A;
 }
-
+h2{
+	
+}
 .checkbox{
 	position: relative;
 	margin-top: 1rem;

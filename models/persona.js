@@ -202,10 +202,10 @@ module.exports = function(sequelize, DataTypes) {
         }).then(callback).catch(errorCallback);
       },
       ///////////////////////////////////////
-      //FUNDIONES CON PROMESAS
+      //FUNCIONES CON PROMESAS
       ///////////////////////////////////////
        ///////////////////////////////////////
-      //FUNDIONES CON TRANSACCIONES
+      //FUNCIONES CON TRANSACCIONES
       ///////////////////////////////////////
       crearPersonaT: function(persona, transaction){
         return new Promise( (resolve, reject) => {

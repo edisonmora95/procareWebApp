@@ -2,13 +2,7 @@
 <html>
 
 <head>
-    <title>Procare</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Materializecs-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+     <% include ../partials/head %>
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/style/paymentccs.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/benefactorStyles.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
@@ -28,8 +22,8 @@
 <body>
     <div id="main">
         <header>
-            <navbar></navbar>
-        </header>
+                <% include ../partials/navbar %>
+            </header>
         <!--<button @click="llenarBaseDeDatos">Llenar base</button>-->
         <main class="container">
             <div class="row" id="row-form">
@@ -96,8 +90,8 @@
                             <div class="input-field col s6 text-darken-4">
                                 <v-select id="selectGenero" name="selectGenero" v-model="benefactor.genero" select-text="">
                                     <!--<option value="" disabled selected></option> -->
-                                    <option value="masculino">Masculino</option>
-                                    <option value="femenino">Femenino</option>
+                                    <option value="masculino">masculino</option>
+                                    <option value="femenino">femenino</option>
                                 </v-select>
                                 <label for="selectGenero">Género</label>
                             </div>
@@ -158,25 +152,36 @@
                     <!--Botones-->
                     <div class="row row-botones">
                         <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="/benefactor/">Cancelar<a>
-						<a class="btn waves-effect waves-light pull right orange" type="submit" name="action" @click="validateBeforeSubmit">Crear<a>
-					</div>
-							
-			</form>
-			
-
-					</div>
-				</main>
-
-	
-				<!-- Modal Structure -->
-				<div id="modalBenfactorCreado" class="modal">
-					<div class="modal-content">
-						<p class="center-align modal-text">Benefactor creado correctamente.</p>
-					</div>
-					<div class="modal-footer">
-						<a href="/benefactor/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+                        <a class="btn waves-effect waves-light pull right orange" type="submit" id="guardar" name="action" @click="validateBeforeSubmit"><a>
                     </div>
-            </div>
+                            
+            </form>
+
+
+                    </div>
+                </main>
+
+    
+                <!-- Modal Structure -->
+                <div id="modalBenfactorCreado" class="modal">
+                    <div class="modal-content">
+                        <p class="center-align modal-text">Benefactor creado correctamente.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/benefactor/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+                    </div>
+               </div>
+
+               <!-- Modal Structure -->
+                <div id="modalBenfactorEditar" class="modal">
+                    <div class="modal-content">
+                        <p class="center-align modal-text">Benefactor Fue Actualizado correctamente.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/benefactor/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+                    </div>
+               </div>
+
             <!-- Modal Structure -->
             <div id="modalError" class="modal">
                 <div class="modal-content">
@@ -201,13 +206,11 @@
             </div>
     </div>
     <div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <!-- Compiled and minified JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-        <script src='https://unpkg.com/vue@2.3.3'></script>
-        <!--<script src='/bower_components/vee-validate/dist/vee-validate.min.js'></script>-->
-        <script src="https://cdn.jsdelivr.net/vee-validate/2.0.0-rc.3/vee-validate.min.js"></script>
-        <script src="/build/benefactor/BenefactorScript.js"></script>
+        <% include ../partials/scripts %>
+        <script src="/scripts/moment/moment.js"></script>
+        <script src="/scripts/moment/locale/es.js"></script>
+        <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+        <script src="/build/benefactor/BenefactorScript.min.js"></script>
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
         </script>
     </div>
