@@ -1,13 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather:700');
+@import url('./../general.css' )
 
-.container{
-	margin-top: 5%;
-}
-
-.card{
-	border-radius: 2%;
-	padding: 2%;
-}
 
 .row-botones{
 	margin-top: 3%;
@@ -23,4 +16,18 @@
 
 label, h4{
 	font-family: 'Merriweather', serif;
+}
+
+.card header{
+	background-color: rgba(184, 188, 196, 0.2)
+}
+
+.card header img{
+	height: 150px;
+	width: 150px;
+}
+
+h4{
+	font-family: 'Merriweather', serif;
+  color: #21378A;
 }

@@ -405,6 +405,7 @@ function inicializarTransaccion(){
 			return reject(fail);
 		});
 	});
+}
 
 /*
 	@Descripción:
@@ -453,4 +454,3 @@ const obtenergrupoActual = (arrayGrupos) => {
 	}
 	return grupoActual;
 }
-

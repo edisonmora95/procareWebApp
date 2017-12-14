@@ -141,18 +141,12 @@ var main = new Vue({
 				}
 			});
 		},
-		irAPerfil(procariano){
-			window.location.href = '/procarianos/perfil/' + procariano.personaId;
-		},
-		anadirACheckBox(elemento){
-			console.log(elemento)
-		},
 		//Funciones para editar la forma en la que se muestra la fecha
 		moment: function (date) {
       return moment(date);
     },
     date: function (date) {
-      var es = moment().locale('es');
+      const es = moment().locale('es');
       if (date === undefined || date === '') {
         return '----';
       }

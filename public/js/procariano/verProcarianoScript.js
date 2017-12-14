@@ -15,6 +15,7 @@ let app = new Vue({
 	},
 	mounted: function(){
 		$('.modal').modal();
+		$('ul.tabs').tabs();
 	},
 	data: {
 		idProcariano 			 : 0,

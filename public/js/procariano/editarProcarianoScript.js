@@ -304,9 +304,6 @@ let editarApp = new Vue({
 			self.errorAjax.descripcion	= descripcion;
 			$('#modalErrorAjax').modal('open');
     },
-		cancelarEdicion(){
-
-		},
 		aceptarEdicion(){
 
 		}

@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<% include ../partials/head %>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/verProcarianoStyles.css">
 	</head>
 	<body>
@@ -11,102 +10,110 @@
 				<% include ../partials/navbar %>
 			</header>
 			<main class="container" id="app">
-				<!--Row ver procariano-->
-				<section class="row rowVer" id="rowVer" v-if="!habilitaredicion && dataFinishedLoading">
-					<header>
-						<h4 class="center-align">Perfil</h4>
-					</header>
-					<div class="col s12">
-						<div class="card">
-							<div class="card-content">
-								<!--Nombres-->
-								<section class="row rowVer" id="rowVerNombres">
-									<article class="col s6" id="verNombre">
-										<label>Nombres</label>
-										<p>{{procariano.nombres}}</p>
-									</article>
-									<article class="col s6" id="verApellido">
-										<label>Apellidos</label>
-										<p>{{procariano.apellidos}}</p>
-									</article>
-								</section>
-								<!--Cedula-fecha-->
-								<section class="row rowVer" id="rowVerCedulaFecha">
-									<article class="col s6" id="verCedula">
-										<label>Cédula</label>
-										<p>{{procariano.cedula}}</p>
-									</article>
-									<article class="col s6" id="verFecha">
-										<label>Fecha de nacimiento</label>
-										<p>{{date(fechaNacimiento)}}</p>
-									</article>
-								</section>
-								<!--Direccion-email-->
-								<section class="row rowVer" id="rowVerDireccionEmail">
-									<article class="col s6" id="verDireccion">
-										<label>Dirección</label>
-										<p>{{procariano.direccion}}</p>
-									</article>
-									<article class="col s6" id="verEmail">
-										<label>Email</label>
-										<p>{{procariano.email}}</p>
-									</article>
-								</section>
-								<!--Celular-convencional-->
-								<section class="row rowVer" id="rowVerTelefonos">
-									<article class="col s6" id="verConvencional">
-										<label>Convencional</label>
-										<p v-if="procariano.convencional">{{procariano.convencional}}</p>
-										<p v-else>---</p>
-									</article>
-									<article class="col s6" id="verCelular">
-										<label>Celular</label>
-										<p v-if="procariano.celular">{{procariano.celular}}</p>
-										<p v-else>---</p>
-									</article>
-								</section>
-								<!--Tipo-grupo-->
-								<section class="row rowVer" id="rowVerTipoGrupo">
-									<article class="col s6" id="verTipo">
-										<label>Tipo</label>
-										<p>{{tipoprocariano.text}}</p>
-									</article>
-									<article class="col s6" id="verGrupo">
-										<label>Grupo</label>
-										<p>{{grupoprocariano.text}}</p>
-									</article>
-								</section>
-								<!--Coelgio-Universidad-->
-								<section class="row rowVer" id="rowVerEducacion">
-									<article class="col s6" id="verColegio">
-										<label>Colegio</label>
-										<p v-if="procariano.colegio">{{procariano.colegio}}</p>
-										<p v-else>---</p>
-									</article>
-									<article class="col s6" id="verUniversidad">
-										<label>Universidad</label>
-										<p v-if="procariano.universidad">{{procariano.universidad}}</p>
-										<p v-else>---</p>
-									</article>
-								</section>
-								<!--Trabajo-->
-								<section class="row rowVer" id="rowVerTrabajo">
-									<article class="col s12" id="verTrabajo">
-										<label>Trabajo</label>
-										<p v-if="procariano.trabajo">{{procariano.trabajo}}</p>
-										<p v-else>---</p>
-									</article>
-								</section>
+				<h4>Perfil</h4>
+				<section class="row">
+					<article class="col s12">
+						<section class="card" id="rowVer" v-if="dataFinishedLoading">
+							<header class="card-content">
+								<img src="http://via.placeholder.com/150x150" class="circle responsive-img">
+							</header>
+							<section class="card-tabs">
+								<ul class="tabs tabs-fixed-width">
+									<li class="tab"><a class="active" href="#general">General</a></li>
+									<li class="tab"><a href="#personal">Personal</a></li>
+								</ul>
+							</section>
+							<main class="card-content">
+								<main id="general">
+									<!--Cedula-fecha-->
+									<section class="row rowVer" id="rowNombresApellidos">
+										<article class="col s6">
+											<label>Nombres</label>
+											<p>{{procariano.nombres}}</p>
+										</article>
+										<article class="col s6">
+											<label>Apellidos</label>
+											<p>{{procariano.apellidos}}</p>
+										</article>
+									</section>
+									<!--Cedula-fecha-->
+									<section class="row rowVer" id="rowVerCedulaFecha">
+										<article class="col s6" id="verFecha">
+											<label>Fecha de nacimiento</label>
+											<p>{{date(fechaNacimiento)}}</p>
+										</article>
+										<article class="col s6" id="verEmail">
+											<label>Email</label>
+											<p>{{procariano.email}}</p>
+										</article>
+									</section>
+									<!--Tipo-grupo-->
+									<section class="row rowVer" id="rowVerTipoGrupo">
+										<article class="col s6" id="verTipo">
+											<label>Tipo</label>
+											<p>{{tipoprocariano.text}}</p>
+										</article>
+										<article class="col s6" id="verGrupo">
+											<label>Grupo</label>
+											<p>{{grupoprocariano.text}}</p>
+										</article>
+									</section>
+								</main>
+								<main id="personal">
+									<section class="row">
+										<article class="col s6" id="verCedula">
+											<label>Cédula</label>
+											<p>{{procariano.cedula}}</p>
+										</article>
+										<article class="col s6" id="verDireccion">
+											<label>Dirección</label>
+											<p>{{procariano.direccion}}</p>
+										</article>
+									</section>
+									<!--Celular-convencional-->
+									<section class="row rowVer" id="rowVerTelefonos">
+										<article class="col s6" id="verConvencional">
+											<label>Convencional</label>
+											<p v-if="procariano.convencional">{{procariano.convencional}}</p>
+											<p v-else>---</p>
+										</article>
+										<article class="col s6" id="verCelular">
+											<label>Celular</label>
+											<p v-if="procariano.celular">{{procariano.celular}}</p>
+											<p v-else>---</p>
+										</article>
+									</section>
+									<!--Coelgio-Universidad-->
+									<section class="row rowVer" id="rowVerEducacion">
+										<article class="col s6" id="verColegio">
+											<label>Colegio</label>
+											<p v-if="procariano.colegio">{{procariano.colegio}}</p>
+											<p v-else>---</p>
+										</article>
+										<article class="col s6" id="verUniversidad">
+											<label>Universidad</label>
+											<p v-if="procariano.universidad">{{procariano.universidad}}</p>
+											<p v-else>---</p>
+										</article>
+									</section>
+									<!--Trabajo-->
+									<section class="row rowVer" id="rowVerTrabajo">
+										<article class="col s6" id="verTrabajo">
+											<label>Trabajo</label>
+											<p v-if="procariano.trabajo">{{procariano.trabajo}}</p>
+											<p v-else>---</p>
+										</article>
+									</section>
+								</main>
 								<!--Botones-->
-								<div class="row row-botones" v-if="procariano.estado!=='inactivo'">
-									<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalConfirmarEliminar">Eliminar</a>
-									<a :href="'/procarianos/perfil/' + idProcariano + '/editar'" class="btn waves-effect waves-light pull right" type="submit" name="action" >Editar</a>
-								</div>
-							</div><!--End card content-->
-						</div><!--End card-->
-					</div>
+								<footer class="row row-botones" v-if="procariano.estado!=='inactivo'">
+									<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalConfirmarEliminar"><i class="material-icons left">clear</i>Eliminar</a>
+									<a :href="'/procarianos/perfil/' + idProcariano + '/editar'" class="btn waves-effect waves-light pull right" type="submit" name="action"><i class="material-icons left">edit</i>Editar</a>
+								</footer>
+							</main>
+						</section>
+					</article>
 				</section>
-				<!--End row ver procariano-->
 				<!-- Modal Structure -->
 			  <div id="modalErrorEliminar" class="modal">
 			    <div class="modal-content">

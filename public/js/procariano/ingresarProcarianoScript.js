@@ -6,7 +6,10 @@
 */
 'use strict';
 
+import VueTheMask from 'vue-the-mask';
+
 Vue.use(VeeValidate);
+Vue.use(VueTheMask);
 /*
 	Validaciones. Cambio de mensajes de error
 */
@@ -39,7 +42,7 @@ const dictionary = {
 };
 VeeValidate.Validator.updateDictionary(dictionary);
 
-var main = new Vue({
+let main = new Vue({
 	el: '#main',
 	created(){
 		this.obtenerTodosLosGrupos(this);
@@ -87,7 +90,12 @@ var main = new Vue({
 			titulo 			: '',
 			descripcion : ''
 		},
-		cargoTipos : false
+		cargoTipos : false,
+		mask_format: {
+	    telef_convencional : "(0#)###-####",
+	    telf_celular 			 : "(0#)#-###-####",
+	    Ruc_Mask 					 : "##########"
+    },
 	},
 	methods: {
 		/*
@@ -267,6 +275,8 @@ var main = new Vue({
 				self.bindGrupoSeleccionado(self, self.procariano.tipo);
 				this.$validator.validateAll().then( (result) => {
 					if( result ){
+						self.procariano.convencional = convertirTelefono(self.procariano.convencional);
+						self.procariano.celular 		 = convertirTelefono(self.procariano.celular)		 ;
 						self.ingresarProcariano(self);
 					}else{
 						console.log(self.errors)
@@ -359,3 +369,7 @@ $('#fecha-ordenacion').change(function(){
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaOrdenacion = fecha;
 });
+
+function convertirTelefono(telefono){
+	return telefono.replace(/[^0-9.]/g, "");
+}
