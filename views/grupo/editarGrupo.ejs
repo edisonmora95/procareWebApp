@@ -9,79 +9,85 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="editarGrupoApp">
-			<header>
-				<h4 class="center-align"><b>Editar grupo</b></h4>
-			</header>
-			<main>
-				<section class="row" id="row-info-general">
-					<header>
-						<h5 class="center-align"><b>Información general</b></h5>	
-					</header>
-					<form class="col s12">
-						<section class="row">
-							<article class="input-field col s6">
-								<label class="active">Nombre del grupo</label>
-								<input type="text" name="nombre" id="nombre" v-model="grupo.nombre">
-							</article>
-							<article class="input-field col s6">
-								<select id="selectGenero" name="genero">
-									<option value="" disabled selected></option>
-									<option value="Procare">Masculino</option>
-									<option value="Procare Mujeres">Femenino</option>
-								</select>
-								<label>Género</label>
-							</article>
-						</section>
-						<section class="row">
-							<article class="input-field col s6">
-								<select id="selectEtapa" name="selectEtapa">
-								</select>
-								<span v-show="error==='etapa'" class="help is-danger">{{mensaje}}</span>
-								<label for="selectEtapa" class="active">Etapa</label>
-							</article>
-							<article class="input-field col s6">
-								<select id="selectAnimador" name="selectAnimador">
-								</select>
-								<span v-show="error==='animador'" class="help is-danger">{{mensaje}}</span>
-								<label for="selectAnimador" class="active">Animador</label>
-							</article>
-						</section>
-					</form>
-				</section>
-				<section class="row" id="row-escoger-chicos">
-					<header>
-						<h5 class="center-align"><b>Selección de integrantes</b></h5>
-					</header>
-					<main class="col s12">
-						<section class="row">
-							<article class="col s5 col-chicos card" id="col-sin-grupo">
+			<section class="row">
+				<article class="col s12">
+					<main class="card">
+						<header class="card-content">
+							<h4 class="titulo"><b>Editar grupo</b></h4>
+						</header>
+						<main class="card-content">
+							<section class="row" id="row-info-general">
 								<header>
-									<h6 class="center-align"><b>Chicos sin grupo</b></h6>		
+									<h5 class="center-align"><b>Información general</b></h5>	
 								</header>
-								<main>
-									<ul id="chicosSinGrupo">
-										<li v-for="chico in sinGrupo" :id="chico.id" @click="anadir(chico)">{{chico.nombre}}</li>
-									</ul>		
-								</main>	
-							</article>
-							<article class="col s5  col-chicos pull right card" id="col-con-grupo">
+								<form class="col s12">
+									<section class="row">
+										<article class="input-field col s6">
+											<label class="active" for="nombre">Nombre del grupo</label>
+											<input type="text" name="nombre" id="nombre" v-model="grupo.nombre">
+										</article>
+										<article class="input-field col s6">
+											<select id="selectGenero" name="genero">
+												<option value="" disabled selected></option>
+												<option value="Procare">Masculino</option>
+												<option value="Procare Mujeres">Femenino</option>
+											</select>
+											<label>Género</label>
+										</article>
+									</section>
+									<section class="row">
+										<article class="input-field col s6">
+											<select id="selectEtapa" name="selectEtapa">
+											</select>
+											<span v-show="error==='etapa'" class="help is-danger">{{mensaje}}</span>
+											<label for="selectEtapa" class="active">Etapa</label>
+										</article>
+										<article class="input-field col s6">
+											<select id="selectAnimador" name="selectAnimador">
+											</select>
+											<span v-show="error==='animador'" class="help is-danger">{{mensaje}}</span>
+											<label for="selectAnimador" class="active">Animador</label>
+										</article>
+									</section>
+								</form>
+							</section>
+							<section class="row" id="row-escoger-chicos">
 								<header>
-									<h6 class="center-align"><b>Chicos en grupo</b></h6>		
+									<h5 class="center-align"><b>Selección de integrantes</b></h5>
 								</header>
-								<main>
-									<ul id="integrantes">
-										<li v-for="chico in integrantes" :id="chico.idProcariano" @click="quitar(chico)">{{chico.nombre}} {{chico.apellido}}</li>
-									</ul>		
+								<main class="col s12">
+									<section class="row">
+										<article class="col s5 col-chicos card" id="col-sin-grupo">
+											<header>
+												<h6 class="center-align"><b>Chicos sin grupo</b></h6>		
+											</header>
+											<main>
+												<ul id="chicosSinGrupo">
+													<li v-for="chico in sinGrupo" :id="chico.id" @click="anadir(chico)">{{chico.nombre}}</li>
+												</ul>		
+											</main>	
+										</article>
+										<article class="col s5  col-chicos pull right card" id="col-con-grupo">
+											<header>
+												<h6 class="center-align"><b>Chicos en grupo</b></h6>		
+											</header>
+											<main>
+												<ul id="integrantes">
+													<li v-for="chico in integrantes" :id="chico.idProcariano" @click="quitar(chico)">{{chico.nombre}} {{chico.apellido}}</li>
+												</ul>		
+											</main>
+										</article>
+									</section>
 								</main>
-							</article>
-						</section>
+							</section>
+							<section class="row">
+								<a class="waves-effect waves-light btn btn-cancelar" :href="'/grupos/'+idGrupo"><i class="material-icons left">clear</i>Cancelar</a>
+								<a class="waves-effect waves-light btn pull right btn-aceptar" id="btnContinuar" @click="aceptar"><i class="material-icons left">check</i>Aceptar</a>
+							</section>
+						</main>
 					</main>
-				</section>
-				<section class="row">
-					<a class="waves-effect waves-light btn" :href="'/grupos/'+idGrupo" >Regresar</a>
-					<a class="waves-effect waves-light btn pull right" id="btnContinuar" @click="aceptar">Aceptar</a>
-				</section>
-			</main>
+				</article>
+			</section>
 		</main>
 	</body>
 	<footer>

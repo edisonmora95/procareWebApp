@@ -51,6 +51,7 @@ let App = new Vue({
 				type: 'GET',
 				url : '/api/grupos/' + self.idGrupo,
 				success(res){
+					console.log(res)
 					self.grupo 						= res.datos.grupo;
 					self.integrantes 			= self.armarArrayIntegrantes(res.datos.procarianos);
 					let animadorObj			  = {

@@ -1,24 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather:700');
-
-body{
-	background-color: #d3dbdb;
-}
-
-.card{
-	margin-top: 5%;
-	padding: 3%;
-	border-radius: 2%;
-	height: auto !important;
-}
+@import url('./../general.css')
 
 li:hover{
 	background-color: #d3dbdb;
 }
 
 li{
-	/*border: 1px solid red;*/
 	padding: 3%;
-	/*border-bottom: 1px solid #d3dbdb;*/
 }
 
 .row{
@@ -37,11 +25,6 @@ li{
 
 h5{
 	margin-top: 1rem;	
-}
-
-h3, h4, h5, h6{
-	font-weight: bold;
-	font-family: 'Merriweather', serif;
 }
 
 #row-btns{
@@ -78,4 +61,5 @@ body::-webkit-scrollbar-thumb {
 
 img{
 	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
 }

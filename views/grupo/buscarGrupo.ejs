@@ -5,36 +5,40 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/grupo/buscarGrupoStyles.css">
 	</head>
 	<body>
-		<div>
-			<header>
-				<% include ../partials/navbar %>
-			</header>
-			<main class="container" id="BuscarGrupoApp">
-				<header>
-					<h4 class="center-align titulo">Grupos</h4>
-				</header>
-				<section id="section-resultados" class="card large">
-					<article class="row" id="row-resultados">
-						<table class="stripped bordered responsive-table centered highlight">
-							<thead>
-								<th>Nombre</th>
-								<th>Tipo</th>
-								<th>Etapa</th>
-								<th>Género</th>
-							</thead>
-							<tbody>
-								<tr v-for="grupo in grupos" @click="irAGrupo(grupo)">
-									<td>{{grupo.nombre}}</td>
-									<td>{{grupo.tipo}}</td>
-									<td>{{grupo.etapaNombre}}</td>
-									<td>{{grupo.genero}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</article>
-				</section>
-			</main>
-		</div>
+		<header>
+			<% include ../partials/navbar %>
+		</header>
+		<main class="container row" id="BuscarGrupoApp">
+			<section class="col s12">
+				<main class="card">
+					<header class="card-content">
+						<h4 class="center-align titulo">Grupos</h4>
+					</header>
+					<main id="section-resultados" class="card-content">
+						<article id="row-resultados">
+							<table class="stripped bordered responsive-table centered highlight">
+								<thead>
+									<th>Perfil</th>
+									<th>Nombre</th>
+									<th>Tipo</th>
+									<th>Etapa</th>
+									<th>Género</th>
+								</thead>
+								<tbody>
+									<tr v-for="grupo in grupos" >
+										<td><a :href="'/grupos/'+ grupo.id"><i class="material-icons small">group</i></a></td>
+										<td>{{grupo.nombre}}</td>
+										<td>{{grupo.tipo}}</td>
+										<td>{{grupo.etapaNombre}}</td>
+										<td>{{grupo.genero}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</article>
+					</main>	
+				</main>
+			</section>
+		</main>
 	</body>
 	<div>
 		<% include ../partials/scripts %>

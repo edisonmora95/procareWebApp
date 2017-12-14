@@ -9,91 +9,99 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="tareaApp">
-			<header>
-				<h3 class="center-align">Tarea nueva</h3>
-			</header>
-			<form>
-		  	<section id="rowNombre" class="row">
-		  		<article class="col s12">
-		  			<label for="nombre">Nombre(*)</label>	
-		  			<input name="nombre" id="nombre" v-model="tarea.nombre" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'">
-		  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
-		  		</article>
-		  	</section>
-		  	<section id="rowDescripcion" class="row">
-		  		<article class="col s12">
-		  			<label for="descripcion">Descripción(*)</label>
-			  		<textarea name="descripcion" id="descripcion" v-model="tarea.descripcion" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
-			  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
-		  		</article>
-		  	</section>
-		  	<section id="rowFechaInicio" class="row">
-		  		<article class="col s6">
-		  			<label for="fechaInicio">Fecha de inicio</label>
-			      <input id="fechaInicio" name="fechaInicio" type="date" class="datepicker"/>	
-			      <span v-show="errorFechaInicio" class="help">{{msjFechaInicio}}</span>
-		  		</article>
-		  		<article class="col s6" id="divHoraInicio">
-		  			<label for="horaInicio">Hora de inicio</label>
-		  			<input type="text" class="timepicker" id="horaInicio">
-		  		</article>
-		  	</section>
-		  	<section id="rowFechaFin" class="row">
-		  		<article class="col s6">
-		  			<label for="fechaFin">Fecha de fin</label>
-			      <input id="fechaFin" name="fechaFin" type="date" class="datepicker" />
-			      <span v-show="errorFechaFin" class="help">{{msjFechaFin}}</span>
-		  		</article>
-		  		<article class="col s6" id="divHoraFin">
-		  			<label for="horaFin">Hora de fin</label>
-		  			<input type="text" class="timepicker" id="horaFin">
-		  		</article>
-		  	</section>
-		  	<section class="row">
-		  		<article class="input-field col s6">
-		  			<select name="categoria" id="categoria">
-		  				<option value="" disabled selected></option>
-		  				<option value="1">Formación</option>
-		  				<option value="2">Acción</option>
-		  				<option value="3">Fundación</option>
-		  			</select>
-		  			<label for="categoria">Categoría(*)</label>
-		  		</article>
-		  		<article class="input-field col s6">
-		  			<select name="prioridad" id="prioridad">
-		  				<option value="" disabled selected></option>
-		  				<option value="1">Alta</option>
-		  				<option value="2">Media</option>
-		  				<option value="3">Baja</option>
-		  			</select>
-		  			</select>
-		  			<label for="prioridad">Prioridad(*)</label>
-		  		</article>
-		  	</section>
-		  	<section id="row-responsable" class="row">
-		  		<div class="col s12">
-		  			<section id="row-interior" class="row">
-							<article class="input-field col s6" id="esteDiv">
-								<label for="responsable">Responsable(*)</label>
-								<input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off" v-validate="'required'">
-								<span v-show="errors.has('responsable')" class="help is-danger">{{ errors.first('responsable') }}</span>
-							</article>
-							<article class="input-field col s6">
-								<select name="estado" id="estado">
-									<option value="" disabled selected></option>
-				  				<option value="1">Pendiente</option>
-				  				<option value="2">En proceso</option>
-				  				<option value="3">Completada</option>
-								</select>
-		  					<label for="estado">Estado</label>
-							</article>
-		  			</section>
-		  		</div>
-		  	</section>
-		  	<section class="row">
-		  		<a class="waves-effect waves-light btn pul right" @click="validarAntesDeEnviar">Crear</a>
-		  	</section>
-		  </form>
+			<section class="row">
+				<article class="col s12">
+					<main class="card">
+						<header class="card-content">
+							<h3 class="titulo">Tarea nueva</h3>
+						</header>
+						<main class="card-content">
+							<form>
+						  	<section id="rowNombre" class="row">
+						  		<article class="col s12">
+						  			<label for="nombre">Nombre(*)</label>	
+						  			<input name="nombre" id="nombre" v-model="tarea.nombre" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'">
+						  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>
+						  		</article>
+						  	</section>
+						  	<section id="rowDescripcion" class="row">
+						  		<article class="col s12">
+						  			<label for="descripcion">Descripción(*)</label>
+							  		<textarea name="descripcion" id="descripcion" v-model="tarea.descripcion" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
+							  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
+						  		</article>
+						  	</section>
+						  	<section id="rowFechaInicio" class="row">
+						  		<article class="col s6">
+						  			<label for="fechaInicio">Fecha de inicio</label>
+							      <input id="fechaInicio" name="fechaInicio" type="date" class="datepicker"/>	
+							      <span v-show="errorFechaInicio" class="help">{{msjFechaInicio}}</span>
+						  		</article>
+						  		<article class="col s6" id="divHoraInicio">
+						  			<label for="horaInicio">Hora de inicio</label>
+						  			<input type="text" class="timepicker" id="horaInicio">
+						  		</article>
+						  	</section>
+						  	<section id="rowFechaFin" class="row">
+						  		<article class="col s6">
+						  			<label for="fechaFin">Fecha de fin</label>
+							      <input id="fechaFin" name="fechaFin" type="date" class="datepicker" />
+							      <span v-show="errorFechaFin" class="help">{{msjFechaFin}}</span>
+						  		</article>
+						  		<article class="col s6" id="divHoraFin">
+						  			<label for="horaFin">Hora de fin</label>
+						  			<input type="text" class="timepicker" id="horaFin">
+						  		</article>
+						  	</section>
+						  	<section class="row">
+						  		<article class="input-field col s6">
+						  			<select name="categoria" id="categoria">
+						  				<option value="" disabled selected></option>
+						  				<option value="1">Formación</option>
+						  				<option value="2">Acción</option>
+						  				<option value="3">Fundación</option>
+						  			</select>
+						  			<label for="categoria">Categoría(*)</label>
+						  		</article>
+						  		<article class="input-field col s6">
+						  			<select name="prioridad" id="prioridad">
+						  				<option value="" disabled selected></option>
+						  				<option value="1">Alta</option>
+						  				<option value="2">Media</option>
+						  				<option value="3">Baja</option>
+						  			</select>
+						  			</select>
+						  			<label for="prioridad">Prioridad(*)</label>
+						  		</article>
+						  	</section>
+						  	<section id="row-responsable" class="row">
+						  		<div class="col s12">
+						  			<section id="row-interior" class="row">
+											<article class="input-field col s6" id="esteDiv">
+												<label for="responsable">Responsable(*)</label>
+												<input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off" v-validate="'required'">
+												<span v-show="errors.has('responsable')" class="help is-danger">{{ errors.first('responsable') }}</span>
+											</article>
+											<article class="input-field col s6">
+												<select name="estado" id="estado">
+													<option value="" disabled selected></option>
+								  				<option value="1">Pendiente</option>
+								  				<option value="2">En proceso</option>
+								  				<option value="3">Completada</option>
+												</select>
+						  					<label for="estado">Estado</label>
+											</article>
+						  			</section>
+						  		</div>
+						  	</section>
+						  	<section class="row">
+						  		<a class="waves-effect waves-light btn pul right btn-aceptar" @click="validarAntesDeEnviar"><i class="material-icons right">send</i>Crear</a>
+						  	</section>
+						  </form>	
+						</main>
+					</main>
+				</article>
+			</section>
 		  <section id="modalTareaCreada" class="modal">
 	      <main class="modal-content">
 	        <h4 class="center-align">Tarea creada correctamente</h4>

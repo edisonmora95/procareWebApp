@@ -9,37 +9,44 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="verGrupoApp">
-			<section class="card large row">
-				<header class="headerNombreGrupo">
-					<h3 class="center-align">{{grupo.nombre}}</h3>
-					<p class="center-align">Etapa actual: {{etapa.text}}</p>	
-				</header>
-				<article class="col s4 center-align">
-					<header>
-						<h5 class="center-align">Animador</h5>	
-					</header>
-					<main>
-						<img :src="logoImagen" alt="logo procare" class=" responsive-img circle">
-						<p class="center-align">{{animador.nombres}}</p>	
-					</main>
+			<section class="row">
+				<article class="col s12">
+					<section class="card">
+						<header class="headerNombreGrupo card-content">
+							<h3 class="titulo">{{grupo.nombre}}</h3>
+							<p class="center-align"><b>Etapa actual:</b> {{etapa.text}}</p>	
+						</header>
+						<main class="card-content row">
+							<article class="col s4 center-align">
+								<header>
+									<h5 class="titulo">Animador</h5>	
+								</header>
+								<main>
+									<img :src="logoImagen" alt="logo procare" class=" responsive-img circle">
+									<p class="center-align">{{animador.nombres}}</p>	
+								</main>
+							</article>
+							<article class="col s8">
+								<header>
+									<h5 class="titulo">Lista de chicos</h5>
+								</header>
+								<main>
+									<ul id="listaChicos">
+										<li v-for="chico in integrantes" :id="chico.idProcariano"> 
+											<i class="material-icons">person</i>
+											<a :href="'/procarianos/perfil/' + chico.idPersona">{{chico.nombre}} {{chico.apellidos}}</a>
+										</li>
+									</ul>
+								</main>
+							</article>
+							<footer class="row" v-if="puedeEditar" id="row-btns">
+								<a class="btn waves-effect waves-light btn-cancelar modal-trigger" type="button" name="action" href="#modalEliminarGrupo"><i class="material-icons left">clear</i>Eliminar</a>
+								<a class="waves-effect waves-light btn pull right" :href="'/grupos/'+idGrupo+'/editar'"><i class="material-icons left">edit</i>Editar</a>
+							</footer>
+						</main>
+						
+					</section>
 				</article>
-				<article class="col s8">
-					<header>
-						<h5 class="center-align">Lista de chicos</h5>
-					</header>
-					<main>
-						<ul id="listaChicos">
-							<li v-for="chico in integrantes" :id="chico.idProcariano"> 
-								<i class="material-icons">person</i>
-								<a :href="'/procarianos/perfil/' + chico.idPersona">{{chico.nombre}} {{chico.apellidos}}</a>
-							</li>
-						</ul>
-					</main>
-				</article>
-				<footer class="row" v-if="puedeEditar" id="row-btns">
-					<a class="waves-effect waves-light btn modal-trigger" href="#modalEliminarGrupo">Eliminar</a>
-					<a class="waves-effect waves-light btn pull right" :href="'/grupos/'+idGrupo+'/editar'">Editar</a>
-				</footer>
 			</section>
 			<!-- Modal Structure -->
 		  <section id="modalEliminarGrupo" class="modal">

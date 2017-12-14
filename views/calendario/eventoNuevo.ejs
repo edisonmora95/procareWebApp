@@ -9,77 +9,85 @@
 			<% include ../partials/navbar %>
 		</header>
 		<main class="container" id="eventoApp">
-			<header>
-				<h3 class="center-align">Evento nuevo</h3>
-			</header>
-			<form>
-				<section class="row">
-					<article class="col s12">
-						<label for="nombre">Nombre</label>	
-		  			<input name="nombre" id="nombre" v-model="evento.nombre" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'">
-		  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>	
-					</article>
-				</section>
-				<section class="row">
-					<article class="col s12">
-						<label for="descripcion">Descripción</label>
-			  		<textarea name="descripcion" id="descripcion" v-model="evento.descripcion" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
-			  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
-					</article>
-				</section>
-				<section class="row">
-					<article class="col s12">
-						<label for="lugar">Lugar</label>
-			  		<textarea name="lugar" id="lugar" v-model="evento.lugar" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
-			  		<span v-show="errors.has('lugar')" class="help is-danger">{{ errors.first('lugar') }}</span>	
-					</article>
-				</section>
-				<section id="rowFechaInicio" class="row">
-		  		<article class="col s6">
-		  			<label for="fechaInicio">Fecha de inicio</label>
-			      <input id="fechaInicio" name="fechaInicio" type="date" class="datepicker"/>	
-			      <span v-show="errorFechaInicio" class="help">{{msjFechaInicio}}</span>
-		  		</article>
-		  		<article class="col s6" id="divHoraInicio">
-		  			<label for="horaInicio">Hora de inicio</label>
-		  			<input type="text" class="timepicker" id="horaInicio">
-		  		</article>
-		  	</section>
-		  	<section id="rowFechaFin" class="row">
-		  		<article class="col s6">
-		  			<label for="fechaFin">Fecha de fin</label>
-			      <input id="fechaFin" name="fechaFin" type="date" class="datepicker" />
-			      <span v-show="errorFechaFin" class="help">{{msjFechaFin}}</span>
-		  		</article>
-		  		<article class="col s6" id="divHoraFin">
-		  			<label for="horaFin">Hora de fin</label>
-		  			<input type="text" class="timepicker" id="horaFin">
-		  		</article>
-		  	</section>
-		  	<section id="row-responsable" class="row">
-		  		<div class="col s12">
-		  			<section id="row-interior" class="row">
-							<article class="input-field col s6" id="esteDiv">
-								<label for="responsable">Responsable(*)</label>
-								<input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off" v-validate="'required'">
-								<span v-show="errors.has('responsable')" class="help is-danger">{{ errors.first('responsable') }}</span>
-							</article>
-							<article class="input-field col s6">
-								<select name="estado" id="estado">
-									<option value="" disabled selected></option>
-				  				<option value="1">Pendiente</option>
-				  				<option value="2">En proceso</option>
-				  				<option value="3">Completada</option>
-								</select>
-		  					<label for="estado">Estado</label>
-							</article>
-		  			</section>
-		  		</div>
-		  	</section>
-		  	<section class="row">
-		  		<a class="waves-effect waves-light btn pul right" @click="validarAntesDeEnviar">Crear</a>
-		  	</section>
-			</form>
+			<section class="row">
+				<article class="col s12">
+					<main class="card">
+						<header class="card-content">
+							<h3 class="titulo">Evento nuevo</h3>
+						</header>
+						<main class="card-content">
+							<form>
+								<section class="row">
+									<article class="col s12">
+										<label for="nombre">Nombre</label>	
+						  			<input name="nombre" id="nombre" v-model="evento.nombre" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'">
+						  			<span v-show="errors.has('nombre')" class="help is-danger">{{ errors.first('nombre') }}</span>	
+									</article>
+								</section>
+								<section class="row">
+									<article class="col s12">
+										<label for="descripcion">Descripción</label>
+							  		<textarea name="descripcion" id="descripcion" v-model="evento.descripcion" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
+							  		<span v-show="errors.has('descripcion')" class="help is-danger">{{ errors.first('descripcion') }}</span>
+									</article>
+								</section>
+								<section class="row">
+									<article class="col s12">
+										<label for="lugar">Lugar</label>
+							  		<textarea name="lugar" id="lugar" v-model="evento.lugar" class="materialize-textarea" v-validate="'required|regex:^([áéíóúÁÉÍÓÚñÑA-Za-z0-9# .\-]+)$'"></textarea>
+							  		<span v-show="errors.has('lugar')" class="help is-danger">{{ errors.first('lugar') }}</span>	
+									</article>
+								</section>
+								<section id="rowFechaInicio" class="row">
+						  		<article class="col s6">
+						  			<label for="fechaInicio">Fecha de inicio</label>
+							      <input id="fechaInicio" name="fechaInicio" type="date" class="datepicker"/>	
+							      <span v-show="errorFechaInicio" class="help">{{msjFechaInicio}}</span>
+						  		</article>
+						  		<article class="col s6" id="divHoraInicio">
+						  			<label for="horaInicio">Hora de inicio</label>
+						  			<input type="text" class="timepicker" id="horaInicio">
+						  		</article>
+						  	</section>
+						  	<section id="rowFechaFin" class="row">
+						  		<article class="col s6">
+						  			<label for="fechaFin">Fecha de fin</label>
+							      <input id="fechaFin" name="fechaFin" type="date" class="datepicker" />
+							      <span v-show="errorFechaFin" class="help">{{msjFechaFin}}</span>
+						  		</article>
+						  		<article class="col s6" id="divHoraFin">
+						  			<label for="horaFin">Hora de fin</label>
+						  			<input type="text" class="timepicker" id="horaFin">
+						  		</article>
+						  	</section>
+						  	<section id="row-responsable" class="row">
+						  		<div class="col s12">
+						  			<section id="row-interior" class="row">
+											<article class="input-field col s6" id="esteDiv">
+												<label for="responsable">Responsable(*)</label>
+												<input type="text" name="responsable" id="responsable" v-model="responsable" class="autocomplete" autocomplete="off" v-validate="'required'">
+												<span v-show="errors.has('responsable')" class="help is-danger">{{ errors.first('responsable') }}</span>
+											</article>
+											<article class="input-field col s6">
+												<select name="estado" id="estado">
+													<option value="" disabled selected></option>
+								  				<option value="1">Pendiente</option>
+								  				<option value="2">En proceso</option>
+								  				<option value="3">Completada</option>
+												</select>
+						  					<label for="estado">Estado</label>
+											</article>
+						  			</section>
+						  		</div>
+						  	</section>
+						  	<section class="row">
+						  		<a class="waves-effect waves-light btn pul right btn-aceptar" @click="validarAntesDeEnviar"><i class="material-icons right">send</i>Crear</a>
+						  	</section>
+							</form>
+						</main>
+					</main>
+				</article>
+			</section>
 		  <section id="modalEventoCreado" class="modal">
 	      <main class="modal-content">
 	        <h4 class="center-align">Evento creado correctamente</h4>
