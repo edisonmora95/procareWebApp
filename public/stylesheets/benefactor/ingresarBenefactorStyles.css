@@ -1,12 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather:700');
-
-
-.container{
-	margin-top: 5%;
-}
-.btn-cancelar, .btn-cancelar:hover{
-	background-color: #F04F5A;
-}
+@import url('./../general.css')
 
 #row-form{
 	padding: 3%;
@@ -102,10 +95,6 @@ legend {
 	color: red;
 }
 
-.titulo{
-	font-family: 'Merriweather', serif;
-	font-size: 3rem;
-}
 /*Navbar*/
 li a{
 	padding: 0 16px !important;

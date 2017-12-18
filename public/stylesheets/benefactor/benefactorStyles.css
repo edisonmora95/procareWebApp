@@ -1,7 +1,5 @@
-body{
-	background-color: #F2F2F2;
-	font-family: sans-serif;
-}
+@import url('./../general.css');
+
 
 i:hover{
 

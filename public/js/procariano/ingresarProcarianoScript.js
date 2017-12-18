@@ -275,8 +275,6 @@ let main = new Vue({
 				self.bindGrupoSeleccionado(self, self.procariano.tipo);
 				this.$validator.validateAll().then( (result) => {
 					if( result ){
-						self.procariano.convencional = convertirTelefono(self.procariano.convencional);
-						self.procariano.celular 		 = convertirTelefono(self.procariano.celular)		 ;
 						self.ingresarProcariano(self);
 					}else{
 						console.log(self.errors)
@@ -369,7 +367,3 @@ $('#fecha-ordenacion').change(function(){
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaOrdenacion = fecha;
 });
-
-function convertirTelefono(telefono){
-	return telefono.replace(/[^0-9.]/g, "");
-}

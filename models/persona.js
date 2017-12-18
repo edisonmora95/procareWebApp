@@ -53,7 +53,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     razonSocial : {
       type      : DataTypes.STRING,
-      allowNull : true
+      allowNull : true,
+      validate  : {
+        not : {
+          args : /[`~,<>;':"/[\]|{}()=_+-\d]/,
+          msg  : 'No puede ingresar caracteres especiales en "Razón Social"'
+        }
+      }
     },
     direccion: {
       type      : DataTypes.TEXT,
@@ -122,8 +128,9 @@ module.exports = function(sequelize, DataTypes) {
       type       : DataTypes.STRING,
       allowNull : true,
       validate  : {
-        isNumeric : {
-          msg     : 'El teléfono solo puede contener números'
+        not : {
+          args : /[`~,<>;':"/[\]|{}=_+]/,
+          msg  : 'No puede ingresar caracteres especiales en "Dirección"'
         },
         len       : {
           args    : [0, 15],
@@ -135,8 +142,9 @@ module.exports = function(sequelize, DataTypes) {
       type      : DataTypes.STRING,
       allowNull : true,
       validate  : {
-        isNumeric : {
-          msg     : 'El celular solo puede contener números'
+        not : {
+          args : /[`~,<>;':"/[\]|{}=_+]/,
+          msg  : 'No puede ingresar caracteres especiales en "Dirección"'
         },
         len       : {
           args    : [0, 15],
@@ -204,7 +212,23 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       //FUNCIONES CON PROMESAS
       ///////////////////////////////////////
-       ///////////////////////////////////////
+      buscarPersonaPorCedulaP: function(cedula){
+        return new Promise( (resolve, reject) => {
+          if( !cedula ) return reject('No ingresó la cédula a buscar');
+          return this.findOne({
+            where : {
+              cedula : cedula
+            }
+          })
+          .then( persona => {
+            return resolve(persona);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      ///////////////////////////////////////
       //FUNCIONES CON TRANSACCIONES
       ///////////////////////////////////////
       crearPersonaT: function(persona, transaction){

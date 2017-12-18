@@ -32,3 +32,7 @@ INSERT INTO PersonaRol VALUES (now(), null, now(), now(), 1, 'Director Ejecutivo
 
 INSERT INTO  Personas (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) VALUES('0987654321', 'Personal', 'Personal', 'Urdesa', '2000-07-01', 'masculino', 'personal@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
 INSERT INTO PersonaRol VALUES (now(), null, now(), now(), 2, 'Personal');
+
+
+INSERT INTO `procare_db_dev`.`personas` (`cedula`, `nombres`, `apellidos`, `razonSocial`, `direccion`, `fechaNacimiento`, `genero`, `email`, `createdAt`, `updatedAt`) VALUES ('0927102858', 'Benefactor', 'Benefactor', 'razonsocial', 'sur', '1995-12-16 08:38:18', 'masculino', 'benefactor@gmail.com', '2017-12-16 08:38:40', '2017-12-16 08:38:41');
+INSERT INTO `procare_db_dev`.`benefactors` (`valorContribucion`, `diaCobro`, `tarjetaCredito`, `tipoDonacion`, `estado`, `nombreGestor`, `relacion`, `createdAt`, `updatedAt`, `PersonaId`) VALUES ('150', '15', '4027493056892012', 'mensual', 'activo', 'Edison Mora', 'Amigo', '2017-12-16 08:40:05', '2017-12-16 08:40:06', '3');

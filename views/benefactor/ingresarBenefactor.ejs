@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/style/paymentccs.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/benefactor/ingresarBenefactorStyles.css">
+    <style type="text/css" media="screen">
+      .ccs {
+        margin-top: 15px;
+        padding-right: 70px;
+        font-size: 75px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/navbar %>
+    </header>
+    <main class="container" id="main">
+      <section class="card">
+        <header class="card-content">
+          <h4 class="center-align titulo">Ingresar Benefactor</h4>
+        </header>
+        <main class="card-content">
+          <form class="col s12" @submit.prevent="validateBeforeSubmit">
+            <fieldset>
+                <legend> Datos Personales: </legend>
+                <!--Row nombres y apellidos-->
+                <section class="row row-nombres-apellidos">
+                  <article class="input-field col s6">
+                    <input type="text" class="blue-text text-darken-4" name="nombres" id="nombres" v-model="benefactor.nombres" style="text-transform:uppercase">
+                    <span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+                    <label for="nombres">Nombres</label>
+                  </article>
+                  <article class="input-field col s6">
+                    <input type="text" class="blue-text text-darken-4" name="apellidos" id="apellidos" v-model="benefactor.apellidos" style="text-transform:uppercase">
+                    <span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
+                    <label for="apellidos">Apellidos</label>
+                  </article>
+                </section>
+                <!--Row genero y fecha nacimiento-->
+                <section class="row row-genero">
+                  <article class="col s6">
+                      <label for="fecha-nacimiento">Fecha de nacimiento</label>
+                      <input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-validate="'required'">
+                      <span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
+                      <span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 18 años.</span>
+                    </article>
+                  <article class="input-field col s6 text-darken-4">
+                    <select id="selectGenero" name="selectGenero">
+                      <option value="" disabled selected></option>
+                      <option value="masculino">Masculino</option>
+                      <option value="femenino">Femenino</option>
+                    </select>
+                    <label for="selectGenero">Género</label>
+                  </article>
+                </section>
+                <!--Row razon social-->
+                <section class="row row-razon-social">
+                  <article class="input-field col s12">
+                    <input type="text" name="razonSocial" id="razonSocial" v-model="benefactor.razonSocial" style="text-transform:uppercase">
+                    <span v-show="errors.has('razonSocial')" class="help is-danger">{{ errors.first('razonSocial') }}</span>
+                    <label for="direccion">Razón Social</label>
+                  </article>
+                </section>
+                <section class="row row-cedula-email">
+                  <article class="input-field col s6">
+                    <input type="tel" name="cedula" id="cedula" v-model="benefactor.cedula" v-mask="mask_format.Ruc_Mask" v-validate="'required'">
+                    <span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
+                    <label for="cedula">Cédula/Ruc</label>
+                  </article>
+                  <article class="input-field col s6">
+                    <input type="email" name="email" id="email" v-model="benefactor.email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }">
+                    <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
+                    <label for="email">Email</label>
+                  </article>
+                </section>
+                <!--Row direccion y email-->
+                <section class="row row-direccion-email">
+                  <article class="input-field col s12">
+                    <input type="text" name="direccion" id="direccion" v-model="benefactor.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+                    <span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
+                    <label for="direccion">Dirección</label>
+                  </article>
+                </section>
+                <!--Row celular y convencional-->
+                <section class="row row-celular-convencional">
+                  <article class="input-field col s6">
+                    <input type="tel" name="celular" id="celular" v-model="benefactor.celular" v-mask="mask_format.telf_celular">
+                    <span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
+                    <label for="celular">Telf. Celular</label>
+                  </article>
+                  <article class="input-field col s6">
+                    <input type="tel" name="convencional" id="convencional" v-model="benefactor.convencional" v-mask="mask_format.telef_convencional">
+                    <span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
+                    <label for="convencional">Telf. Convencional</label>
+                  </article>
+                </section>
+            </fieldset>
+            <fieldset>
+              <legend>Datos Benefactor:</legend>
+              <!--Row valor Contribucion y dia-->
+              <section class="row row-contribucion-dia">
+                <article class="input-field col s6 m4">
+                  <input type="tel" name="valorContribucion" id="valorContribucion" v-model="benefactor.valorContribucion" v-money="money" placeholder="$ 0.00" v-model="valor" v-validate="'required'">
+                  <span v-show="errors.has('valorContribucion')" class="help is-danger">{{ errors.first('valorContribucion') }}</span>
+                  <label for="valorContribucion">Contribución $</label>
+                </article>
+                <article class="input-field col s6 m4">
+                  <input type="tel" name="diaCobro" id="diaCobro" min=1 max=30 v-model="benefactor.diaCobro" v-mask="mask_format.diaCobroMask" v-validate="'required|numeric'">
+                  <span v-show="errors.has('diaCobro')" class="help is-danger">{{ errors.first('diaCobro') }}</span>
+                  <label for="diaCobro">Día de cobro</label>
+                </article>
+                <article class="input-field col s6 m4">
+                  <select id="selectDonacion" name="selectDonacion">
+                    <option value="" disabled selected></option>
+                    <option value="mensual">Mensual</option>
+                    <option value="extraordinario">Extraordinaria</option>
+                  </select>
+                  <label for="selectDonacion">Tipo Donación</label>
+                </article>
+              </section>
+              <!--Row valor Tarjeta de Credito-->
+              <section class="row row-Tarjeta-Credito">
+                <article class="input-field col s8 m3 l3">
+                  <input type="tel" name="tarjetaCredito" id="tarjetaCredito" v-model="benefactor.tarjetaCredito" v-mask="mask_format.credit_card">
+                  <span v-show="errors.has('tarjetaCredito')" class="help is-danger">{{ errors.first('tarjetaCredito') }}</span>
+                  <label for="tarjetaCredito">Tarjeta Crédito</label>
+                </article>
+                <article class="col s4 m3 l1">
+                  <i :class="validarIconoTarjeta()"><span></span></i>
+                </article>
+                <article class="input-field col s12 m3 l4">
+                  <input type="text" name="nombreGestor" id="nombreGestor" v-model="benefactor.nombreGestor">
+                  <span v-show="errors.has('nombreGestor')" class="help is-danger">{{ errors.first('nombreGestor') }}</span>
+                  <label for="nombreGestor">Nombre de gestor</label>
+                </article>
+                <article class="input-field col s12 m3 l4">
+                  <input type="text" name="relacion" id="relacion" v-model="benefactor.relacion" v-validate="'alpha_spaces'">
+                  <span v-show="errors.has('relacion')" class="help is-danger">{{ errors.first('relacion') }}</span>
+                  <label for="relacion">Relación</label>
+                </article>
+              </section>
+              <!--row TextArea Observacion-->
+              <section class="row row-textarea-observacion">
+                <article class="input-field col s12">
+                  <textarea name="observacion" id="observacion" v-model="benefactor.observacion" class="materialize-textarea"></textarea>
+                  <label for="textarea">Observación</label>
+                </article>
+              </section>
+            </fieldset>
+            <!--Botones-->
+            <footer class="row row-botones">
+              <a class="btn waves-effect waves-light btn-cancelar" type="button" name="action" href="/benefactor/"><i class="material-icons left">clear</i>Cancelar<a>
+              <a class="btn waves-effect waves-light pull right orange" type="submit" id="guardar" name="action" @click="validateBeforeSubmit"><i class="material-icons right">send</i>Crear<a>
+            </footer>
+          </form>
+        </main>
+      </section>
+      <!-- Modal Structure -->
+      <section id="modalBenfactorCreado" class="modal">
+        <main class="modal-content">
+          <p class="center-align modal-text">Benefactor creado correctamente.</p>
+        </main>
+        <footer class="modal-footer">
+          <a href="/benefactor/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </footer>
+      </section>
+      <!-- Modal Structure -->
+      <section id="modalBenfactorEditar" class="modal">
+        <main class="modal-content">
+          <p class="center-align modal-text">Benefactor Fue Actualizado correctamente.</p>
+        </main>
+        <footer class="modal-footer">
+          <a href="/benefactores/" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </footer>
+      </section>
+      <!-- Modal Structure -->
+      <section id="modalError" class="modal">
+        <main class="modal-content">
+          <h4 class="center-align">Formulario con errores.</h4>
+          <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+          <p class="center-align">Con el siguiente mensaje de error: </p>
+          <p class="center-align">"{{errorObj.msj}}"</p>
+        </main>
+        <footer class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </footer>
+      </section>
+      <!-- Modal Structure -->
+      <section id="modalErrorAjax" class="modal">
+        <main class="modal-content">
+          <h4 class="center-align">{{errorAjax.titulo}}.</h4>
+          <p class="center-align">"{{errorAjax.descripcion}}"</p>
+        </main>
+        <footer class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </footer>
+      </section>
+    </main>
+    <footer>
+      <% include ../partials/scripts %>
+      <script src="/scripts/moment/moment.js"></script>
+      <script src="/scripts/moment/locale/es.js"></script>
+      <script src="/scripts/vee-validate/dist/vee-validate.min.js"></script>
+      <script src="/build/benefactor/BenefactorScript.min.js"></script>
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js">
+      </script>
+    </footer>
+  </body>
+</html>

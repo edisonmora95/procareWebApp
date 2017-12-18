@@ -78,7 +78,7 @@ app.use(flash());
 app.use('/home', index);
 app.use('/usuarios', usuarios);
 app.use('/procarianos', procarianos);
-app.use('/benefactor', benefactor);
+app.use('/benefactores', benefactor);
 app.use('/asistencias', asistencias);
 app.use('/grupos', grupos);
 app.use('/personal', personal);
@@ -88,7 +88,7 @@ app.use('/', login);
 
 //Rutas de la api
 app.use('/api/procarianos', apiProcarianos);
-app.use('/api/benefactor', apiBenefactor);
+app.use('/api/benefactores', apiBenefactor);
 app.use('/api/etapa', apiEtapa);
 app.use('/api/cargo', apiCargo);
 app.use('/api/login', apiLogin);

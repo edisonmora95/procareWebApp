@@ -10,23 +10,25 @@ let App = new Vue({
 		this.obtenerUsuarioLoggeado(this);
 	},
 	mounted(){
-		let self = this;
-		$('.modal').modal();
-		$('select').material_select();
-		let selectEstado = $('#selectEstado');
-		selectEstado.change( () => {
-			const estadoNuevo = $('#selectEstado option:selected').val();
-			self.cambiarEstado(self.eventoSeleccionado, estadoNuevo);
-		});
-		$('#tareas').hide();
+		this.inicializarMaterialize(this);
 	},
 	data: {
-		tareasEventos: [],
+		tareasEventos     : [],
 		eventoSeleccionado: {},
-		usuario: {},
-		esPersonal: false
+		usuario           : {},
+		esPersonal        : false
 	},
 	methods: {
+		inicializarMaterialize(self){
+			$('.modal').modal();
+			$('select').material_select();
+			let selectEstado = $('#selectEstado');
+			selectEstado.change( () => {
+				const estadoNuevo = $('#selectEstado option:selected').val();
+				self.cambiarEstado(self.eventoSeleccionado, estadoNuevo);
+			});
+			$('#tareas').hide();	
+		},
 		/*
 			@Descripción: 
 				Obtiene la información del usuario logeado. Para armar la navbar de acuerdo con su rol.
@@ -34,14 +36,14 @@ let App = new Vue({
 		obtenerUsuarioLoggeado(self){
 			$.ajax({
 				type: 'GET',
-				url: '/api/login/usuarios',
+				url : '/api/login/usuarios',
 				success(res){
-					self.usuario 		 = res;
-					self.esPersonal  = self.verificarRolDeUsuario('Personal');
-					if( self.esPersonal ){
-						self.obtenerTareasEventos();
+					App.usuario 		 = res;
+					App.esPersonal  = App.verificarRolDeUsuario('Personal');
+					if( App.esPersonal ){
+						App.obtenerTareasEventos();
 					}else{
-						self.obtenerTareasEventosDeUsuario(self, self.usuario.id);
+						App.obtenerTareasEventosDeUsuario(App.usuario.id);
 					}
 				}
 			});
@@ -69,33 +71,32 @@ let App = new Vue({
 		obtenerTareasEventos(){
 			$.ajax({
 				type: 'GET',
-				url: '/api/calendario/',
+				url : '/api/calendario/',
 				success(res){
 					App.tareasEventos = res.datos;
 					App.armarCalendario(App.tareasEventos);
+				},
+				error(err){
+					Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');
 				}
 			});
 		}, 
 		/*
 			@Descripción: Obtiene todas las tareas de la base de datos del usuario loggeado, luego arma el calendario con ellas
 		*/
-		obtenerTareasEventosDeUsuario(self, idPersona){
+		obtenerTareasEventosDeUsuario(idPersona){
 			const urlApi = '/api/calendario/usuario/' + idPersona;
-			console.log(urlApi)
 			$.ajax({
 				type: 'GET',
-				url: urlApi,
+				url : urlApi,
 				success(res){
-					console.log(res)
-					if(res.estado){
-						self.tareasEventos = res.datos;
-						self.armarCalendario(self);
-					}
+					App.tareasEventos = res.datos;
+					App.armarCalendario(App.tareasEventos);
 				},
 				error(err){
 					Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');
 				}
-			})
+			});
 		},
 		armarCalendario(tareasEventos){
 			$('#calendar').fullCalendar({

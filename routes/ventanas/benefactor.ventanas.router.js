@@ -10,22 +10,21 @@
 
 /* jshint node: true */
 'use strict';
-var controladorBenefactor = require('../../controllers/benefactor');
 var express = require('express');
 var router = express.Router();
 
 //Responde con la página de ingreso de benefactor
 router.get('/nuevo', function(req, res) {
-    res.render('benefactor/BenefactorPerfil');
+    res.render('benefactor/ingresarBenefactor');
 });
 
 //Responde con la página de búsqueda de Benefactor
 router.get('/', function(req, res) {
-    res.render('benefactor/Benefactor');
+    res.render('benefactor/buscarBenefactores');
 });
 
 //Responde con la página de búsqueda de Benefactor seleccionado
-router.get('/:id', function(req, res) {
+router.get('/perfil/:id', function(req, res) {
     res.render('benefactor/BenefactorPerfil');
 });
 
