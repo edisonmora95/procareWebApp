@@ -1,0 +1,70 @@
+<div id="app" class="container">
+  <h3 class="title is-3">Vue v1 Search and Pagination</h3>
+  <h5 class="subtitle is-5">
+    credit : 
+    <a href="http://bulma.io/">bulma</a>, 
+    <a href="https://vuejs.org/">vuejs</a>, 
+    <a href="http://chancejs.com/">chancejs</a>, 
+    <a href="http://lodash.com/">lodash</a>
+  </h5>
+  <div class="box m-form">
+    <label class="label">Search Person Name</label>
+    <div class="control is-grouped">
+      <p class="control is-expanded">
+        <input class="input" v-model="searchItem" v-on:keyup="searchInTheList(searchItem)" type="text" placeholder="Find a person">
+        <span class="help is-dark"><strong>{{filteredItems.length | numeral}}</strong> of {{items.length | numeral}} person found</span>
+      </p>
+      <p class="control">
+        <a class="button is-info" v-on:click="clearSearchItem" v-bind:class="{'is-disabled': searchItem==''}">
+          Clear
+        </a>
+      </p>
+    </div>
+  </div>
+  
+  <nav class="pagination m-pagination">
+    <a class="button" v-on:click="selectPage(this.pagination.currentPage-1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">Previous</a>
+    <a class="button" v-on:click="selectPage(this.pagination.currentPage+1)" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">Next page</a>
+    <ul>
+      <!--BOTON ULTIMO-->
+      <li>
+        <a class="button" v-on:click="selectPage(pagination.items[0])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[0] || this.pagination.items.length==0}">
+          First
+        </a>
+      </li>
+
+      <!--BOTONES DE PAGINACION-->
+      <li class="is-space"></li>
+      <li v-for="item in pagination.filteredItems">
+        <a class="button" v-on:click="selectPage(item)" v-bind:class="{'is-info': item == pagination.currentPage}">{{item | numeral}}</a>
+      </li>
+      <li class="is-space"></li>
+      <!--BOTON ULTIMO-->
+      <li>
+        <a class="button" v-on:click="selectPage(pagination.items[pagination.items.length-1])" v-bind:class="{'is-disabled': this.pagination.currentPage==this.pagination.items[this.pagination.items.length-1] || this.pagination.items.length==0}">
+          Last
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="m-table">
+    <table class="table is-bordered is-striped is-narrow">
+      <tr>
+        <th class="m-table-index">#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th></th>
+      </tr>
+      <tr v-for="item in paginatedItems">
+        <td>{{item.key}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.email}}</td>
+        <td>{{item.address}}</td>
+        <td>{{item.phone}}</td>
+        <td><a class="button is-info is-outlined" v-on:click="selectItem(item)">Select</a></td>
+      </tr>
+    </table>
+  </div>
+</div>

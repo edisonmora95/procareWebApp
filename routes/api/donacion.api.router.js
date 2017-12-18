@@ -2,7 +2,7 @@
 	CRUD de Donacion
   
 */
-var controladorDonacion = require('../../controllers/donacion')
+var controladorDonacion = require('../../controllers/donacion.controller')
 var express = require('express');
 var router = express.Router();
 
