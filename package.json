@@ -1,6 +1,6 @@
 {
   "name": "procareapp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "gulp",
@@ -10,7 +10,9 @@
     "test": "node_modules/.bin/mocha ./test/etapa/etapa.test.js || true",
     "mocha-test": "gulp test",
     "istanbul-test": "gulp istanbul",
-    "coveralls": "gulp coveralls"
+    "coveralls": "gulp coveralls",
+    "build-dev" : "gulp build-dev",
+    "build-prod" : "gulp build-prod"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -19,8 +21,6 @@
     "co": "^4.6.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
-    "datatables.net": "^1.10.15",
-    "datatables.net-dt": "^1.10.15",
     "debug": "~2.2.0",
     "ejs": "~2.5.2",
     "express": "~4.14.0",
@@ -28,6 +28,7 @@
     "fullcalendar": "^3.4.0",
     "gulp-forever-monitor": "^1.0.3",
     "jquery": "^3.2.1",
+    "jsonwebtoken": "^8.1.0",
     "materialize-css": "^0.100.1",
     "moment": "^2.18.1",
     "morgan": "~1.7.0",
@@ -44,10 +45,6 @@
     "serve-favicon": "~2.3.0",
     "v-money": "^0.8.0",
     "vee-validate": "^2.0.0-rc.5",
-    "vue-clock-picker": "^0.4.2",
-    "vue-material": "^0.7.1",
-    "vue-materialize-datatable": "^0.6.9",
-    "vue-materials": "^1.0.7-rc.7",
     "vue-router": "^2.7.0",
     "vue-the-mask": "^0.11.0-alpha.2"
   },

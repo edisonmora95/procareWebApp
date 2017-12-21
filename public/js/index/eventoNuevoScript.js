@@ -1,8 +1,6 @@
 'use strict';
-import Materials from 'vue-materials';
 
 Vue.use(VeeValidate);
-Vue.use(Materials);
 
 /*
 	Validaciones. Cambio de mensajes de error

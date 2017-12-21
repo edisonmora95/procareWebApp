@@ -1,25 +1,41 @@
 {
-    "development": {
-        "username": "procare_dev",
-        "password": "procare_sw_2",
-        "database": "procare_db_dev",
-        "host": "127.0.0.1",
-        "dialect": "mariadb",
-        "logging" : false
-    },
-    "test": {
-        "username": "procare_test",
-        "password": "procare_sw_2",
-        "database": "procare_db_test",
-        "host": "127.0.0.1",
-        "dialect": "mariadb",
-        "logging" : false
-    },
-    "production": {
-        "username": "procare_dev",
-        "password": "procare_sw_2",
-        "database": "procare_db_dev",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
+  "development": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
     }
+  },
+  "test": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
+    }
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
+    }
+  }
 }
