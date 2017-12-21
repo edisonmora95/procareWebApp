@@ -38,3 +38,27 @@ li a{
 #ulProcareAccion li a, #ulProcareFormacion li a{
 	padding: 0 15% !important;
 }
+
+#profilePic{
+	width: 150px !important
+}
+
+article.show-image {
+  position: relative;
+  margin: 5px;
+}
+
+article.show-image:hover img {
+  opacity: 0.5;
+}
+
+article.show-image:hover i {
+  display: block;
+  position: relative;
+}
+
+article.show-image i {
+  position: absolute;
+  display: none;
+  top: -85px;
+}

@@ -164,6 +164,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     tipo : {
       type : DataTypes.STRING
+    },
+    imagenUrl : {
+      type      : DataTypes.STRING,
+      allowNull : true
     }
   }, {
     classMethods: {
@@ -245,7 +249,8 @@ module.exports = function(sequelize, DataTypes) {
             celular         : persona.celular,
             trabajo         : persona.trabajo,
             convencional    : persona.convencional,
-            tipo            : persona.tipo
+            tipo            : persona.tipo,
+            imagenUrl       : persona.imagenUrl
           }, { transaction  : transaction })
           .then( persona => {
             return resolve(persona);

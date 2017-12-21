@@ -18,6 +18,16 @@
 							</header>
 							<main class="card-content row">
 								<form class="col s12">
+									<section class="file-field input-field row center-align">
+							      <article class="show-image col s4 offset-s4">
+							        <img id="profilePic" :src="src" class="circle responsive-img">
+							        <i v-if="src=='http://via.placeholder.com/150x150'" class="overlay material-icons">camera_alt</i>
+							        <input type="file" accept="image/x-png,image/jpeg" id="imgInp">
+							        <div class="file-path-wrapper">
+								        <input class="file-path validate" type="text">
+								      </div>
+							      </article>
+							    </section>
 									<!--Row nombres y apellidos-->
 									<section class="row row-nombres-apellidos">
 										<article class="col s6">

@@ -58,6 +58,7 @@ let main = new Vue({
 			msj 	: ''
 		},
 		procariano 			: {
+			imagenUrl       : '',
 			nombres					: '',
 			apellidos				: '',
 			fechaNacimiento : '',
@@ -76,7 +77,7 @@ let main = new Vue({
 			parroquia 			: '',
 			fechaOrdenacion : ''
 		},
-		src: '',
+		src: "http://via.placeholder.com/150x150",
 		gruposObtenidos 		: [],
 		gruposCaminantes 		: [],
 		grupoCaminantesSel 	: '',
@@ -135,6 +136,11 @@ let main = new Vue({
 			$('#selectGrupoPescadores').change( () => {
 				self.grupoPescadoresSel = $('#selectGrupoPescadores option:selected').val();
 			});
+
+			$("#imgInp").change(function() {
+			  readURL(this);
+			});
+			
     },
 		//////////////////////////////////
 		//OBTENER DATOS DE LA BASE
@@ -263,6 +269,7 @@ let main = new Vue({
 		//////////////////////////////////
 		//EVENTOS
 		//////////////////////////////////
+
 		/*
 			@Descripción:
 				* Primero valida la fecha de nacimiento
@@ -275,13 +282,19 @@ let main = new Vue({
 				self.bindGrupoSeleccionado(self, self.procariano.tipo);
 				this.$validator.validateAll().then( (result) => {
 					if( result ){
+						if ( self.src != 'http://via.placeholder.com/150x150') {
+							self.procariano.imagenUrl = self.src;
+						}else{
+							self.procariano.imagenUrl = null;
+						}
 						self.ingresarProcariano(self);
 					}else{
 						console.log(self.errors)
 						self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
 					}
 						        
-	      }).catch( () => {
+	      }).catch( (err) => {
+	      	console.log(err)
 	      	self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
 	      });
 
@@ -367,3 +380,17 @@ $('#fecha-ordenacion').change(function(){
 	var fecha = year + '/' + month + '/' + day;
 	main.$data.procariano.fechaOrdenacion = fecha;
 });
+
+
+function readURL(input) {
+	if (input.files && input.files[0]) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      $('#profilePic').attr('src', e.target.result);
+      main.$data.src = e.target.result;
+    }
+    reader.readAsDataURL(input.files[0]);
+  }else{
+  	 main.$data.src = 'http://via.placeholder.com/150x150';
+  }
+}

@@ -15,7 +15,8 @@
 					<article class="col s12">
 						<section class="card" id="rowVer" v-if="dataFinishedLoading">
 							<header class="card-content">
-								<img src="http://via.placeholder.com/150x150" class="circle responsive-img">
+								<img v-if="procariano.imagenUrl" :src="procariano.imagenUrl" class="circle responsive-img materialboxed ">
+								<img v-else src="http://via.placeholder.com/150x150" class="circle responsive-img">
 							</header>
 							<section class="card-tabs">
 								<ul class="tabs tabs-fixed-width">

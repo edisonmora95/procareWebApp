@@ -17,7 +17,6 @@ const ModeloProcarianoTipo 	= require('../models/').ProcarianoTipo;
 const ModeloTipo 						= require('../models/').Tipo;
 const ModeloGrupo 					= require('../models/').Grupo;
 
-
 /*
 	@Autor : JV
 	@FechaCreacion : 26/06/2017
@@ -30,6 +29,9 @@ const ModeloGrupo 					= require('../models/').Grupo;
 	@Modificado: 21/07/2017 @edisonmora95	promesas y transacciones
 */
 const crearProcariano = (req, res) => {
+	const options       = {
+		public_id : req.body.nombres + ' ' + req.body.apellidos + ' ' + Date.now()
+	};
 	let datos 					= {};
 	let fechaNacimiento = ( req.body.fechaNacimiento === '' ) ? null : new Date(req.body.fechaNacimiento);
 	let persona 				= {
@@ -42,7 +44,8 @@ const crearProcariano = (req, res) => {
 		email 					: req.body.email,
 		celular 				: req.body.celular,
 		trabajo 				: req.body.trabajo,
-		convencional 		: req.body.convencional
+		convencional 		: req.body.convencional,
+		imagenUrl       : null
 	};
 	let fechaOrdenacion = ( req.body.fechaOrdenacion === '' ) ? null : new Date(req.body.fechaOrdenacion);
 	let procariano 			= {
@@ -58,6 +61,10 @@ const crearProcariano = (req, res) => {
 
 	co(function* (){
 		let t 										=	yield inicializarTransaccion();
+		if ( req.body.imagenUrl ) {
+			let imagenUrl							= yield utils.subirImagenCloudinary(req.body.imagenUrl, options);	
+			persona.imagenUrl         = imagenUrl.secure_url;
+		}
 		//Creación de Persona
 		let personaCreada 				=	yield ModeloPersona.crearPersonaT(persona, t);
 		//Creación de Procariano

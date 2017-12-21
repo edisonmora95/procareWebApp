@@ -10,10 +10,25 @@
 var bcrypt = require('bcryptjs');
 var modelo = require('../models');
 var respuestas = require('./respuestas.js');
+const config = require('../config/config.json');
+
+let cloudinary    = require('cloudinary');
+
+cloudinary.config(config[process.env.NODE_ENV].cloudinary);
 
 /*
 EXPORTACIONES
 */
+module.exports.subirImagenCloudinary = function(img, options){
+  return new Promise( (resolve, reject) => {
+    cloudinary.v2.uploader.upload(img, options, function(err, result) { 
+      if ( err ) reject(err);
+      resolve(result);
+    });
+  });
+} 
+
+
 /*
 @Descripcion: genera el hash para la contrasenna, usada para el crear con aleaotorio (ya no se usa)
 @Autor: Jose Viteri
