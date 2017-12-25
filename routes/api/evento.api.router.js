@@ -1,12 +1,17 @@
 /*
 	CRUD de Eventos
 */
-var controladorEvento = require('../../controllers/evento.controller')
+
 var express = require('express');
 var router = express.Router();
+const authApi								= require('../../utils/authentication.api');
+var controladorEvento 			= require('../../controllers/evento.controller');
+
+router.use(authApi.verifyToken);
 
 /**
 	*@api {post} /api/eventos/
+	*@apiPermission usuario personal 
 	*@apiDescription Crea el registro de Evento en la base de datos
 	*@apiGroup Evento
 	*@apiName crearEvento
@@ -19,7 +24,7 @@ var router = express.Router();
 	*@apiParam {Int}		responsable
 	*@apiPermission Personal
 */
-router.post('/', controladorEvento.crearEvento);
+router.post('/', authApi.verifyRol(['Personal', 'Admin']), controladorEvento.crearEvento);
 
 /**
 	*@api {get} /api/eventos/
@@ -33,6 +38,7 @@ router.get('/', controladorEvento.mostrarEventos);
 
 /**
 	*@api {put} /api/eventos/:id
+	*@apiPermission usuario personal 
 	*@apiDescription Edita el registro de Evento en la base de datos
 	*@apiGroup Evento
 	*@apiName editarEvento
@@ -46,10 +52,11 @@ router.get('/', controladorEvento.mostrarEventos);
 	*@apiParam {Int}		responsable
 	*@apiPermission Personal
 */
-router.put('/:id', controladorEvento.editarEvento);
+router.put('/:id', authApi.verifyRol(['Personal', 'Admin']), controladorEvento.editarEvento);
 
 /**
 	*@api {delete} /api/eventos/:id
+	*@apiPermission usuario personal 
 	*@apiDescription Elimina el registro de Evento en la base de datos
 	*@apiGroup Evento
 	*@apiName eliminarEvento
@@ -57,7 +64,7 @@ router.put('/:id', controladorEvento.editarEvento);
 	*@apiParam {Int}		id
 	*@apiPermission Personal
 */
-router.delete('/:id', controladorEvento.eliminarEvento);
+router.delete('/:id', authApi.verifyRol(['Personal', 'Admin']), controladorEvento.eliminarEvento);
 
 router.put('/cambiarEstado/:id', controladorEvento.cambiarEstado);
 

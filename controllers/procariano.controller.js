@@ -187,7 +187,6 @@ const buscarProcarianosActivos = (req, res) => {
 const buscarProcarianoPorId = (req, res) => {
 	const idPersona = req.params.id;
 	let datos 			= {};
-
 	co(function* (){
 		let procariano 		= yield ModeloProcariano.obtenerProcarianoPorIdPersonaP(idPersona);
 		datos.procariano 	= procariano;
@@ -305,12 +304,10 @@ const eliminarProcariano = (req, res) => {
 	co(function* (){
 		let t 							=	yield inicializarTransaccion();
 		const procarianoDel	=	yield ModeloProcariano.eliminarProcarianoT(idPersona, t);
-
-		if( procarianoDel === 1 ){
+		if( procarianoDel[0] === 1 ){
 			//Caso exitoso, se eliminó solo a 1 Procariano
 			const procariano 		= yield ModeloProcariano.obtenerProcarianoPorIdPersonaP(idPersona);
 			const idProcariano 	= procariano.get('id');
-			
 			//Elimino sus registros de tipo
 			const tipoActual 		= yield ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(idProcariano);
 			if( tipoActual != null ){
@@ -326,7 +323,7 @@ const eliminarProcariano = (req, res) => {
 
 			return respuesta.okDelete(res, 'Procariano eliminado.', null);
 
-		}else if( procarianoDel === 0 ){
+		}else if( procarianoDel[0] === 0 ){
 			//Si no se eliminó a ningún Procariano
 			t.rollback();
 			return respuesta.errorDelete(res, 'No hay un procariano con ese Id para eliminar.', null);

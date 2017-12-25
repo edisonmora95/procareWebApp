@@ -25,7 +25,7 @@ let navbarApp = new Vue({
                 type: 'GET',
                 url: '/api/login/usuarios',
                 success(res) {
-                    self.usuario = res;
+                    self.usuario = res.datos;
                     self.formarNavbar();
                     self.generoUsuarioImagen();
                 }
@@ -53,9 +53,12 @@ let navbarApp = new Vue({
             $.ajax({
                 type: 'GET',
                 url: urlApi,
+                headers: {
+                  "x-access-token" : localStorage.getItem('token')
+                },
                 success(res) {
-                    self.procariano = res[0];
-                    self.obtenerGrupoDeAnimador(self, self.procariano.procarianoID);
+                    self.procariano = res.datos;
+                    self.obtenerGrupoDeAnimador(self, self.procariano.id);
                 },
                 error(err) {
                     console.log(err);
@@ -72,6 +75,7 @@ let navbarApp = new Vue({
                 type: 'GET',
                 url: urlApi,
                 success(res) {
+                    console.log(res)
                     self.grupoId = res.datos.GrupoId;
                 },
                 error(err) {

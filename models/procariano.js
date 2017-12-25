@@ -248,6 +248,37 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      obtenerPosiblesAnimadoresP: function(){
+        const Persona = sequelize.import("../models/persona");
+        const Tipo    = sequelize.import("../models/tipo");
+        return new Promise( (resolve, reject) => {
+          return this.findAll({
+            where   : {
+              estado   : 'activo'
+            },
+            include    : [
+              {
+                model : Tipo,
+                where : {
+                  id : { $not : 1}
+                },
+                attributes : [['id', 'tipoId'], 'nombre']
+              },
+              {
+                model : Persona,
+                attributes: [['id', 'personaId'], 'nombres', 'apellidos']
+              }
+            ],
+            attributes : [['id', 'procarianoId']] 
+          })
+          .then( resultado => {
+            resolve(resultado);
+          })
+          .catch( error => {
+            reject(error);
+          });
+        });
+      },
       ///////////////////////////////////////
       //FUNDIONES CON TRANSACCIONES
       ///////////////////////////////////////

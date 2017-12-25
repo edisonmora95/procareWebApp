@@ -9,10 +9,10 @@
 
 const express = require('express');
 const router = express.Router();
-let autenticacion = require('./../../utils/authentication');
 
-//router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+const authViews 	= require('../../utils/authentication.views');
 
+router.use(authViews.usuario)
 /*
 	@Descripción:
 		Responde con la página de ingreso de procarianos
@@ -20,7 +20,7 @@ let autenticacion = require('./../../utils/authentication');
 		Usuario
 		Personal
 */
-router.get('/nuevo',  function(req, res){
+router.get('/nuevo', authViews.verifyRolView(['Personal', 'Admin']), function(req, res){
 	res.render('procariano/ingresarProcariano');
 });
 
@@ -31,7 +31,7 @@ router.get('/nuevo',  function(req, res){
 		Usuario
 		Personal | Director ejecutivo | Director de Procare Formación
 */
-router.get('/', function(req, res) {
+router.get('/', authViews.verifyRolView(['Personal', 'Admin']), function(req, res) {
   res.render('procariano/buscarProcariano');
 });
 
@@ -42,11 +42,18 @@ router.get('/', function(req, res) {
 		Usuario
 		Personal | Director ejecutivo | Director de Procare Formación: solo si es alguien de Procare o PM | Animador: solo si es suyo o de su grupo
 */
-router.get('/perfil/:id', function(req, res){
+router.get('/perfil/:id', authViews.verifyRolView(['Personal', 'Admin']), function(req, res){
 	res.render('procariano/verProcariano');
 });
 
-router.get('/perfil/:id/editar', function(req, res){
+/*
+	@Descripción:
+		Responde con la página de edición de información de Procariano
+	@Permisos:
+		Usuario
+		Personal | Director ejecutivo | Director de Procare Formación: solo si es alguien de Procare o PM | Animador: solo si es suyo o de su grupo
+*/
+router.get('/perfil/:id/editar', authViews.verifyRolView(['Personal', 'Admin']), function(req, res){
 	res.render('procariano/editarProcariano');
 });
 

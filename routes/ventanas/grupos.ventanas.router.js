@@ -1,9 +1,9 @@
 'use strict';
-var express = require('express');
-var router = express.Router();
-let autenticacion = require('./../../utils/authentication');
+const express 		= require('express');
+const router  		= express.Router();
+const authViews 	= require('../../utils/authentication.views');
 
-//router.use(autenticacion.usuario);	//Para todas estas rutas, debe ser un usuario de la aplicación
+router.use(authViews.usuario);
 
 /*
 	@Descripción:
@@ -23,15 +23,21 @@ router.get('/nuevo', function(req, res, next){
 		Usuario
 		Personal | Director ejecutivo | Director de Procare Formación
 */
-router.get('/', function(req, res, next){
+router.get('/', authViews.verifyRolView(['Personal', 'Admin']), function(req, res, next){
 	res.render('grupo/buscarGrupo');
 });
 
+/*
+	@Descripción:
+		Responde con la página de perfil del grupo
+	@Permisos:
+		Usuario
+*/
 router.get('/:id', function(req, res, next){
 	res.render('grupo/verGrupo');
 });
 
-router.get('/:id/editar', function(req, res, next){
+router.get('/:id/editar', authViews.verifyRolView(['Personal', 'Admin']), function(req, res, next){
 	res.render('grupo/editarGrupo');
 });
 

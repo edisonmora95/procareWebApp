@@ -1,6 +1,8 @@
 /* jshint node: true */
 'use strict';
 
+const config = require('./config/config.json');
+
 let express       = require('express');
 let path          = require('path');
 let favicon       = require('serve-favicon');
@@ -19,7 +21,7 @@ const cambioContrasenna   = require('./routes/ventanas/cambioContrasenna.ventana
 const donacion            = require('./routes/ventanas/donacion.ventanas.router');
 const grupos              = require('./routes/ventanas/grupos.ventanas.router');
 const index               = require('./routes/ventanas/index.ventanas.router');
-const login               = require('./routes/ventanas/login.router');
+const login               = require('./routes/ventanas/login.ventanas.router');
 const perderContrasenna   = require('./routes/ventanas/perderContrasenna.ventanas.router');
 const personal            = require('./routes/ventanas/personal.ventanas.router');
 const procarianos         = require('./routes/ventanas/procarianos.ventanas.router');
@@ -51,22 +53,24 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 //BODY PARSER
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({
     extended: false,
-    limit: '50mb'
+    limit   : '10mb'
 }));
+
 app.use(cookieParser());
+
+//RUTAS PARA USAR EN <SCRIPT> TAGS
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
-// Express Session
 
+// Express Session
+const express_session_secret = config[process.env.NODE_ENV].secretP;
 app.use(session({
-    secret: 'Ya_ya_posi_Posi',
+    secret: express_session_secret,
     saveUninitialized: true,
     resave: true
 }));
@@ -118,15 +122,29 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+// ERROR HANDLERS
 
-    // render the error page
+// DEVELOPMENT error handler
+// will print stacktrace
+if ( process.env.NODE_ENV === 'development' ) {
+  app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error');
+    res.render('error', {
+      message: err.message,
+      error  : err
+    });
+  });
+}
+
+
+// PRODUCTION error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error  : {}
+    });
 });
 
 module.exports = app;

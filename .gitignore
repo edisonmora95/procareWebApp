@@ -5,3 +5,4 @@ npm-debug.log
 /public/dist/*
 DatosFalsosBase.json
 .idea/*
+/config/config.json

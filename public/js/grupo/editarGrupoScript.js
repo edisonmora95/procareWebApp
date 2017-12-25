@@ -54,7 +54,7 @@ let App = new Vue({
 				type: 'GET',
 				url: '/api/login/usuarios',
 				success(res){
-					App.usuario = res;
+					App.usuario = res.datos;
 				}
 			});
 		},
@@ -68,6 +68,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url : '/api/grupos/' + idGrupo,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.grupo 								 = res.datos.grupo;
 					self.grupo.animadorAntiguo = res.datos.procarianoAnimador.procarianoId;
@@ -92,6 +95,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url : '/api/etapa/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.etapas							= res.datos;
 					self.armarSelect(self.etapas, '#selectEtapa', self.grupo.etapaAntigua);
@@ -107,7 +113,10 @@ let App = new Vue({
 		obtenerAnimadores(self){
 			$.ajax({
 				type: 'GET',
-				url: '/api/animadores/',
+				url: '/api/animadores/posibles',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.animadores = self.armarArrayAnimadores(res.datos);
 					self.armarSelect(self.animadores, '#selectAnimador', self.grupo.animadorAntiguo);
@@ -122,7 +131,10 @@ let App = new Vue({
 		obtenerChicosFormacion(self){
 			$.ajax({
 				type: 'GET',
-				url: '/api/procarianos/formacion',
+				url: '/api/procarianos/formacion/sinGrupo',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.sinGrupo = self.armarArraySinGrupo(res.datos);	
 				}
@@ -132,6 +144,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'POST',
 				url : '/api/pg/anadir',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: data,
 				success(res){
 					Materialize.toast('Procariano añadido a grupo', 2000, 'rounded');
@@ -149,6 +164,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'PUT',
 				url : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: {
 					idGrupo: App.grupo.id
 				},
@@ -167,6 +185,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'PUT',
 				url : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: grupo,
 				success(res){
 					Materialize.toast(res.mensaje, 4000);

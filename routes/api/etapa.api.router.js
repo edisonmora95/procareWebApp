@@ -1,21 +1,53 @@
 /*
 	CRUD de Etapas
 */
-var controladorEtapa = require('../../controllers/etapa.controller')
-var express = require('express');
-var router = express.Router();
+const controladorEtapa = require('../../controllers/etapa.controller')
+const authApi	  		   = require('../../utils/authentication.api'); 
+const express = require('express');
+const router  = express.Router();
 
-//Crear las etapas
-router.post('/nuevo', controladorEtapa.crearEtapa);
 
-//Ver las etapas
-router.get('/', controladorEtapa.mostrarEtapa);
+router.use(authApi.verifyToken);
 
-//Modificar una etapa
-router.put('/:id', controladorEtapa.editarEtapa);
+/*
+	*@api {post} /api/etapa/
+	*@apiDescription Crea el registro de Etapa en la base de datos
+	*@apiGroup Etapa
+	*@apiName crearEtapa
+	*@apiversion 0.2.0
+	*@apiPermission Usuario | Admin
+*/
+router.post('/nuevo', authApi.verifyRol(['Admin']), controladorEtapa.crearEtapa);
 
-//Eliminar una etapa
-router.delete('/:id', controladorEtapa.eliminarEtapa);
+/*
+	*@api {get} /api/etapa/
+	*@apiDescription Obtiene todas las etapas de la base de datos
+	*@apiGroup Etapa
+	*@apiName mostrarEtapa
+	*@apiversion 0.2.0
+	*@apiPermission Usuario | Admin | Personal
+*/
+router.get('/', authApi.verifyRol(['Personal']), controladorEtapa.mostrarEtapa);
+
+/*
+	*@api {put} /api/etapa/
+	*@apiDescription Modifica el registro de Etapa en la base de datos
+	*@apiGroup Etapa
+	*@apiName editarEtapa
+	*@apiversion 0.2.0
+	*@apiPermission Usuario | Admin
+*/
+router.put('/:id', authApi.verifyRol(['Admin']), controladorEtapa.editarEtapa);
+
+/*
+	*@api {delete} /api/etapa/
+	*@apiDescription Elimina el registro de Etapa en la base de datos
+	*@apiGroup Etapa
+	*@apiName eliminarEtapa
+	*@apiversion 0.2.0
+	*@apiPermission Usuario | Admin
+*/
+router.delete('/:id', authApi.verifyRol(['Admin']), controladorEtapa.eliminarEtapa);
 
 //Asignar etapa
 router.post('/asignar', controladorEtapa.asignarEtapa);

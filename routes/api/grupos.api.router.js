@@ -1,6 +1,9 @@
 var controladorGrupo = require('../../controllers/grupo.controller');
+const authApi	  		 = require('../../utils/authentication.api'); 
 var express = require('express');
 var router = express.Router();
+
+router.use(authApi.verifyToken);
 
 /*
 	*@api {post} /api/grupos/
@@ -14,19 +17,20 @@ var router = express.Router();
 	*@apiParam {Int}    numeroReuniones
 	*@apiParam {Int} 		etapa
 	*@apiParam {Int}		animador
-	*@apiPermission Personal
+	*@apiPermission Usuario | Personal | Admin
 */
-router.post('/', controladorGrupo.crearGrupo);
+router.post('/', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.crearGrupo);
 
 /*
 	*@api {get} /api/grupos/
+	*@apiPermission Usuario | Personal | Admin
 	*@apiDescription Devuelve todos los grupos de la base de datos. Con su etapa.
 	*@apiGroup Grupo
 	*@apiName mostrarGrupos
 	*@apiversion 0.1.2
 	*@apiSuccess {Object[]} grupos lista de todos las grupos
 */
-router.get('/', controladorGrupo.mostrarGrupos);
+router.get('/', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.mostrarGrupos);
 
 /*
 	*@api {get} /api/grupos/:id_grupo
@@ -59,7 +63,7 @@ router.get('/:id_grupo', controladorGrupo.obtenerGrupoPorId);
 	*@apiParam {Int}		animador
 	*@apiPermission Personal
 */
-router.put('/:id_grupo', controladorGrupo.editarGrupo);
+router.put('/:id_grupo', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.editarGrupo);
 
 /*
 	*@api {delete} /api/grupos/:id
@@ -70,6 +74,6 @@ router.put('/:id_grupo', controladorGrupo.editarGrupo);
 	*@apiParam {Int}		id
 	*@apiPermission Personal
 */
-router.delete('/:id', controladorGrupo.eliminarGrupo);
+router.delete('/:id', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.eliminarGrupo);
 
 module.exports = router;

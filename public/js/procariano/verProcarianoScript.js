@@ -57,6 +57,9 @@ let app = new Vue({
 			$.ajax({
 				type 	 : 'GET',
 				url 	 : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success: function(res){
 					self.asignarValoresObtenidos(self, res);
 				}
@@ -83,23 +86,21 @@ let app = new Vue({
 			self.dataFinishedLoading 	= true;
 		},
 		eliminar(){
-			console.log('entra en eliminar');
-			var self = this;
-			var urlApi= '/api/procarianos/' + self.idProcariano;
+			var self   = this;
+			var urlApi = '/api/procarianos/' + self.idProcariano;
 			$.ajax({
-				type: 'DELETE',
-				url: urlApi,
+				type   : 'DELETE',
+				url    : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success: function(res){
 					console.log(res);
-					if (res.status) {
-						self.procariano.estado = 'inactivo';
-						console.log('');
-						$('#modalExitoEliminar').modal('open');
-					}else{
-						$('#modalErrorEliminar').modal('open');
-					}
+					self.procariano.estado = 'inactivo';
+					$('#modalExitoEliminar').modal('open');
 				},
 				error : function(error){
+					console.log(error)
 					$('#modalErrorEliminar').modal('open');
 				}
 			});

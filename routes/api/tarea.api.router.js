@@ -1,12 +1,17 @@
 /*
 	CRUD de Tareas
 */
-var controladorTarea = require('../../controllers/tarea')
+
 var express = require('express');
 var router = express.Router();
+const controladorTarea 			= require('../../controllers/tarea')
+const authApi								= require('../../utils/authentication.api');
+
+router.use(authApi.verifyToken);
 
 /**
 	*@api {post} /api/tareas/
+	*@apiPermission usuario personal 
 	*@apiDescription Crea el registro de Tarea en la base de datos
 	*@apiGroup Tarea
 	*@apiName crearTarea
@@ -22,10 +27,11 @@ var router = express.Router();
 	*@apiParam {Int}		responsable
 	*@apiPermission Personal
 */
-router.post('/', controladorTarea.crearTarea);
+router.post('/', authApi.verifyRol(['Personal', 'Admin']), controladorTarea.crearTarea);
 
 /**
 	*@api {put} /api/tareas/:id
+	*@apiPermission usuario personal 
 	*@apiDescription Edita una tarea existente en la base de datos
 	*@apiGroup Tarea
 	*@apiName editarTarea
@@ -42,10 +48,11 @@ router.post('/', controladorTarea.crearTarea);
 	*@apiParam {Int}		responsable
 	*@apiPermission Personal
 */
-router.put('/:id', controladorTarea.editarTarea);
+router.put('/:id',  authApi.verifyRol(['Personal', 'Admin']), controladorTarea.editarTarea);
 
 /**
 	*@api {delete} /api/tareas/:id
+	*@apiPermission usuario personal 
 	*@apiDescription Elimina el registro de Tarea en la base de datos
 	*@apiGroup Tarea
 	*@apiName eliminarTarea
@@ -53,7 +60,7 @@ router.put('/:id', controladorTarea.editarTarea);
 	*@apiParam {Int}		id
 	*@apiPermission Personal
 */
-router.delete('/:id', controladorTarea.eliminarTarea);
+router.delete('/:id',  authApi.verifyRol(['Personal', 'Admin']), controladorTarea.eliminarTarea);
 
 /**
 	*@api {get} /api/tareas/

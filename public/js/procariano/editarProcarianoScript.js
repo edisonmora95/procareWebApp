@@ -100,8 +100,11 @@ let editarApp = new Vue({
 		obtenerProcarianoPorId(self, id){
 			const urlApi = '/api/procarianos/' + id;
 			$.ajax({
-				type: 'GET',
-				url : urlApi,
+				type   : 'GET',
+				url    : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.asignarValoresObtenidos(self, res);
 					self.obtenerTodosLosGrupos(self);
@@ -118,6 +121,9 @@ let editarApp = new Vue({
     	$.ajax({
     		type  : 'GET',
     		url 	: '/api/grupos/',
+    		headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
     		success(res){
     			if( res.estado ){
     				self.gruposObtenidos = res.datos;
@@ -141,6 +147,9 @@ let editarApp = new Vue({
     	$.ajax({
     		type : 'GET',
     		url  : '/api/tipo/',
+    		headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
     		success(res){
     			self.tiposObtenidos = res.datos;
     			self.initTipos(self, self.tiposObtenidos);
@@ -156,6 +165,9 @@ let editarApp = new Vue({
     		url: urlApi,
     		type: 'PUT',
     		data: data,
+    		headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
     		success(res){
     			Materialize.toast('Procariano cambiado de grupo', 3000, 'rounded');
     		},

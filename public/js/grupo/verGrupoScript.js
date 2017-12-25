@@ -36,7 +36,8 @@ let App = new Vue({
 				type: 'GET',
 				url: '/api/login/usuarios',
 				success(res){
-					self.usuario = res;
+					console.log(res)
+					self.usuario = res.datos;
 					let usuarioEsPersonal = self.verificarTipoUsuario(self, 'Personal');
 					if(usuarioEsPersonal){
 						self.puedeEditar = true;
@@ -50,6 +51,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url : '/api/grupos/' + self.idGrupo,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					console.log(res)
 					self.grupo 						= res.datos.grupo;

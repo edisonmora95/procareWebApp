@@ -83,6 +83,9 @@ let tareaApp = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: urlAPi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.procarianos = res.datos;
 				}
@@ -94,6 +97,9 @@ let tareaApp = new Vue({
 				type: 'POST',
 				url: urlApi,
 				data: tarea,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					$('#modalTareaCreada').modal('open');
 				},

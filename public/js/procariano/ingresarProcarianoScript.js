@@ -153,8 +153,11 @@ let main = new Vue({
     */
     obtenerTodosLosGrupos(self){
     	$.ajax({
-    		type  : 'GET',
-    		url 	: '/api/grupos/',
+    		type   : 'GET',
+    		url 	 : '/api/grupos/',
+    		headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
     		success(res){
     			if( res.estado ){
     				self.gruposObtenidos = res.datos;
@@ -165,7 +168,7 @@ let main = new Vue({
     		},
     		error(err){
     			console.log(err);
-    			self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor para obtener los grupos. Intente nuevamente.');
+    			self.mostrarMensajeDeErrorAjax(self, 'Usuario no autorizado', err.responseJSON.mensaje);
     		}
     	});
     },
@@ -176,14 +179,17 @@ let main = new Vue({
     */
     obtenerTiposProcariano(self){
     	$.ajax({
-    		type : 'GET',
-    		url  : '/api/tipo/',
+    		type   : 'GET',
+    		url    : '/api/tipo/',
+    		headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
     		success(res){
     			self.armarSelect(self, res.datos, '#selectTipo');
     		},
     		error(err){
     			console.log(err);
-    			self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+    			self.mostrarMensajeDeErrorAjax(self, 'Usuario no autorizado', err.responseJSON.mensaje);
     		}
     	});
     },
@@ -337,9 +343,12 @@ let main = new Vue({
     ingresarProcariano(self){
     	let urlApi = '/api/procarianos/';
     	$.ajax({
-      	type	:'POST',
-      	url 	: urlApi,
-      	data	: self.procariano,
+      	type	 :'POST',
+      	url 	 : urlApi,
+      	data	 : self.procariano,
+      	headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
       	success: function(res){
       		if(res.estado){
       			$('#modalProcarianoCreado').modal('open');
@@ -349,7 +358,7 @@ let main = new Vue({
       	},
       	error: function(err){
       		console.log(err);
-      		self.mostrarMensajeDeErrorAjax(self, 'Error de conexión', 'No se pudo conectar con el servidor. Intente nuevamente.');
+      		self.mostrarMensajeDeErrorAjax(self, 'Usuario no autorizado', err.responseJSON.mensaje);
       	}
       });
     },

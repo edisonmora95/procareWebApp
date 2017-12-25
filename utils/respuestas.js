@@ -51,3 +51,29 @@ module.exports.errorUpdate = (res, mensaje) => {
 		mensaje: mensaje
 	});
 };
+
+/*
+	Responde con un estado 403 de acceso restringido
+*/
+module.exports.apiAuthError = (res, mensaje) => {
+	return res.status(403).json({
+		estado : false,
+		mensaje : mensaje
+	});
+};
+
+/*
+	Redirige a la ventana de error
+*/
+module.exports.viewsUnauthorized = (res) => {
+	res.status(403);
+	return res.render('error/noAutorizado');
+};
+
+module.exports.serverError = (res, mensaje, error) => {
+	return res.status(500).json({
+		estado  : false,
+		mensaje : mensaje,
+		error   : error
+	});
+};

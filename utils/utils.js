@@ -1,23 +1,34 @@
 /*
-@Descripcion: utils, lugar donde existen las funciones que estandarizan el codigo
-@Autor: Jose Viteri
-@FechaCreacion: 20/05/2017
-@UltimaEdicion: 05/06/2017 (agregado generarJsonProcariano)
+    @Descripcion: utils, lugar donde existen las funciones que estandarizan el codigo
+    @Autor: Jose Viteri
+    @FechaCreacion: 20/05/2017
+    @UltimaEdicion: 05/06/2017 (agregado generarJsonProcariano)
 */
+'use strict';
 
+const bcrypt        = require('bcryptjs');
+const cloudinary    = require('cloudinary');
 
-
-var bcrypt = require('bcryptjs');
-var modelo = require('../models');
-var respuestas = require('./respuestas.js');
-const config = require('../config/config.json');
-
-let cloudinary    = require('cloudinary');
+let respuestas      = require('./respuestas.js');
+const config        = require('../config/config.json');
+const modelo        = require('../models');
+const ModeloPersona = require('../models').Persona;
 
 cloudinary.config(config[process.env.NODE_ENV].cloudinary);
 
 /*
 EXPORTACIONES
+*/
+/*
+  @Descripcion: Sube la imagen al album en Cloudinary
+  @Params:
+    img -> imagen (url, path, base64)
+    options -> json con las opciones posibles. Revisar documentación de Cloudinary
+  @FechaCreación: 20/12/2017
+  @Return:
+    Promise
+      err -> Error de cloudinary
+      result -> json de la imagen subida con su url
 */
 module.exports.subirImagenCloudinary = function(img, options){
   return new Promise( (resolve, reject) => {
@@ -28,7 +39,15 @@ module.exports.subirImagenCloudinary = function(img, options){
   });
 } 
 
-
+/*
+  @Descripcion: Asigna al req los roles que serán permitidos para usar la ruta indicada
+*/
+module.exports.aisgnarRolesPermitidos = function(arrayRoles) {
+  return function(req, res, next){
+    req.rolesPermitidos = arrayRoles;
+    next();  
+  }
+};
 /*
 @Descripcion: genera el hash para la contrasenna, usada para el crear con aleaotorio (ya no se usa)
 @Autor: Jose Viteri

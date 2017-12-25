@@ -20,7 +20,7 @@ const dictionary = {
 };
 VeeValidate.Validator.updateDictionary(dictionary);
 
-let GrupoApp = new Vue({
+let vm = new Vue({
 	el: '#app',
 	created(){
 		this.obtenerEtapas(this);
@@ -49,7 +49,11 @@ let GrupoApp = new Vue({
 		sinGrupo    : [],
 		conGrupo		: [],
 		integrantes	: [],
-		mensajeError: ''
+		mensajeError: '',
+		errorAjax   : {
+			header : '',
+			content: '',
+		},
 	},
 	methods: {
 		/*
@@ -74,18 +78,27 @@ let GrupoApp = new Vue({
 		//////////////////////////////////
 		/*
 			@Descripción: Obtiene todas las etapas de la base de datos y las añade al aray para mostrarlas en el <select>
+			@UltimaModificacion:
+				25/12/2017	@edisonmora95	Añadido token al header
 		*/
 		obtenerEtapas(self){
 			$.ajax({
-				type: 'GET',
-				url : '/api/etapa/',
+				type   : 'GET',
+				url    : '/api/etapa/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					if( res.estado ){
-						self.etapasGrupo = res.datos;
-						self.armarSelect(self, self.etapasGrupo, '#selectEtapa')
+					self.etapasGrupo = res.datos;
+					self.armarSelect(self, self.etapasGrupo, '#selectEtapa');
+				},
+				error(err){
+					if( err.status === 403 ){
+						vm.error404(err.responseJSON.mensaje);
 					}else{
-						alert('Error al buscar etapas en la base de datos');
+						Materialize.toast('No se pudieron obtener las etapas', 4000, 'rounded error');	
 					}
+					console.log(err)
 				}
 			});
 		},
@@ -93,15 +106,26 @@ let GrupoApp = new Vue({
 			@Descripción:
 				Obtiene a todos los procarianos que pueden ser animadores de la base de datos.
 				A partir de eso, se arma el array para mostrar a los animadores en el select
+			@UltimaModificacion:
+				25/12/2017	@edisonmora95	Añadido token al header
 		*/
 		obtenerPosiblesAnimadores(self){
 			$.ajax({
-				type: 'GET',
-				url : '/api/animadores/',
+				type   : 'GET',
+				url    : '/api/animadores/posibles',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					if( res.status ){
-						self.armarArrayAnimadores(self, res.datos);
+					self.armarArrayAnimadores(self, res.datos);
+				},
+				error(err){
+					if( err.status === 403 ){
+						vm.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener los posibles animadores', 4000, 'rounded error');	
 					}
+					console.log(err)
 				}
 			});
 		},
@@ -109,6 +133,9 @@ let GrupoApp = new Vue({
 			$.ajax({
 				type: 'POST',
 				url : '/api/grupos/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: grupo,
 				success(res){
 					if( res.estado ){
@@ -123,11 +150,19 @@ let GrupoApp = new Vue({
 				}
 			});
 		},
+		/*
+			@UltimaModificacion:
+				25/12/2017	@edisonmora95	Añadido token al header
+		*/
 		obtenerChicosFormacion(self){
 			$.ajax({
-				type: 'GET',
-				url: '/api/procarianos/formacion',
+				type   : 'GET',
+				url    : '/api/procarianos/formacion/sinGrupo',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
+					console.log(res)
 					self.armarArraySinGrupo(self, res.datos);
 				},
 				error(err){
@@ -139,6 +174,9 @@ let GrupoApp = new Vue({
 			$.ajax({
 				type: 'POST',
 				url : '/api/pg/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: { integrantes: JSON.stringify(self.integrantes) },
 				success(res){
 					console.log(res)
@@ -206,6 +244,14 @@ let GrupoApp = new Vue({
 			let nombreProcariano = self.buscarProcariano(self, idProcarianoError);
 			self.mensajeError = 'No se puede ingresar a los procarianos porque ' + nombreProcariano + ' pertenece a otro grupo';
 		},
+		/*
+			@Descripcion: Activa el modal de error Ajax
+		*/
+		error404(mensaje){
+    	vm.errorAjax.header = 'Usuario no autorizado';
+			vm.errorAjax.content=  mensaje;	
+			$('#modalAjax').modal('open');
+    },
 		//////////////////////////////////
 		//EVENTOS
 		//////////////////////////////////

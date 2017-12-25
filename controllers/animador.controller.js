@@ -1,5 +1,6 @@
 var modelo = require('../models');
-const respuesta = require('../utils/respuestas');
+const respuesta        = require('../utils/respuestas');
+const ModeloProcariano = require('../models/').Procariano;
 
 const crearAnimadorAPartirDeProcariano = (procarianoId,fechaInicio,fechaFin) => {
 	modelo.Animador.create({
@@ -83,26 +84,14 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 	@Descripción:
 		Devuelve a todos los procarianos que no sean Chico de Formación
 */
-module.exports.mostrarProcarianosPosiblesAnimadores = (req,res,next) => {
-	modelo.Procariano.findAll({
-		include: [
-			{
-				model: modelo.Tipo,	
-				where: {id: { $not: 1 }},
-				attributes: [['id', 'tipoId'], 'nombre']
-			},
-			{
-				model: modelo.Persona,
-				attributes: [['id', 'personaId'], 'nombres', 'apellidos']
-			}
-		],
-		where:{estado: {$not: 'inactivo'}},
-		attributes: [['id', 'procarianoId']]
-	}).then( result => {
-		return res.status(200).json({status: true, datos: result, mensaje: 'Se pudieron obtener los posibles animadores'});
-	}).catch( error => {
-		return res.status(400).json({status: false, datos: error, mensaje: 'Error en el query'});
-	});
+module.exports.posiblesAnimadores = (req,res,next) => {
+	ModeloProcariano.obtenerPosiblesAnimadoresP()
+	.then( resutado => {
+		return respuesta.okGet(res, 'Búsqueda exitosa', resutado);
+	})
+	.catch( error => {
+		return respuesta.serverError(res, 'Error en la búsqueda', error);
+	})
 }
 
 module.exports.obtenerGrupoDeAnimador = (req, res, next) => {

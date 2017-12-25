@@ -1,15 +1,27 @@
 /*
 	CRUD de Tipo
 */
-var controladorTipo = require('../../controllers/tipo.controller')
-var express = require('express');
-var router = express.Router();
+
+const authApi	  		  = require('../../utils/authentication.api');
+const controladorTipo = require('../../controllers/tipo.controller')
+const express         = require('express');
+const router          = express.Router();
+
+router.use(authApi.verifyToken);
 
 //Post de la etapa
 router.post('/nuevo', controladorTipo.crearTipo);
 
-//Obtiene todos los tipos de procariano de la base de datos
-router.get('/', controladorTipo.mostrarTipo);
+/*
+	*@api {get} /api/tipo/
+	*@apiPermission Usuario | Personal | Admin
+	*@apiDescription Devuelve todos los tipos de la base de datos
+	*@apiGroup Tipo
+	*@apiName mostrarTipo
+	*@apiversion 0.2.0
+	*@apiSuccess {Object[]} tipos lista de todos las tipos
+*/
+router.get('/', authApi.verifyRol(['Personal']), controladorTipo.mostrarTipo);
 
 //Update etapa
 router.put('/:id', controladorTipo.editarTipo);

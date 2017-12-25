@@ -1,18 +1,47 @@
+const respuesta = require('./respuestas');
+
 /*
 	@Descripción: 
 		Verifica si el usuario que quiere acceder a la ruta es un usuario de la aplicación
 		Si es, lo deja pasar
 		Si no es, lo redirige al login
 */
-let usuario = (req, res, next) => {
+const usuario = (req, res, next) => {
 	if(!req.user){
-		console.log('No se ha loggeado')
 		res.redirect('/');
 	}else{
-		console.log('Es un usuario de la aplicación')
 		next();
 	}
 };
+
+/*
+	Verifica si el rol del usuario loggeado le permite entrar a la ventana que quiere.
+	Los roles del usuario los saca de la session.
+	@Params:
+		arrayRoles : Array de los roles permitidos para la ventana que quiere entrar
+
+*/
+const verifyRolView = (arrayRoles) => {
+	return 	(req, res, next) => {
+		let flag    = false;
+		const roles = req.user[0].get('Rols');
+		//Busca si el usuario tiene uno de los roles permitidos para la ventana
+		for (let i = 0; i < roles.length; i++) {
+			let nombreRol = roles[i].get('nombre');
+			if ( arrayRoles.indexOf(nombreRol) > -1 ) {
+				flag = true;
+				break;
+			}
+		}
+		
+		if ( flag ) {
+			next();
+		} else {
+			return respuesta.viewsUnauthorized(res);
+		}
+
+	}
+}
 
 /*
 	@Descripción: 
@@ -21,7 +50,7 @@ let usuario = (req, res, next) => {
 		Si es, lo deja pasar
 		Si no es, lo redirige al login
 */
-let personal = (req, res, next) => {
+const personal = (req, res, next) => {
 	let flag = false;
 
 	if( esUsuario(req) ){
@@ -60,5 +89,6 @@ function esUsuario(req){
 
 module.exports = {
 	usuario,
-	personal
+	personal,
+	verifyRolView
 };

@@ -16,7 +16,11 @@ let App = new Vue({
 		tareasEventos     : [],
 		eventoSeleccionado: {},
 		usuario           : {},
-		esPersonal        : false
+		esPersonal        : false,
+		errorAjax         : {
+			header : '',
+			content: '',
+		},
 	},
 	methods: {
 		inicializarMaterialize(self){
@@ -38,13 +42,16 @@ let App = new Vue({
 				type: 'GET',
 				url : '/api/login/usuarios',
 				success(res){
-					App.usuario 		 = res;
+					App.usuario 		 = res.datos;
 					App.esPersonal  = App.verificarRolDeUsuario('Personal');
 					if( App.esPersonal ){
 						App.obtenerTareasEventos();
 					}else{
 						App.obtenerTareasEventosDeUsuario(App.usuario.id);
 					}
+				},
+				error(err){
+					console.log(err)
 				}
 			});
 		},
@@ -70,14 +77,22 @@ let App = new Vue({
 		*/
 		obtenerTareasEventos(){
 			$.ajax({
-				type: 'GET',
-				url : '/api/calendario/',
+				type   : 'GET',
+				url    : '/api/calendario/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					App.tareasEventos = res.datos;
 					App.armarCalendario(App.tareasEventos);
 				},
 				error(err){
-					Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');
+					if( err.status === 403 ){
+						App.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');	
+					}
+					console.log(err)
 				}
 			});
 		}, 
@@ -87,14 +102,21 @@ let App = new Vue({
 		obtenerTareasEventosDeUsuario(idPersona){
 			const urlApi = '/api/calendario/usuario/' + idPersona;
 			$.ajax({
-				type: 'GET',
-				url : urlApi,
+				type   : 'GET',
+				url    : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					App.tareasEventos = res.datos;
 					App.armarCalendario(App.tareasEventos);
 				},
 				error(err){
-					Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');
+					if( err.status === 403 ){
+						App.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');	
+					}
 				}
 			});
 		},
@@ -208,6 +230,11 @@ let App = new Vue({
       } else if (eventoCompletado) {
         elemento.addClass('completado');
       }
-    }
+    },
+    error404(mensaje){
+    	App.errorAjax.header = 'Usuario no autorizado';
+			App.errorAjax.content=  mensaje;	
+			$('#modalAjax').modal('open');
+    },
   }
 });

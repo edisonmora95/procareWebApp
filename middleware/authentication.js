@@ -8,7 +8,6 @@ const jwt           = require('jsonwebtoken');
 const authenticate = (req, res, next) => {
 	const correo   = req.body.correo;
 	const password = req.body.password;
-
 	co(function* (){
 		//Primero se verifica si el correo existe en la base
 		let persona = yield ModeloPersona.buscarPersonaPorEmailP(correo);
@@ -23,12 +22,12 @@ const authenticate = (req, res, next) => {
 		let roles           = yield ModeloPersona.obtenerRolesP(persona.get('id'));
 		const rolesActuales = obtenerRolesActuales(roles);
 		//Genero el token
-		const payload = { roles : rolesActuales	};
+		const payload = { 
+			roles : rolesActuales	,
+			id    : persona.get('id')
+		};
 		const secret  = config[process.env.NODE_ENV].secret;
 		const token   = jwt.sign(payload, secret);
-
-		req.token = token;
-		
 		res.send({
       success: true,
       token  : token,
@@ -39,6 +38,39 @@ const authenticate = (req, res, next) => {
 	});
 };
 
+const verifyToken = (req, res, next) => {
+	const token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+	if( !token ){
+		return respuesta.authError(res, 'Token no enviado');
+	}
+	
+	const secret  = config[process.env.NODE_ENV].secret;
+	jwt.verify(token, secret, (err, decoded) => {
+		if ( err ) {
+			return respuesta.authError(res, 'Token inválido');
+		}
+		req.decoded = decoded;
+		next();
+	});
+};
+
+const verifyRol = (req, res, next) => {
+	let flag    = false;
+	const roles = req.decoded.roles;
+	for (let i = 0; i < roles.length; i++) {
+		if ( req.rolesPermitidos.indexOf(roles[i]) > -1 ) {
+			flag = true;
+			break;
+		}
+	}
+	req.rolesPermitidos = null;
+	if ( flag ) {
+		next();
+	} else {
+		return respuesta.authError(res, 'Usuario no autorizado');	
+	}
+};
 
 function obtenerRolesActuales(arrayRoles){
 	let array = [];
@@ -53,4 +85,6 @@ function obtenerRolesActuales(arrayRoles){
 
 module.exports = {
 	authenticate,
+	verifyToken,
+	verifyRol,
 }

@@ -232,6 +232,42 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      buscarPersonaPorEmailP: function(email){
+        return new Promise( (resolve, reject) => {
+          return this.findOne({
+            where : {
+              email : email
+            }
+          })
+          .then( persona => {
+            return resolve(persona);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      obtenerRolesP: function(idPersona){
+        const Rol = sequelize.import("../models/rol");
+        return new Promise( (resolve, reject) => {
+          return this.findOne({
+            where : {
+              id : idPersona
+            },
+            include : [
+              {
+                model : Rol
+              }
+            ]
+          })
+          .then( persona => {
+            return resolve(persona.Rols);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
       ///////////////////////////////////////
       //FUNCIONES CON TRANSACCIONES
       ///////////////////////////////////////

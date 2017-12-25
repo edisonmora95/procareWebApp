@@ -81,6 +81,9 @@ let eventoApp = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: urlAPi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.procarianos = res.datos;
 				}
@@ -92,6 +95,9 @@ let eventoApp = new Vue({
 				type: 'POST',
 				url: urlApi,
 				data: evento,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					$('#modalEventoCreado').modal('open');
 				},

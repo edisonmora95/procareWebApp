@@ -11,25 +11,30 @@
 let controladorProcariano = require('../../controllers/procariano.controller');
 let express 						  = require('express');
 let router 								= express.Router();
-let utils 								= require('../../utils/utils');
+const utils 							= require('../../utils/utils');
+const authApi	  					= require('../../utils/authentication.api');
+
+router.use(authApi.verifyToken);
 
 /*
 	@api {post} /api/procarianos/
+	@apiPermission Usuario | Personal | Admin
 	@apiDescription	Ingresa un procariano a la base de datos
 	@apiGroup Procariano
 	@apiName crearProcariano
 	@apiversion 0.1.2
 */
-router.post('/',controladorProcariano.crearProcariano);
+router.post('/', authApi.verifyRol(['Personal']), controladorProcariano.crearProcariano);
 
 /*
 	@api {get} /api/procarianos/
+	@apiPermission Usuario | Personal | Admin
 	@apiDescription Retorna a los procarianos que coinciden con los campos de búsqueda
 	@apiGroup Procariano
 	@apiName buscarProcariano
 	@apiVersion 0.1.2
 */
-router.get('/', controladorProcariano.buscarProcariano);
+router.get('/', authApi.verifyRol(['Personal', 'Admin', 'Director Ejecutivo', 'Director Procare Formacion', 'Director Centro']), controladorProcariano.buscarProcariano);
 
 /*
 	@api {get} /api/procarianos/activos
@@ -47,16 +52,17 @@ router.get('/activos', controladorProcariano.buscarProcarianosActivos);
 	@apiName buscarChicosFormacionSinGrupo
 	@apiVersion 0.1.2
 */
-router.get('/formacion', controladorProcariano.buscarChicosFormacionSinGrupo);
+router.get('/formacion/sinGrupo', controladorProcariano.buscarChicosFormacionSinGrupo);
 
 /*
 	@api {get} /api/procarianos/:id
+	@apiPermission Usuario | Personal | Admin
 	@apiDescription Devuelve toda la información del procariano con el id indicado
 	@apiGroup Procariano
 	@apiName buscarProcarianoPorId
 	@apiVersion 0.1.2
 */
-router.get('/:id', controladorProcariano.buscarProcarianoPorId);
+router.get('/:id', authApi.verifyRol(['Personal','Admin']), controladorProcariano.buscarProcarianoPorId);
 
 /*
 	@api {get} /api/procarianos/:id/grupo
@@ -69,6 +75,7 @@ router.get('/grupo/:id', controladorProcariano.obtenerGrupoActualDeProcariano);
 
 /*
 	@api {put} /api/procarianos/:id
+	@apiPermission Usuario | Personal | Admin
 	@apiDescription Actualiza información del procariano
 	@apiGroup Procarianos
 	@apiName editarProcariano
@@ -78,12 +85,14 @@ router.put('/:id', controladorProcariano.editarProcariano);
 
 /*
 	@api {delete} /api/procarianos/:id
+	@apiPermission Usuario | Personal | Admin
+	@apiPermission Usuario Personal Admin
 	@apiDescription Cambia el estado de un procariano a inactivo
 	@apiGroup Procarianos
 	@apiName eliminarProcariano
 	@apiVersion 0.1.2
 */
-router.delete('/:id', controladorProcariano.eliminarProcariano);
+router.delete('/:id', authApi.verifyRol(['Personal','Admin']), controladorProcariano.eliminarProcariano);
 
 
 module.exports = router;

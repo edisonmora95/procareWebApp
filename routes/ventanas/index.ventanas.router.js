@@ -1,30 +1,34 @@
-var express = require('express');
-var router = express.Router();
-let autenticacion = require('./../../utils/authentication');
-
-// middleware that is specific to this router
-/*router.use(function timeLog(req, res, next) {
-  console.log('Fecha: ', new Date().toString());
-  next();
-});*/
+let express 			= require('express');
+let router  			= express.Router();
+const authViews 	= require('../../utils/authentication.views');
 
 /*
 	@Permisos:
 		Usuario
 */
 
-//router.use(autenticacion.usuario)
+router.use(authViews.usuario)
 
 /* GET home page. */
+/*
+	@api {get} /home
+	@apiPermissions Usuario
+*/
 router.get('/', function(req, res, next) {
   res.render('calendario/index');
 });
-
-router.get('/tarea/', function(req, res, next){
+/*
+	@api {get} /home/tarea
+	@apiPermissions Personal, Admin
+*/
+router.get('/tarea/', authViews.verifyRolView(['Personal', 'Admin']), function(req, res, next){
 	res.render('calendario/tareaNueva');
 });
-
-router.get('/evento/', function(req, res, next){
+/*
+	@api {get} /home/evento
+	@apiPermissions Personal, Admin
+*/
+router.get('/evento/', authViews.verifyRolView(['Personal', 'Admin']), function(req, res, next){
 	res.render('calendario/eventoNuevo');
 });
 

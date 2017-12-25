@@ -129,6 +129,9 @@ var main = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				data: self.procariano,
 				success: function(res){
 					$.each(res.datos, function(index, procarianoEncontrado){
