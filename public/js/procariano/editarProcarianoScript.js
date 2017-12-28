@@ -1,6 +1,9 @@
 'use strict';
 
+import VueTheMask from 'vue-the-mask';
+
 Vue.use(VeeValidate);
+Vue.use(VueTheMask);
 /*
 	Validaciones. Cambio de mensajes de error
 */
@@ -33,7 +36,7 @@ const dictionary = {
 };
 VeeValidate.Validator.updateDictionary(dictionary);
 
-let editarApp = new Vue({
+let vm = new Vue({
 	el 		 : '#editarApp',
 	created(){
 		const path  			= window.location.pathname;
@@ -44,12 +47,13 @@ let editarApp = new Vue({
 		this.inicializarMaterialize(this);
 	},
 	data 	 : {
-		flag: true,
+		flag    : true,
 		errorObj: {
 			campo: '',
-			msj: ''
+			msj  : ''
 		},
-		grupos: [],
+		grupos  : [],
+		tipos   : [],
 		tempGrupoPrevio: {
 			id: '',
 			text: ''
@@ -58,13 +62,12 @@ let editarApp = new Vue({
 			id: '',
 			text: ''
 		},
-		tipos: [],
-		gruposObtenidos: [],
-		gruposFormacion: [],
+		gruposObtenidos : [],
+		gruposFormacion : [],
 		gruposCaminantes: [],
 		gruposPescadores: [],
-		gruposMayores: [],
-		errorServidor: '',
+		gruposMayores   : [],
+		errorServidor   : '',
 		dataFinishedLoading: false,
 		grupoprocariano 	 : {
 			id 	: '',
@@ -74,7 +77,16 @@ let editarApp = new Vue({
 			id 	: '',
 			text: ''
 		},
-		procariano: {}
+		procariano: {},
+		mask_format: {
+	    telef_convencional : "(0#)###-####",
+	    telf_celular 			 : "(0#)#-###-####",
+	    Ruc_Mask 					 : "##########"
+    },
+    errorAjax : {
+    	titulo : '',
+    	descripcion : ''
+    }
 	},
 	methods: {
 		//Funciones para editar la forma en la que se muestra la fecha
@@ -106,6 +118,7 @@ let editarApp = new Vue({
 	        "x-access-token" : localStorage.getItem('token')
 		    },
 				success(res){
+					console.log(res)
 					self.asignarValoresObtenidos(self, res);
 					self.obtenerTodosLosGrupos(self);
 					self.obtenerTiposProcariano(self);
@@ -207,7 +220,7 @@ let editarApp = new Vue({
 			});
 			$('#selectGrupo').change( () => {
 				const grupoId = parseInt($('#selectGrupo').val());
-				const urlApi = '/api/pg/' + self.procariano.idProcariano;
+				const urlApi = '/api/procarianos/' + self.procariano.idProcariano + '/grupo/cambiar/';
 				//console.log(urlApi)
 				const data = {
 					idGrupoNuevo  : grupoId,
@@ -219,6 +232,11 @@ let editarApp = new Vue({
 				self.cambiarGrupo(urlApi, data);
 			});
 		},
+		mostrarErrorValidacion(campo, msj){
+    	vm.errorObj.campo = campo;
+      vm.errorObj.msj 	= msj;
+      $('#modalErrorForm').modal('open');
+    },
 		/*
 			@Descripción:
 				De los datos obtenidos de la base, se asignan todos los valores al objeto self.procariano
@@ -238,6 +256,13 @@ let editarApp = new Vue({
 
 			self.fechaNacimiento 			= new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
 			self.dataFinishedLoading 	= true;
+			console.log(vm.procariano.fechaNacimiento)
+			//Asignar fecha de nacimiento
+			const $input = $('#fechaNacimiento').pickadate();
+
+			// Use the picker object directly.
+			const picker = $input.pickadate('picker');
+			picker.set('select', vm.fechaNacimiento);
 		},
 		/*
 			@Descripción: 
@@ -317,8 +342,63 @@ let editarApp = new Vue({
 			$('#modalErrorAjax').modal('open');
     },
 		aceptarEdicion(){
-
-		}
+			const anioIngresado = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+			this.$validator.validateAll()
+			.then( result => {
+				console.log(result)
+				if( result ){
+					//Si pasa las validaciones entonces valida la fecha de nacimiento
+					if ( vm.validarFechaNacimiento( anioIngresado ) ) {
+						console.log('procariano:', vm.procariano);
+						vm.enviarEdicion();
+					} else {
+						$('#modalErrorForm').modal('open');
+					}
+				} else {
+					console.log(vm.errors);
+					vm.mostrarErrorValidacion(vm, vm.errors.items[0].field, vm.errors.items[0].msg);
+				}
+				
+			})
+			.catch( error => {
+				console.log('error:', error)
+			})
+		},
+		/*
+			@Descripción: Valida que la fecha de nacimiento ingresada no sea de alguien menor a 11 años.
+				Solo valida eso ya que Vee Validate valida que la fecha haya sido ingresada
+			@Return:
+				True si es una fecha válida (>11)
+				False si es inválida
+    */
+    validarFechaNacimiento(year){
+			let actualYear 	= new Date().getFullYear();
+			let diferencia 	= actualYear - year;
+			if( diferencia < 11 ){
+				vm.errorObj.campo = 'Fecha de nacimiento';
+				vm.errorObj.msj 	= 'No puede ingresar a alguien con menos de 11 años.';
+				return false;
+			}
+			return true;
+    },
+    enviarEdicion(){
+    	$.ajax({
+    		type    : 'PUT',
+    		url     : '/api/procarianos/' + vm.procariano.PersonaId,
+    		data    : vm.procariano,
+    		headers : {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
+		    success : function(res){
+		    	console.log(res)
+		    	$('#modalEdicionExitosa').modal('open');
+		    },
+		    error   : function(err){
+		    	console.log(err);
+		    	vm.mostrarMensajeDeErrorAjax(vm, 'Error', err.responseJSON.mensaje);
+		    }
+    	});
+    }
 	}
 
 });

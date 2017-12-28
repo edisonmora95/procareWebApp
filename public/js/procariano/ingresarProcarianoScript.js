@@ -42,7 +42,7 @@ const dictionary = {
 };
 VeeValidate.Validator.updateDictionary(dictionary);
 
-let main = new Vue({
+let vm = new Vue({
 	el: '#main',
 	created(){
 		this.obtenerTodosLosGrupos(this);
@@ -283,43 +283,42 @@ let main = new Vue({
 		validateBeforeSubmit() {
 			let self = this;
 			const anioIngresado = $('#fecha-nacimiento').pickadate('picker').get('highlight', 'yyyy');
-			if( self.validarFechaNacimiento(self, anioIngresado) ){
-				
-				self.bindGrupoSeleccionado(self, self.procariano.tipo);
-				this.$validator.validateAll().then( (result) => {
-					if( result ){
-						if ( self.src != 'http://via.placeholder.com/150x150') {
+			//Primero valida los inputs que tienen vee-validate
+			this.$validator.validateAll()
+			.then( result => {
+				if ( result ){
+					//Si pasa las validaciones entonces valida la fecha de nacimiento
+					if ( vm.validarFechaNacimiento( anioIngresado ) ) {
+						vm.bindGrupoSeleccionado(vm, vm.procariano.tipo);
+						//Añade la imagen si se ingresó una
+						if ( self.src != 'http://via.placeholder.com/150x150' ) {
 							self.procariano.imagenUrl = self.src;
 						}else{
 							self.procariano.imagenUrl = null;
 						}
-						self.ingresarProcariano(self);
-					}else{
-						console.log(self.errors)
-						self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
+						vm.ingresarProcariano(vm);
+					} else {
+						$('#modalError').modal('open');
 					}
-						        
-	      }).catch( (err) => {
-	      	console.log(err)
-	      	self.mostrarErrorValidacion(self, self.errors.items[0].field, self.errors.items[0].msg);
-	      });
-
-			}else{
-				$('#modalError').modal('open');
-			}
+				}else {
+					console.log(vm.errors);
+					vm.mostrarErrorValidacion(vm, vm.errors.items[0].field, vm.errors.items[0].msg);
+				}
+			});
     },
     /*
 			@Descripción: Valida que la fecha de nacimiento ingresada no sea de alguien menor a 11 años.
+				Solo valida eso ya que Vee Validate valida que la fecha haya sido ingresada
 			@Return:
 				True si es una fecha válida (>11)
 				False si es inválida
     */
-    validarFechaNacimiento(self, year){
+    validarFechaNacimiento(year){
 			let actualYear 	= new Date().getFullYear();
 			let diferencia 	= actualYear - year;
 			if( diferencia < 11 ){
-				self.errorObj.campo = 'Fecha de nacimiento';
-				self.errorObj.msj 	= 'No puede ingresar a alguien con menos de 11 años.';
+				vm.errorObj.campo = 'Fecha de nacimiento';
+				vm.errorObj.msj 	= 'No puede ingresar a alguien con menos de 11 años.';
 				return false;
 			}
 			return true;
@@ -374,20 +373,20 @@ $('#fecha-nacimiento').change(function(){
 	let actualYear = new Date().getFullYear();
 	let diferencia = actualYear - year;
 	if(diferencia < 11){
-		main.$data.fechaIncorrecta = true;
+		vm.$data.fechaIncorrecta = true;
 	}else{
-		main.$data.fechaIncorrecta = false;
+		vm.$data.fechaIncorrecta = false;
 	}
 
 	var fecha = year + '/' + month + '/' + day;
-	main.$data.procariano.fechaNacimiento = fecha;
+	vm.$data.procariano.fechaNacimiento = fecha;
 });
 $('#fecha-ordenacion').change(function(){
 	var year 	= $('#fecha-ordenacion').pickadate('picker').get('highlight', 'yyyy');
 	var day 	= $('#fecha-ordenacion').pickadate('picker').get('highlight', 'dd');
 	var month = $('#fecha-ordenacion').pickadate('picker').get('highlight', 'mm');
 	var fecha = year + '/' + month + '/' + day;
-	main.$data.procariano.fechaOrdenacion = fecha;
+	vm.$data.procariano.fechaOrdenacion = fecha;
 });
 
 
@@ -396,10 +395,10 @@ function readURL(input) {
     let reader = new FileReader();
     reader.onload = function(e) {
       $('#profilePic').attr('src', e.target.result);
-      main.$data.src = e.target.result;
+      vm.$data.src = e.target.result;
     }
     reader.readAsDataURL(input.files[0]);
   }else{
-  	 main.$data.src = 'http://via.placeholder.com/150x150';
+  	 vm.$data.src = 'http://via.placeholder.com/150x150';
   }
 }

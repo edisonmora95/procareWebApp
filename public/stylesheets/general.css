@@ -90,3 +90,8 @@ td a{
      color: #000;
 }
 
+.is-danger{
+  border-color: red !important;
+  color: red;
+  font-size: 0.8rem;
+}

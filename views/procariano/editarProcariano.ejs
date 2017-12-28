@@ -21,12 +21,12 @@
 							<form>
 								<section id="rowNombresApellidos" class="row">
 									<article class="col s6 input-field">
-										<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
+										<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'" :class="{'input': true, 'is-danger': errors.has('nombres') }">
 										<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
 										<label for="nombres" class="active">Nombres</label>
 									</article>
 									<article class="col s6 input-field">
-										<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'">
+										<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'" :class="{'input': true, 'is-danger': errors.has('apellidos') }">
 										<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 										<label for="apellidos" class="active">Apellidos</label>
 									</article>
@@ -34,18 +34,18 @@
 								<section id="rowCedulaFechaNacimiento" class="row">
 									<article class="col s6">
 										<label for="cedula" class="active">Cédula</label>
-										<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'" >
+										<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'" :class="{'input': true, 'is-danger': errors.has('cedula') }" v-mask="mask_format.Ruc_Mask">
 										<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 									</article>
 									<article class="col s6">
 										<label for="fechaNacimiento" class="active">Fecha de nacimiento</label>
-										<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'" v-model="procariano.fechaNacimiento">
+										<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('fechaNacimiento') }">
 										<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 									</article>
 								</section>
 								<section id="rowDirEmail" class="row">
 									<article class="col s6 input-field">
-										<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+										<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('direccion') }">
 										<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
 										<label for="direccion" class="active">Dirección</label>
 									</article>
@@ -57,12 +57,12 @@
 								</section>
 								<section id="rowTelefonos" class="row">
 									<article class="col s6 input-field">
-										<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
+										<input type="tel" name="celular" id="celular" v-model="procariano.celular"  v-mask="mask_format.telf_celular">
 										<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 										<label for="celular" class="active">Celular</label>
 									</article>
 									<article class="col s6 input-field">
-										<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-validate="'numeric'">
+										<input type="tel" name="convencional" id="convencional" v-model="procariano.convencional"  v-mask="mask_format.telef_convencional">
 										<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 										<label for="convencional" class="active">Convencional</label>
 									</article>	
@@ -83,19 +83,19 @@
 								</section>
 								<section id="rowColegioUniversidad" class="row">
 									<article class="col s6 input-field">
-										<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+										<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('colegio') }">
 										<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
 										<label for="colegio" class="active">Colegio</label>
 									</article>
 									<article class="col s6 input-field">
-										<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+										<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('universidad') }">
 										<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
 										<label for="universidad" class="active">Universidad</label>
 									</article>
 								</section>
 								<section id="rowTrabajo" class="row">
 									<article class="col s12 input-field">
-										<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+										<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('trabajo') }">
 										<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
 										<label for="trabajo" class="active">Trabajo</label>
 									</article>
@@ -109,6 +109,37 @@
 					</main>
 				</article>
 			</section>
+			<!-- Modal Structure -->
+		  <section id="modalEdicionExitosa" class="modal">
+		    <main class="modal-content">
+		      <p class="center-align modal-text">Procariano editado correctamente.</p>
+		    </main>
+		    <footer class="modal-footer">
+		      <a :href="'/procarianos/perfil/' + procariano.PersonaId" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </footer>
+		  </section>
+		  <!-- Modal Structure -->
+		  <section id="modalErrorForm" class="modal">
+		    <main class="modal-content">
+		      <h4 class="center-align">Formulario con errores.</h4>
+		      <p class="center-align">Existe un error del campo: "{{errorObj.campo}}"</p>
+		      <p class="center-align">Con el siguiente mensaje de error: </p>
+		      <p class="center-align">"{{errorObj.msj}}"</p>
+		    </main>
+		    <footer class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </footer>
+		  </section>
+		  <!-- Modal Structure -->
+		  <section id="modalErrorAjax" class="modal">
+		    <main class="modal-content">
+		      <h4 class="center-align">{{errorAjax.titulo}}.</h4>
+		      <p class="center-align">"{{errorAjax.descripcion}}"</p>
+		    </main>
+		    <footer class="modal-footer">
+		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+		    </footer>
+		  </section>
 		</main>
 	</body>
 	<div>

@@ -84,6 +84,7 @@ let app = new Vue({
 
 			self.fechaNacimiento 			= new Date(self.procariano.fechaNacimiento.replace(/-/g, '\/').replace(/T.+/, ''));
 			self.dataFinishedLoading 	= true;
+			$('ul.tabs').tabs();
 		},
 		eliminar(){
 			var self   = this;

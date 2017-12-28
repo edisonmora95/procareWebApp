@@ -32,12 +32,12 @@
 									<section class="row row-nombres-apellidos">
 										<article class="col s6">
 											<label for="nombres">Nombres</label>
-											<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
+											<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'" :class="{'input': true, 'is-danger': errors.has('nombres') }">
 											<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="apellidos">Apellidos</label>
-											<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'">
+											<input type="text" name="apellidos" id="apellidos" v-model="procariano.apellidos" v-validate="'required|alpha_spaces'" :class="{'input': true, 'is-danger': errors.has('apellidos') }">
 											<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 										</article>
 									</section>
@@ -45,13 +45,13 @@
 									<section class="row row-cedula-fecha">
 										<article class="col s6">
 											<label for="fecha-nacimiento">Fecha de nacimiento</label>
-											<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'">
+											<input type="date" name="fecha-nacimiento" id="fecha-nacimiento" class="datepicker" v-model="procariano.fechaNacimiento" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('fecha-nacimiento') }">
 											<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
-											<span v-if="fechaIncorrecta" id="errorFecha">No puede ingresar a alguien con menos de 11 años.</span>
+											<span v-if="fechaIncorrecta" id="errorFecha" class="help is-danger">No puede ingresar a alguien con menos de 11 años.</span>
 										</article>
 										<article class="col s6">
 											<label for="cedula">Cédula</label>
-											<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-mask="mask_format.Ruc_Mask" v-validate="'required'">
+											<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-mask="mask_format.Ruc_Mask" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('cedula') }">
 											<span v-show="errors.has('cedula')" class="help is-danger">{{ errors.first('cedula') }}</span>
 										</article>
 									</section>
@@ -59,7 +59,7 @@
 									<section class="row row-direccion-email">
 										<article class="col s6">
 											<label for="direccion">Dirección</label>
-											<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'required|regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('direccion') }">
 											<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
 										</article>
 										<article class="col s6">
@@ -71,14 +71,14 @@
 									<!--Row celular y convencional-->
 									 <section class="row row-celular-convencional">
 			              <article class="input-field col s6">
-			                  <label for="celular" class="active">Telf. Celular</label>
-			                  <input type="tel" name="celular" id="celular" v-model="procariano.celular" v-mask="mask_format.telf_celular">
-			                  <span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
+		                  <label for="celular" class="active">Telf. Celular</label>
+		                  <input type="tel" name="celular" id="celular" v-model="procariano.celular" v-mask="mask_format.telf_celular">
+		                  <span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
 			              </article>
 			              <article class="input-field col s6">
-			                  <label for="convencional" class="active">Telf. Convencional</label>
-			                  <input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-mask="mask_format.telef_convencional">
-			                  <span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
+		                  <label for="convencional" class="active">Telf. Convencional</label>
+		                  <input type="tel" name="convencional" id="convencional" v-model="procariano.convencional" v-mask="mask_format.telef_convencional">
+		                  <span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 			              </article>
 			          	</section>
 									<!--Row genero y tipo-->
@@ -102,7 +102,7 @@
 									<section class="row row-chico-formacion" v-show="procariano.tipo=='1'">
 										<article class="col s6">
 											<label for="colegio">Colegio</label>
-											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('colegio') }">
 											<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
 										</article>
 										<article class="col s6" id="div-select-grupo-formacion">
@@ -116,17 +116,17 @@
 									<section class="row row-caminante" v-show="procariano.tipo=='2'">
 										<article class="col s6">
 											<label for="colegio">Colegio</label>
-											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('colegio') }">
 											<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="universidad">Universidad</label>
-											<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('universidad') }">
 											<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="trabajo">Trabajo</label>
-											<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('trabajo') }">
 											<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
 										</article>
 										<article class="col s6" id="div-select-grupo-caminantes">
@@ -140,17 +140,17 @@
 									<section class="row row-pescador" v-show="procariano.tipo=='3'||procariano.tipo==='4'">
 										<article class="col s6">
 											<label for="colegio">Colegio</label>
-											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('colegio') }">
 											<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="universidad">Universidad</label>
-											<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="universidad" id="universidad" v-model="procariano.universidad" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('universidad') }">
 											<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="trabajo">Trabajo</label>
-											<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('trabajo') }">
 											<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
 										</article>
 										<article class="col s6" id="div-select-grupo-pescadores">
@@ -164,12 +164,12 @@
 									<section class="row row-sacerdote" v-show="procariano.tipo=='5'">
 										<article class="col s6">
 											<label for="parroquia">Parroquia</label>
-											<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
+											<input type="text" name="parroquia" id="parroquia" v-model="procariano.parroquia" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'" :class="{'input': true, 'is-danger': errors.has('parroquia') }">
 											<span v-show="errors.has('parroquia')" class="help is-danger">{{ errors.first('parroquia') }}</span>
 										</article>
 										<article class="col s6">
 											<label for="fecha-ordenacion">Fecha de ordenación</label>
-											<input type="date" name="fecha-ordenacion" id="fecha-ordenacion" class="datepicker" v-model="procariano.fechaOrdenacion">
+											<input type="date" name="fecha-ordenacion" id="fecha-ordenacion" class="datepicker" v-model="procariano.fechaOrdenacion" :class="{'input': true, 'is-danger': errors.has('fecha-ordenacion') }">
 										</article>
 									</section>
 									<!--Botones-->
