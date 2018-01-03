@@ -100,7 +100,7 @@ module.exports = function(sequelize, DataTypes) {
             include: [
               {
                 model: Persona,
-                attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero']
+                attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero', 'email']
               }
             ],
             attributes: [['id', 'procarianoId']]

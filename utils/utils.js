@@ -48,30 +48,45 @@ module.exports.aisgnarRolesPermitidos = function(arrayRoles) {
     next();  
   }
 };
+
 /*
-@Descripcion: genera el hash para la contrasenna, usada para el crear con aleaotorio (ya no se usa)
-@Autor: Jose Viteri
-@FechaCreacion: 31/05/2017
+  @Descripcion: genera una contrasenna aleatoria
+  @Autor: Jose Viteri
+  @FechaCreacion: 05/06/2017
+*/
+module.exports.randomString = () => {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 12; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
+
+/*
+  @Descripcion: Genera el hash para la contraseña
+  @Autor: Jose Viteri
+  @FechaCreacion: 31/05/2017
+  @ÚltimaModificacion:
+    29/12/2017  @edisonmora95 Promesas
 */
 
-module.exports.generarHash = function(req, res, next) {
-
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash('posi', salt, function(err, hash) {
-            console.log(hash);
-            console.log("ff");
-            req.body.contrasenna = hash;
-            next();
-
-        });
+module.exports.generarHash = function(password) {
+  return new Promise( (resolve, reject) => {
+    bcrypt.genSalt(10, (err, salt) => {
+      if ( err ) return reject(err);
+      bcrypt.hash(password, salt, (err2, hash) => {
+        if ( err2 )return reject(err2);
+        return resolve(hash);
+      });
     });
+  });
 };
 
-
 /*
-@Descripcion: genera el hash para la nueva contrasenna, en el crear contrasenna
-@Autor: Jose Viteri
-@FechaCreacion: 29/06/2017
+  @Descripcion: genera el hash para la nueva contrasenna, en el crear contrasenna
+  @Autor: Jose Viteri
+  @FechaCreacion: 29/06/2017
 */
 
 module.exports.generarHashNuevaContrasenna = function(req, res, next) {
@@ -91,26 +106,11 @@ FUNCIONES
 */
 
 
-/*
-@Descripcion: genera una contrasenna aleatoria
-@Autor: Jose Viteri
-@FechaCreacion: 05/06/2017
-*/
-function hacerClave() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    console.log(text);
-    return text;
-}
-
 
 /*
-@Descripcion: pone en un formato adecuado los campos para buscar procariano
-@Autor: Jose Viteri
-@FechaCreacion: 05/06/2017
+  @Descripcion: pone en un formato adecuado los campos para buscar procariano
+  @Autor: Jose Viteri
+  @FechaCreacion: 05/06/2017
 */
 
 
@@ -138,9 +138,9 @@ module.exports.generarJsonProcariano = function(procariano) {
 }
 
 /*
-@Descripcion: pone en un formato adecuado los campos para buscar los grupos
-@Autor: Jose Viteri
-@FechaCreacion: 15/07/2017
+  @Descripcion: pone en un formato adecuado los campos para buscar los grupos
+  @Autor: Jose Viteri
+  @FechaCreacion: 15/07/2017
 */
 
 
@@ -186,36 +186,10 @@ module.exports.generarJsonGrupo = function(grupo) {
 
 
 /*
-@Descripcion: genera el hash para la nueva contrasenna
-@Autor: Jose Viteri
-@FechaCreacion: 29/06/2017
-
-
+  @Descripcion: pone en un formato adecuado los campos para buscar nino de accion
+  @Autor: Luis Lainez
+  @FechaCreacion: 29/07/2017
 */
-
-
-module.exports.generarHashNuevaContrasenna = function(req, res, next) {
-
-
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.nuevaContrasenna, salt, function(err, hash) {
-            console.log(hash);
-            req.body.nuevaContrasenna = hash;
-            next();
-
-        });
-    });
-};
-
-
-/*
-@Descripcion: pone en un formato adecuado los campos para buscar nino de accion
-@Autor: Luis Lainez
-@FechaCreacion: 29/07/2017
-*/
-
-
-
 module.exports.generarJsonNinoAccion = function(ninoaccion) {
         var respuesta = {};
         respuesta['persona'] = {};
@@ -239,56 +213,55 @@ module.exports.generarJsonNinoAccion = function(ninoaccion) {
         }
         return respuesta;
     }
-    /*
-    @Descripcion: es una funcion que genera y envia el correo al destinatario
-    @Autor: Jose Viteri
-    @FechaCreacion: 18/08/2017
-    */
 
-module.exports.generarCorreo = function(mensaje, destinatario, sujeto, res, mensajeExito, mensajeError, resultado) {
-    //mensaje : el mensaje del correo
-    //destinatario : la persona o personas que se le va a enviar el correo (si son varias, separadas por comas)
-    //sujeto : el tema del correo
-    const nodemailer = require('nodemailer');
+/*
+  @Descripcion: es una funcion que genera y envia el correo al destinatario
+  @Autor: Jose Viteri
+  @FechaCreacion: 18/08/2017
+  @UltimaModificacion:
+    30/12/20217 @edisonmora95 Cambiado a Promesas
+*/
+module.exports.generarCorreo = function(mensaje, destinatario, sujeto) {
+  //mensaje : el mensaje del correo
+  //destinatario : la persona o personas que se le va a enviar el correo (si son varias, separadas por comas)
+  //sujeto : el tema del correo
+  const nodemailer = require('nodemailer');
 
-    // create reusable transporter object using the default SMTP transport
-    console.log('entra dentro de generarCorreo');
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // secure:true for port 465, secure:false for port 587
-        auth: {
-            type: 'OAuth2',
-            user: 'procarewebapp@gmail.com',
-            clientId: '636471246614-f425frovl75hc6971hpq0hbh77iq4dta.apps.googleusercontent.com',
-            clientSecret: "pJBQIxcaEN9BAALMKowo6zld",
-            refreshToken: "1/D0LJMDXjVy3JCB5Wcr7069jLs1-lmtlh2GF-EfqUwVXnCHDk0NJ4sUXqeQuhKk4l"
-                //accessToken: serverConfig.gmail.access_token,
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
+  // create reusable transporter object using the default SMTP transport
+  const transporter = nodemailer.createTransport({
+    host   : 'smtp.gmail.com',
+    port   : 465,
+    secure : true, // secure:true for port 465, secure:false for port 587
+    auth   : {
+      type    : 'OAuth2',
+      user    : 'procarewebapp@gmail.com',
+      clientId: '636471246614-f425frovl75hc6971hpq0hbh77iq4dta.apps.googleusercontent.com',
+      clientSecret: "pJBQIxcaEN9BAALMKowo6zld",
+      refreshToken: "1/D0LJMDXjVy3JCB5Wcr7069jLs1-lmtlh2GF-EfqUwVXnCHDk0NJ4sUXqeQuhKk4l"
+          //accessToken: serverConfig.gmail.access_token,
+    },
+    tls    : {
+      rejectUnauthorized: false
+    }
+  });
+
+  // setup email data with unicode symbols
+  const mailOptions = {
+    from   : '"Procare " <procarewebapp@gmail.com>', // sender address
+    to     : destinatario, // list of receivers
+    subject: sujeto, // Subject line
+    text   : mensaje // plain text body
+  };
+  return new Promise( (resolve, reject) => {
+    return transporter.sendMail(mailOptions, (error, info) => {
+      if ( error ) {
+        console.log('Este es el error:', error);
+        return reject(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
+      return resolve(info)
     });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: '"Procare " <procarewebapp@gmail.com>', // sender address
-        to: destinatario, // list of receivers
-        subject: sujeto, // Subject line
-        text: mensaje // plain text body
-            //html: '<b>Hello world ?</b>' // html body
-    };
-
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('este es error: ' + error);
-            return respuestas.error(res, error, '', info);
-
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-        return respuestas.okCreate(res, mensajeExito, resultado);
-    });
+  });
 }
 
 

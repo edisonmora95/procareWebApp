@@ -9,11 +9,14 @@
 
 const respuesta 						= require('../utils/respuestas');
 const co 										= require('co');
+const utils									=	require('../utils/utils');
+
 const modelo 								= require('../models');
 const ModeloGrupo 					= require('../models/').Grupo;
 const ModeloGrupoEtapa 			= require('../models/').GrupoEtapa;
 const ModeloAnimador 				= require('../models/').Animador;
 const ModeloProcariano 			= require('../models/').Procariano;
+const ModeloPersona 			= require('../models/').Persona;
 const ModeloPersonaRol 			= require('../models/').PersonaRol;
 const ModeloProcarianoGrupo = require('../models/').ProcarianoGrupo;
 
@@ -24,7 +27,7 @@ const ModeloProcarianoGrupo = require('../models/').ProcarianoGrupo;
 		Primero se crea el registro en la tabla Grupos
 		Luego se lo añade al grupo a una etapa, se crea el registro en la tabla GrupoEtapa
 		Luego se crea el registro de su animador en la tabla Animador
-			Si el procariano ingresado como animador no consta en la base como uno, se lo añade en PersonaRol
+			Si el procariano ingresado como animador no consta en la base como uno, se lo añade en PersonaRol. Y se le envía el correo con la contraseña
 	@ÚltimaModificación: 
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
@@ -41,6 +44,7 @@ module.exports.crearGrupo = (req, res) => {
 	let datosRespuesta 	= {};
 
 	co(function* (){
+		console.log('Entro al controller')
 		let t 					= 	yield inicializarTransaccion();
     let grupo 			= 	yield ModeloGrupo.crearGrupoT(grupoObj, t);
     let idGrupo 		= 	grupo.get('id');
@@ -49,13 +53,28 @@ module.exports.crearGrupo = (req, res) => {
   	let procariano 	= 	yield ModeloProcariano.obtenerProcarianoPorIdP(idAnimador);
   	const persona 	= 	procariano.get('Persona');
   	const idPersona = 	persona.get('personaId');
-
   	let rolAsignado = 	yield ModeloPersonaRol.buscarRolDePersonaPorId(idPersona);
-  	if(rolAsignado === null){
+  	console.log('rolAsignado:', rolAsignado)
+  	if( !rolAsignado ){
+  		//Si no tiene asignado un rol en la base de datos, se le asigna
   		let rol = yield ModeloPersonaRol.asignarRolT(idPersona, 'Animador', t);
   		datosRespuesta.rol = rol;
+  		//Luego se le genera la contraseña aleatoria
+  		const password = utils.randomString();
+  		console.log('password:', password);
+  		const hash 		 = yield utils.generarHash(password);
+  		console.log('hash:', hash);
+  		const mensaje  = 'Ha sido añadido como Animador a la aplicación web de Procare. Su contraseña para ingresar es ' + password + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare"
+  		const destinatario = persona.get('email');
+  		console.log('destinatario:', destinatario)
+  		const sujeto	 =	'ProcareWebApp';
+  		//Se le envía el correo con su nueva contraseña
+  		yield utils.generarCorreo(mensaje, destinatario, sujeto);
+  		//Se guarda la contraseña del animador
+  		yield ModeloPersona.ingresarContrasenna(idPersona, hash, t);
   	}
     t.commit();
+    //t.rollback();
     datosRespuesta.grupo 			= grupo;
     datosRespuesta.grupoetapa = grupoetapa;
     datosRespuesta.animador 	= animador;

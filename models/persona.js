@@ -326,6 +326,25 @@ module.exports = function(sequelize, DataTypes) {
             return reject(error);
           });
         });
+      },
+      ingresarContrasenna: function(idPersona, contrasenna, transaction){
+        return new Promise( (resolve, reject) => {
+           return this.update({
+            contrasenna : contrasenna
+          }, 
+          { 
+            where : {
+              id  : idPersona
+            },
+            transaction  : transaction 
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
       }
 
     }

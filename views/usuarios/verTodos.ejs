@@ -2,118 +2,67 @@
 <html>
 	<head>
 		<% include ../partials/head %>
- 		<link rel="stylesheet" type="text/css" href="/stylesheets/procarianos/procarianosStyles.css">
  		<link rel="stylesheet" type="text/css" href="/stylesheets/usuarios/verUsuariosStyles.css">
 	</head>
 	<body>
-		<div>
-			<header>
-				<% include ../partials/navbar %>
-			</header>
-			<main class="container" id="main">
-				<section id="section-resultados">
-					<div class="row">
-					  <div id="admin" class="col s12">
-					  	<div class="row">
-					  		<div class="s4 m4" >
-					  			<h2 style="text-align: center;">Usuarios</h3>
-					  		</div>
-					  	</div>
-					  	
-					    <div class="material-table">
-					      <div class="table-header">
-					        <!--<span class="table-title">Tabla de Cargos</span>
-					        <div class="actions">
-					          <a href="#modalFormacion" class="modal-trigger waves-effect btn-flat no-uppercase"> {{valorBotonFormacion}}</a>-->
-					          <!--<a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>-->
-					        </div>
-					      </div>
-								<table class="tripped bordered responsive-table centered highlight" id="datatable" >
-									<thead>
-										<th>Nombres</th>
-										<th>Apellidos</th>
-										<th>Email</th>
-										<th>Rol</th>
-										<!--<th>Acción</th>-->
-									</thead>
-									<tbody>
-										<tr v-for="usuario in listaUsuarios">
-											<td>{{usuario.nombres}}</td>
-											<td>{{usuario.apellidos}}</td>
-											<td>{{usuario.email}}</td>
-											<td>
-												<div v-for="rol in usuario.Rols"><p> {{rol.nombre}}</p></div>
-												<ul class='dropdown-content' id="dropDownRols">
-													<div v-for="rol in usuario.Rols">
-														<li><a href="#!">{{rol.nombre}}</a></li>	
-														<li class="divider"></li>
-													</div>
-												</ul>
-											</td>
-											<!--<td>
-												<a href="#modalEditarUsuario" class="waves-effect waves-light">
-													<i class="material-icons" @click="seleccionarUsuario(usuario)">mode_edit</i>
-												</a>
-											</td>-->
-										</tr>
-									</tbody>
-								</table>
-								<pre></pre>
-
-					    </div>
-					  </div>
-					</div>
-
-				</section>
-			</main>
-			<!-- Modal Structure -->
-		  <div id="modalEditarUsuario" class="modal">
-		    <div class="modal-content" id="modal-content">
-		      <h4 class="center-align">Editar usuario</h4>
-		      <p class="center-align">{{usuarioSeleccionado.nombres}} {{usuarioSeleccionado.apellidos}}</p>
-		      <p class="center-align">{{usuarioSeleccionado.email}}</p>
-		      <v-select id="select-rol" name="rol" v-model="usuarioSeleccionado.rolId" :items="roles">
-		      </v-select>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Agree</a>
-		    </div>
-		  </div>
-			<!--
-		  <div id="modalFormacion" class="modal">
-		    <div class="modal-content" id="modal-content">
-		      <h4 class="center-align">Asignación de directores de formación </h4>
-					<form action="">
-						<div class="row">
-							  <div class="input-field col s6">							  
-							    <select >
-							      <option  v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'masculino' " :value="usuario.id">{{usuario.nombres}} {{usuario.apellidos}}</option>
-							    </select>
-							    <label>Hombres</label>
-							  </div>
-								<div class="input-field col s6">
-							    <select >
-							      <option v-for="usuario in listaUsuarios" v-if="usuario.esProcariano && usuario.genero == 'femenino' " :value="usuario.id">  {{usuario.nombres}} {{usuario.apellidos}}</option>
-							    </select>
-							    <label>Mujeres</label>
-							  </div>
-						</div>
-					</form>
-		    </div>
-		    <div class="modal-footer">
-		      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Aceptar</a>
-		    </div>
-		  </div>
-		  -->
-		</div>
-		<div id="scripts">
-			<% include ../partials/scripts %>
-  			<!--<script src="/js/libs/jquery.dataTables.min.js"></script>
-  			<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-			<script src="/js/usuarios/tableMaterial.js"></script>-->
-			<script src="/build/usuarios/verTodosScript.min.js"></script>
-		</div>
+		<header>
+			<% include ../partials/navbar %>
+		</header>
+		<main class="container row" id="main">
+			<section class="col s12">
+				<main class="card">
+					<header class="card-content">
+						<h4 class="titulo">Usuarios</h4>
+					</header>
+					<main id="section-resultados" class="card-content">
+						<article id="article-resultados">
+							<table class="tripped bordered responsive-table centered highlight" id="datatable" >
+								<thead>
+									<th>Nombres</th>
+									<th>Apellidos</th>
+									<th>Email</th>
+									<th>Rol</th>
+								</thead>
+								<tbody>
+									<tr v-for="usuario in listaUsuarios">
+										<td>{{usuario.nombres}}</td>
+										<td>{{usuario.apellidos}}</td>
+										<td>{{usuario.email}}</td>
+										<td>
+											<div v-for="rol in usuario.Rols"><p> {{rol.nombre}}</p></div>
+											<ul class='dropdown-content' id="dropDownRols">
+												<div v-for="rol in usuario.Rols">
+													<li><a href="#!">{{rol.nombre}}</a></li>	
+													<li class="divider"></li>
+												</div>
+											</ul>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</article>
+					</main>
+				</main>
+			</section>
+		</main>
+		<!-- Modal Structure -->
+	  <section id="modalEditarUsuario" class="modal">
+	    <main class="modal-content" id="modal-content">
+	      <h4 class="center-align">Editar usuario</h4>
+	      <p class="center-align">{{usuarioSeleccionado.nombres}} {{usuarioSeleccionado.apellidos}}</p>
+	      <p class="center-align">{{usuarioSeleccionado.email}}</p>
+	      <v-select id="select-rol" name="rol" v-model="usuarioSeleccionado.rolId" :items="roles">
+	      </v-select>
+	    </main>
+	    <footer class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Agree</a>
+	    </footer>
+	  </section>
 	</body>
+	<footer id="scripts">
+		<% include ../partials/scripts %>
+		<script src="/build/usuarios/verTodosScript.min.js"></script>
+	</footer>
 </html>
 
 

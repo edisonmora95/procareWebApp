@@ -1,23 +1,14 @@
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
-import Materials from 'vue-materials';
 
-Vue.component('navbar', Navbar); 
-
-let main = new Vue({
+let vm = new Vue({
 	el: '#main',
 	created(){
+		this.obtenerUsuarios();
 	},
 	mounted(){
 		$('.modal').modal();
 		$('select').material_select();
-		//$('#datatable').DataTable();
-		this.obtenerUsuarios();
-
-	},
-	updated(){
-
 	},
 	data: {
 		usuarios: [],
@@ -43,8 +34,30 @@ let main = new Vue({
 		}
 	},
 	methods: {
+		//////////////////////////////////
+		//OBTENER DATOS DE LA BASE
+		//////////////////////////////////
+		obtenerUsuarios: function(){
+			//vm.usuarios = [];
+			$.ajax({
+				type   : 'GET',
+				url    : '/api/cargo/usuarios',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
+				success: function(res){
+					vm.usuarios = res.datos;
+					console.log(res);
+				},
+				error  : function(res){
+					vm.fallaCargar = true;
+					vm.msg 				 = res.mensaje;
+					console.log(res);
+				}
+			});
+		},
 		seleccionarUsuario(usuario){
-			console.log(usuario)
+			console.log(usuario);
 			let self = this;
 			self.usuarioSeleccionado = usuario;
 			//self.crearSelectRoles('select-rol', self.rolEscogido, 'modal-content', self.roles);
@@ -94,34 +107,6 @@ let main = new Vue({
 			self.usuarioSeleccionado = usuario;
 			return self.usuarioSeleccionado['rolText'].includes('Director procare formación');
 		},
-		obtenerUsuarios: function(){
-			let self = this;
-			self.usuarios = [];
-			$.ajax({
-				type : 'GET',
-				url: '/api/cargo/usuarios',
-				success: function(res){
-					console.log(res);
-					if(res.estado){
-						$.each(res.datos, function(index, usuarioEncontrado){
-							//console.log(personalEncontrado)
-								self.usuarios.push(usuarioEncontrado);
-							});
-						console.log(res)
-					}
-					else{
-							self.fallaCargar = true;
-							self.msg = res.mensaje;
-							console.log(res)
-					}						
-				},
-				error : function(res){
-					self.fallaCargar = true;
-					self.msg = res.mensaje;
-					console.log(res)
-				}
-			});
-		}
 		
 	}
 });
