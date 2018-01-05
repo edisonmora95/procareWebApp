@@ -35,6 +35,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: '/api/login/usuarios',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					console.log(res)
 					self.usuario = res.datos;

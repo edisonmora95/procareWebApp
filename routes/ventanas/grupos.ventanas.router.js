@@ -12,7 +12,7 @@ router.use(authViews.usuario);
 		Usuario
 		Personal
 */
-router.get('/nuevo', function(req, res, next){
+router.get('/nuevo', authViews.verifyRolView(['Personal', 'Admin']), function(req, res, next){
 	res.render('grupo/crearGrupo');
 });
 
