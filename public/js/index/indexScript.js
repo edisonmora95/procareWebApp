@@ -41,9 +41,12 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url : '/api/login/usuarios',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					App.usuario 		 = res.datos;
-					App.esPersonal  = App.verificarRolDeUsuario('Personal');
+					App.esPersonal   = App.verificarRolDeUsuario('Personal');
 					if( App.esPersonal ){
 						App.obtenerTareasEventos();
 					}else{

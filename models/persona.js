@@ -345,6 +345,24 @@ module.exports = function(sequelize, DataTypes) {
             return reject(error);
           });
         });
+      },
+      cambiarContrasenna: function(email, contrasenna){
+        return new Promise((resolve, reject) => {
+          return this.update({
+            contrasenna : contrasenna
+          },
+          {
+            where : {
+              email : email
+            }
+          })
+          .then( resultado => {
+            resolve(resultado);
+          })
+          .catch( error => {
+            reject(error);
+          });
+        });
       }
 
     }

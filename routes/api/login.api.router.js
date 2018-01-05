@@ -19,12 +19,13 @@ var utils             = require('../../utils/utils');
 const ModeloPersona   = require('../../models').Persona;
 const ModeloRol       = require('../../models').Rol;
 const authentication  = require('../../middleware/authentication');
+const authApi         = require('../../utils/authentication.api');
 
 //LOCAL STRATEGY
 const strategy = new LocalStrategy({
   usernameField : 'correo',
   passwordField : 'password'
-}, function(correo, password, done){
+ }, function(correo, password, done){
   co(function* (){
     //Primero se verifica si el correo existe en la base
     let persona = yield ModeloPersona.buscarPersonaPorEmailP(correo);
@@ -94,9 +95,9 @@ router.get('/loginFalla', function(req, res, next) {
   @apiName login
   @apiversion 0.2.0
 */
-router.get('/usuarios', controladorLogin.getUsuario);
+router.get('/usuarios', authApi.verifyToken, controladorLogin.getUsuario);
 
-//router.post('/', utils.generarHashNuevaContrasenna, controladorLogin.cambioContrasenna);
+router.post('/cambiar', authApi.verifyToken, controladorLogin.cambioContrasenna);
 
 router.post('/authenticate', authentication.authenticate);
 

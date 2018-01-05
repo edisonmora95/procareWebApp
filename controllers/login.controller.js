@@ -3,57 +3,45 @@ var modelo = require('../models');
 
 const co            = require('co');
 const jwt           = require('jsonwebtoken');
+const bcrypt        = require('bcryptjs');
+const utils					= require('../utils/utils');
 
 const ModeloPersona = require('../models').Persona;
 const config        = require('../config/config');
 let respuesta 		  = require('../utils/respuestas');
 
 const cambioContrasenna = (req, res , next) => {
-	let	email = req.body.correo;
-	let viejaContrasenna = req.body.viejaContrasenna;
-	let nuevaContrasenna = req.body.nuevaContrasenna;
-	modelo.Persona.find({
-		where : {
-			email : email, 
-		}
-	}).then( persona => {
-		modelo.Persona.compararContrasenna2(viejaContrasenna, persona.contrasenna, function(err, isMatch){
-			if(err) throw err;
-			console.log(isMatch);
-			console.log("nueva contrasenna es " + nuevaContrasenna);
-			if (isMatch){
-				modelo.Persona.update({
-					contrasenna : nuevaContrasenna
-				  
-				}, {
-				  where: {
-				    email : email,
-				  }
-				}).then( persona2 => {
-					res.json( {
-						status : true,
-						message : "se realizo el cambio correctamente"
-					});
-				}).catch( err2 => {
-					res.json({
-						status : false, 
-						message : "algo paso"
-					});
-				});
-
-			}else{
-				res.json({
-					status : false,
-					message : "vieja contraseña no coincide"
-				});
-			}
-		})
-	}).catch( err => {
-		res.json({
-			status : false, 
-			message : "No existe usuaario asignado a ese correo"
-		});
+	const	email						 = req.body.correo;
+	const viejaContrasenna = req.body.viejaContrasenna;
+	const nuevaContrasenna = req.body.nuevaContrasenna;
+	//Primero hay que verificar si la contraseña anterior coincide con la actual en la base
+	ModeloPersona.buscarPersonaPorEmailP(email)
+	.then( persona => {
+		//Si el correo no existe en la base
+		if( !persona ) return respuesta.error(res, 'Registro no encontrado', 'No hay un usuario con ese correo', null);
+		//Ahora se comparan las contraseñas
+    if( !bcrypt.compareSync(viejaContrasenna, persona.get('contrasenna')) ) return respuesta.error(res, 'Contraseña anterior no coincide', '', null);
+    //Se genera la nueva contraseña en hash
+    utils.generarHash(nuevaContrasenna)
+    .then( hash => {
+    	//Cambio la contraseña
+    	ModeloPersona.cambiarContrasenna(email, hash)
+	    .then( resultado => {
+	    	if ( resultado < 1 ) return respuesta.error(res, 'No se encontró registro para hacer el cambio', '', null);
+	    	return respuesta.okUpdate(res, 'Contraseña cambiada', resultado);
+	    })
+	    .catch( errorCambio => {
+	    	return respuesta.error(res, 'Error al cambiar la contraseña', '', errorCambio);
+	    });
+    })
+    .catch( errorHash => {
+    	return respuesta.error(res, 'Error al crear el hash', '', errorHash);
+    });
 	})
+	.catch( error => {
+		return respuesta.error(res, 'Registro no encontrado', 'Error en la búsqueda', error);
+	});
+
 };
 
 const login = (req, res, next) => {
