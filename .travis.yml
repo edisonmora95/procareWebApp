@@ -8,9 +8,8 @@ before_script :
     - npm install
 before_install:
     - mysql -u root -e 'CREATE DATABASE IF NOT EXISTS procare_db_test;'
-script : 
-  - ./public/scripts/db_test_create_populate.sql
-  - gulp unit-test
+    - mysql -u root --password="" < public/scripts/db_test_create_populate.sql
+script : gulp unit-test
 after_script: gulp coveralls
 
 
