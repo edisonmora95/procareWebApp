@@ -6,9 +6,10 @@ services :
 before_script :
     - npm install -g gulp-cli
     - npm install
+    - gulp create-populate-db-test
 before_install:
-    - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db2;'
-script : gulp istanbul
+    - mysql -e 'CREATE DATABASE IF NOT EXISTS procare_db_test;'
+script : gulp unit-test
 after_script: gulp coveralls
 
 
