@@ -70,10 +70,10 @@ module.exports.viewsUnauthorized = (res) => {
 	return res.render('error/noAutorizado');
 };
 
-module.exports.serverError = (res, mensaje, error) => {
+module.exports.ERROR_SERVIDOR = (res, error) => {
 	return res.status(500).json({
 		estado  : false,
-		mensaje : mensaje,
+		mensaje : 'Error en el servidor',
 		error   : error
 	});
 };

@@ -10,7 +10,7 @@ let ModeloProcarianoTipo	 	= require('../../models/').ProcarianoTipo;
 
 describe('PROCARIANOTIPO', () => {
 
-	describe('obtenerTipoActualDeProcarianoP', () => {
+	describe.skip('obtenerTipoActualDeProcarianoP', () => {
 		let idProcariano;
 
 		it('CP1. Id válido', done => {

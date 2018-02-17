@@ -24,7 +24,7 @@ let tarea = {
 
 let transaction;
 
-describe('TAREAS', () => {
+describe.skip('TAREAS', () => {
 	describe('crearTareaP', () => {
 
 		afterEach( () => {

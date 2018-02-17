@@ -6,6 +6,8 @@
 */
 let bcrypt = require('bcryptjs');
 'use strict';
+
+const errors = require('../utils/errors');
 module.exports = function(sequelize, DataTypes) {
   let Persona = sequelize.define('Persona', {
     cedula: {
@@ -329,7 +331,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       ingresarContrasenna: function(idPersona, contrasenna, transaction){
         return new Promise( (resolve, reject) => {
-           return this.update({
+          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
+          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
+          return this.update({
             contrasenna : contrasenna
           }, 
           { 
@@ -342,7 +346,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(resultado);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },

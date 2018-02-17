@@ -1,17 +1,20 @@
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   let ProcarianoGrupo = sequelize.define('ProcarianoGrupo', {
     fechaInicio : {
-      type : DataTypes.DATE,
+      type      : DataTypes.DATE,
       allowNull : true
     },
     fechaFin : {
-      type : DataTypes.DATE,
+      type      : DataTypes.DATE,
       allowNull : true
     }
   }, {
-    singular : 'ProcarianoGrupo',
-    plural : 'ProcarianoGrupo',
+    singular  : 'ProcarianoGrupo',
+    plural    : 'ProcarianoGrupo',
     tableName : 'procarianogrupo',
     classMethods : {
       associate : function(models) {
@@ -105,6 +108,8 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       eliminarRegistrosDeGrupoT: function(idGrupo, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
           return this.destroy({
             where : {
               GrupoId : idGrupo
@@ -112,16 +117,20 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            if( resultado === 0 ) return reject( errors.SEQUELIZE_ERROR('Delete error', 'No se encontró el registro de la etapa del grupo para eliminar') );
+            if( resultado === 1 ) return resolve(resultado);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       anadirProcarianoAGrupoT: function(idGrupo, idProcariano, transaction){
-        let errors = [];
         return new Promise( (resolve, reject) => {
+          if ( !idGrupo )         return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 )      return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
+          if ( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
+          if ( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
           return this.create({
             GrupoId       : idGrupo,
             ProcarianoId  : idProcariano,
@@ -131,8 +140,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( resultado => {
             return resolve(resultado);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },

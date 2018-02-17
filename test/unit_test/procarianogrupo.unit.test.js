@@ -11,12 +11,12 @@ let ModeloProcarianoGrupo 	= require('../../models/').ProcarianoGrupo;
 
 describe('PROCARIANOGRUPO0', () => {
 
-	describe('anadirProcarianoAGrupoT', () => {
+	describe.skip('anadirProcarianoAGrupoT', () => {
 		let transaction;
 		let idProcariano  = 41;
 		let idGrupo 			= 1;
 
-		before( () => {
+		beforeEach( () => {
 	    return inicializarTransaccion()
 	    .then( t => {
 	    	console.log('Transacción creada');
@@ -32,7 +32,7 @@ describe('PROCARIANOGRUPO0', () => {
 	  	.then( resultado => {
 	  		console.log('Exito');
 				resultado.should.be.json;
-				//transaction.commit();
+				transaction.rollback();
 				done();
 	  	})
 	  	.catch( error => {
@@ -44,6 +44,7 @@ describe('PROCARIANOGRUPO0', () => {
 	  	idGrupo = null;
 	  	ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, transaction)
 	  	.catch( error => {
+	  		transaction.rollback();
 	  		const mensajeObtenido = error.errors[0].message;
 	  		const mensajeEsperado = 'No envió id del grupo';
 	  		assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje incorrecto');
@@ -55,6 +56,7 @@ describe('PROCARIANOGRUPO0', () => {
 	  	idGrupo = -5;
 	  	ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, transaction)
 	  	.catch( error => {
+	  		transaction.rollback();
 	  		const mensajeObtenido = error.errors[0].message;
 	  		const mensajeEsperado = 'Id de grupo no puede ser negativo.';
 	  		assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje incorrecto');
@@ -62,6 +64,59 @@ describe('PROCARIANOGRUPO0', () => {
 	  	});
 	  });
 
+	});
+
+	describe('eliminarRegistrosDeGrupoT', () => {
+		let transaction;
+		let idGrupo = 1;
+
+		beforeEach( () => {
+	    return inicializarTransaccion()
+	    .then( t => {
+	    	transaction = t;
+	    })
+	    .catch( error => {
+	    	console.log('No se pudo crear la transacción');
+	    });
+	  });
+
+	  it('CP1. Caso exitoso', done => {
+	  	ModeloProcarianoGrupo.eliminarRegistrosDeGrupoT(idGrupo, transaction)
+	  	.then( resultado => {
+	  		transaction.rollback();
+	  		assert.equal(resultado, 1, 'Cantidad de registros incorrecta');
+	  		done();
+	  	})
+	  	.catch( fail => {
+	  		done(fail);
+	  	});
+	  });
+
+	  it('CP2. idGrupo es null', done => {
+	  	ModeloProcarianoGrupo.eliminarRegistrosDeGrupoT(null, transaction)
+	  	.then( resultado => {
+	  		done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id del grupo', 'Mensaje de error incorrecto');
+	  		done();
+	  	});
+	  });
+
+	  it('CP3. idGrupo es negativo', done => {
+	  	ModeloProcarianoGrupo.eliminarRegistrosDeGrupoT(-5, transaction)
+	  	.then( resultado => {
+	  		done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Id del grupo inválido', 'Mensaje de error incorrecto');
+	  		done();
+	  	});
+	  });
 	});
 
 });

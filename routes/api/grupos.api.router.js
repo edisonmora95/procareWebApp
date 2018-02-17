@@ -1,10 +1,12 @@
-var controladorGrupo = require('../../controllers/grupo.controller');
-const authApi	  		 = require('../../utils/authentication.api'); 
+const controladorGrupo    = require('../../controllers/grupo.controller');
+const controladorAsist    = require('../../controllers/asistenciachico.controller');
+const controladorAnimador = require('../../controllers/animador.controller');
+const controladorRol      = require('../../controllers/rol.controller');
+const authApi	  		      = require('../../utils/authentication.api'); 
 var express = require('express');
 var router = express.Router();
 
 router.use(authApi.verifyToken);
-
 /*
 	*@api {post} /api/grupos/
 	*@apiDescription Crea el registro de Grupo en la base de datos
@@ -19,7 +21,12 @@ router.use(authApi.verifyToken);
 	*@apiParam {Int}		animador
 	*@apiPermission Usuario | Personal | Admin
 */
-router.post('/', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.crearGrupo);
+router.post('/', 
+						authApi.verifyRol(['Personal', 'Admin']), 
+						controladorGrupo.crearGrupo, 
+						controladorAnimador.agregarAnimador, 
+						controladorRol.asignarRol
+						);
 
 /*
 	*@api {get} /api/grupos/
@@ -75,5 +82,14 @@ router.put('/:id_grupo', authApi.verifyRol(['Personal', 'Admin']), controladorGr
 	*@apiPermission Personal
 */
 router.delete('/:id', authApi.verifyRol(['Personal', 'Admin']), controladorGrupo.eliminarGrupo);
+
+
+router.post('/:id_grupo/anadir', controladorGrupo.anadirProcarianoAGrupo);
+
+
+router.post('/asistencia/', controladorAsist.ingresarAsistencia);
+router.get('/asistencia/:id_grupo', controladorAsist.obtenerAsistenciasGrupo);
+
+
 
 module.exports = router;

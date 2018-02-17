@@ -5,6 +5,8 @@
 @UltimaFechaModificacion: @erialper 12/08/2017 agrega campos al modelo
 */
 'use strict';
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   var PersonaRol = sequelize.define('PersonaRol', {
       fechaInicio : {
@@ -22,9 +24,11 @@ module.exports = function(sequelize, DataTypes) {
       },
       buscarRolDePersonaPorId: function(idPersona){
         return new Promise( (resolve, reject) => {
+          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
+          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
           return this.findOne({
             where: {
-              fechaFin : null,
+              fechaFin  : null,
               PersonaId : idPersona,
               RolNombre : 'Animador'
             }
@@ -33,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(registro);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -42,17 +46,19 @@ module.exports = function(sequelize, DataTypes) {
       ////////////////////////////////////
       asignarRolT: function(idPersona, rol, transaction){
         return new Promise( (resolve, reject) => {
+          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
+          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
           return this.create({
             fechaInicio : new Date(),
-            fechaFin : null,
-            PersonaId : idPersona,
-            RolNombre : rol
+            fechaFin    : null,
+            PersonaId   : idPersona,
+            RolNombre   : rol
           }, { transaction : transaction })
           .then( registro => {
             return resolve(registro);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

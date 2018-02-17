@@ -15,6 +15,9 @@ let gutil       = require('gulp-util');
 let stripDebug  = require('gulp-strip-debug');
 let clean       = require('gulp-clean');
 let forever     = require('gulp-forever-monitor');
+let gmcfp       = require('gulp-mysql-command-file-processor');
+
+const config    = require('./config/config.json');
 
 ////////////////////////////////////////////
 //Tasks para correr la aplicación
@@ -224,9 +227,10 @@ gulp.task('clean', () => {
 //Tasks para setear variables de entorno
 ////////////////////////////////////////////
 
-gulp.task('set-test-node-env', function() {
+gulp.task('set-test-node-env', function(cb) {
     console.log('Cambiado environment para testing');
-    return process.env.NODE_ENV = 'test';
+    process.env.NODE_ENV = 'test';
+    cb();
 });
 gulp.task('set-dev-node-env', function() {
     console.log('Cambiado environment para development');
@@ -243,19 +247,18 @@ gulp.task('set-prod-node-env', function() {
 
 //TASK DE MOCHA
 gulp.task('unit', function() {
-    gulp.src('./test/unit_test/procarianos.unit.test.js', {
+    gulp.src('./test/unit_test/*.unit.test.js', {
             read: false
         })
         .pipe(mocha());
 });
 
 gulp.task('integration', function() {
-    gulp.src('./test/integration_test/procarianos.integration.test.js', {
+    gulp.src('./test/integration_test/grupos.integration.test.js', {
             read: false
         })
         .pipe(mocha());
 });
-
 
 //SCRIPTS PARA CORRER TESTS
 gulp.task('unit-test', function() {
@@ -276,13 +279,13 @@ gulp.task('istanbul', function(){
 });
 */
 gulp.task('istanbul', function() {
-    return gulp.src('./test/etapa/*.js')
+    return gulp.src('./test/unit_test/*.unit.test.js')
         // Right there
         .pipe(istanbul({
             includeUntested: true
         }))
         .on('finish', function() {
-            gulp.src('./test/etapa/*.js')
+            gulp.src('./test/unit_test/*.unit.test.js')
                 .pipe(mocha({
                     reporter: 'spec'
                 }))
@@ -299,4 +302,57 @@ gulp.task('istanbul', function() {
 gulp.task('coveralls', function() {
     gulp.src('./coverage/lcov.info')
         .pipe(coveralls());
+});
+
+////////////////////////////////////////////
+//Tasks para base de datos
+////////////////////////////////////////////
+
+gulp.task('creation-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/db_test_creation.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db))
+        .on('end', function() { cb(); });
+    //cb();
+});
+
+gulp.task('populate-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/populate_db_test.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db))
+    cb();
+});
+
+gulp.task('create-populate-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/db_test_create_populate.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db))
+        .on('error', function(err){
+            cb(err);
+        })
+        .on('end', function(){
+            cb();
+        });
+});
+
+gulp.task('db-test-set-up', function(cb){
+    runSequence('set-test-node-env', 'creation-db-test', 'populate-db-test');
 });

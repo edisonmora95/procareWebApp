@@ -5,6 +5,7 @@
 @UltimaFechaModificacion: 03/06/2017 @JoseViteri
 */
 'use strict';
+const errors = require('../utils/errors');
 var Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   let Procariano = sequelize.define('Procariano', {
@@ -66,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
         Procariano.hasMany(models.Ticket);
         Procariano.belongsToMany(models.Tipo, {through: 'ProcarianoTipo'});
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
-        Procariano.belongsToMany(models.Reunion, {through: 'ProcarianoReunion'});
+        Procariano.belongsToMany(models.Reunion, {through: 'AsistenciaChico'});
       },
       obtenerGrupoDeProcariano: function(idProcariano, success, error){
         const Grupo = sequelize.import("../models/grupo");
@@ -91,15 +92,15 @@ module.exports = function(sequelize, DataTypes) {
       obtenerProcarianoPorIdP: function(idProcariano){
         const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-          if( !idProcariano )     return reject('No ingresó el id del procariano');
-          if( idProcariano < 0 )  return reject('Id de procariano a buscar no puede ser negativo');
+          if( !idProcariano )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
+          if( idProcariano < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
           return this.findOne({
             where: {
               id: idProcariano
             },
             include: [
               {
-                model: Persona,
+                model     : Persona,
                 attributes: [['id', 'personaId'], 'nombres', 'apellidos', 'genero', 'email']
               }
             ],
@@ -108,8 +109,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( procariano => {
             return resolve(procariano);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -121,8 +122,8 @@ module.exports = function(sequelize, DataTypes) {
         const Grupo = sequelize.import("../models/grupo");
         const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-          if( !idGrupo )    return reject('No ingresó el id del grupo');
-          if( idGrupo < 0 ) return reject('Id de grupo no puede ser negativo');
+          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
           return this.findAll({
             include: [
               {
@@ -143,7 +144,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(procarianos);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },

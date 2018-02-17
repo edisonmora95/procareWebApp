@@ -1,4 +1,7 @@
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   let Grupo = sequelize.define('Grupo', {
     nombre : {
@@ -75,87 +78,25 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     name : {
-      singular: 'Grupo',
-      plural: 'Grupos',
+      singular : 'Grupo',
+      plural   : 'Grupos',
       tableName: 'grupos'
     },
     classMethods : {
       associate : function(models) {
         Grupo.hasOne(models.Animador)
         Grupo.hasMany(models.Reunion, {as : 'Reuniones'})
-        Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'})
-        Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'})
-      },
-      crearGrupo: function(grupo ,callback, errorCallback){
-        this.create({
-          nombre: grupo.nombre,
-          tipo: grupo.tipo,
-          cantidadChicos: grupo.cantidadChicos,
-          numeroReuniones: grupo.numeroReuniones,
-          genero: grupo.genero
-        }).then(callback).catch(errorCallback);
-      },
-      obtenerGrupoPorId: function(idGrupo, success, error){
-        const Etapa = sequelize.import("../models/etapa");
-        this.findOne({
-          where: {
-            id: idGrupo
-          },
-          include: [
-            {
-              model: Etapa,
-            }
-          ]
-        }).then(success).catch(error);
-      },
-      obtenerTodosLosGrupos: function(success, error){
-        const Etapa = sequelize.import("../models/etapa");
-        this.findAll({
-          include: [
-            {
-              model: Etapa
-            }
-          ]
-        }).then(success).catch(error);
-      },
-      editarGrupo(grupo, success, error){
-        this.update({
-          nombre: grupo.nombre,
-          tipo: grupo.tipo,
-          cantidadChicos: grupo.cantidadChicos,
-          numeroReuniones: grupo.numeroReuniones,
-          genero: grupo.genero
-        }, {
-          where: {
-            id: grupo.id
-          }
-        }).then(success).catch(error);
+        Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'});
+        Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'});
       },
       ///////////////////////////////////////
       //FUNDIONES CON PROMESAS
       ///////////////////////////////////////
-      crearGrupoP: function(grupo){
-        return new Promise( (resolve, reject) => {
-          return this.create({
-            nombre: grupo.nombre,
-            tipo: grupo.tipo,
-            cantidadChicos: grupo.cantidadChicos,
-            numeroReuniones: grupo.numeroReuniones,
-            genero: grupo.genero
-          })
-          .then( grupo => {
-            return resolve(grupo);
-          })
-          .catch( error => {
-            return reject(error);
-          });
-        });
-      },
       obtenerGrupoPorIdP: function(idGrupo){
         const Etapa = sequelize.import("../models/etapa");
         return new Promise( (resolve, reject) => {
-          if( !idGrupo )    return reject('No envió id de grupo');
-          if( idGrupo < 0 ) return reject('ID de grupo a buscar no puede ser negativo');
+          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
           return this.findOne({
             where: {
               id: idGrupo
@@ -170,7 +111,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(grupo);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -188,7 +129,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(resultado);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -198,44 +139,48 @@ module.exports = function(sequelize, DataTypes) {
       crearGrupoT: function(grupo, transaction){
         return new Promise( (resolve, reject) => {
           return this.create({
-            nombre: grupo.nombre,
-            tipo: grupo.tipo,
-            cantidadChicos: grupo.cantidadChicos,
+            nombre         : grupo.nombre,
+            tipo           : grupo.tipo,
+            genero         : grupo.genero,
+            cantidadChicos : grupo.cantidadChicos,
             numeroReuniones: grupo.numeroReuniones,
-            genero: grupo.genero
           }, { transaction : transaction })
           .then( grupo => {
             return resolve(grupo);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
-      editarGrupoT: function(grupo, transaction){
+      editarGrupoT: function(grupo, idGrupo, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
           return this.update({
-            nombre: grupo.nombre,
-            tipo: grupo.tipo,
-            cantidadChicos: grupo.cantidadChicos,
+            nombre         : grupo.nombre,
+            tipo           : grupo.tipo,
+            genero         : grupo.genero,
+            cantidadChicos : grupo.cantidadChicos,
             numeroReuniones: grupo.numeroReuniones,
-            genero: grupo.genero
           }, {
             where: {
-              id: grupo.id
+              id: idGrupo
             },
             transaction : transaction 
           })
           .then( result => {
             return resolve(result);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       eliminarGrupoT: function(idGrupo, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
+          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
           return this.destroy({
             where : {
               id : idGrupo
@@ -246,7 +191,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(resultado);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

@@ -357,3 +357,31 @@ module.exports.generarUsuarioConCorreo = function(id, res, mensajeExito, mensaje
         }
     })
 }
+
+module.exports.findAllDaysInYear = (day) => {
+  var date = new Date();
+  var nextYear = date.getFullYear() + 1;
+  let array = [];
+
+  while(date.getDay() != day) {
+    date.setDate(date.getDate() + 1)    
+  }
+
+  while(date.getFullYear() < nextYear)  {
+    var yyyy = date.getFullYear();
+
+    var mm = (date.getMonth() + 1);
+    mm = (mm < 10) ? '0' + mm : mm;
+
+    var dd = date.getDate();
+    dd = (dd < 10) ? '0' + dd : dd;
+
+    let fecha = yyyy + '-' + mm + '-' + dd;
+    array.push(fecha);
+
+    date.setDate(date.getDate() + 7);
+  }
+  return array;
+}
+
+

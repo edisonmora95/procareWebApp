@@ -5,10 +5,16 @@ let chai 		= require('chai');
 let assert 	= chai.assert;
 let should 	= chai.should();
 
-let sequelize	 				= require('../../models/').sequelize;
-let ModeloPersona 		= require('../../models/').Persona;
+let sequelize	 	  = require('../../models/').sequelize;
+let ModeloPersona = require('../../models/').Persona;
+
+/*
+	VARIABLES GLOBALES
+*/
 
 let transaction;
+let idPersona = 4;	//Quemado en la base de datos. Id del animador
+let hash = 'contraseñasupersecreta';
 let personaObj 		= {
 	cedula 					: '0927102848',
 	nombres 				: 'Edison Andre',
@@ -25,8 +31,8 @@ let personaObj 		= {
 };
 
 describe('PERSONAS', () => {
-	
-	describe('crearPersonaT', () => {
+
+	describe.skip('crearPersonaT', () => {
 		/*
 		describe('Caso exitoso', () => {
 			before( () => {
@@ -446,7 +452,7 @@ describe('PERSONAS', () => {
 		
 	});
 	
-	describe('editarPersonaT', () => {
+	describe.skip('editarPersonaT', () => {
 		let transactionEditar;
 		let idPersonaEditar = 79;
 		let personaEditar 		= {
@@ -881,6 +887,62 @@ describe('PERSONAS', () => {
 			
 		});
 		
+	});
+
+	describe('ingresarContrasenna', () => {
+		beforeEach( () => {
+	    return inicializarTransaccion()
+	    .then( t => {
+	    	transaction = t;
+	    })
+	    .catch( error => {
+	    	console.log('No se pudo crear la transacción');
+	    });
+	  });
+
+	  it('CP1. Ingreso exitoso', done => {
+	  	ModeloPersona.ingresarContrasenna(idPersona, hash, transaction)
+	  	.then( resultado => {
+	  		resultado.should.be.array;
+	  		assert.equal(resultado[0], 1, 'Cantidad editada incorrecta');
+	  		//transaction.commit();
+	  		transaction.rollback();
+				done();
+	  	})
+	  	.catch( fail => {
+	  		done(fail);
+	  	});
+	  });
+
+	  it('CP2. idPersona es null', done => {
+	  	ModeloPersona.ingresarContrasenna(null, hash, transaction)
+	  	.then( resultado => {
+	  		console.log('ESTO NO DEBERÍA DE PASAR...');
+				done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+	  		assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+	  		assert.equal(fail.mensaje, 'No ingresó el id', 'Mensaje de error incorrecto');
+	  		done();
+	  	});
+	  });
+
+	  it('CP3. idPersona es negativo', done => {
+	  	ModeloPersona.ingresarContrasenna(-5, hash, transaction)
+	  	.then( resultado => {
+	  		console.log('ESTO NO DEBERÍA DE PASAR...');
+				done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+	  		assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+	  		assert.equal(fail.mensaje, 'Id inválido', 'Mensaje de error incorrecto');
+	  		done();
+	  	});
+	  });
+
+
 	});
 
 });

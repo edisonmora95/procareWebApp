@@ -164,7 +164,7 @@ describe('PROCARIANOS', () => {
 	});
 	
 	describe('obtenerProcarianoPorIdP', () => {
-		let idProcariano = 40;
+		let idProcariano = 1;	//Quemado en la base de datos test
 
 		it('CP1. Id válido', done => {
 			ModeloProcariano.obtenerProcarianoPorIdP(idProcariano)
@@ -185,8 +185,8 @@ describe('PROCARIANOS', () => {
 				done();
 			})
 			.catch( fail => {
-				const mensajeEsperado = 'No ingresó el id del procariano';
-				assert.equal(fail, mensajeEsperado, 'Mensaje obtenido incorrecto');
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id del procariano', 'Mensaje incorrecto');
 				done();
 			});
 		});
@@ -198,26 +198,20 @@ describe('PROCARIANOS', () => {
 				done();
 			})
 			.catch( fail => {
-				const mensajeEsperado = 'Id de procariano a buscar no puede ser negativo';
-				assert.equal(fail, mensajeEsperado, 'Mensaje obtenido incorrecto');
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo incorrecto');
+				assert.equal(fail.mensaje, 'Id del procariano inválido', 'Mensaje incorrecto');
 				done();
 			});
 		});
 	});
 	
-	describe.skip('obtenerProcarianosDeGrupoP', () => {
+	describe('obtenerProcarianosDeGrupoP', () => {
 		let idGrupo = 1;
 
 		it('CP1. Id válido', done => {
 			ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
 			.then( procarianos => {
-				const grupo = procarianos[0].get('Grupos');
-				const idGrupoObtenido = grupo[0].get('idGrupo');
-				const procarianogrupo = grupo[0].get('ProcarianoGrupo');
-				const fechaFinObtenida = procarianogrupo.get('fechaFin');
-
-				assert.equal(idGrupoObtenido, idGrupo, 'Grupo obtenido incorrecto');
-				assert.equal(fechaFinObtenida, null, 'Fecha fin no es null');
+				procarianos.should.be.array;
 				done();
 			})
 			.catch( error => {
@@ -231,8 +225,8 @@ describe('PROCARIANOS', () => {
 				done();
 			})
 			.catch( fail => {
-				const mensajeEsperado = 'No ingresó el id del grupo';
-				assert.equal(fail, mensajeEsperado, 'Mensaje obtenido incorrecto');
+				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id del grupo',  'Mensaje recibido incorrecto');
 				done();
 			});
 		});
@@ -244,8 +238,8 @@ describe('PROCARIANOS', () => {
 				done();
 			})
 			.catch( fail => {
-				const mensajeEsperado = 'Id de grupo no puede ser negativo';
-				assert.equal(fail, mensajeEsperado, 'Mensaje obtenido incorrecto');
+				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
+				assert.equal(fail.mensaje, 'Id del grupo inválido',  'Mensaje recibido incorrecto');
 				done();
 			});
 		});
