@@ -3,7 +3,7 @@ Llenar los campos dentro de config/config.json con los datos del entorno de desa
 
 ## Para correr el proyecto
 1) npm install
-2) npm build-dev (development) || npm build-prod (production)
+2) npm run build-dev (development) || npm run build-prod (production)
 3) npm run dev (development) || npm run prod (production)
 
 ## Analizador de codigo
@@ -12,7 +12,7 @@ Para el analisis de codigo usaremos JsHint
 
 ## Para pruebas
 
-Para las pruebas usaremos mocha.js
+Para las pruebas usaremos mocha.js e istanbul
 
 ## Links importantes
 Entre los links de interes,

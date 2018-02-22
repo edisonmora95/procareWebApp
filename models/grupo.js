@@ -110,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
           .then( grupo => {
             return resolve(grupo);
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });

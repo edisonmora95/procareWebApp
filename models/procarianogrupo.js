@@ -74,17 +74,19 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       obtenerGrupoActualDeProcarianoP: function(idProcariano){
         return new Promise( (resolve, reject) => {
+          if ( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
+          if ( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
           return this.findOne({
             where: {
               ProcarianoId: idProcariano,
-              fechaFin: null
+              fechaFin    : null
             }
           })
           .then( resultado => {
             return resolve(resultado);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -117,8 +119,8 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            if( resultado === 0 ) return reject( errors.SEQUELIZE_ERROR('Delete error', 'No se encontró el registro de la etapa del grupo para eliminar') );
-            if( resultado === 1 ) return resolve(resultado);
+            if ( resultado < 0 ) return reject( errors.SEQUELIZE_ERROR('Error en la eliminación. Se cancela', 'Delete error') );
+            return resolve(resultado);
           })
           .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
@@ -147,6 +149,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       anadirFechaFinT: function(idProcariano, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
+          if ( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
           return this.update({
             fechaFin : new Date()
           }, {
@@ -157,10 +161,10 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            return resolve(resultado[0]);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

@@ -2,13 +2,11 @@
 
 process.env.NODE_ENV = 'test';
 
-const app   = require('../../app')
-let chai 			= require('chai');
-let request   = require('supertest');
-let assert 		= chai.assert;
-let expect 		= chai.expect;
-
-
+const app     = require('../../app')
+const chai 		= require('chai');
+const request = require('supertest');
+const assert 	= chai.assert;
+const expect 	= chai.expect;
 
 let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJQZXJzb25hbCJdLCJpZCI6MiwiaWF0IjoxNTEzODkwNzAxfQ.5OQlRcegbehBU2C9Lnwz59zgBPRyBLicpwnpigYllG0';
 

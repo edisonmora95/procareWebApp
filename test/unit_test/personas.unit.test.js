@@ -12,8 +12,7 @@ let ModeloPersona = require('../../models/').Persona;
 	VARIABLES GLOBALES
 */
 
-let transaction;
-let idPersona = 4;	//Quemado en la base de datos. Id del animador
+
 let hash = 'contraseñasupersecreta';
 let personaObj 		= {
 	cedula 					: '0927102848',
@@ -32,430 +31,400 @@ let personaObj 		= {
 
 describe('PERSONAS', () => {
 
-	describe.skip('crearPersonaT', () => {
-		/*
-		describe('Caso exitoso', () => {
-			before( () => {
-		    return inicializarTransaccion()
-		    .then( t => {
-		    	console.log('Transacción creada');
-		    	transaction = t;
-		    })
-		    .catch( error => {
-		    	console.log('No se pudo crear la transacción');
-		    });
-		  });
+	describe('crearPersonaT', () => {
+		let transaction;
+		let idPersona  = 4;	//Quemado en la base de datos. Id del animador
+		let personaObj = {
+			cedula 					: '0927102848',
+			nombres 				: 'Edison Andre',
+			apellidos 			: 'Mora Cazar',
+			direccion 			: 'Cdla. Coviem',
+			fechaNacimiento : new Date('1995-06-27'),
+			genero 					: 'masculino',
+			contrasenna 		: '',
+			email 					: 'edison_andre_9@hotmail.com',
+			celular 				: '0992556793',
+			convencional 		: '042438648',
+			trabajo 				: '',
+			tipo 						: ''
+		};
+		beforeEach( () => {
+			personaObj 		= {
+				cedula 					: '0927102848',
+				nombres 				: 'Edison Andre',
+				apellidos 			: 'Mora Cazar',
+				direccion 			: 'Cdla. Coviem',
+				fechaNacimiento : new Date('1995-06-27'),
+				genero 					: 'masculino',
+				contrasenna 		: '',
+				email 					: 'edison_andre_9@hotmail.com',
+				celular 				: '0992556793',
+				convencional 		: '042438648',
+				trabajo 				: '',
+				tipo 						: ''
+			};
+			return inicializarTransaccion()
+	    .then( t => {
+	    	transaction = t;
+	    })
+	    .catch( error => {
+	    	console.log('No se pudo crear la transacción');
+	    });
 
-			afterEach( () => {
-				personaObj 		= {
-					cedula 					: '0927102848',
-					nombres 				: 'Edison Andre',
-					apellidos 			: 'Mora Cazar',
-					direccion 			: 'Cdla. Coviem',
-					fechaNacimiento : new Date('1995-06-27'),
-					genero 					: 'masculino',
-					contrasenna 		: '',
-					email 					: 'edison_andre_9@hotmail.com',
-					celular 				: '0992556793',
-					convencional 		: '042438648',
-					trabajo 				: '',
-					tipo 						: ''
-				};
-			});
+	    
+		});
 
-			it('CP1. Datos correctos', done => {
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Exito');
-					resultado.should.be.json;
-					transaction.commit();
-					done();
-				})
-				.catch( error => {
-					transaction.rollback();
-					done(error);
-				});
+		it('CP1. Datos correctos', done => {
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				resultado.should.be.json;
+				transaction.rollback();
+				done();
+			})
+			.catch( error => {
+				transaction.rollback();
+				done(error);
 			});
 		});
-		*/
-		
-		describe('Casos inválidos', () => {
-			before( () => {
-		    return inicializarTransaccion()
-		    .then( t => {
-		    	console.log('Transacción creada');
-		    	transaction = t;
-		    })
-		    .catch( error => {
-		    	console.log('No se pudo crear la transacción');
-		    });
-		  });
 
-			afterEach( () => {
-				personaObj 		= {
-					cedula 					: '0927102848',
-					nombres 				: 'Edison Andre',
-					apellidos 			: 'Mora Cazar',
-					direccion 			: 'Cdla. Coviem',
-					fechaNacimiento : new Date('1995-06-27'),
-					genero 					: 'masculino',
-					contrasenna 		: '',
-					email 					: 'edison_andre_9@hotmail.com',
-					celular 				: '0992556793',
-					convencional 		: '042438648',
-					trabajo 				: '',
-					tipo 						: ''
-				};
+		it('CP2. Cédula con letras', done => {
+			personaObj.cedula = 'hola';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'La cédula solo puede contener números', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP2. Cédula con letras', done => {
-				personaObj.cedula = 'hola';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'La cédula solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP3. Cédula vacía', done => {
+			personaObj.cedula = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Cédula" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP3. Cédula vacía', done => {
-				personaObj.cedula = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Cédula" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP4. Cédula más de 10 caracteres', done => {
+			personaObj.cedula = '0992568758975';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'La cédula debe tener 10 caracteres', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP4. Cédula más de 10 caracteres', done => {
-				personaObj.cedula = '0992568758975';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'La cédula debe tener 10 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP5. Nombre vacío', done => {
-				personaObj.nombres = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Nombres" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP6. Nombre con caracteres especiales', done => {
-				personaObj.nombres = '<>';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Nombre"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP7. Apellido vacío', done => {
-				personaObj.apellidos = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Apellidos" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP8. Apellido con caracteres especiales', done => {
-				personaObj.apellidos = '<>';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Apellidos"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP9. Dirección vacía', done => {
-				personaObj.direccion = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Dirección" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP10. Dirección con caracteres especiales', done => {
-				personaObj.direccion = '<>';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Dirección"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP11. Fecha de nacimiento vacía', done => {
-				personaObj.fechaNacimiento = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Fecha de nacimiento" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-			
-			it('CP13. Fecha de nacimiento futura', done => {
-				personaObj.fechaNacimiento = new Date('2020-06-27');
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar una fecha de nacimiento futura';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP14. Género vacío', done => {
-				personaObj.genero = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Género" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP15. Género no válido', done => {
-				personaObj.genero = 'hola';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El género ingresado debe ser "masculino" o "femenino"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP16. Email vacío', done => {
-				personaObj.email = '';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Email" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP17. No es email', done => {
-				personaObj.email = 'hola';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Email" debe contener un email válido';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP18. Email con caracteres especiales', done => {
-				personaObj.email = 'hola<script>@hotmail.com';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Email"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP19. Convencional con letras', done => {
-				personaObj.convencional = 'hola';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El teléfono solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP20. Convencional con caracteres especiales', done => {
-				personaObj.convencional = '<>';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El teléfono solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP21. Convencional > 15 caracteres', done => {
-				personaObj.convencional = '04234851588888858';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No más de 15 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP22. Celular con letras', done => {
-				personaObj.celular = 'hola';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El celular solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP23. Celular con caracteres especiales', done => {
-				personaObj.celular = '<>';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El celular solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP24. Celular > 15 caracteres', done => {
-				personaObj.celular = '04234851588888858';
-				ModeloPersona.crearPersonaT(personaObj, transaction)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No más de 15 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP5. Nombre vacío', done => {
+			personaObj.nombres = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Nombres" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
 			});
 		});
 		
+		it('CP6. Nombre con caracteres especiales', done => {
+			personaObj.nombres = '<>';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Nombre"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP7. Apellido vacío', done => {
+			personaObj.apellidos = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Apellidos" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP8. Apellido con caracteres especiales', done => {
+			personaObj.apellidos = '<>';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Apellidos"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP9. Dirección vacía', done => {
+			personaObj.direccion = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Dirección" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP10. Dirección con caracteres especiales', done => {
+			personaObj.direccion = '<>';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Dirección"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP11. Fecha de nacimiento vacía', done => {
+			personaObj.fechaNacimiento = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Fecha de nacimiento" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+		
+		it('CP13. Fecha de nacimiento futura', done => {
+			personaObj.fechaNacimiento = new Date('2020-06-27');
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar una fecha de nacimiento futura', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP14. Género vacío', done => {
+			personaObj.genero = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Género" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP15. Género no válido', done => {
+			personaObj.genero = 'hola';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El género ingresado debe ser "masculino" o "femenino"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP16. Email vacío', done => {
+			personaObj.email = '';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Email" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP17. No es email', done => {
+			personaObj.email = 'hola';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Email" debe contener un email válido', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP18. Email con caracteres especiales', done => {
+			personaObj.email = 'hola<script>@hotmail.com';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Email"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		xit('CP19. Convencional con letras', done => {
+			personaObj.convencional = 'hola';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP20. Convencional con caracteres especiales', done => {
+			personaObj.convencional = '<>';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP21. Convencional > 15 caracteres', done => {
+			personaObj.convencional = '04234851588888858';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No más de 15 caracteres en el campo "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		xit('CP22. Celular con letras', done => {
+			personaObj.celular = 'hola';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				console.log('Error:', resultado)
+				done();
+			})
+			.catch( fail => {
+				console.log('Fail:', fail)
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Celular"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP23. Celular con caracteres especiales', done => {
+			personaObj.celular = '<>';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Celular"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP24. Celular > 15 caracteres', done => {
+			personaObj.celular = '04234851588888858';
+			ModeloPersona.crearPersonaT(personaObj, transaction)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No más de 15 caracteres en el campo "Celular"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
 	});
 	
-	describe.skip('editarPersonaT', () => {
+	describe('editarPersonaT', () => {
 		let transactionEditar;
-		let idPersonaEditar = 79;
-		let personaEditar 		= {
+		let idPersonaEditar = 4;	//Quemado en la base de datos. Id del animador
+		let personaEditar 	= {
 			cedula 					: '0927102848',
 			nombres 				: 'Edison Andre',
 			apellidos 			: 'Mora Cazar',
@@ -469,427 +438,411 @@ describe('PERSONAS', () => {
 			trabajo 				: 'JAJAJA',
 			tipo 						: ''
 		};
-		/*
-		describe('Caso exitoso', () => {
-			before( () => {
-		    return inicializarTransaccion()
-		    .then( t => {
-		    	console.log('Transacción creada');
-		    	transactionEditar = t;
-		    })
-		    .catch( error => {
-		    	console.log('No se pudo crear la transacción');
-		    });
-		  });
+		beforeEach( () => {
+			personaEditar 	= {
+				cedula 					: '0927102848',
+				nombres 				: 'Edison Andre',
+				apellidos 			: 'Mora Cazar',
+				direccion 			: 'Cdla. Coviem',
+				fechaNacimiento : new Date('1995-06-27'),
+				genero 					: 'masculino',
+				contrasenna 		: '',
+				email 					: 'edison_andre_9@hotmail.com',
+				celular 				: '0992556793',
+				convencional 		: '042438648',
+				trabajo 				: 'JAJAJA',
+				tipo 						: ''
+			};
+	    return inicializarTransaccion()
+	    .then( t => {
+	    	transactionEditar = t;
+	    })
+	    .catch( error => {
+	    	console.log('No se pudo crear la transacción');
+	    });
+	  });
 
-			afterEach( () => {
-				personaEditar 		= {
-					cedula 					: '0927102848',
-					nombres 				: 'Edison Andre',
-					apellidos 			: 'Mora Cazar',
-					direccion 			: 'Cdla. Coviem',
-					fechaNacimiento : new Date('1995-06-27'),
-					genero 					: 'masculino',
-					contrasenna 		: '',
-					email 					: 'edison_andre_9@hotmail.com',
-					celular 				: '0992556793',
-					convencional 		: '042438648',
-					trabajo 				: 'JAJAJA',
-					tipo 						: ''
-				};
-			});
-
-			it('CP1. Datos correctos', done => {
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Exito');
-					resultado.should.be.json;
-					transactionEditar.commit();
-					done();
-				})
-				.catch( error => {
-					transactionEditar.rollback();
-					done(error);
-				});
+	  it('CP1. Datos correctos', done => {
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				assert.equal(resultado, 1, 'Cantidad de registros incorrecta');
+				transactionEditar.rollback();
+				done();
+			})
+			.catch( error => {
+				transactionEditar.rollback();
+				done(error);
 			});
 		});
-		*/
+	  
+		it('CP2. Cédula con letras', done => {
+			personaEditar.cedula = 'hola';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'La cédula solo puede contener números', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP3. Cédula vacía', done => {
+			personaEditar.cedula = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Cédula" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP4. Cédula más de 10 caracteres', done => {
+			personaEditar.cedula = '0992568758975';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'La cédula debe tener 10 caracteres', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP5. Nombre vacío', done => {
+			personaEditar.nombres = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Nombres" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP6. Nombre con caracteres especiales', done => {
+			personaEditar.nombres = '<>';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Nombre"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP7. Apellido vacío', done => {
+			personaEditar.apellidos = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Apellidos" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP8. Apellido con caracteres especiales', done => {
+			personaEditar.apellidos = '<>';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Apellidos"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP9. Dirección vacía', done => {
+			personaEditar.direccion = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Dirección" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP10. Dirección con caracteres especiales', done => {
+			personaEditar.direccion = '<>';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Dirección"', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP11. Fecha de nacimiento vacía', done => {
+			personaEditar.fechaNacimiento = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Fecha de nacimiento" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
 		
-		describe('Casos inválidos', () => {
-			before( () => {
-		    return inicializarTransaccion()
-		    .then( t => {
-		    	console.log('Transacción creada');
-		    	transactionEditar = t;
-		    })
-		    .catch( error => {
-		    	console.log('No se pudo crear la transacción');
-		    });
-		  });
+		it('CP13. Fecha de nacimiento futura', done => {
+			personaEditar.fechaNacimiento = new Date('2020-06-27');
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar una fecha de nacimiento futura', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
 
-			afterEach( () => {
-				personaEditar 		= {
-					cedula 					: '0927102848',
-					nombres 				: 'Edison Andre',
-					apellidos 			: 'Mora Cazar',
-					direccion 			: 'Cdla. Coviem',
-					fechaNacimiento : new Date('1995-06-27'),
-					genero 					: 'masculino',
-					contrasenna 		: '',
-					email 					: 'edison_andre_9@hotmail.com',
-					celular 				: '0992556793',
-					convencional 		: '042438648',
-					trabajo 				: 'JAJAJA',
-					tipo 						: ''
-				};
+		it('CP14. Género vacío', done => {
+			personaEditar.genero = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Género" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
 			});
-			
-			it('CP2. Cédula con letras', done => {
-				personaEditar.cedula = 'hola';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'La cédula solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
+		});
 
-			it('CP3. Cédula vacía', done => {
-				personaEditar.cedula = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Cédula" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP15. Género no válido', done => {
+			personaEditar.genero = 'hola';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El género ingresado debe ser "masculino" o "femenino"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP4. Cédula más de 10 caracteres', done => {
-				personaEditar.cedula = '0992568758975';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'La cédula debe tener 10 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP16. Email vacío', done => {
+			personaEditar.email = '';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Email" no puede estar vacío', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP5. Nombre vacío', done => {
-				personaEditar.nombres = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Nombres" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP17. No es email', done => {
+			personaEditar.email = 'hola';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'El campo "Email" debe contener un email válido', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP6. Nombre con caracteres especiales', done => {
-				personaEditar.nombres = '<>';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Nombre"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP18. Email con caracteres especiales', done => {
+			personaEditar.email = 'hola<script>@hotmail.com';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Email"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP7. Apellido vacío', done => {
-				personaEditar.apellidos = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Apellidos" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		xit('CP19. Convencional con letras', done => {
+			personaEditar.convencional = 'hola';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP8. Apellido con caracteres especiales', done => {
-				personaEditar.apellidos = '<>';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Apellidos"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP20. Convencional con caracteres especiales', done => {
+			personaEditar.convencional = '<>';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP9. Dirección vacía', done => {
-				personaEditar.direccion = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Dirección" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP21. Convencional > 15 caracteres', done => {
+			personaEditar.convencional = '04234851588888858';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No más de 15 caracteres en el campo "Convencional"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP10. Dirección con caracteres especiales', done => {
-				personaEditar.direccion = '<>';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Dirección"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		xit('CP22. Celular con letras', done => {
+			personaEditar.celular = 'hola';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Celular"', 'Mensaje obtenido incorrecto');
+				done();
 			});
+		});
 
-			it('CP11. Fecha de nacimiento vacía', done => {
-				personaEditar.fechaNacimiento = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Fecha de nacimiento" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		it('CP23. Celular con caracteres especiales', done => {
+			personaEditar.celular = '<>';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No puede ingresar caracteres especiales en "Celular"', 'Mensaje obtenido incorrecto');
+				done();
 			});
-			
-			it('CP13. Fecha de nacimiento futura', done => {
-				personaEditar.fechaNacimiento = new Date('2020-06-27');
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar una fecha de nacimiento futura';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
+		});
+		
+		it('CP24. Celular > 15 caracteres', done => {
+			personaEditar.celular = '04234851588888858';
+			ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
+			.then( resultado => {
+				console.log('Error');
+				console.log(resultado)
+				done();
+			})
+			.catch( fail => {
+				transactionEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Validation error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No más de 15 caracteres en el campo "Celular"', 'Mensaje obtenido incorrecto');
+				done();
 			});
-
-			it('CP14. Género vacío', done => {
-				personaEditar.genero = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Género" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP15. Género no válido', done => {
-				personaEditar.genero = 'hola';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El género ingresado debe ser "masculino" o "femenino"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP16. Email vacío', done => {
-				personaEditar.email = '';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Email" no puede estar vacío';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP17. No es email', done => {
-				personaEditar.email = 'hola';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El campo "Email" debe contener un email válido';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP18. Email con caracteres especiales', done => {
-				personaEditar.email = 'hola<script>@hotmail.com';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No puede ingresar caracteres especiales en "Email"';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP19. Convencional con letras', done => {
-				personaEditar.convencional = 'hola';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El teléfono solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP20. Convencional con caracteres especiales', done => {
-				personaEditar.convencional = '<>';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El teléfono solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP21. Convencional > 15 caracteres', done => {
-				personaEditar.convencional = '04234851588888858';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No más de 15 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP22. Celular con letras', done => {
-				personaEditar.celular = 'hola';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El celular solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-
-			it('CP23. Celular con caracteres especiales', done => {
-				personaEditar.celular = '<>';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'El celular solo puede contener números';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-			
-			it('CP24. Celular > 15 caracteres', done => {
-				personaEditar.celular = '04234851588888858';
-				ModeloPersona.editarPersonaT(idPersonaEditar, personaEditar, transactionEditar)
-				.then( resultado => {
-					console.log('Error');
-					console.log(resultado)
-					done();
-				})
-				.catch( error => {
-					const mensajeObtenido = error.errors[0].message;
-					const mensajeEsperado = 'No más de 15 caracteres';
-					assert.equal(mensajeEsperado, mensajeObtenido, 'Mensaje Incorrecto');
-					done();
-				});
-			});
-			
 		});
 		
 	});
 
 	describe('ingresarContrasenna', () => {
+		let idPersona = 4;
+		let transaction;
 		beforeEach( () => {
 	    return inicializarTransaccion()
 	    .then( t => {
@@ -941,7 +894,6 @@ describe('PERSONAS', () => {
 	  		done();
 	  	});
 	  });
-
 
 	});
 

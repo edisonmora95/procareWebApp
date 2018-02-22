@@ -1,0 +1,12 @@
+config:
+  target: 'http://localhost:3001'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+  defaults:
+    headers:
+      x-access-token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJQZXJzb25hbCJdLCJpZCI6MiwiaWF0IjoxNTEzODkwNzAxfQ.5OQlRcegbehBU2C9Lnwz59zgBPRyBLicpwnpigYllG0'
+scenarios:
+  - flow:
+    - get:
+        url: "/api/grupos"

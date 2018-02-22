@@ -6,8 +6,6 @@ let browserSync = require('browser-sync').create();
 let babel       = require('gulp-babel');
 let browserify  = require('gulp-browserify');
 let runSequence = require('run-sequence');
-let istanbul    = require('gulp-istanbul')
-let coveralls   = require('gulp-coveralls')
 let mocha       = require('gulp-mocha');
 let uglify      = require('gulp-uglify');
 let rename      = require('gulp-rename');
@@ -246,62 +244,20 @@ gulp.task('set-prod-node-env', function() {
 ////////////////////////////////////////////
 
 //TASK DE MOCHA
-gulp.task('unit', function() {
+gulp.task('unit-test', function() {
+    process.env.NODE_ENV = 'test';
     gulp.src('./test/unit_test/*.unit.test.js', {
             read: false
         })
         .pipe(mocha());
 });
 
-gulp.task('integration', function() {
-    gulp.src('./test/integration_test/grupos.integration.test.js', {
+gulp.task('integration-test', function() {
+    process.env.NODE_ENV = 'test';
+    gulp.src('./test/integration_test/*.integration.test.js', {
             read: false
         })
         .pipe(mocha());
-});
-
-//SCRIPTS PARA CORRER TESTS
-gulp.task('unit-test', function() {
-    runSequence('set-test-node-env', 'unit');
-});
-
-gulp.task('integration-test', function() {
-    runSequence('set-test-node-env', 'integration');
-});
-
-//TASK DE ISTANBUL
-/*
-gulp.task('istanbul', function(){
-	gulp.src('./test/etapa/*.js', {read: false})
-		.pipe(mocha())
-		.pipe(istanbul.writeReports())
-		.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
-});
-*/
-gulp.task('istanbul', function() {
-    return gulp.src('./test/unit_test/*.unit.test.js')
-        // Right there
-        .pipe(istanbul({
-            includeUntested: true
-        }))
-        .on('finish', function() {
-            gulp.src('./test/unit_test/*.unit.test.js')
-                .pipe(mocha({
-                    reporter: 'spec'
-                }))
-                .pipe(istanbul.writeReports({
-                    dir: './coverage',
-                    reporters: ['lcov'],
-                    reportOpts: {
-                        dir: './coverage'
-                    }
-                }));
-        });
-});
-
-gulp.task('coveralls', function() {
-    gulp.src('./coverage/lcov.info')
-        .pipe(coveralls());
 });
 
 ////////////////////////////////////////////
@@ -351,8 +307,4 @@ gulp.task('create-populate-db-test', function(cb){
         .on('end', function(){
             cb();
         });
-});
-
-gulp.task('db-test-set-up', function(cb){
-    runSequence('set-test-node-env', 'creation-db-test', 'populate-db-test');
 });

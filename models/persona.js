@@ -2,12 +2,14 @@
   @Descripcion: Modelo de persona
   @Autor: jose viteri
   @FechaCreacion: 20/05/2017
-  @UltimaFechaModificacion: 19/08/2017 @JoseViteri se agrego tipo, se quito sueldo
+  @UltimaFechaModificacion: 
+    19/08/2017 @JoseViteri se agrego tipo, se quito sueldo
+    17/02/2018  @edisonmora95 Formato a los errores
 */
-let bcrypt = require('bcryptjs');
+const errors = require('../utils/errors');
+let bcrypt   = require('bcryptjs');
 'use strict';
 
-const errors = require('../utils/errors');
 module.exports = function(sequelize, DataTypes) {
   let Persona = sequelize.define('Persona', {
     cedula: {
@@ -29,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     nombres: {
       type      : DataTypes.STRING,
-      allowNull : true,
+      allowNull : false,
       validate  : {
         notEmpty  : {
           msg     : 'El campo "Nombres" no puede estar vacío'
@@ -42,7 +44,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     apellidos: {
       type      : DataTypes.STRING,
-      allowNull : true,
+      allowNull : false,
       validate  : {
         notEmpty  : {
           msg     : 'El campo "Apellidos" no puede estar vacío'
@@ -132,11 +134,11 @@ module.exports = function(sequelize, DataTypes) {
       validate  : {
         not : {
           args : /[`~,<>;':"/[\]|{}=_+]/,
-          msg  : 'No puede ingresar caracteres especiales en "Dirección"'
+          msg  : 'No puede ingresar caracteres especiales en "Convencional"'
         },
         len       : {
           args    : [0, 15],
-          msg     : 'No más de 15 caracteres'
+          msg     : 'No más de 15 caracteres en el campo "Convencional"'
         }
       }
     },
@@ -146,11 +148,11 @@ module.exports = function(sequelize, DataTypes) {
       validate  : {
         not : {
           args : /[`~,<>;':"/[\]|{}=_+]/,
-          msg  : 'No puede ingresar caracteres especiales en "Dirección"'
+          msg  : 'No puede ingresar caracteres especiales en "Celular"'
         },
         len       : {
           args    : [0, 15],
-          msg     : 'No más de 15 caracteres'
+          msg     : 'No más de 15 caracteres en el campo "Celular"'
         }
       }
     },
@@ -293,15 +295,15 @@ module.exports = function(sequelize, DataTypes) {
           .then( persona => {
             return resolve(persona);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       editarPersonaT: function(idPersona, persona, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idPersona )    return reject('No ingresó id de Persona.');
-          if( idPersona < 0 ) return reject('Id de Persona no puede ser negativo.');
+          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
+          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
           return this.update({
             cedula          : persona.cedula,
             nombres         : persona.nombres,
@@ -322,10 +324,12 @@ module.exports = function(sequelize, DataTypes) {
             transaction  : transaction 
           })
           .then( resultado => {
-            return resolve(resultado);
+            if( resultado[0] < 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'No se encontró el registro de la persona para editar') );
+            if( resultado[0] === 1 ) return resolve(resultado[0]);
+            if( resultado[0] > 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'Se encontraron múltiples registros. Se cancela la edición') );
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },

@@ -5,8 +5,10 @@
 @UltimaFechaModificacion: 03/06/2017 @JoseViteri
 */
 'use strict';
-const errors = require('../utils/errors');
-var Sequelize = require('sequelize');
+
+const errors    = require('../utils/errors');
+const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
   let Procariano = sequelize.define('Procariano', {
     colegio: {
@@ -107,6 +109,7 @@ module.exports = function(sequelize, DataTypes) {
             attributes: [['id', 'procarianoId']]
           })
           .then( procariano => {
+            if ( !procariano ) return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') );
             return resolve(procariano);
           })
           .catch( fail => {
@@ -157,8 +160,8 @@ module.exports = function(sequelize, DataTypes) {
         const Tipo    = sequelize.import("../models/tipo");
         const Grupo   = sequelize.import("../models/grupo");
         return new Promise( (resolve, reject) => {
-          if( !idPersona )    return reject('No ingresó el id a buscar');
-          if( idPersona < 0 ) return reject('Ingresó un id negativo');
+          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
+          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
           return this.findOne({
             include : [
               {
@@ -176,10 +179,11 @@ module.exports = function(sequelize, DataTypes) {
             }  
           })
           .then( procariano => {
+            if ( !procariano ) return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') );
             return resolve(procariano);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -211,8 +215,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( procarianos => {
             return resolve(procarianos);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -244,8 +248,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( procarianos => {
             return resolve(procarianos);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -292,6 +296,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       crearProcarianoT: function(procariano, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !procariano.PersonaId )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
+          if ( procariano.PersonaId < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
           return this.create({
             PersonaId       : procariano.PersonaId,
             colegio         : procariano.colegio,
@@ -303,8 +309,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( procariano => {
             return resolve(procariano);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -318,8 +324,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       editarProcarianoT: function(idPersona, procariano, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idPersona )     return reject('No ingresó id');
-          if( idPersona < 0 )  return reject('Id debe ser mayor a 0');
+          if ( !idPersona )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
+          if ( idPersona < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
           return this.update({
             colegio         : procariano.colegio,
             universidad     : procariano.universidad,
@@ -334,10 +340,12 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            if( resultado[0] < 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'No se encontró el registro del procariano para eliminar') );
+            if( resultado[0] === 1 ) return resolve(resultado[0]);
+            if( resultado[0] > 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'Se encontraron múltiples registros. Se cancela la edición') );
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -350,6 +358,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       eliminarProcarianoT: function(idPersona, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !idPersona )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
+          if ( idPersona < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
           return this.update({
             estado : 'inactivo'
           }, {
@@ -359,10 +369,12 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            if( resultado < 1 )   return reject( errors.SEQUELIZE_ERROR('No se encontró el registro del procariano para eliminar', 'Delete error') );
+            if ( resultado == 1 ) return resolve(resultado);
+            return reject( errors.SEQUELIZE_ERROR('Se encontraron varios registros. Se cancela la eliminación', 'Delete error') );
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

@@ -1,12 +1,15 @@
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
-  var ProcarianoTipo = sequelize.define('ProcarianoTipo', {
+  let ProcarianoTipo = sequelize.define('ProcarianoTipo', {
     fechaInicio : {
-      type : DataTypes.DATE,
+      type      : DataTypes.DATE,
       allowNull : true
     },
-    fechaFin : {
-      type : DataTypes.DATE,
+    fechaFin    : {
+      type      : DataTypes.DATE,
       allowNull : true
     }
   }, {
@@ -27,19 +30,19 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       obtenerTipoActualDeProcarianoP: function(idProcariano){
         return new Promise( (resolve, reject) => {
-          if( !idProcariano )    return reject('No ingresó el id del procariano');
-          if( idProcariano < 0 ) return reject('Id de procariano inválido');
+          if( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un procariano') );
+          if( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de procariano inválido') );
           return this.findOne({
             where : {
-              fechaFin : null,
+              fechaFin     : null,
               ProcarianoId : idProcariano
             }
           })
           .then( registro => {
             return resolve(registro);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -48,26 +51,32 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       anadirTipoProcarianoT: function(idTipo, idProcariano, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idTipo )          return reject('No ingresó un tipo');
-          if( !idProcariano )    return reject('No ingresó el id del procariano');
-          if( idTipo < 0 )       return reject('Id de tipo inválido');
-          if( idProcariano < 0 ) return reject('Id de procariano inválido');
+          if( !idTipo )          return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un tipo') );
+          if( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un procariano') );
+          if( idTipo < 0 )       return reject( errors.SEQUELIZE_FK_ERROR('Id de tipo inválido') );
+          if( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de procariano inválido') );
           return this.create({
-            TipoId: idTipo,
+            TipoId      : idTipo,
             ProcarianoId: idProcariano,
-            fechaInicio: new Date(),
-            fechaFin: null
+            fechaInicio : new Date(),
+            fechaFin    : null
           }, { transaction : transaction })
           .then( resultado => {
             return resolve(resultado);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       cambiarTipoDeProcarianoT: function(idProcariano, tipoActual, tipoNuevo, transaction){
         return new Promise( (resolve, reject) => {
+          if( !tipoActual )      return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el tipo actual') );
+          if( tipoActual < 0 )   return reject( errors.SEQUELIZE_FK_ERROR('Id de tipo actual inválido') );
+          if( !tipoNuevo )       return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el tipo nuevo') );
+          if( tipoNuevo < 0 )    return reject( errors.SEQUELIZE_FK_ERROR('Id de tipo nuevo inválido') );
+          if( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un procariano') );
+          if( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de procariano inválido') );
           return this.update({
             fechaFin  : new Date()
           }, {
@@ -79,29 +88,29 @@ module.exports = function(sequelize, DataTypes) {
           })
           .then( resultado => {
             return this.create({
-              TipoId: tipoNuevo,
+              TipoId      : tipoNuevo,
               ProcarianoId: idProcariano,
-              fechaInicio: new Date(),
-              fechaFin: null
+              fechaInicio : new Date(),
+              fechaFin    : null
             }, { transaction : transaction })
-            .then( resultado => {
-              return resolve(resultado);
+            .then( resultado2 => {
+              return resolve(resultado2);
             })
-            .catch( error2 => {
-              return reject(error2);
+            .catch( fail2 => {
+              return reject( errors.ERROR_HANDLER(fail2) );
             });
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       anadirFechaFinT: function(idProcariano, idTipo, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idTipo )          return reject('No ingresó un tipo');
-          if( !idProcariano )    return reject('No ingresó el id del procariano');
-          if( idTipo < 0 )       return reject('Id de tipo inválido');
-          if( idProcariano < 0 ) return reject('Id de procariano inválido');
+          if( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un procariano') );
+          if( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de procariano inválido') );
+          if( !idTipo )          return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un tipo') );
+          if( idTipo < 0 )       return reject( errors.SEQUELIZE_FK_ERROR('Id de tipo inválido') );
           return this.update({
             fechaFin : new Date()
           }, {
@@ -113,10 +122,12 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            if ( resultado[0] < 1 ) return reject( errors.SEQUELIZE_ERROR('No se encontró el registro. Se cancela la edición', 'Update error') )
+            if ( resultado[0] > 1 ) return reject( errors.SEQUELIZE_ERROR('Se encontraron varios registros con ese id. Se cancela la edición', 'Update error') )
+            return resolve(resultado[0]);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

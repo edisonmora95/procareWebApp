@@ -7,4 +7,5 @@ DatosFalsosBase.json
 .idea/*
 /config/config.json
 *.log
-./coverage/*
+coverage/*
+.nyc_output/*

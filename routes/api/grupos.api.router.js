@@ -1,3 +1,13 @@
+/*
+	@Descripcion: API de Grupos
+	@Autor: @edisonmora95
+	@FechaCreacion: 25/05/2017
+	@UltimaFechaModificacion:
+*/
+
+/* jshint node: true */
+'use strict';
+
 const controladorGrupo    = require('../../controllers/grupo.controller');
 const controladorAsist    = require('../../controllers/asistenciachico.controller');
 const controladorAnimador = require('../../controllers/animador.controller');

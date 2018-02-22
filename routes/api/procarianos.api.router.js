@@ -8,13 +8,16 @@
 /* jshint node: true */
 'use strict';
 
-let controladorProcariano 		 = require('../../controllers/procariano.controller');
-let controladorProcarianoGrupo = require('../../controllers/procarianogrupo.controller');
+const middlewareCloudinary       = require('../../middleware/cloudinary.middleware');
+const controladorPersona 		     = require('../../controllers/persona.controller');
+const controladorProcariano 		 = require('../../controllers/procariano.controller');
+const controladorProcarianoGrupo = require('../../controllers/procarianogrupo.controller');
+const controladorProcarianoTipo  = require('../../controllers/procarianotipo.controller');
 
-let express 						  = require('express');
-let router 								= express.Router();
-const utils 							= require('../../utils/utils');
-const authApi	  					= require('../../utils/authentication.api');
+const express = require('express');
+const router  = express.Router();
+const utils 	= require('../../utils/utils');
+const authApi	= require('../../utils/authentication.api');
 
 router.use(authApi.verifyToken);
 
@@ -26,7 +29,12 @@ router.use(authApi.verifyToken);
 	@apiName crearProcariano
 	@apiVersion 0.2.0
 */
-router.post('/', authApi.verifyRol(['Personal']), controladorProcariano.crearProcariano);
+router.post('/', 
+						authApi.verifyRol(['Personal']), 
+						middlewareCloudinary.subirImagen,
+						controladorPersona.crearPersona,
+						controladorProcariano.crearProcariano
+						);
 
 /*
 	@api {get} /api/procarianos/
@@ -64,7 +72,7 @@ router.get('/formacion/sinGrupo', controladorProcariano.buscarChicosFormacionSin
 	@apiName buscarProcarianoPorId
 	@apiVersion 0.2.0
 */
-router.get('/:id', authApi.verifyRol(['Personal','Admin']), controladorProcariano.buscarProcarianoPorId);
+router.get('/:id', authApi.verifyRol(['Personal','Admin', 'Animador']), controladorProcariano.buscarProcarianoPorId);
 
 /*
 	@api {get} /api/procarianos/:id/grupo
@@ -92,7 +100,13 @@ router.put('/:id_procariano/grupo/cambiar/', authApi.verifyRol(['Personal']), co
 	@apiName editarProcariano
 	@apiVersion 0.2.0
 */
-router.put('/:id', controladorProcariano.editarProcariano);
+router.put('/:id',
+						authApi.verifyRol(['Personal']),
+						middlewareCloudinary.editarImagen,
+						controladorPersona.editarPersona,
+						controladorProcariano.editarProcariano,
+						controladorProcarianoTipo.cambiarTipo
+						);
 
 /*
 	@api {delete} /api/procarianos/:id

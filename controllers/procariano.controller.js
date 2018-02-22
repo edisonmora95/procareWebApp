@@ -2,6 +2,8 @@
 	@Descripcion: Clase controladora de todos los procarianos
 	@Autor: Jose Viteri
 	@FechaCreacion: 26/06/2017
+	@UltimaFechaModificacion:
+		17/02/2018	@edisonmora95
 */
 'use strict';
 
@@ -21,32 +23,15 @@ const ModeloGrupo 					= require('../models/').Grupo;
 	@Autor : JV
 	@FechaCreacion : 26/06/2017
 	@Descripción:
-		* Primero se crea el registro de persona
-		* Luego se crea el registro de procariano
+		* Primero se crea el registro de procariano
 		* Si el usuario ingresó un grupo, se crea su registro en ProcarianoGrupo
 		* Si el usuario ingresó un tipo, se crea su registro en ProcarianoTipo
 		* Es obligatorio que ingrese un tipo. Si no se ingresa, no se crea el Procariano.
-	@Modificado: 21/07/2017 @edisonmora95	promesas y transacciones
+	@Modificado: 
+		21/07/2017 @edisonmora95	promesas y transacciones
+		18/02/2018	@edisonmora95	Reorganización en Controller de Persona
 */
 const crearProcariano = (req, res) => {
-	const options       = {
-		public_id : req.body.nombres + ' ' + req.body.apellidos + ' ' + Date.now()
-	};
-	let datos 					= {};
-	let fechaNacimiento = ( req.body.fechaNacimiento === '' ) ? null : new Date(req.body.fechaNacimiento);
-	let persona 				= {
-		cedula 					: req.body.cedula,
-		nombres 				: req.body.nombres,
-		apellidos 			: req.body.apellidos,
-		direccion 			: req.body.direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero 					: req.body.genero,
-		email 					: req.body.email,
-		celular 				: req.body.celular,
-		trabajo 				: req.body.trabajo,
-		convencional 		: req.body.convencional,
-		imagenUrl       : null
-	};
 	let fechaOrdenacion = ( req.body.fechaOrdenacion === '' ) ? null : new Date(req.body.fechaOrdenacion);
 	let procariano 			= {
 		colegio 				: req.body.colegio,
@@ -55,56 +40,32 @@ const crearProcariano = (req, res) => {
 		fechaOrdenacion : fechaOrdenacion,
 		estado 					: req.body.estado,
 	};
+
+	let t 							 = res.locals.t;
+	procariano.PersonaId = res.locals.idPersona;
+	
 	const idGrupo 			= req.body.grupo;
 	const idTipo 				= req.body.tipo;
 	let mensaje 				=	'Procariano creado correctamente.';
-
 	co(function* (){
-		let t 										=	yield inicializarTransaccion();
-		if ( req.body.imagenUrl ) {
-			let imagenUrl							= yield utils.subirImagenCloudinary(req.body.imagenUrl, options);	
-			persona.imagenUrl         = imagenUrl.secure_url;
-		}
-		//Creación de Persona
-		let personaCreada 				=	yield ModeloPersona.crearPersonaT(persona, t);
 		//Creación de Procariano
-		procariano.PersonaId 			= personaCreada.get('id');
-		let procarianoCreado 			= yield ModeloProcariano.crearProcarianoT(procariano, t);
-		let idProcariano 					= procarianoCreado.get('id');
+		let procarianoCreado = yield ModeloProcariano.crearProcarianoT(procariano, t);
+		let idProcariano 		 = procarianoCreado.get('id');
 		//Añadir Grupo
-		const ingresoIdGrupo 			= ( idGrupo !== '' && idGrupo !== null && typeof idGrupo !== 'undefined' && idGrupo > 0 );
+		const ingresoIdGrupo = ( idGrupo !== '' && idGrupo !== null && typeof idGrupo !== 'undefined' && idGrupo > 0 );
 		if( ingresoIdGrupo ){
-			const grupoExiste				=	yield ModeloGrupo.obtenerGrupoPorIdP(idGrupo);
-			if( grupoExiste ){
-				datos.procarianogrupo = yield ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, t);
-			}else{
-				mensaje += ' Grupo ingresado no existe.';
-			}
+			yield ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, t);
 		}
 		//Si no escogió grupo no hay problema, no es obligatorio
 		//Añadir Tipo
-		const ingresoIdTipo				= ( idTipo !== '' && idTipo !== null && typeof idTipo !== 'undefined' );
-		if( ingresoIdTipo ){
-			const tipoExiste 				=	( idTipo > 0 && idTipo < 7 );
-			if( tipoExiste ){
-				datos.procarianotipo 	= yield ModeloProcarianoTipo.anadirTipoProcarianoT(idTipo, idProcariano, t);			
-			}else{
-				t.rollback();
-				return respuesta.error(res, 'No se pudo crear procariano', 'Tipo ingresado no existe', null);
-			}
-		}else{
-			//Si no escogió grupo, no se debe crear el registro
-			t.rollback();
-			return respuesta.error(res, 'No se pudo crear procariano', 'No ingresó tipo', null);
-		}
+		yield ModeloProcarianoTipo.anadirTipoProcarianoT(idTipo, idProcariano, t);
 		//Se hace commit y se envíá su respuesta
-		datos.persona 		= personaCreada;
-		datos.procariano 	= procarianoCreado;
 		t.commit();
-		return respuesta.okCreate(res, mensaje, datos);
-	}).catch( fail => {
-		const mensajeError = fail.errors[0].message;
-		return respuesta.error(res, 'No se pudo crear al procariano', mensajeError, fail);
+		return respuesta.okCreate(res, mensaje, idProcariano);
+	})
+	.catch( fail => {
+		t.rollback();
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
@@ -162,14 +123,15 @@ const buscarProcariano = (req, res) => {
 		22/08/2017 	@edisonmora95,	Cambio de nombre de función
 																Pasada función a modelo.
 		16/09/2017	@edisonmora95,	Cambiado a promesas. Una sola función en ModeloProcariano
+		18/02/2018	@edisonmora95,	Modificado formato de respuesta de error
 */
 const buscarProcarianosActivos = (req, res) => {
 	ModeloProcariano.obtenerProcarianosActivosP()
 	.then( procarianos => {
 		return respuesta.okGet(res, 'Búsqueda exitosa', procarianos);
 	})
-	.catch( error => {
-		return respuesta.error(res, 'Error en la búsqueda', '', error);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
@@ -179,10 +141,11 @@ const buscarProcarianosActivos = (req, res) => {
 	@Descripción:
 		Devuelve la información de Persona, Procariano, ProcarianoGrupo y ProcarianoTipo
 	@Modificado: 
-		07/07/2017 @JV , 						para que modifique por ID
-		21/07/2017 @erialper , 			para que devuelva el tipo de procariano, agrego la excepción de busquedad	
-		23/07/2017 @edisonmora95 , 	luego de obtener el id del tipo, también obtiene el nombre del tipo
-		15/09/2017 @edisonmora95 , 	cambiado a promesas. Una sola función en ModeloProariano
+		07/07/2017 	@JV , 					para que modifique por ID
+		21/07/2017	@erialper , 		para que devuelva el tipo de procariano, agrego la excepción de busquedad	
+		23/07/2017 	@edisonmora95 , luego de obtener el id del tipo, también obtiene el nombre del tipo
+		15/09/2017 	@edisonmora95 ,	cambiado a promesas. Una sola función en ModeloProariano
+		18/02/2018	@edisonmora95, 	Modificado formato de respuesta de error
 */
 const buscarProcarianoPorId = (req, res) => {
 	const idPersona = req.params.id;
@@ -199,9 +162,9 @@ const buscarProcarianoPorId = (req, res) => {
 		datos.grupoActual = grupoActual;
 		procariano.set('Grupos', null);
 
-		return respuesta.okGet(res, 'Procariano encontrado', datos);
+		return respuesta.okGet(res, 'Búsqueda exitosa', datos);
 	}).catch( fail => {
-		return respuesta.error(res, 'Error en la búsqueda', '', fail);
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
@@ -216,22 +179,8 @@ const buscarProcarianoPorId = (req, res) => {
 		22/07/2017 @erialper, agregado el cambio de tipo
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
 */
-const editarProcariano = (req, res) => {
+const editarProcariano = (req, res, next) => {
 	const idPersona 			= req.params.id;
-	console.log('idPersona:', idPersona);
-	const fechaNacimiento = (req.body.fechaNacimiento === '') ? null : new Date(req.body.fechaNacimiento);
-	const persona 				= {
-		cedula 					: req.body.cedula,
-		nombres 				: req.body.nombres,
-		apellidos 			: req.body.apellidos,
-		direccion 			: req.body.direccion,
-		fechaNacimiento : fechaNacimiento,
-		genero 					: req.body.genero,
-		email 					: req.body.email,
-		celular 				: req.body.celular,
-		trabajo 				: req.body.trabajo,
-		convencional 		: req.body.convencional
-	};
 	const fechaOrdenacion = (req.body.fechaOrdenacion === '') ? null : new Date(req.body.fechaOrdenacion);
 	const procariano 			= {
 		colegio 				: req.body.colegio,
@@ -241,49 +190,23 @@ const editarProcariano = (req, res) => {
 		estado 					: req.body.estado,
 	};
 	const idTipoNuevo 		= req.body.tipoId;
-	const idProcariano 		= req.body.idProcariano;
-	console.log('idProcariano:', idProcariano);
-	let datos 						= {};
 	let mensaje 					= '';
-	
-	co( function* (){
-		let t 									=	yield inicializarTransaccion();
-		//Edito campos de Persona
-		const personaEditada 		= yield ModeloPersona.editarPersonaT(idPersona, persona, t);
-		//Edito campos de Procariano
-		const procarianoEditado	= yield ModeloProcariano.editarProcarianoT(idPersona, procariano, t);
-		//Edito tipo de Procariano
-		const ingresoTipo 		=	( idTipoNuevo !== null && idTipoNuevo !== '' && typeof idTipoNuevo !== 'undefined' );
-		if( ingresoTipo ){
-			const tipoActual  	=	yield ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(idProcariano);
-			if ( tipoActual === null ) {
-				yield ModeloProcarianoTipo.anadirTipoProcarianoT(idTipoNuevo, idProcariano, t);
-				mensaje = 'Se modificó la información del procariano. Se añadió el tipo';
-			}else{
-				const idTipoActual = tipoActual.get('TipoId');
-				if( idTipoActual != idTipoNuevo ){
-					const cambioDeTipoValido = ( idTipoNuevo == 6 || ( idTipoActual == idTipoNuevo-1 && idTipoNuevo != 5 ) );	
-					if( cambioDeTipoValido ){
-						yield ModeloProcarianoTipo.cambiarTipoDeProcarianoT(idProcariano, idTipoActual, idTipoNuevo, t);
-						mensaje	= 'Se modificó la información del procariano. Incluyendo el tipo';
-					}else{
-						mensaje = 'Se modificó la información del procariano. No se permite cambiar el tipo a uno menor';
-					}
-				}else{
-					mensaje 	= 'Se modificó la información del procariano. No se cambió el tipo ya que era igual al anterior';
-				}
-			}
-		}else{
+	let t 								= res.locals.t;
+
+	ModeloProcariano.editarProcarianoT(idPersona, procariano, t)
+	.then( resutado => {
+		const ingresoTipo =	( idTipoNuevo !== null && idTipoNuevo !== '' && typeof idTipoNuevo !== 'undefined' );
+		if ( ingresoTipo ) {
+			next();
+		} else {
 			mensaje = 'Se modificó la información del procariano. No ingresó tipo para cambiar';
+			t.commit();
+			return respuesta.okUpdate(res, mensaje, null);
 		}
-		//Respuesta
-		datos.persona 		= personaEditada;
-		datos.procariano 	= procarianoEditado;
-		t.commit();
-		return respuesta.okUpdate(res, mensaje, datos);
-	}).catch( fail => {
-		const mensajeError = fail.errors[0].message;
-		return respuesta.error(res, 'Error al editar procariano', mensajeError, fail);
+	})
+	.catch( fail => {
+		t.rollback();
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
@@ -347,20 +270,27 @@ const eliminarProcariano = (req, res) => {
 	@Modificado: 
 		21/07/2017 @erialper , agrega eliminar el tipo y el grupo
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
+		19/02/2018 @edisonmora95,	cambiado a Promise.all
 */
 const buscarChicosFormacionSinGrupo = (req, res) => {
-	co(function* (){
-		let chicosFormacion 							= yield ModeloProcariano.buscarChicosFormacionP();
-		let procarianosEnGrupo 						=	yield ModeloProcarianoGrupo.buscarProcarianosConGrupoP();
-		let arrayChicosFormacionSinGrupo 	= [];
+	Promise.all([
+		ModeloProcariano.buscarChicosFormacionP(),
+		ModeloProcarianoGrupo.buscarProcarianosConGrupoP()
+	])
+	.then( values => {
+		let chicosFormacion    = values[0];
+		let procarianosEnGrupo = values[1];
+
+		let arrayChicosFormacionSinGrupo = [];
 		chicosFormacion.forEach( chico => {
 			if( !chicoEnGrupo(chico.dataValues, procarianosEnGrupo) ){
 				arrayChicosFormacionSinGrupo.push(chico);
 			}
 		});
 		return respuesta.okGet(res, 'Búsqueda exitosa', arrayChicosFormacionSinGrupo);
-	}).catch( fail => {
-		return respuesta.error(res, 'Error en la búsqueda', '', fail);
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
@@ -376,7 +306,7 @@ const obtenerGrupoActualDeProcariano = (req, res) => {
 		let procarianogrupo = yield ModeloProcarianoGrupo.obtenerGrupoActualDeProcarianoP(idProcariano);
 		const idGrupo 			=	procarianogrupo.get('GrupoId');
 		let grupoActual 		=	yield ModeloGrupo.obtenerGrupoPorIdP(idGrupo);
-		return respuesta.okGet(res, 'Búsqueda exitosa', grupo);
+		return respuesta.okGet(res, 'Búsqueda exitosa', grupoActual);
 	}).catch( fail => {
 		return respuesta.error(res, 'Error en la búsqueda', '', fail);
 	});

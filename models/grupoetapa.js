@@ -112,8 +112,8 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            if( resultado === 0 ) return reject( errors.SEQUELIZE_ERROR('Delete error', 'No se encontró el registro de la etapa del grupo para eliminar') );
-            if( resultado === 1 ) return resolve(resultado);
+            if( resultado < 1 ) return reject( errors.SEQUELIZE_ERROR('Delete error', 'No se encontró el registro de la etapa del grupo para eliminar') );
+            return resolve(resultado);
           })
           .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
