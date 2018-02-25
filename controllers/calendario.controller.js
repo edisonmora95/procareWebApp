@@ -4,22 +4,29 @@ const ModeloTarea  = require('../models').Tarea;
 const ModeloEvento = require('../models').Evento;
 let co 						 = require('co');
 
-
+/*
+	@Modificaciones:
+		25/02/2018	@edisonmora95	Cambiado a Promise.all()
+*/
 module.exports.mostrarCalendario = (req, res, next) => {
-	co(function *(){
-		let tareas  = yield ModeloTarea.obtenerTodasLasTareasP();
-		let eventos = yield ModeloEvento.obtenerTodosLosEventosP();
+	Promise.all([
+		ModeloTarea.obtenerTodasLasTareasP(),
+		ModeloEvento.obtenerTodosLosEventosP()
+	])
+	.then( values => {
+		let tareas  = values[0];
+		let eventos = values[1];
 
 		tareas  = asignarObjetos(tareas, 'tarea');
 		eventos = asignarObjetos(eventos, 'evento');
 
 		const datos = tareas.concat(eventos);
-		 return respuesta.okGet(res, 'Tareas y eventos obtenidos exitosamente', datos);
+		 return respuesta.okGet(res, 'Búsqueda exitosa', datos);
 	})
 	.catch( fail => {
-		return respuesta.error(res, 'No se pudieron obtener las tareas', '', fail);
-	});
-}
+    return respuesta.ERROR_SERVIDOR(res, fail);
+  });
+};
 
 function asignarObjetos(arrayT, tipo){
 	return arrayT.map( tarea => {
@@ -40,21 +47,27 @@ function asignarObjetos(arrayT, tipo){
 	});
 }
 
-
+/*
+	@Modificaciones:
+		25/02/2018	@edisonmora95	Cambiado a Promise.all()
+*/
 module.exports.mostrarCalendarioUsuario = (req, res, next) => {
 	const idResponsable = req.params.id_responsable;
 
-	co(function *(){
-		let tareas  = yield ModeloTarea.obtenerTareasDeUsuarioP(idResponsable);
-		let eventos = yield ModeloEvento.obtenerEventosDeUsuarioP(idResponsable);
-
+	Promise.all([
+		ModeloTarea.obtenerTareasDeUsuarioP(idResponsable),
+		ModeloEvento.obtenerTodosLosEventosP()
+	])
+	.then( values => {
+		let tareas  = values[0];
+		let eventos = values[1];
 		tareas  = asignarObjetos(tareas, 'tarea');
 		eventos = asignarObjetos(eventos, 'evento');
 
 		const datos = tareas.concat(eventos);
-		return respuesta.okGet(res, 'Tareas y eventos obtenidos exitosamente', datos);
+		 return respuesta.okGet(res, 'Búsqueda exitosa', datos);
 	})
 	.catch( fail => {
-		return respuesta.error(res, 'No se pudieron obtener las tareas u eventos', '', fail);
-	});
+    return respuesta.ERROR_SERVIDOR(res, fail);
+  });
 };

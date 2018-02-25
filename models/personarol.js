@@ -8,13 +8,13 @@
 const errors = require('../utils/errors');
 
 module.exports = function(sequelize, DataTypes) {
-  var PersonaRol = sequelize.define('PersonaRol', {
+  let PersonaRol = sequelize.define('PersonaRol', {
       fechaInicio : {
-        type : DataTypes.DATE,
+        type      : DataTypes.DATE,
         allowNull : true
       },
       fechaFin : {
-        type : DataTypes.DATE,
+        type      : DataTypes.DATE,
         allowNull : true
       }
   }, {
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
           .then( registro => {
             return resolve(registro);
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });

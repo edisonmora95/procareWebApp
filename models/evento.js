@@ -5,6 +5,9 @@
 @UltimaFechaModificacion: --
 */
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   let Evento = sequelize.define('Evento', {
     nombre: {
@@ -20,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
         }
       }
     },
-    fechaInicio: {
+   fechaInicio: {
       type        : DataTypes.DATE, //YYY-MM-DD HH:MM:SS
       allowNull   : false,
       defaultValue: sequelize.NOW,
@@ -31,19 +34,30 @@ module.exports = function(sequelize, DataTypes) {
         isDate   : {
           msg  : 'El campo "Fecha de inicio" debe estar en formato Date'
         },
-        isAfter  : function(value){
-          const fechaIngresada = value;
+        isAfter(value){
+          const fechaIngresada = new Date(value);
           const fechaActual    = new Date().setHours(0,0,0,0);
-          if( fechaActual > new Date(fechaIngresada).getTime() ){
-            return false;
+          if( fechaActual > fechaIngresada.getTime() ){
+            throw new Error('No puede ingresar una fecha de inicio que ya pasó');
           }
-          return true;
         }
       }
     },
     fechaFin: {
       type        : DataTypes.DATE, //YYY-MM-DD HH:MM:SS
       allowNull   : true,
+      validate    : {
+        isDate   : {
+          msg  : 'El campo "Fecha fin" debe estar en formato Date'
+        },
+        isAfter(value){
+          const fechaIngresada = new Date(value);
+          const fechaActual    = new Date().setHours(0,0,0,0);
+          if( fechaActual > fechaIngresada.getTime() ){
+            throw new Error('No puede ingresar una fecha fin que ya pasó');
+          }
+        }
+      }
     },
     descripcion: {
       type      : DataTypes.TEXT,
@@ -82,14 +96,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate : {
         notEmpty: {
-          msg: 'El valor ingresado como estado no puede estar vacío.'
+          msg: 'El campo "Estado" no puede estar vacío'
         },
         isNumeric: {
-          msg: 'Debe ser número'
+          msg: 'El campo "Estado" debe ser número'
         },
         isIn: {
           args: [  [1, 2, 3] ], //Pendiente, En proceso, Completada
-          msg: 'Debe ser un valor válido'
+          msg: 'El campo "Estado" debe ser 1, 2 ó 3'
         }
       }
     },
@@ -105,6 +119,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       crearEventoP(evento){
         return new Promise( (resolve, reject) => {
+          if( !evento.responsable )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del organizador') );
+          if( evento.responsable < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del organizador debe ser mayor a 0') );
           return this.create({
             idOrganizador : evento.responsable,
             nombre        : evento.nombre,
@@ -120,9 +136,9 @@ module.exports = function(sequelize, DataTypes) {
           .then( evento => {
             return resolve(evento);
           })
-          .catch( error => {
-            return reject(error);
-          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
         });
       },
       obtenerTodosLosEventosP(){
@@ -138,16 +154,16 @@ module.exports = function(sequelize, DataTypes) {
           .then( eventos => {
             return resolve(eventos);
           })
-          .catch( error => {
-            return reject(error);
-          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
         });
       },
       obtenerEventosDeUsuarioP(idOrganizador){
         const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-          if( !idOrganizador )    return reject( new Error('Debe enviar el id del organizador') );
-          if( idOrganizador < 0 ) return reject( new Error('El id debe ser mayor a 0') );
+          if( !idOrganizador )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del organizador') );
+          if( idOrganizador < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del organizador debe ser mayor a 0') );
           return this.findAll({
             include : [
               {
@@ -161,45 +177,48 @@ module.exports = function(sequelize, DataTypes) {
           .then( eventos => {
             return resolve(eventos);
           })
-          .catch( error => {
-            return reject(error);
-          })
-        });
-      },
-      obtenerTodosLosEventos: function(success, error) {
-          this.findAll({}).then(success).catch(error);
-      },
-      eliminarEventoT(idEvento, transaction){
-        return new Promise((resolve, reject) => {
-          if( !idEvento )    return reject( new Error('Debe enviar el id del evento') );
-          if( idEvento < 0 ) return reject( new Error('El id debe ser mayor a 0') );
-          return this.destroy({
-            where : {
-              id : idEvento
-            }
-          },
-          { 
-            transaction : transaction 
-          })
-          .then( rows => {
-            if( rows == 0 ) return reject( new Error('No se encontró evento con el id indicado'));
-            if( rows < 0 )  return reject( new Error('Error al eliminar'));
-            if( rows == 1 ) return resolve(rows);
-            if( rows > 1 )  return reject( new Error('Se eliminó más de un evento'))
-          })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
-      cambiarEstado: function(idEvento, estadoNuevo, success, error){
-        this.update({
-          estado: estadoNuevo
-        }, {
-          where: {
-            id: idEvento
-          }
-        }).then(success).catch(error);
+      eliminarEventoT(idEvento, transaction){
+        return new Promise((resolve, reject) => {
+          if( !idEvento )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del evento') );
+          if( idEvento < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del evento debe ser mayor a 0') );
+          return this.destroy({
+            where : {
+              id : idEvento
+            },
+            transaction : transaction
+          })
+          .then( rows => {
+            if( rows == 0 ) return reject( errors.SEQUELIZE_ERROR('No se encontró evento con el id indicado', 'Delete error'));
+            if( rows < 0 )  return reject( errors.SEQUELIZE_ERROR('Error al eliminar', 'Delete error'));
+            if( rows == 1 ) return resolve(rows);
+            if( rows > 1 )  return reject( errors.SEQUELIZE_ERROR('Se encontró más de un registro. No se puede eliminar', 'Delete error'))
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
+      },
+      cambiarEstadoP: function(idEvento, estadoNuevo){
+        return new Promise( (resolve, reject) => {
+          if( !idEvento )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del evento') );
+          if( idEvento < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del evento debe ser mayor a 0') );
+          return this.update({
+            estado: estadoNuevo
+          }, {
+            where : { id : idEvento }
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
       }
     }
   });

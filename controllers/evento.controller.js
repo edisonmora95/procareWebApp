@@ -7,7 +7,7 @@
 'use strict';
 
 const ModeloEvento = require('../models').Evento;
-let respuesta     = require('../utils/respuestas');
+const respuesta    = require('../utils/respuestas');
 let co            = require('co');
 let sequelize     = require('../models/').sequelize;
 
@@ -18,7 +18,8 @@ var modelo = require('../models');
   @Descripción:
     * Crea el registro de evento
   @ÚltimaModificación:
-    17/11/2017 @edisonmora95 Cambiado a Promesas
+    17/11/2017 @edisonmora95  Cambiado a Promesas
+    24/02/2018 @edisonmora95  Modificada respuesta
 */
 const crearEvento = (req, res, next) => {
   let fechaFin = null;
@@ -39,12 +40,10 @@ const crearEvento = (req, res, next) => {
   };
   ModeloEvento.crearEventoP(evento)
   .then( datos => {
-    let mensaje     = 'Evento creado correctamente';
-    return respuesta.okCreate(res, mensaje, datos);
+    return respuesta.okCreate(res, 'Evento creado correctamente', datos.get('id'));
   })
-  .catch( error => {
-    const mensajeError = fail.errors[0].message;
-    return respuesta.error(res, 'No se pudo crear el evento', mensajeError, fail);
+  .catch( fail => {
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
 }
 
@@ -53,25 +52,29 @@ const crearEvento = (req, res, next) => {
   @Descripción:
     * Elimina el registro de evento
   @ÚltimaModificación:
-    17/11/2017 @edisonmora95 Cambiado a Promesas
+    17/11/2017  @edisonmora95 Cambiado a Promesas
+    24/02/2018  @edisonmora95 Modificado orden de funciones
 */
 const eliminarEvento = (req, res, next) => {
   const idEvento = req.params.id;
-  let mensaje   = 'Evento eliminado correctamente';
-  co(function* (){
-    let t = yield inicializarTransaccion();
-    yield ModeloEvento.eliminarEventoT(idEvento, t);
-    t.commit();
-    return respuesta.okDelete(res, mensaje, null);
+  inicializarTransaccion()
+  .then( t => {
+    ModeloEvento.eliminarEventoT(idEvento, t)
+    .then( resultado => {
+      t.commit();
+      return respuesta.okDelete(res, 'Evento eliminado correctamente', resultado);
+    })
+     .catch( fail => {
+      return respuesta.ERROR_SERVIDOR(res, fail);
+    });
   })
-  .catch(error => {
-    const mensajeError = error.errors[0].message;
-    return respuesta.error(res, 'No se pudo eliminar el evento', mensajeError, error);
+  .catch( fail => {
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
 }
 
 const editarEvento = (req, res, next) => {
-  modelo.Evento.update({
+  ModeloEvento.update({
     
     idOrganizador : req.body.id_organiador,
     nombre : req.body.nombre,
@@ -107,73 +110,71 @@ const editarEvento = (req, res, next) => {
   });
 };
 
+/*
+  @UltimaModificacion:
+    24/02/2018  @edisonmora95 Modificado formato de respuesta
+*/
 const mostrarEventosPorUsuario = (req, res) => {
   const idOrganizador = req.params.id;
   ModeloEvento.obtenerEventosDeUsuarioP(idOrganizador)
   .then( eventos => {
-    const datos = eventos.map(tarea => {
+    const datos = eventos.map(evento => {
       return Object.assign({}, {
         id          : evento.id,
-        idUser      : evento.Persona.id,
-        title       : evento.titulo,
-        user        : evento.Persona.nombres + " " + evento.Persona.apellidos ,
-        start       : evento.fecha ,
+        idUser      : evento.get('Persona').get('id'),
+        title       : evento.nombre,
+        user        : evento.get('Persona').get('nombres') + " " + evento.get('Persona').get('apellidos') ,
+        start       : evento.fechaInicio,
+        end         : evento.fechaFin,
         description : evento.descripcion, 
         type        : "evento"
       });
     });
     return respuesta.okGet(res, 'Búsqueda exitosa', datos);
   })
-  .catch( error => {
-    const mensajeError = error.errors[0].message;
-    return respuesta.error(res, 'No se pudieron obtener los eventos', mensajeError, error);
+ .catch( fail => {
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
 };
 
+/*
+  @UltimaModificacion:
+    24/02/2018  @edisonmora95 Modificado formato de respuesta
+*/
 const mostrarEventos = (req,res,next) =>{
   ModeloEvento.obtenerTodosLosEventosP()
   .then( eventos => {
-    const datos = eventos.map(tarea => {
+    const datos = eventos.map(evento => {
       return Object.assign({}, {
         id          : evento.id,
-        idUser      : evento.Persona.id,
-        title       : evento.titulo,
-        user        : evento.Persona.nombres + " " + evento.Persona.apellidos ,
-        start       : evento.fecha ,
+        idUser      : evento.get('Persona').get('id'),
+        title       : evento.nombre,
+        user        : evento.get('Persona').get('nombres') + " " + evento.get('Persona').get('apellidos') ,
+        start       : evento.fechaInicio,
+        end         : evento.fechaFin,
         description : evento.descripcion, 
         type        : "evento"
       });
     });
     return respuesta.okGet(res, 'Búsqueda exitosa', datos);
   })
-  .catch( error => {
-    const mensajeError = error.errors[0].message;
-    return respuesta.error(res, 'No se pudieron obtener los eventos', mensajeError, error);
+  .catch( fail => {
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
 };
 
 
 const cambiarEstado = (req, res, next) => {
-  const idEvento = req.params.id;
+  const idEvento    = req.params.id;
   const estadoNuevo = req.body.estadoNuevo;
-  let Evento = modelo.Evento;
 
-  Evento.cambiarEstado(idEvento, estadoNuevo, (success) => {
-    
-    const cantidadRegistrosCambiados = parseInt(success);
-
-    if(cantidadRegistrosCambiados === 1){
-      return respuesta.okUpdate(res, 'Evento cambiada de estado', success);  
-    }else if( cantidadRegistrosCambiados > 1){
-      return respuesta.error(res, 'Se cambió de estado a ' + success + ' tareas', '', success);
-    }else if( cantidadRegistrosCambiados < 1){
-      return respuesta.error(res, 'Error al intentar cambiar de estado', '', success);
-    }
-
-  }, (error) => {
-    return respuesta.error(res, 'Error al intentar cambiar de estado', '', error);
+  ModeloEvento.cambiarEstadoP(idEvento, estadoNuevo)
+  .then( success => {
+    return respuesta.okUpdate(res, 'Evento cambiado de estado', success);  
+  })
+  .catch( fail => {
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
-
 };
 
 module.exports = {

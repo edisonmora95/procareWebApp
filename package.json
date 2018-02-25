@@ -6,12 +6,13 @@
     "start": "gulp",
     "dev": "gulp",
     "prod": "gulp run-prod",
-    "coverage-test": "nyc --reporter=html gulp unit-test",
+    "coverage-unit-test": "nyc --reporter=html --reporter=text gulp unit-test",
+    "coverage-integration-test" : "nyc --reporter=html --reporter=text gulp integration-test",
     "unit-test" : "gulp unit-test",
     "integration-test" : "gulp integration-test",
     "coveralls": "gulp coveralls",
     "build-dev": "gulp build-dev",
-    "build-prod": "gulp build-prod",
+    "build-prod": "gulp build-prod"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -17,14 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // associations can be defined here
       },
-      anadirTipoProcariano: function(idTipo, idProcariano, fechaInicio, callback, errorCallback){
-        this.create({
-          TipoId: idTipo,
-          ProcarianoId: idProcariano,
-          fechaInicio: fechaInicio,
-          fechaFin: null
-        }).then(callback).catch(errorCallback);
-      },
       ///////////////////////////////////////
       //FUNDIONES CON PROMESAS
       ///////////////////////////////////////

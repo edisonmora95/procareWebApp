@@ -6,7 +6,6 @@
 */
 'use strict';
 
-let modelo    = require('../models');
 const ModeloTarea = require('../models').Tarea;
 let respuesta 		= require('../utils/respuestas');
 let co 						= require('co');
@@ -17,7 +16,8 @@ let sequelize	 		= require('../models/').sequelize;
 	@Descripción:
 		* Crea el registro de tarea
 	@ÚltimaModificación:
-		17/11/2017 @edisonmora95 Cambiado a Promesas
+		17/11/2017 @edisonmora95  Cambiado a Promesas
+		24/02/2018 @edisonmora95	Modificada respuesta
 */
 const crearTarea = (req, res) => {
 	let fechaFin = null;
@@ -38,11 +38,10 @@ const crearTarea = (req, res) => {
 	};
 	ModeloTarea.crearTareaP(tarea)
 	.then( datos => {
-		return respuesta.okCreate(res, 'Tarea creada correctamente', datos);
+		return respuesta.okCreate(res, 'Tarea creada correctamente', datos.get('id'));
 	})
 	.catch( fail => {
-		const mensajeError = fail.errors[0].message;
-		return respuesta.error(res, 'No se pudo crear la tarea', mensajeError, fail);
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 }
 
@@ -52,24 +51,29 @@ const crearTarea = (req, res) => {
 		* Elimina el registro de tarea
 	@ÚltimaModificación:
 		17/11/2017 @edisonmora95 Cambiado a Promesas
+		24/02/2018  @edisonmora95 Modificado orden de funciones
 */
 const eliminarTarea = (req, res, next) => {
 	const idTarea = req.params.id;
-	let mensaje   = 'Tarea eliminada correctamente';
-	co(function* (){
-		let t =	yield inicializarTransaccion();
-		yield ModeloTarea.eliminarTareaT(idTarea, t);
-		t.commit();
-		return respuesta.okDelete(res, mensaje, null);
+	inicializarTransaccion()
+	.then( t => {
+		ModeloTarea.eliminarTareaT(idTarea, t)
+		.then( resultado => {
+			t.commit();
+			return respuesta.okDelete(res, 'Tarea eliminada correctamente', resultado);
+		})
+		.catch( fail => {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
 	})
-	.catch(error => {
-		const mensajeError = error.errors[0].message;
-		return respuesta.error(res, 'No se pudo eliminar la tarea', mensajeError, error);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 }
 
 const editarTarea = (req, res, next) => {
-		modelo.Tarea.update({
+		ModeloTarea.update({
 			id_responsable: req.body.nombre,
 			nombre: req.body.nombre,
 			fecha_publicacion: req.body.fecha_publicacion,
@@ -104,6 +108,10 @@ const editarTarea = (req, res, next) => {
 		});
 }
 
+/*
+  @UltimaModificacion:
+    24/02/2018  @edisonmora95 Modificado formato de respuesta
+*/
 const mostrarTareaPorUsuario = (req, res) => {
 	const idResponsable = req.params.id;
 	ModeloTarea.obtenerTareasDeUsuarioP(idResponsable)
@@ -122,12 +130,15 @@ const mostrarTareaPorUsuario = (req, res) => {
 		});
 		return respuesta.okGet(res, 'Búsqueda exitosa', datos);
 	})
-	.catch( error => {
-		const mensajeError = error.errors[0].message;
-		return respuesta.error(res, 'No se pudieron obtener las tareas', mensajeError, error);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 }
 
+/*
+  @UltimaModificacion:
+    24/02/2018  @edisonmora95 Modificado formato de respuesta
+*/
 const mostrarTareas = (req, res, next) => {
 	ModeloTarea.obtenerTodasLasTareasP()
 	.then( tareas => {
@@ -137,41 +148,30 @@ const mostrarTareas = (req, res, next) => {
 				idUser 			: tarea.Persona.id,
 				title 			: tarea.titulo,
 				user 				: tarea.Persona.nombres + " " + tarea.Persona.apellidos,
-				start 			: tarea.fecha_publicacion,
-				end 				: tarea.fecha_limite,
+				start 			: tarea.fechaInicio,
+				end 				: tarea.fechaFin,
 				description : tarea.descripcion,
 				type 				: "tarea"
 			});
 		});
 		return respuesta.okGet(res, 'Búsqueda exitosa', datos);
 	})
-	.catch( error => {
-		const mensajeError = error.errors[0].message;
-		return respuesta.error(res, 'No se pudieron obtener las tareas', mensajeError, error);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 }
 
 const cambiarEstado = (req, res, next) => {
-  const idTarea = req.params.id;
+  const idTarea     = req.params.id;
   const estadoNuevo = req.body.estadoNuevo;
-  let Tarea = modelo.Tarea;
 
-  Tarea.cambiarEstado(idTarea, estadoNuevo, (success) => {
-	
-	const cantidadRegistrosCambiados = parseInt(success);
-	
-	if(cantidadRegistrosCambiados === 1){
-	  return respuesta.okUpdate(res, 'Tarea cambiada de estado', success);  
-	}else if( cantidadRegistrosCambiados > 1){
-	  return respuesta.error(res, 'Se cambió de estado a ' + success + ' tareas', '', success);
-	}else if( cantidadRegistrosCambiados < 1){
-	  return respuesta.error(res, 'Error al intentar cambiar de estado', '', success);
-	}
-
-  }, (error) => {
-	return respuesta.error(res, 'Error al intentar cambiar de estado', '', error);
+  ModeloTarea.cambiarEstadoP(idTarea, estadoNuevo)
+  .then( success => {
+  	return respuesta.okUpdate(res, 'Tarea cambiada de estado', success);  
+  })
+  .catch( fail => {
+  	return respuesta.ERROR_SERVIDOR(res, fail);
   });
-
 };
 
 

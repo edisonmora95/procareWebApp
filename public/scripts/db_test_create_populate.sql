@@ -608,3 +608,17 @@ INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimien
               VALUES(9, '0123456780', 'ANIMADOR', 'SIN ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_sin_rol@gmail.com', null, now(), now());
 INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
               VALUES  (3, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 9);
+INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento, genero, email, contrasenna, createdAt, updatedAt) 
+              VALUES (10, '0125478548', 'Chico Formacion', 'Sin grupo', 'Sur', '2003-02-01', 'masculino', 'chico_sin_grupo@hotmail.com', null, now(), now());
+INSERT INTO  `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
+              VALUES (4, 'Nueva Semilla', null, 'activo', now(), now(), 10);
+INSERT INTO `procarianotipo` (fechaInicio, fechaFin, createdAt, updatedAt, ProcarianoId, TipoId)              
+              VALUES (now(), null, now(), now(), 4, 1);
+
+/* Creación de tareas */
+INSERT INTO `tareas` (id, nombre, descripcion, fechaPublicacion, fechaInicio, fechaFin, prioridad, estado, categoria, tipo, createdAt, updatedAt, idResponsable)
+              VALUES (1, 'Tarea del animador', 'Esta es la tarea del animador', now(), now(), now(), 1, 1, 1, 'tarea', now(), now(), 4);
+
+              /* Creación de tareas */
+INSERT INTO `eventos` (id, nombre, descripcion, fechaInicio, fechaFin, lugar, estado, tipo, createdAt, updatedAt, idOrganizador)
+              VALUES (1, 'Chocolate de Reyes', 'Este es el evento del chocolate de reyes', now(), now(), 'Casa Procare', 1, 'tarea', now(), now(), 4);

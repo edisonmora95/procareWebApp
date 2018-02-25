@@ -5,6 +5,9 @@
 @UltimaFechaModificacion: 03/07/2017 @JV modificado el validate del estado, y el ID responsable
 */
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   let Tarea = sequelize.define('Tarea', {
     nombre: {
@@ -31,9 +34,10 @@ module.exports = function(sequelize, DataTypes) {
         isDate 	 : {
           msg  : 'El campo "Fecha de publicación" debe estar en formato Date'
         },
-        isBefore : {
-          args :  new Date().toString() ,
-          msg  : 'No puede ingresar una fecha de publicación futura'
+        isValidDate(date) {
+          if ( new Date(date) > new Date() ) {
+            throw new Error('No puede ingresar una fecha de publicación futura');
+          }
         }
       }
     },
@@ -48,19 +52,30 @@ module.exports = function(sequelize, DataTypes) {
         isDate 	 : {
           msg  : 'El campo "Fecha de inicio" debe estar en formato Date'
         },
-        isAfter  : function(value){
-          const fechaIngresada = value;
+        isAfter(value){
+          const fechaIngresada = new Date(value);
           const fechaActual    = new Date().setHours(0,0,0,0);
-          if( fechaActual > new Date(fechaIngresada).getTime() ){
-            return false;
+          if( fechaActual > fechaIngresada.getTime() ){
+            throw new Error('No puede ingresar una fecha de inicio que ya pasó');
           }
-          return true;
         }
       }
     },
     fechaFin: {
       type 				: DataTypes.DATE, //YYY-MM-DD HH:MM:SS
       allowNull 	: true,
+      validate    : {
+        isDate   : {
+          msg  : 'El campo "Fecha fin" debe estar en formato Date'
+        },
+        isAfter(value){
+          const fechaIngresada = new Date(value);
+          const fechaActual    = new Date().setHours(0,0,0,0);
+          if( fechaActual > fechaIngresada.getTime() ){
+            throw new Error('No puede ingresar una fecha fin que ya pasó');
+          }
+        }
+      }
     },
     prioridad: {
       type 		 : DataTypes.INTEGER,
@@ -70,11 +85,11 @@ module.exports = function(sequelize, DataTypes) {
           msg : 'El campo "Prioridad" no puede estar vacío'
         },
         isNumeric: {
-          msg: 'Debe ser número'
+          msg: 'El campo "Prioridad" debe ser número'
         },
         isIn: {
           args: [ [1, 2, 3] ], //alta, media, baja
-          msg : 'Debe ser 1, 2 ó 3'
+          msg : 'El campo "Prioridad" debe ser 1, 2 ó 3'
         }
       }
     },
@@ -83,14 +98,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate : {
         notEmpty: {
-          msg: 'El valor ingresado como estado no puede estar vacío.'
+          msg: 'El campo "Estado" no puede estar vacío'
         },
         isNumeric: {
-          msg: 'Debe ser número'
+          msg: 'El campo "Estado" debe ser número'
         },
         isIn: {
           args: [  [1, 2, 3] ], //Pendiente, En proceso, Completada
-          msg: 'Debe ser un valor válido'
+          msg: 'El campo "Estado" debe ser 1, 2 ó 3'
         }
       }
     },
@@ -112,14 +127,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate : {
         notEmpty: {
-          msg: 'El valor ingresado como categoría no puede estar vacío.'
+          msg: 'El campo "Categoría" no puede estar vacío'
         },
         isNumeric: {
-          msg: 'Debe ser número'
+          msg: 'El campo "Categoría" debe ser número'
         },
         isIn: {
           args: [ [1, 2, 3] ], //Formación, Acción, Fundación
-          msg : 'El valor ingresado como categoría debe ser 1, 2 ó 3'
+          msg : 'El campo "Categoría" debe ser 1, 2 ó 3'
         }
       }
     },
@@ -135,6 +150,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       crearTareaP(tarea){
       	return new Promise( (resolve, reject) => {
+          if( !tarea.idResponsable )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del responsable') );
+          if( tarea.idResponsable < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del responsable debe ser mayor a 0') );
       		return this.create({
 		    		nombre 					 : tarea.nombre,
 		    		fechaPublicacion : tarea.fechaPublicacion,
@@ -150,9 +167,9 @@ module.exports = function(sequelize, DataTypes) {
 		    	.then( tarea => {
 		    		return resolve(tarea);
 		    	})
-		    	.catch( error => {
-		    		return reject(error);
-		    	})
+		    	.catch( fail => {
+		    		return reject( errors.ERROR_HANDLER(fail) );
+		    	});
       	});
       },
       obtenerTodasLasTareasP(){
@@ -167,16 +184,17 @@ module.exports = function(sequelize, DataTypes) {
 					})
 					.then( tareas => {
 						return resolve(tareas);
-					}).catch( error => {
-						return reject(error);
+					})
+          .catch( fail => {
+						return reject( errors.ERROR_HANDLER(fail) );
 					});
 				});
       },
       obtenerTareasDeUsuarioP(idResponsable){
       	const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-					if( !idResponsable ) 		return reject( new Error('Debe enviar el id del responsable') );
-					if( idResponsable < 0 ) return reject( new Error('El id debe ser mayor a 0') );
+					if( !idResponsable ) 		return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id del responsable') );
+					if( idResponsable < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id del responsable debe ser mayor a 0') );
 					return this.findAll({
 						include : [
 							{
@@ -189,42 +207,48 @@ module.exports = function(sequelize, DataTypes) {
 					})
 					.then( tareas => {
 						return resolve(tareas);
-					}).catch( error => {
-						return reject(error);
-					});
+					})
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
 				});
       },
       eliminarTareaT(idTarea, transaction){
       	return new Promise((resolve, reject) => {
-      		if( !idTarea ) 		return reject( new Error('Debe enviar el id de la tarea') );
-					if( idTarea < 0 ) return reject( new Error('El id debe ser mayor a 0') );
+      		if( !idTarea ) 		return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id de la tarea') );
+					if( idTarea < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id de la tarea debe ser mayor a 0') );
 					return this.destroy({
 						where : {
 							id : idTarea
-						}
-					},
-					{ 
-						transaction : transaction 
+						},
+            transaction : transaction 
 					})
 					.then( rows => {
-						if( rows == 0 ) return reject( new Error('No se encontró tarea con el id indicado'));
-						if( rows < 0 ) 	return reject( new Error('Error al eliminar'));
+						if( rows < 1 ) return reject( errors.SEQUELIZE_ERROR('No se encontró tarea con el id indicado', 'Delete error') );
 						if( rows == 1 ) return resolve(rows);
-						if( rows > 1 )	return reject( new Error('Se eliminó más de una tarea'))
+						if( rows > 1 )	return reject( errors.SEQUELIZE_ERROR('Se encontró más de un registro. No se puede eliminar', 'Delete error') );
 					})
-					.catch( error => {
-						return reject(error);
-					});
+					.catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
       	});
       },
-      cambiarEstado: function(idTarea, estadoNuevo, success, error){
-        this.update({
-          estado: estadoNuevo
-        }, {
-          where: {
-            id: idTarea
-          }
-        }).then(success).catch(error);
+      cambiarEstadoP: function(idTarea, estadoNuevo){
+        return new Promise( (resolve, reject) => {
+          if( !idTarea )    return reject( errors.SEQUELIZE_FK_ERROR('Debe enviar el id de la tarea') );
+          if( idTarea < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('El id de la tarea debe ser mayor a 0') );
+          return this.update({
+            estado: estadoNuevo
+          }, {
+            where : { id : idTarea }
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
       }
     }
 	});

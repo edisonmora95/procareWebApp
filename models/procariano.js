@@ -71,19 +71,6 @@ module.exports = function(sequelize, DataTypes) {
         Procariano.belongsToMany(models.Grupo, {through: 'ProcarianoGrupo'});
         Procariano.belongsToMany(models.Reunion, {through: 'AsistenciaChico'});
       },
-      obtenerGrupoDeProcariano: function(idProcariano, success, error){
-        const Grupo = sequelize.import("../models/grupo");
-        this.findOne({
-          where: {
-            id: idProcariano
-          },
-          include: [
-            {
-              model: Grupo
-            }
-          ]
-        }).then(success).catch(error);
-      },
       ///////////////////////////////////////
       //FUNDIONES CON PROMESAS
       ///////////////////////////////////////

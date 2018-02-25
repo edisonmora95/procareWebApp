@@ -254,7 +254,7 @@ gulp.task('unit-test', function() {
 
 gulp.task('integration-test', function() {
     process.env.NODE_ENV = 'test';
-    gulp.src('./test/integration_test/*.integration.test.js', {
+    gulp.src('./test/integration_test/calendario.integration.test.js', {
             read: false
         })
         .pipe(mocha());
