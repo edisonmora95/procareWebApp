@@ -545,6 +545,8 @@ INSERT INTO `personas` (cedula, nombres, apellidos, direccion, fechaNacimiento,g
               VALUES('0123456789', 'FUNDACION', 'PROCARE', 'Urdesa', '1995-06-01', 'masculino', 'procarewebapp@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
 INSERT INTO `personarol` 
               VALUES (now(), null, now(), now(), 1, 'Director Ejecutivo');
+INSERT INTO `personarol` 
+              VALUES (now(), null, now(), now(), 1, 'Animador');              
 /* PERSONAL */
 INSERT INTO  `personas` (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
               VALUES('0987654321', 'Personal', 'Personal', 'Urdesa', '2000-07-01', 'masculino', 'personal@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
@@ -575,8 +577,6 @@ INSERT INTO `personarol`
 /* ASESOR */
 INSERT INTO `personas` (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
               VALUES('0123254484', 'ASESOR', 'NIVEL', 'Urdesa', '1995-06-01', 'masculino', 'asesor@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
-INSERT INTO `personarol` 
-              VALUES (now(), null, now(), now(), 7, 'Asesor');
 
 
 /* TESTS */

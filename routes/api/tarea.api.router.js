@@ -2,10 +2,10 @@
 	CRUD de Tareas
 */
 
-var express = require('express');
-var router = express.Router();
-const controladorTarea 			= require('../../controllers/tarea')
-const authApi								= require('../../utils/authentication.api');
+const express = require('express');
+const router  = express.Router();
+const controladorTarea = require('../../controllers/tarea.controller');
+const authApi					 = require('../../utils/authentication.api');
 
 router.use(authApi.verifyToken);
 

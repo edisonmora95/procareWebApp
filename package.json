@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "start": "gulp",
-    "dev": "gulp",
-    "prod": "gulp run-prod",
-    "coverage-unit-test": "nyc --reporter=html --reporter=text gulp unit-test",
+    "dev"  : "gulp",
+    "prod" : "gulp run-prod",
+    "coverage-unit-test"        : "nyc --reporter=html --reporter=text gulp unit-test",
     "coverage-integration-test" : "nyc --reporter=html --reporter=text gulp integration-test",
-    "unit-test" : "gulp unit-test",
+    "unit-test"        : "gulp unit-test",
     "integration-test" : "gulp integration-test",
-    "coveralls": "gulp coveralls",
-    "build-dev": "gulp build-dev",
+    "coveralls" : "gulp coveralls",
+    "build-dev" : "gulp build-dev",
     "build-prod": "gulp build-prod"
   },
   "dependencies": {

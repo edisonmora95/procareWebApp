@@ -22,15 +22,14 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // associations can be defined here
       },
-      buscarRolDePersonaPorId: function(idPersona){
+      buscarRolesDePersonaPorId: function(idPersona){
         return new Promise( (resolve, reject) => {
           if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
           if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
-          return this.findOne({
+          return this.findAll({
             where: {
               fechaFin  : null,
               PersonaId : idPersona,
-              RolNombre : 'Animador'
             }
           })
           .then( registro => {

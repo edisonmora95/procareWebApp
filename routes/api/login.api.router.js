@@ -6,6 +6,8 @@
     15/07/2017 //agregado post cambio contrasenna
     22/12/2017  @edisonmora95 añadida ruta para login con passport
 */
+'use strict';
+
 const co            = require('co');
 const bcrypt        = require('bcryptjs');
 const express       = require('express');
@@ -13,13 +15,10 @@ const passport      = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 let router          = express.Router();
 
-var modelos           = require('../../models');
-var controladorLogin  = require('../../controllers/login.controller');
-var utils             = require('../../utils/utils');
-const ModeloPersona   = require('../../models').Persona;
-const ModeloRol       = require('../../models').Rol;
-const authentication  = require('../../middleware/authentication');
-const authApi         = require('../../utils/authentication.api');
+const controladorLogin = require('../../controllers/login.controller');
+const ModeloPersona    = require('../../models').Persona;
+const authentication   = require('../../middleware/authentication');
+const authApi          = require('../../utils/authentication.api');
 
 //LOCAL STRATEGY
 const strategy = new LocalStrategy({
@@ -47,25 +46,16 @@ const strategy = new LocalStrategy({
 passport.use(strategy);
 
 passport.serializeUser(function(persona, done) {
-  done(null, persona.get('id'));
+  return done(null, persona.get('id'));
 });
 
 passport.deserializeUser(function(id, done) {
-  ModeloPersona.findAll({
-    attributes: ['id', 'nombres', 'apellidos', 'email', 'genero'],
-    where     : {
-      id: id
-    },
-    include   : [{
-      model  : ModeloRol,
-      through: {
-        attributes: ['RolNombre'],
-      }
-    }]
-  }).then(persona => {
-      done(null, persona);
-  }).catch(err => {
-      done(err, null);
+  return ModeloPersona.deserializarUsuario(id)
+  .then( usuario => {
+    return done(null, usuario);
+  })
+  .catch( fail => {
+    return done(fail, null);
   });
 });
 
@@ -78,27 +68,32 @@ passport.deserializeUser(function(id, done) {
 */
 router.post('/', passport.authenticate('local'), controladorLogin.login);
 
-
-router.get('/loginFalla', function(req, res, next) {
-    let objeto = {
-        status: false,
-        message: "algo paso"
-    }
-    res.json(objeto);
-
-});
-
 /*
   @api {get} /api/login/usuarios
   @apiDescription Obtiene los datos del usuario conectado
   @apiGroup Login
-  @apiName login
+  @apiName getUsuario
   @apiversion 0.2.0
 */
 router.get('/usuarios', authApi.verifyToken, controladorLogin.getUsuario);
 
+/*
+  @api {post} /api/login/cambiar
+  @apiDescription Cambia la contraseña del usuario seleccionado
+  @apiGroup Login
+  @apiName cambioContraseña
+  @apiversion 0.2.0
+*/
 router.post('/cambiar', authApi.verifyToken, controladorLogin.cambioContrasenna);
 
 router.post('/authenticate', authentication.authenticate);
+
+router.get('/loginFalla', function(req, res) {
+    let objeto = {
+        status: false,
+        message: "algo paso"
+    };
+    res.json(objeto);
+});
 
 module.exports = router;

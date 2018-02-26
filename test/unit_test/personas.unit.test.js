@@ -30,7 +30,7 @@ let personaObj 		= {
 };
 
 describe('PERSONAS', () => {
-
+	
 	describe('crearPersonaT', () => {
 		let transaction;
 		let idPersona  = 4;	//Quemado en la base de datos. Id del animador
@@ -418,7 +418,6 @@ describe('PERSONAS', () => {
 				done();
 			});
 		});
-
 	});
 	
 	describe('editarPersonaT', () => {
@@ -837,7 +836,6 @@ describe('PERSONAS', () => {
 				done();
 			});
 		});
-		
 	});
 
 	describe('ingresarContrasenna', () => {
@@ -894,7 +892,124 @@ describe('PERSONAS', () => {
 	  		done();
 	  	});
 	  });
+	});
+	
+	describe('buscarPersonaPorEmailP', () => {
+		let email = 'personal@gmail.com';
 
+		it('CP1. Caso exitoso', done => {
+			ModeloPersona.buscarPersonaPorEmailP(email)
+			.then( resultado => {
+				resultado.should.be.json;
+				assert.equal(resultado.get('nombres'), 'Personal', 'Nombre incorrecto');
+				done();
+			});
+		});
+
+		it('CP2. Email no enviado', done => {
+			ModeloPersona.buscarPersonaPorEmailP(null)
+			.catch( fail => {
+				assert.equal(fail.mensaje, 'No ingresó el email', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP3. Email vacío', done => {
+			ModeloPersona.buscarPersonaPorEmailP('')
+			.catch( fail => {
+				assert.equal(fail.mensaje, 'No ingresó el email', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP4. Email no encontrado', done => {
+			let emailFalso = 'email_falso@gmail.com'
+			ModeloPersona.buscarPersonaPorEmailP(emailFalso)
+			.then( resultado => {
+				assert.equal(resultado, null, 'Resultado incorrecto');
+				done();
+			});
+		});
+	});
+	
+	describe('deserializarUsuario', () => {
+		let idPersonal = 2;
+		let idDirectorEjecutivo = 1;
+		let idChicoFormacion = 8;
+
+		it('CP1. Deserializar Animador', done => {
+			ModeloPersona.deserializarUsuario(idPersonal)
+			.then( resultado => {
+				resultado.should.be.json;
+				assert.equal(resultado.get('id'), idPersonal, 'Ids no coinciden');
+				assert.equal(resultado.get('nombres'), 'Personal', 'Nombres no coinciden');
+				assert.equal(resultado.get('email'), 'personal@gmail.com', 'Emails no coinciden');
+				const Rols = resultado.get('Rols');
+				assert.equal(Rols[0].get('nombre'), 'Personal', 'Rol incorrecto');
+				const nombreRol = Rols[0].get('PersonaRol').get('RolNombre');
+				assert.equal(nombreRol, 'Personal', 'Rol incorrecto');
+				done();
+			});
+		});
+
+		it('CP2. Deserializar usuario con varios roles', done => {
+			ModeloPersona.deserializarUsuario(idDirectorEjecutivo)
+			.then( resultado => {
+				resultado.should.be.json;
+				assert.equal(resultado.get('id'), idDirectorEjecutivo, 'Ids no coinciden');
+				assert.equal(resultado.get('nombres'), 'FUNDACION', 'Nombres no coinciden');
+				assert.equal(resultado.get('email'), 'procarewebapp@gmail.com', 'Emails no coinciden');
+				const Rols = resultado.get('Rols');
+				let nombreRol = '';
+				// Primer rol
+				assert.equal(Rols[0].get('nombre'), 'Animador', 'Rol incorrecto');
+				nombreRol = Rols[0].get('PersonaRol').get('RolNombre');
+				assert.equal(nombreRol, 'Animador', 'Rol incorrecto');
+				// Segundo rol
+				assert.equal(Rols[1].get('nombre'), 'Director Ejecutivo', 'Rol incorrecto');
+				nombreRol = Rols[1].get('PersonaRol').get('RolNombre');
+				assert.equal(nombreRol, 'Director Ejecutivo', 'Rol incorrecto');
+				done();
+			});
+		});
+
+		it('CP3. Deserializar usuario sin roles', done => {
+			ModeloPersona.deserializarUsuario(idChicoFormacion)
+			.then( resultado => {
+				resultado.should.be.json;
+				assert.equal(resultado.get('id'), idChicoFormacion, 'Ids no coinciden');
+				assert.equal(resultado.get('nombres'), 'Chico', 'Nombres no coinciden');
+				assert.equal(resultado.get('email'), 'chico_formacion@gmail.com', 'Emails no coinciden');
+				assert.equal(resultado.get('Rols').length, 0, 'Array de roles no está vacío');
+				done();
+			});
+		});
+
+		it('CP4. Id no enviado', done => {
+			ModeloPersona.deserializarUsuario(null)
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id de la persona', 'Tipo de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP5. Id no válido', done => {
+			ModeloPersona.deserializarUsuario(-5)
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Id de la persona inválido', 'Tipo de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP6. Persona no encontrada', done => {
+			ModeloPersona.deserializarUsuario(800)
+			.then( resultado => {
+				assert.equal(resultado, null, 'Se encontró un registro');
+				done();
+			});
+		});
 	});
 
 });

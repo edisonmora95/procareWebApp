@@ -6,9 +6,10 @@
     19/08/2017 @JoseViteri se agrego tipo, se quito sueldo
     17/02/2018  @edisonmora95 Formato a los errores
 */
+'use strict';
+
 const errors = require('../utils/errors');
 let bcrypt   = require('bcryptjs');
-'use strict';
 
 module.exports = function(sequelize, DataTypes) {
   let Persona = sequelize.define('Persona', {
@@ -176,7 +177,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Persona.belongsToMany(models.Rol , {through: 'PersonaRol'})
+        Persona.belongsToMany(models.Rol , {through: 'PersonaRol'});
         // associations can be defined here
       },
       compararContrasenna :  function(candidatePassword, hash, done, user){
@@ -192,21 +193,12 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
       },
-      compararContrasenna2 :  function(candidatePassword, hash, callback){
-        bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-            if(err){
-              return done(null, false , { status : false ,  message : "Usuario no registrado en el sistema"});
-            }
-            return callback(null , isMatch);
-
-        });
-      },
       ///////////////////////////////////////
       //FUNCIONES CON PROMESAS
       ///////////////////////////////////////
       buscarPersonaPorCedulaP: function(cedula){
         return new Promise( (resolve, reject) => {
-          if( !cedula ) return reject('No ingresó la cédula a buscar');
+          if( !cedula ) { return reject('No ingresó la cédula a buscar'); }
           return this.findOne({
             where : {
               cedula : cedula
@@ -222,6 +214,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       buscarPersonaPorEmailP: function(email){
         return new Promise( (resolve, reject) => {
+          if( !email || email === '' ) { return reject( { mensaje : 'No ingresó el email'} ); }
           return this.findOne({
             where : {
               email : email
@@ -230,29 +223,33 @@ module.exports = function(sequelize, DataTypes) {
           .then( persona => {
             return resolve(persona);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
-      obtenerRolesP: function(idPersona){
+      deserializarUsuario: function(idPersona){
         const Rol = sequelize.import("../models/rol");
         return new Promise( (resolve, reject) => {
+          if( !idPersona )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') ); }
+          if( idPersona < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') ); }
           return this.findOne({
-            where : {
-              id : idPersona
+            attributes: ['id', 'nombres', 'apellidos', 'email', 'genero'],
+            where     : {
+              id: idPersona
             },
-            include : [
-              {
-                model : Rol
+            include   : [{
+              model  : Rol,
+              through: {
+                attributes: ['RolNombre'],
               }
-            ]
+            }]
           })
-          .then( persona => {
-            return resolve(persona.Rols);
+          .then( usuario => {
+            return resolve(usuario);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
@@ -286,8 +283,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       editarPersonaT: function(idPersona, persona, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
-          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
+          if( !idPersona )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') ); }
+          if( idPersona < 0 )  { return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') ); }
           return this.update({
             cedula          : persona.cedula,
             nombres         : persona.nombres,
@@ -308,9 +305,9 @@ module.exports = function(sequelize, DataTypes) {
             transaction  : transaction 
           })
           .then( resultado => {
-            if( resultado[0] < 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'No se encontró el registro de la persona para editar') );
-            if( resultado[0] === 1 ) return resolve(resultado[0]);
-            if( resultado[0] > 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'Se encontraron múltiples registros. Se cancela la edición') );
+            if( resultado[0] < 1 )   { return   reject( errors.SEQUELIZE_ERROR('No se encontró el registro de la persona para editar', 'Edit error') ); }
+            if( resultado[0] === 1 ) { return resolve(resultado[0]); }
+            if( resultado[0] > 1 )   { return   reject( errors.SEQUELIZE_ERROR('Se encontraron múltiples registros. Se cancela la edición', 'Edit error') ); }
           })
           .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
@@ -319,8 +316,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       ingresarContrasenna: function(idPersona, contrasenna, transaction){
         return new Promise( (resolve, reject) => {
-          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') );
-          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') );
+          if( !idPersona )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') ); }
+          if( idPersona < 0 )  { return reject( errors.SEQUELIZE_FK_ERROR('Id inválido') ); }
           return this.update({
             contrasenna : contrasenna
           }, 
@@ -333,13 +330,14 @@ module.exports = function(sequelize, DataTypes) {
           .then( resultado => {
             return resolve(resultado);
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       },
       cambiarContrasenna: function(email, contrasenna){
         return new Promise((resolve, reject) => {
+          if( !email || email === '' ) { return reject( { mensaje : 'No ingresó el email'} ); }
           return this.update({
             contrasenna : contrasenna
           },
@@ -349,10 +347,12 @@ module.exports = function(sequelize, DataTypes) {
             }
           })
           .then( resultado => {
-            resolve(resultado);
+            if ( resultado[0] < 1 ) { return reject( errors.SEQUELIZE_ERROR('No se encontró el registro de la persona para editar', 'Edit error') ); }
+            if ( resultado[0] > 1 ) { return reject( errors.SEQUELIZE_ERROR('Se encontraron múltiples registros. Se cancela la edición', 'Edit error') ); }
+            return resolve(resultado[0]);
           })
-          .catch( error => {
-            reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

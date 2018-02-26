@@ -1,16 +1,16 @@
+'use strict';
 
-var modelo = require('../models');
+const jwt    = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const utils	 = require('../utils/utils');
 
-const co            = require('co');
-const jwt           = require('jsonwebtoken');
-const bcrypt        = require('bcryptjs');
-const utils					= require('../utils/utils');
+const ModeloPersona    = require('../models').Persona;
+const ModeloPersonaRol = require('../models').PersonaRol;
 
-const ModeloPersona = require('../models').Persona;
-const config        = require('../config/config');
-let respuesta 		  = require('../utils/respuestas');
+const config    = require('../config/config');
+const respuesta = require('../utils/respuestas');
 
-const cambioContrasenna = (req, res , next) => {
+const cambioContrasenna = (req, res) => {
 	const	email						 = req.body.correo;
 	const viejaContrasenna = req.body.viejaContrasenna;
 	const nuevaContrasenna = req.body.nuevaContrasenna;
@@ -18,55 +18,60 @@ const cambioContrasenna = (req, res , next) => {
 	ModeloPersona.buscarPersonaPorEmailP(email)
 	.then( persona => {
 		//Si el correo no existe en la base
-		if( !persona ) return respuesta.error(res, 'Registro no encontrado', 'No hay un usuario con ese correo', null);
+		if( !persona ) { return respuesta.ERROR_SERVIDOR(res, { mensaje : 'Registro no encontrado' }); }
 		//Ahora se comparan las contraseñas
-    if( !bcrypt.compareSync(viejaContrasenna, persona.get('contrasenna')) ) return respuesta.error(res, 'Contraseña anterior no coincide', '', null);
+    if( !bcrypt.compareSync(viejaContrasenna, persona.get('contrasenna')) ) {
+    	return respuesta.ERROR_SERVIDOR(res, { mensaje : 'Contraseña anterior no coincide' });
+    }
     //Se genera la nueva contraseña en hash
     utils.generarHash(nuevaContrasenna)
     .then( hash => {
     	//Cambio la contraseña
     	ModeloPersona.cambiarContrasenna(email, hash)
 	    .then( resultado => {
-	    	if ( resultado < 1 ) return respuesta.error(res, 'No se encontró registro para hacer el cambio', '', null);
 	    	return respuesta.okUpdate(res, 'Contraseña cambiada', resultado);
 	    })
-	    .catch( errorCambio => {
-	    	return respuesta.error(res, 'Error al cambiar la contraseña', '', errorCambio);
-	    });
+	    .catch( fail => {
+				return respuesta.ERROR_SERVIDOR(res, fail);
+			});
     })
-    .catch( errorHash => {
-    	return respuesta.error(res, 'Error al crear el hash', '', errorHash);
-    });
+    .catch( fail => {
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
 	})
-	.catch( error => {
-		return respuesta.error(res, 'Registro no encontrado', 'Error en la búsqueda', error);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 
 };
 
-const login = (req, res, next) => {
-	co(function* () {
-		const id    = req.user.get('id');
-		const roles 				= yield ModeloPersona.obtenerRolesP(id);
-		const rolesActuales = obtenerRolesActuales(roles);
-		//Genero el token
-    const payload = { 
-      roles : rolesActuales,
-      id    : id
-    };
-    const secret  = config[process.env.NODE_ENV].secret;
-    const token   = jwt.sign(payload, secret);
-    return res.send({
-      status: true,
-      token  : token,
-    });
-	}).catch( fail => {
-    return res.status(500).send(fail);
-  });	
+const login = (req, res) => {
+	const idPersona = req.user.get('id');
+	ModeloPersonaRol.buscarRolesDePersonaPorId(idPersona)
+	.then( roles => {
+		roles = obtenerRolesActuales(roles);
+		if ( roles === undefined || roles.length === 0 ) {
+			return respuesta.viewsUnauthorized(res);
+		}else{
+			const payload = { 
+	      roles : roles,
+	      id    : idPersona
+	    };
+	    const secret = config[process.env.NODE_ENV].secret;
+	    const token  = jwt.sign(payload, secret);
+	    return res.send({
+	      status : true,
+	      token  : token,
+	    });	
+		}
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
 };
 
-const getUsuario = (req, res, next) => {
-	const usuario      = req.user[0];
+const getUsuario = (req, res) => {
+	const usuario      = req.user;
 	const rolesUsuario = usuario.get('Rols');
 	let lista	= [];
 	for (let i = 0; i < rolesUsuario.length; i++) {
@@ -92,9 +97,9 @@ module.exports = {
 function obtenerRolesActuales(arrayRoles){
   let array = [];
   for (let i = 0; i < arrayRoles.length; i++) {
-    let actual = arrayRoles[i].get('PersonaRol');
-    if( !actual.fechaFin ){
-      array.push(actual.RolNombre);
+    let actual = arrayRoles[i];
+    if( !actual.get('fechaFin') ){
+      array.push(actual.get('RolNombre'));
     }
   }
   return array;

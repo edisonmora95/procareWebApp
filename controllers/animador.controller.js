@@ -55,15 +55,22 @@ module.exports.agregarAnimador = (req, res, next) => {
 		const persona 	= procariano.get('Persona');
 		const idPersona = persona.get('personaId');
 
-		ModeloPersonaRol.buscarRolDePersonaPorId(idPersona)
-		.then( rolAsignado => {
-			if ( !rolAsignado ) {
+		ModeloPersonaRol.buscarRolesDePersonaPorId(idPersona)
+		.then( rolesAsignados => {
+			if ( rolesAsignados === undefined || rolesAsignados.length === 0 ) {
 				res.locals.idPersona = idPersona;
 				res.locals.email     = persona.get('email');
 				next();
 			} else {
-				t.commit();
-				return respuesta.okCreate(res, 'Grupo creado', idGrupo);
+				const rolActual = rolesAsignados.get('RolNombre');
+				if ( rolActual === 'Animador' ) {
+					t.commit();
+					return respuesta.okCreate(res, 'Grupo creado', idGrupo);
+				} else {
+					res.locals.idPersona = idPersona;
+					res.locals.email     = persona.get('email');
+					next();
+				}
 			}
 		})
 		.catch( fail => {

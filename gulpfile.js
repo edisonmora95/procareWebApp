@@ -10,7 +10,6 @@ let mocha       = require('gulp-mocha');
 let uglify      = require('gulp-uglify');
 let rename      = require('gulp-rename');
 let gutil       = require('gulp-util');
-let stripDebug  = require('gulp-strip-debug');
 let clean       = require('gulp-clean');
 let forever     = require('gulp-forever-monitor');
 let gmcfp       = require('gulp-mysql-command-file-processor');
@@ -41,12 +40,12 @@ gulp.task('run-prod', function() {
 });
 
 gulp.task('forever', function() {
-  var foreverMonitorOptions = { 
+  let foreverMonitorOptions = { 
     env: process.env,
     args: process.argv,
     watch: true, 
     watchIgnorePatterns:  ['.*', 'node_modules/**', 'public/**', 'temp/**']
-  }
+  };
   
   forever('app.js', foreverMonitorOptions)  
   .on('watch:restart', function(fileInfo) { 
@@ -54,8 +53,8 @@ gulp.task('forever', function() {
   })
   .on('exit', function() {
     console.log('server was closed');
-  })
-})
+  });
+});
 
 ////////////////////////////////////////////
 //Watch tasks
@@ -201,7 +200,7 @@ gulp.task('vueify-dev', function(){
             suffix: '.min'           //Cambia la extensión a nombreArchivo.min.js
         }))                         
         .pipe(gulp.dest(build));
-})
+});
 
 gulp.task('build-prod', () => {
     runSequence('babel', 'vueify-prod');
@@ -254,7 +253,7 @@ gulp.task('unit-test', function() {
 
 gulp.task('integration-test', function() {
     process.env.NODE_ENV = 'test';
-    gulp.src('./test/integration_test/calendario.integration.test.js', {
+    gulp.src('./test/integration_test/login.integration.test.js', {
             read: false
         })
         .pipe(mocha());
@@ -287,7 +286,7 @@ gulp.task('populate-db-test', function(cb){
     const port = 3306;
     const db   = config[process.env.NODE_ENV].database;
     gulp.src(src)
-        .pipe(gmcfp(user, pwd, host, port, null, db))
+        .pipe(gmcfp(user, pwd, host, port, null, db));
     cb();
 });
 

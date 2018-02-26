@@ -21,11 +21,18 @@ let rol = 'Animador';
 
 describe('PERSONA-ROL', () => {
 
-	describe('buscarRolDePersonaPorId', () => {
+	describe('buscarRolesDePersonaPorId', () => {
+		const idAnimador = 4;
+		const idPersonal = 2;
+		const idChicoFormacion   = 8;
+		const idDirectorAnimador = 1;
 
-		it('CP1. Búsqueda exitosa', done => {
-			ModeloPersonaRol.buscarRolDePersonaPorId(idPersona)
+		it('CP1. Búsqueda exitosa Animador', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(idAnimador)
 			.then( resultado => {
+				resultado.should.be.array;
+				assert.equal(resultado[0].get('PersonaId'), idAnimador, 'Id incorrecto');
+				assert.equal(resultado[0].get('RolNombre'), 'Animador', 'Rol incorrecto');
 				done();
 			})
 			.catch( fail => {
@@ -33,8 +40,47 @@ describe('PERSONA-ROL', () => {
 			});
 		});
 
-		it('CP2. idPersona es null', done => {
-			ModeloPersonaRol.buscarRolDePersonaPorId(null)
+		it('CP2. Búsqueda exitosa Personal', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(idPersonal)
+			.then( resultado => {
+				resultado.should.be.array;
+				assert.equal(resultado[0].get('PersonaId'), idPersonal, 'Id incorrecto');
+				assert.equal(resultado[0].get('RolNombre'), 'Personal', 'Rol incorrecto');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP3. Persona con varios roles', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(idDirectorAnimador)
+			.then( resultado => {
+				resultado.should.be.array;
+				for (let i = 0; i < resultado.length; i++) {
+					assert.equal(resultado[i].get('PersonaId'), idDirectorAnimador, 'Id incorrecto');
+				}
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP4. Persona sin rol', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(idChicoFormacion)
+			.then( resultado => {
+				resultado.should.be.array;
+				assert.equal(resultado.length, 0, 'Se encontraron roles');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP5. idPersona es null', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(null)
 			.then( resultado => {
 				done();
 			})
@@ -45,8 +91,8 @@ describe('PERSONA-ROL', () => {
 			});
 		});
 
-		it('CP3. idPersona es negativo', done => {
-			ModeloPersonaRol.buscarRolDePersonaPorId(-5)
+		it('CP6. idPersona es negativo', done => {
+			ModeloPersonaRol.buscarRolesDePersonaPorId(-5)
 			.then( resultado => {
 				done();
 			})
@@ -56,7 +102,6 @@ describe('PERSONA-ROL', () => {
 				done();
 			});
 		});
-
 	});
 
 	describe('asignarRolT', () => {
@@ -110,7 +155,6 @@ describe('PERSONA-ROL', () => {
 				done();
 			});
 		});
-
 	});
 
 });
