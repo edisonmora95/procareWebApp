@@ -173,6 +173,8 @@ describe('LOGIN', () => {
 		it('CP4. Contraseñas anteriores no coinciden', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
+	    req.correo = 'procarewebapp@gmail.com';
+	    req.viejaContrasenna = 'abcde';
 	    request(app)
 	    	.post('/api/login/cambiar')
 	    	.set('x-access-token', token)

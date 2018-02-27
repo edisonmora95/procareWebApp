@@ -26,5 +26,8 @@ module.exports.ERROR_HANDLER = (fail) => {
   if ( fail.name === 'SequelizeForeignKeyConstraintError' ) {
     return this.SEQUELIZE_FK_ERROR( fail.original.code + ': ' + fail.index );
   }
+  if ( fail.name === 'SequelizeUniqueConstraintError') {
+    return this.SEQUELIZE_ERROR('Registro duplicado', fail.name);
+  }
   return this.SEQUELIZE_ERROR(fail.message, fail.name);
 }

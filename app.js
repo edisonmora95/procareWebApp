@@ -102,7 +102,7 @@ app.use('/api/calendario', apiCalendario);
 app.use('/api/cargo', apiCargo);
 app.use('/api/correo', apiCorreo);
 app.use('/api/donacion', apiDonacion);
-app.use('/api/etapa', apiEtapa);
+app.use('/api/etapas', apiEtapa);
 app.use('/api/eventos', apiEventos);
 app.use('/api/grupos', apiGrupos);
 app.use('/api/login', apiLogin);

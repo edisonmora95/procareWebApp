@@ -8,7 +8,7 @@ let co   = require('co');
 let assert = chai.assert;
 let should = chai.should();
 
-let sequelize   = require('../../models/').sequelize
+let sequelize   = require('../../models/').sequelize;
 let ModeloGrupo = require('../../models/').Grupo;
 
 let grupoObj = {
@@ -591,7 +591,7 @@ describe('GRUPOS', () => {
 			});
 		});
 	});
-
+	
 });
 
 

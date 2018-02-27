@@ -1,17 +1,17 @@
 {
   "name": "procareapp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "start": "gulp",
-    "dev"  : "gulp",
-    "prod" : "gulp run-prod",
-    "coverage-unit-test"        : "nyc --reporter=html --reporter=text gulp unit-test",
-    "coverage-integration-test" : "nyc --reporter=html --reporter=text gulp integration-test",
-    "unit-test"        : "gulp unit-test",
-    "integration-test" : "gulp integration-test",
-    "coveralls" : "gulp coveralls",
-    "build-dev" : "gulp build-dev",
+    "dev": "gulp",
+    "prod": "gulp run-prod",
+    "coverage-unit-test": "nyc --reporter=html --reporter=text gulp unit-test",
+    "coverage-integration-test": "nyc --reporter=html --reporter=text gulp integration-test",
+    "unit-test": "gulp unit-test",
+    "integration-test": "gulp integration-test",
+    "coveralls": "gulp coveralls",
+    "build-dev": "gulp build-dev",
     "build-prod": "gulp build-prod"
   },
   "dependencies": {
@@ -46,6 +46,7 @@
     "siege": "^0.2.0",
     "v-money": "^0.8.0",
     "vee-validate": "^2.0.0-rc.5",
+    "vue-materials": "^1.0.7-rc.7",
     "vue-router": "^2.7.0",
     "vue-the-mask": "^0.11.0-alpha.2",
     "winston": "^2.4.0"
@@ -58,6 +59,7 @@
     "chai-http": "^1.0.0",
     "coveralls": "^2.13.1",
     "gulp": "^3.9.1",
+    "gulp-apidoc": "^0.2.7",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
     "gulp-clean": "^0.3.2",

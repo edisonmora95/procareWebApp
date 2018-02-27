@@ -8,7 +8,6 @@
 'use strict';
 
 const respuesta	= require('../utils/respuestas');
-const co 			  = require('co');
 const utils			=	require('../utils/utils');
 
 const ModeloPersonaRol = require('../models/').PersonaRol;
@@ -26,10 +25,9 @@ module.exports.asignarRol = (req, res, next) => {
 	let t         = res.locals.t;
 	let idPersona = res.locals.idPersona;
 	let email     = res.locals.email;
-	let idGrupo   = res.locals.idGrupo;
 
 	const password     = utils.randomString();
-	const mensaje      = 'Ha sido añadido como Animador a la aplicación web de Procare. Su contraseña para ingresar es ' + password + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare"
+	const mensaje      = 'Ha sido añadido como Animador a la aplicación web de Procare. Su contraseña para ingresar es ' + password + " .\nPor favor proceda a cambiarla por motivos de seguridad . \n\nAtentamente \nFundación Procare";
 	const destinatario = email;
 	const sujeto	     = 'ProcareWebApp';
 
@@ -38,7 +36,6 @@ module.exports.asignarRol = (req, res, next) => {
 		utils.generarHash(password)
 	])
 	.then( values => {
-		let rol  = values[0];
 		let hash = values[1];
 
 		ModeloPersona.ingresarContrasenna(idPersona, hash, t)
@@ -46,7 +43,7 @@ module.exports.asignarRol = (req, res, next) => {
 			utils.generarCorreo(mensaje, destinatario, sujeto)
 			.then( result => {
 				t.commit();
-				return respuesta.okCreate(res, 'Grupo creado', idGrupo);
+				return respuesta.okCreate(res, res.locals.mensaje, res.locals.datos);
 			})
 			// GENERAR CORREO FAIL
 			.catch( fail => {

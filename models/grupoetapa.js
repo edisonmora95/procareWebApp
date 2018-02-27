@@ -18,8 +18,20 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       },
       ////////////////////////////////////
-      //FUNCIONES CON TRANSACCIONES
+      // FUNCIONES CON TRANSACCIONES
       ////////////////////////////////////
+      /**
+        @Descripción:
+          Crea el regstro de asociación del grupo en la etapa indicada. No hace commit.
+        @Params:
+          {Object} idGrupo  Id del grupo
+          {Object} idEtapa  Id de la etapa
+          {Object} transaction
+        @Success:
+          {Object} registro registro creado en la base
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       crearGrupoEtapaT: function(idGrupo, idEtapa, transaction){
         return new Promise( (resolve, reject) => {
           if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
@@ -76,6 +88,17 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      /**
+        @Descripción:
+          Elimina los regstro de etapas del grupo. No hace commit.
+        @Params:
+          {Int} idGrupo  Id del grupo
+          {Object} transaction
+        @Success:
+          {Int} registro cantidad de registros eliminados
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       eliminarRegistrosDeGrupoT: function(idGrupo, transaction){
         return new Promise( (resolve, reject) => {
           if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
@@ -87,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            if( resultado < 1 ) return reject( errors.SEQUELIZE_ERROR('Delete error', 'No se encontró el registro de la etapa del grupo para eliminar') );
+            if( resultado < 1 ) return reject( errors.SEQUELIZE_ERROR('No se encontró el registro de la etapa del grupo para eliminar', 'Delete error') );
             return resolve(resultado);
           })
           .catch( fail => {

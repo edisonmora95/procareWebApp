@@ -20,7 +20,7 @@ let idPersona = 4;	//Quemado en la base. Id del animador
 let rol = 'Animador';
 
 describe('PERSONA-ROL', () => {
-
+	
 	describe('buscarRolesDePersonaPorId', () => {
 		const idAnimador = 4;
 		const idPersonal = 2;
@@ -103,7 +103,7 @@ describe('PERSONA-ROL', () => {
 			});
 		});
 	});
-
+	
 	describe('asignarRolT', () => {
 		
 		beforeEach( () => {
@@ -150,6 +150,80 @@ describe('PERSONA-ROL', () => {
 			})
 			.catch( fail => {
 				transaction.rollback();
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo incorrecto');
+				assert.equal(fail.mensaje, 'Id inválido', 'Mensaje incorrecto');
+				done();
+			});
+		});
+	});
+	
+	describe('personaTieneRolActualmente', () => {
+		const idAnimador = 4;
+		const idDirectorAnimador = 1;
+
+		it('CP1. Búsqueda exitosa Animador', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(idAnimador, 'Animador')
+			.then( resultado => {
+				assert.equal(resultado, true, 'No tiene ese rol');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP2. Búsqueda exitosa persona con varios roles: Animador', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(idDirectorAnimador, 'Animador')
+			.then( resultado => {
+				assert.equal(resultado, true, 'No tiene ese rol');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP3. Búsqueda exitosa persona con varios roles: Director Ejecutivo', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(idDirectorAnimador, 'Director Ejecutivo')
+			.then( resultado => {
+				assert.equal(resultado, true, 'No tiene ese rol');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP4. Persona sin rol especificado', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(idAnimador, 'Director Ejecutivo')
+			.then( resultado => {
+				resultado.should.be.array;
+				assert.equal(resultado, false, 'Si tiene ese rol');
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+
+		it('CP5. idPersona es null', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(null, 'Animador')
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id', 'Mensaje incorrecto');
+				done();
+			});
+		});
+
+		it('CP6. idPersona es negativo', done => {
+			ModeloPersonaRol.personaTieneRolActualmente(-5, 'Animador')
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
 				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo incorrecto');
 				assert.equal(fail.mensaje, 'Id inválido', 'Mensaje incorrecto');
 				done();

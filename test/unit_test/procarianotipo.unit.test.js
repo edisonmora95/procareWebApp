@@ -9,15 +9,16 @@ let sequelize	 							= require('../../models/').sequelize;
 let ModeloProcarianoTipo	 	= require('../../models/').ProcarianoTipo;
 
 describe('PROCARIANOTIPO', () => {
-	/*
+	
 	describe('obtenerTipoActualDeProcarianoP', () => {
 		let idProcariano = 2;
 
 		it('CP1. Id válido', done => {
 			ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(idProcariano)
 			.then( resultado => {
-				const idObtenido = resultado.get('ProcarianoId');
-				assert.equal(idObtenido, idProcariano, 'Ids no coinciden');
+				assert.equal(resultado.get('TipoId'), 1, 'Ids no coinciden');
+				assert.equal(resultado.get('ProcarianoId'), idProcariano, 'Ids no coinciden');
+				assert.equal(resultado.get('FechaFin'), null, 'Fechas no coinciden');
 				done();
 			});
 		});
@@ -39,8 +40,16 @@ describe('PROCARIANOTIPO', () => {
 	  		done();
 			});
 		});
-	});
 
+		it('CP4. Registro no encontrado', done => {
+			ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(100)
+			.then( resultado => {
+				assert.equal(resultado, null, 'Si se encontró un registro');
+				done();
+			});
+		});
+	});
+	
 	describe('anadirTipoProcarianoT', () => {
 		let idTipo 			 = 2;	//Caminante
 		let idProcariano = 1;	//Animador sin Rol
@@ -54,6 +63,7 @@ describe('PROCARIANOTIPO', () => {
 	    	console.log('No se pudo crear la transacción');
 	    });
 	  });
+
 	  it('CP1. Caso exitoso.', done => {
 	  	ModeloProcarianoTipo.anadirTipoProcarianoT(idTipo, idProcariano, transaction)
 	  	.then( resultado => {
@@ -123,15 +133,28 @@ describe('PROCARIANOTIPO', () => {
 	  		done();
 	  	});
 	  });
-	});
 
-	describe('cambiarTipoDeProcarianoT', () => {
+	  it('CP6. Registro duplicado.', done => {
+	  	ModeloProcarianoTipo.anadirTipoProcarianoT(2, 5, transaction)
+	  	.catch( fail => {
+	  		transaction.rollback();
+	  		assert.equal(fail.tipo, 'SequelizeUniqueConstraintError', 'Tipo de error incorrecto');
+	  		assert.equal(fail.mensaje, 'Registro duplicado', 'Tipo de error incorrecto');
+	  		done();
+	  	});
+	  });
+	});
+	
+	describe.skip('cambiarTipoDeProcarianoT', () => {
 		let transaction;
 		let idProcariano = 2;
 		let tipoActual   = 1;
 		let tipoNuevo    = 2;
 		
 		beforeEach( () => {
+			idProcariano = 2;
+		  tipoActual   = 1;
+		  tipoNuevo    = 2;
 			return inicializarTransaccion()
 	    .then( t => {
 	    	transaction = t;
@@ -225,7 +248,7 @@ describe('PROCARIANOTIPO', () => {
 	  	});
 	  });
 
-	  it('CP3. tipoNuevo es negativo.', done => {
+	  it('CP7. tipoNuevo es negativo.', done => {
 	  	ModeloProcarianoTipo.cambiarTipoDeProcarianoT(idProcariano, tipoActual, -5, transaction)
 	  	.then( resultado => {
 	  		transaction.rollback();
@@ -238,7 +261,20 @@ describe('PROCARIANOTIPO', () => {
 	  		done();
 	  	});
 	  });
-	});*/
+
+	  it('CP8. No hay registro del tipo anterior', done => {
+	  	idProcariano = 3;
+	  	ModeloProcarianoTipo.cambiarTipoDeProcarianoT(idProcariano, tipoActual, tipoNuevo, transaction)
+	  	.then( resultado => {
+	  		transaction.rollback();
+	  		done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+	  		done(fail);
+	  	});
+	  });
+	});
 
 	describe('anadirFechaFinT', () => {
 		let idProcariano = 2;

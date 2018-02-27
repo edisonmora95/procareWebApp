@@ -13,28 +13,29 @@ let gutil       = require('gulp-util');
 let clean       = require('gulp-clean');
 let forever     = require('gulp-forever-monitor');
 let gmcfp       = require('gulp-mysql-command-file-processor');
+let apidoc      = require('gulp-apidoc');
 
 const config    = require('./config/config.json');
 
 ////////////////////////////////////////////
-//Tasks para correr la aplicación
+// Tasks para correr la aplicación
 ////////////////////////////////////////////
 
-//CORRER LA APLICACIÓN PARA DEVELOPMENT
-//npm run dev
+// CORRER LA APLICACIÓN PARA DEVELOPMENT
+// npm run dev
 gulp.task('default', ['js-compile', 'vue-compile'], function(){
 	//Por default, el environment será el de development
 	runSequence('set-dev-node-env', 'nodemon', 'browser-sync');
 });
 
-//CORRER LA APLICACIÓN PARA TESTING
-//npm run test
+// CORRER LA APLICACIÓN PARA TESTING
+// npm run test
 gulp.task('run-test', function() {
-    runSequence('set-test-node-env', 'babel', 'vueify-dev', 'nodemon');
+    runSequence('set-test-node-env', 'babel', 'vueify-dev', 'nodemon',  'browser-sync');
 });
 
-//CORRER LA APLICACIÓN PARA PRODUCCIÓN
-//npm run prod
+// CORRER LA APLICACIÓN PARA PRODUCCIÓN
+// npm run prod
 gulp.task('run-prod', function() {
     runSequence('set-prod-node-env', 'forever');
 });
@@ -60,8 +61,8 @@ gulp.task('forever', function() {
 //Watch tasks
 ////////////////////////////////////////////
 
-//Vigila los cambios en los archivos dentro de la carpeta /public/js/
-//Hace build solo de los archivos cambiados
+// Vigila los cambios en los archivos dentro de la carpeta /public/js/
+// Hace build solo de los archivos cambiados
 gulp.task('js-compile', () => {
     const src     = './public/js/**/*.js';
     const dest    = './public/build';
@@ -90,8 +91,9 @@ gulp.task('js-compile', () => {
     });
 
 });
-//Vigila los cambios de los archivos *.vue
-//Vuelve a hacer build de toda la aplicación
+
+// Vigila los cambios de los archivos *.vue
+// Vuelve a hacer build de toda la aplicación
 gulp.task('vue-compile', () => {
     const src = './public/components/**/*.vue';
 
@@ -103,6 +105,16 @@ gulp.task('vue-compile', () => {
         runSequence('babel', 'vueify-dev');
     });
 
+});
+
+gulp.task('api-docs', function(done) {
+    const src  = 'routes/api/';
+    const dest = 'apidoc/';
+
+    apidoc({
+        src: src,
+        dest: dest
+    }, done);
 });
 
 ////////////////////////////////////////////
@@ -253,7 +265,7 @@ gulp.task('unit-test', function() {
 
 gulp.task('integration-test', function() {
     process.env.NODE_ENV = 'test';
-    gulp.src('./test/integration_test/login.integration.test.js', {
+    gulp.src('./test/integration_test/*.integration.test.js', {
             read: false
         })
         .pipe(mocha());

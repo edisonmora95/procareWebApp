@@ -47,18 +47,18 @@ describe('GRUPO-ETAPA', () => {
 		it('CP1. Creación exitosa', done => {
 			ModeloGrupoEtapa.crearGrupoEtapaT(idGrupo, idEtapa, transaction)
 			.then( resultado => {
-				const grupoCreado = resultado.dataValues;
-				grupoCreado.should.be.json;
+				resultado.should.be.json;
+				assert.equal(resultado.get('EtapaId'), idEtapa, 'Etapa incorrecta');
+				assert.equal(resultado.get('GrupoId'), idGrupo, 'Grupo incorrecto');
 				transaction.rollback();
 				done();
 			})
 			.catch( fail => {
 				transaction.rollback();
-				console.log('Esto no debería pasar...');
-				done();
+				done(fail);
 			});
 		});
-
+		
 		it('CP2. idGrupo null', done => {
 			ModeloGrupoEtapa.crearGrupoEtapaT(null, idEtapa, transaction)
 			.then( resultado => {
@@ -115,8 +115,18 @@ describe('GRUPO-ETAPA', () => {
 			});
 		});
 
+		it('CP6. Registro duplicado', done => {
+			ModeloGrupoEtapa.crearGrupoEtapaT(1, 1, transaction)
+			.catch( fail => {
+				transaction.rollback();
+				assert.equal(fail.tipo, 'SequelizeUniqueConstraintError', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Registro duplicado', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+		
 	});
-
+	
 	describe('cambiarGrupoDeEtapaT', () => {
 		let etapaAntigua = 1;
 		let etapaNueva   = 2;
@@ -284,6 +294,7 @@ describe('GRUPO-ETAPA', () => {
 			});
 		});
 	});
+	
 
 });
 

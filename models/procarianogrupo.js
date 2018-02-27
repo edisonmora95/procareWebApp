@@ -59,6 +59,16 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       //FUNDIONES CON TRANSACCIONES
       ///////////////////////////////////////
+      /**
+        @Descripción:
+          Elimina los regstro de procarianos del grupo. No hace commit.
+        @Params:
+          {Int} idGrupo  Id del grupo
+          {Object} transaction
+        @Success:
+          {Int} registro cantidad de registros eliminados
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       eliminarRegistrosDeGrupoT: function(idGrupo, transaction){
         return new Promise( (resolve, reject) => {
           if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
@@ -78,12 +88,25 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      /**
+        @Descripción:
+          Añade el registro de un Procariano a un Grupo.
+          No hace commit.
+        @Params:
+          {Int} idGrupo Id del grupo
+          {Int} idProcariano Id del procariano
+          {Object} transaction
+        @Success:
+          {Object} registro Registro creado en la tabla
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       anadirProcarianoAGrupoT: function(idGrupo, idProcariano, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !idGrupo )         return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
-          if ( idGrupo < 0 )      return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
-          if ( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
-          if ( idProcariano < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
+          if ( !idGrupo )         { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') ); }
+          if ( idGrupo < 0 )      { return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') ); }
+          if ( !idProcariano )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') ); }
+          if ( idProcariano < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') ); }
           return this.create({
             GrupoId       : idGrupo,
             ProcarianoId  : idProcariano,

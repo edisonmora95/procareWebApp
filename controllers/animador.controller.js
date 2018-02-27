@@ -1,5 +1,8 @@
+'use strict';
+
 var modelo = require('../models');
 const respuesta        = require('../utils/respuestas');
+const co = require('co');
 const ModeloProcariano = require('../models/').Procariano;
 const ModeloAnimador 	 = require('../models/').Animador;
 const ModeloPersonaRol = require('../models/').PersonaRol;
@@ -14,7 +17,7 @@ const crearAnimadorAPartirDeProcariano = (procarianoId,fechaInicio,fechaFin) => 
 	}).catch( error => {
 		return [false, error];
 	});
-}
+};
 
 const agregarAnimadorAGrupo = (animadorId,grupoId) => {
 	modelo.Animador.update({
@@ -28,60 +31,100 @@ const agregarAnimadorAGrupo = (animadorId,grupoId) => {
 	}).catch( error => {
 		return false;
 	});
-}
+};
 
 /*
 	@Autor: @edisonmora95
-	@FechaCreación: 02/11/2018
+	@FechaCreación: 11/02/2018
 	@Descripción:
 		Se crea el registro de animador al grupo creado
 		Se busca si es la primera vez que la persona es animador
 			*	De ser así, se pasa el control al siguiente middleware
 			* De no ser así, se termina la creación y se envía la respuesta al cliente
 	@ÚltimaModificación: 
+		26/02/2018	@edisonmora95	Modificada forma de ver si era animador por primera vez
 */
 module.exports.agregarAnimador = (req, res, next) => {
 	let idAnimador = req.body.animador;	//ESTE ES EL ID DEL PROCARIANO
 	let t 			= res.locals.t;
 	let idGrupo = res.locals.idGrupo;
+	co(function*() {
+		const resultado = yield ModeloAnimador.animadorTieneGrupoActualmente(idAnimador);
+		if ( resultado ) {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'El procariano ingresado ya es animador de otro grupo'} );
+		}else{
+			yield ModeloAnimador.agregarAnimadorAGrupoT(idAnimador, idGrupo, t);
+			const procariano = yield ModeloProcariano.obtenerProcarianoPorIdP(idAnimador);
+			const persona 	 = procariano.get('Persona');
+			const idPersona  = persona.get('personaId');
 
-	Promise.all([
-		ModeloAnimador.agregarAnimadorAGrupoT(idAnimador, idGrupo, t),
-		ModeloProcariano.obtenerProcarianoPorIdP(idAnimador),
-	])
-	.then( values => {
-		let animador   = values[0];
-		let procariano = values[1];
-		const persona 	= procariano.get('Persona');
-		const idPersona = persona.get('personaId');
-
-		ModeloPersonaRol.buscarRolesDePersonaPorId(idPersona)
-		.then( rolesAsignados => {
-			if ( rolesAsignados === undefined || rolesAsignados.length === 0 ) {
+			const tieneRol = yield ModeloPersonaRol.personaTieneRolActualmente(idPersona, 'Animador');
+			if ( tieneRol ) {
+				t.commit();
+				return respuesta.okCreate(res, 'Grupo creado', idGrupo);
+			} else {
 				res.locals.idPersona = idPersona;
 				res.locals.email     = persona.get('email');
+				res.locals.mensaje   = 'Grupo creado';
+				res.locals.datos     = res.locals.idGrupo;
 				next();
-			} else {
-				const rolActual = rolesAsignados.get('RolNombre');
-				if ( rolActual === 'Animador' ) {
-					t.commit();
-					return respuesta.okCreate(res, 'Grupo creado', idGrupo);
-				} else {
-					res.locals.idPersona = idPersona;
-					res.locals.email     = persona.get('email');
-					next();
-				}
 			}
-		})
-		.catch( fail => {
-			t.rollback();
-			return respuesta.ERROR_SERVIDOR(res, fail);
-		});
+		}
 	})
 	.catch( fail => {
 		t.rollback();
 		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
+};
+
+/*
+	@Autor: @edisonmora95
+	@FechaCreación: 26/02/2018
+	@Descripción:
+		Verifica si el animador nuevo ya tiene un grupo actualmente
+			* De ser así, se cancela todo y se envía el error al cliente.
+			* De no ser así
+					Se añade el nuevo animador al grupo
+					Se verifica si el nuevo Animador ya tiene un Rol como Animador en la base de datos
+						* De ser así, se termina la edición y se envía la respuesta al cliente.
+						* De no ser así, se pasa el control al siguiente controller
+	@ÚltimaModificación: 
+*/
+module.exports.cambiarAnimadorDelGrupo = (req, res, next) => {
+	let grupo = res.locals.grupo;
+	let t     = res.locals.t;
+
+	co(function*() {
+		// Se verifica si el animador nuevo tiene ya un grupo actualmente
+		const resultado = yield ModeloAnimador.animadorTieneGrupoActualmente(grupo.animadorNuevo);
+		if( resultado ) {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'El nuevo animador ingresado ya es animador de otro grupo'} );
+		} else {
+			res.locals.datos.animadorNuevo = yield ModeloAnimador.cambiarAnimadorDeGrupoT(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, t);
+			// Se verifica si el animador nuevo ya tiene rol asignado como animador
+			const procariano = yield ModeloProcariano.obtenerProcarianoPorIdP(grupo.animadorNuevo);
+			const persona 	 = procariano.get('Persona');
+			const idPersona  = persona.get('personaId');
+
+			const tieneRol = yield ModeloPersonaRol.personaTieneRolActualmente(idPersona, 'Animador');
+			if ( tieneRol ) {
+				t.commit();
+				return respuesta.okUpdate(res, 'Se editó el grupo correctamente.', res.locals.datos);
+			} else {
+				res.locals.idPersona = idPersona;
+				res.locals.email     = persona.get('email');
+				res.locals.mensaje   = 'Se editó el grupo correctamente.';
+				next();
+			}
+		}
+	})
+	.catch( fail => {
+		t.rollback();
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+
 };
 
 

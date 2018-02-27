@@ -30,9 +30,6 @@ describe('EVENTOS', () => {
 		});
 		
 		it('CP1. Creación exitosa', function(done){
-			this.timeout(15000);
-			setTimeout(done, 15000);
-
 			request(app)
 				.post('/api/eventos/')
 				.set('x-access-token', token)
@@ -46,8 +43,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP2. Id de responsable no enviado', function(done){
-			this.timeout(15000);
-			setTimeout(done, 15000);
 			req.responsable = null;
 			request(app)
 				.post('/api/eventos/')
@@ -63,8 +58,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP3. Id de responsable inválido', function(done){
-			this.timeout(15000);
-			setTimeout(done, 15000);
 			req.responsable = 1500;
 			request(app)
 				.post('/api/eventos/')
@@ -80,8 +73,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP4. Evento sin nombre', function(done){
-			this.timeout(15000);
-			setTimeout(done, 15000);
 			req.nombre = null;
 			request(app)
 				.post('/api/eventos/')
@@ -99,9 +90,6 @@ describe('EVENTOS', () => {
 	
 	describe('mostrarEventos', () => {
 		it('CP1. Búsqueda exitosa', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
-
 	    request(app)
 	    	.get('/api/eventos/')
 	    	.set('x-access-token', token)
@@ -116,9 +104,6 @@ describe('EVENTOS', () => {
 	
 	describe('cambiarEstado', () => {
 		it('CP1. Cambio exitoso', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
-
 	    request(app)
 	    	.put('/api/eventos/cambiarEstado/1')
 	    	.set('x-access-token', token)

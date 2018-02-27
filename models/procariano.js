@@ -7,7 +7,6 @@
 'use strict';
 
 const errors    = require('../utils/errors');
-const Sequelize = require('sequelize');
 
 module.exports = function(sequelize, DataTypes) {
   let Procariano = sequelize.define('Procariano', {
@@ -75,14 +74,21 @@ module.exports = function(sequelize, DataTypes) {
       //FUNDIONES CON PROMESAS
       ///////////////////////////////////////
       /*
-        @Descripción: Devuelve la información del procariano con el id de Procariano
-        @Return: Promesa con info de Procariano y Persona
+        @Description: 
+          Devuelve la información del procariano por su id.
+          Devuelve error si no encuentra al procariano.
+        @Params:
+          {int} idProcariano  Id del procariano a buscar
+        @Success: 
+          {Object} procariano  Información de Procariano y Persona
+        @Error:
+          {Object} fail SEQUELIZE_ERROR
       */
       obtenerProcarianoPorIdP: function(idProcariano){
         const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-          if( !idProcariano )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
-          if( idProcariano < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
+          if( !idProcariano )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') ); }
+          if( idProcariano < 0 )  { return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') ); }
           return this.findOne({
             where: {
               id: idProcariano
@@ -96,7 +102,7 @@ module.exports = function(sequelize, DataTypes) {
             attributes: [['id', 'procarianoId']]
           })
           .then( procariano => {
-            if ( !procariano ) return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') );
+            if ( !procariano ) { return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') ); }
             return resolve(procariano);
           })
           .catch( fail => {
@@ -112,8 +118,8 @@ module.exports = function(sequelize, DataTypes) {
         const Grupo = sequelize.import("../models/grupo");
         const Persona = sequelize.import("../models/persona");
         return new Promise( (resolve, reject) => {
-          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
-          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
+          if ( !idGrupo )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') ); }
+          if ( idGrupo < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') ); }
           return this.findAll({
             include: [
               {
@@ -133,7 +139,7 @@ module.exports = function(sequelize, DataTypes) {
           .then( procarianos => {
             return resolve(procarianos);
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });
@@ -147,8 +153,8 @@ module.exports = function(sequelize, DataTypes) {
         const Tipo    = sequelize.import("../models/tipo");
         const Grupo   = sequelize.import("../models/grupo");
         return new Promise( (resolve, reject) => {
-          if( !idPersona )     return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') );
-          if( idPersona < 0 )  return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') );
+          if( !idPersona )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del procariano') ); }
+          if( idPersona < 0 )  { return reject( errors.SEQUELIZE_FK_ERROR('Id del procariano inválido') ); }
           return this.findOne({
             include : [
               {
@@ -166,7 +172,7 @@ module.exports = function(sequelize, DataTypes) {
             }  
           })
           .then( procariano => {
-            if ( !procariano ) return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') );
+            if ( !procariano ) { return reject( errors.SEQUELIZE_ERROR('No se encontró registro del procariano', 'Find error') ); }
             return resolve(procariano);
           })
           .catch( fail => {
@@ -283,8 +289,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       crearProcarianoT: function(procariano, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !procariano.PersonaId )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
-          if ( procariano.PersonaId < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
+          if ( !procariano.PersonaId )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') ); }
+          if ( procariano.PersonaId < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') ); }
           return this.create({
             PersonaId       : procariano.PersonaId,
             colegio         : procariano.colegio,
@@ -311,8 +317,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       editarProcarianoT: function(idPersona, procariano, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !idPersona )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
-          if ( idPersona < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
+          if ( !idPersona )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') ); }
+          if ( idPersona < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') ); }
           return this.update({
             colegio         : procariano.colegio,
             universidad     : procariano.universidad,
@@ -327,9 +333,9 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            if( resultado[0] < 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'No se encontró el registro del procariano para eliminar') );
-            if( resultado[0] === 1 ) return resolve(resultado[0]);
-            if( resultado[0] > 1 ) return   reject( errors.SEQUELIZE_ERROR('Edit error', 'Se encontraron múltiples registros. Se cancela la edición') );
+            if( resultado[0] < 1 ) { return   reject( errors.SEQUELIZE_ERROR('No se encontró el registro del procariano para editar', 'Edit error') ); }
+            if( resultado[0] === 1 ) { return resolve(resultado[0]); }
+            if( resultado[0] > 1 ) { return   reject( errors.SEQUELIZE_ERROR('Se encontraron múltiples registros. Se cancela la edición', 'Edit error') ); }
           })
           .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
@@ -345,8 +351,8 @@ module.exports = function(sequelize, DataTypes) {
       */
       eliminarProcarianoT: function(idPersona, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !idPersona )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') );
-          if ( idPersona < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') );
+          if ( !idPersona )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') ); }
+          if ( idPersona < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id de la persona inválido') ); }
           return this.update({
             estado : 'inactivo'
           }, {
@@ -356,11 +362,11 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            if( resultado < 1 )   return reject( errors.SEQUELIZE_ERROR('No se encontró el registro del procariano para eliminar', 'Delete error') );
-            if ( resultado == 1 ) return resolve(resultado);
+            if( resultado < 1 )   { return reject( errors.SEQUELIZE_ERROR('No se encontró el registro del procariano para eliminar', 'Delete error') ); }
+            if ( resultado === 1 ) { return resolve(resultado); }
             return reject( errors.SEQUELIZE_ERROR('Se encontraron varios registros. Se cancela la eliminación', 'Delete error') );
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });

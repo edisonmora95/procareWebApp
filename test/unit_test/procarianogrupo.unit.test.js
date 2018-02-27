@@ -27,7 +27,7 @@ describe('PROCARIANOGRUPO', () => {
 	    	console.log('No se pudo crear la transacción');
 	    });
 	  });
-
+		
 	  it('CP1. Datos correctos', done => {
 	  	ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, transaction)
 	  	.then( resultado => {
@@ -107,6 +107,17 @@ describe('PROCARIANOGRUPO', () => {
 			});
 	  });
 
+	  it('CP8. Registro duplicado', done => {
+	  	idProcariano = 2;
+	  	idGrupo = 1;
+	  	ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, transaction)
+	  	.catch( fail => {
+	  		transaction.rollback();
+				assert.equal(fail.tipo, 'SequelizeUniqueConstraintError','Tipo de error recibido incorrecto');
+				assert.equal(fail.mensaje, 'Registro duplicado',  'Mensaje recibido incorrecto');
+				done();
+			});
+	  });
 	});
 	
 	describe('eliminarRegistrosDeGrupoT', () => {

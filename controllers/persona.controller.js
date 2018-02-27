@@ -57,7 +57,7 @@ module.exports.crearPersona = (req, res, next) => {
 }
 
 module.exports.editarPersona = (req, res, next) => {
-	const idPersona 			= req.params.id;
+	const idPersona 			= req.params.id_persona;
 	const fechaNacimiento = (req.body.fechaNacimiento === '') ? null : new Date(req.body.fechaNacimiento);
 	const persona 				= {
 		cedula 					: req.body.cedula,

@@ -11,7 +11,7 @@ const expect 	= chai.expect;
 let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJQZXJzb25hbCJdLCJpZCI6MiwiaWF0IjoxNTEzODkwNzAxfQ.5OQlRcegbehBU2C9Lnwz59zgBPRyBLicpwnpigYllG0';
 
 describe('GRUPOS', () => {
-
+	
 	describe('crearGrupo', () => {
 
 		let req = {
@@ -20,8 +20,8 @@ describe('GRUPOS', () => {
 			cantidadChicos : 0,
 			numeroReuniones: 0,
 			genero         : 'Procare',
-			animador			 : 1,						//Dato quemado en la base
-			etapa 				 : 1						//Dato quemado en la base
+			animador			 : 5,						// Id del procariano que ya ha sido animador
+			etapa 				 : 1						// Dato quemado en la base
 		};
 
 		afterEach( () => {
@@ -31,12 +31,12 @@ describe('GRUPOS', () => {
 				cantidadChicos : 0,
 				numeroReuniones: 0,
 				genero         : 'Procare',
-				animador			 : 1,						//Dato quemado en la base
-				etapa 				 : 1						//Dato quemado en la base
+				animador			 : 5,						// Id del procariano que ya ha sido animador
+				etapa 				 : 1						// Dato quemado en la base
 			};
 		});
 
-		it('CP1. Creación exitosa', function(done) {
+		it('CP1. Creación exitosa de grupo. Animador ya tenía rol', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 
@@ -52,7 +52,39 @@ describe('GRUPOS', () => {
 				});
 		});
 
-		it('CP2. Error creación grupo', function(done) {
+		it('CP2. Creación exitosa de grupo. Animador por primera vez', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.animador = 3;
+	    request(app)
+	    	.post('/api/grupos/')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(true);
+					expect(res.body.mensaje).to.equal('Grupo creado');
+					expect(res.body.datos).to.be.a('number');
+					done();
+				});
+		});
+
+		it('CP3. Procariano ya es animador de otro grupo actualmente', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.animador = 1;
+	    request(app)
+	    	.post('/api/grupos/')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(false);
+					expect(res.body.mensaje).to.equal('Error en el servidor');
+					expect(res.body.error.mensaje).to.equal('El procariano ingresado ya es animador de otro grupo');
+					done();
+				});
+		});
+		
+		it('CP4. Error creación grupo', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    req.nombre = null;
@@ -70,7 +102,7 @@ describe('GRUPOS', () => {
 				});
 		});
 
-		it('CP3. Error etapa no enviada', function(done) {
+		it('CP5. Error etapa no enviada', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    req.etapa = null;
@@ -88,7 +120,7 @@ describe('GRUPOS', () => {
 				});
 		});
 
-		it('CP4. Error animador no enviado', function(done) {
+		it('CP6. Error animador no enviado', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    req.animador = null;
@@ -106,7 +138,7 @@ describe('GRUPOS', () => {
 				});
 		});
 	});
-
+	
 	describe('mostrarGrupos', () => {
 		it('CP1. Búsqueda exitosa', function(done) {
 			this.timeout(15000);
@@ -140,7 +172,7 @@ describe('GRUPOS', () => {
 				});
 		});
 	});
-
+	
 	describe('editarGrupo', () => {
 		let reqEdit = {
 			nombre  			 : 'Grupo de prueba editado integration',
@@ -167,7 +199,7 @@ describe('GRUPOS', () => {
 			};
 		});
 
-		it('CP1. Edición de grupo', function(done){
+		it('CP1. Edición solo de grupo', function(done){
 			reqEdit.etapaNueva    = null;
 			reqEdit.animadorNuevo = null;
 			this.timeout(15000);
@@ -185,7 +217,7 @@ describe('GRUPOS', () => {
 	    		done();
 	    	});
 		});
-
+		
 		it('CP2. Cambio de etapa', function(done){
 			reqEdit.nombre        = 'Grupo de prueba. Cambio de etapa. Integration'
 			reqEdit.etapaNueva    = 2;
@@ -208,11 +240,11 @@ describe('GRUPOS', () => {
 	    		done();
 	    	});
 		});
-
-		it('CP3. Cambio de animador', function(done){
+		
+		it('CP3. Cambio de animador. Sin rol de animador', function(done){
 			reqEdit.nombre        = 'Grupo de prueba. Cambio de animador. Integration'
 			reqEdit.etapaNueva    = null;
-			reqEdit.animadorNuevo = 3;
+			reqEdit.animadorNuevo = 6;
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 
@@ -227,12 +259,36 @@ describe('GRUPOS', () => {
 	    		expect(res.body.datos.grupoEditado).to.be.an('array').that.includes(1);
 	    		expect(res.body.datos).to.have.property('animadorNuevo');
 	    		expect(res.body.datos.animadorNuevo).to.have.property('ProcarianoId');
-	    		expect(res.body.datos.animadorNuevo.ProcarianoId).to.equal(3);
+	    		expect(res.body.datos.animadorNuevo.ProcarianoId).to.equal(6);
 	    		done();
 	    	});
 		});
 
-		it('CP4. Cambio de animador y etapa', function(done){
+		it('CP4. Cambio de animador. Ya tenía rol de animador', function(done){
+			reqEdit.nombre        = 'Grupo de prueba. Cambio de animador. Integration'
+			reqEdit.etapaNueva    = null;
+			reqEdit.animadorAntiguo = 5;
+			reqEdit.animadorNuevo   = 7;
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+
+	    request(app)
+	    	.put('/api/grupos/3')
+	    	.set('x-access-token', token)
+	    	.send(reqEdit)
+	    	.end( (err, res) => {
+	    		expect(res.body.estado).to.equal(true);
+	    		expect(res.body.mensaje).to.equal('Se editó el grupo correctamente.');
+	    		expect(res.body.datos).to.have.property('grupoEditado');
+	    		expect(res.body.datos.grupoEditado).to.be.an('array').that.includes(1);
+	    		expect(res.body.datos).to.have.property('animadorNuevo');
+	    		expect(res.body.datos.animadorNuevo).to.have.property('ProcarianoId');
+	    		expect(res.body.datos.animadorNuevo.ProcarianoId).to.equal(7);
+	    		done();
+	    	});
+		});
+		/*
+		xit('CP5. Cambio de animador y etapa', function(done){
 			reqEdit.nombre        = 'Grupo de prueba. Cambio de animador y etapa. Integration'
 			reqEdit.etapaNueva    = 3;
 			reqEdit.animadorNuevo = 2;
@@ -256,9 +312,9 @@ describe('GRUPOS', () => {
 	    		expect(res.body.datos.etapaNueva.EtapaId).to.equal(3);
 	    		done();
 	    	});
-		});
+		});*/
 
-		it('CP5. Error grupo. Id inválido', function(done){
+		it('CP6. Error grupo. Id inválido', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 
@@ -278,7 +334,7 @@ describe('GRUPOS', () => {
 	    	});
 		});
 
-		it('CP6. Error etapa. Id inválido', function(done){
+		it('CP7. Error etapa. Id inválido', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 
@@ -300,10 +356,10 @@ describe('GRUPOS', () => {
 	    	});
 		});
 
-		it('CP7. Error animador. Id inválido', function(done){
+		it('CP8. Error animador. Id inválido', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
-
+	    reqEdit.etapaNueva    = null;
 	    reqEdit.animadorNuevo  = -5;
 
 	    request(app)
@@ -315,13 +371,116 @@ describe('GRUPOS', () => {
 	    		expect(res.body.mensaje).to.equal('Error en el servidor');
 	    		expect(res.body).to.have.property('error');
 	    		expect(res.body.error).to.have.property('tipo');
+	    		expect(res.body.error.tipo).to.equal('Foreign key constraint error');
 	    		expect(res.body.error).to.have.property('mensaje');
+	    		expect(res.body.error.mensaje).to.equal('Id del animador inválido');
+	    		done();
+	    	});
+		});
+
+		it('CP9. Error animador nuevo ya está en otro grupo', function(done){
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    reqEdit.etapaNueva    = null;
+	    reqEdit.animadorNuevo = 6;
+
+	    request(app)
+	    	.put('/api/grupos/1')
+	    	.set('x-access-token', token)
+	    	.send(reqEdit)
+	    	.end( (err, res) => {
+	    		expect(res.body.estado).to.equal(false);
+	    		expect(res.body.mensaje).to.equal('Error en el servidor');
+	    		expect(res.body).to.have.property('error');
+	    		expect(res.body.error).to.have.property('mensaje');
+	    		expect(res.body.error.mensaje).to.equal('El nuevo animador ingresado ya es animador de otro grupo');
 	    		done();
 	    	});
 		});
 	});
 
-	describe.skip('eliminarGrupo', () => {
+	describe('anadirProcarianoAGrupo', () => {
+		let req;
+		beforeEach( () => {
+			req = {
+				idProcariano : 4	// Chico de Formación sin grupo
+			}
+		});
+
+		it('CP1. Caso exitoso.', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+
+	    request(app)
+	    	.post('/api/grupos/1/anadir')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(true);
+					expect(res.body.mensaje).to.equal('Procariano añadido a grupo.');
+					expect(res.body.datos).to.have.property('GrupoId');
+					expect(res.body.datos.GrupoId).to.equal('1');
+					expect(res.body.datos).to.have.property('ProcarianoId');
+					expect(res.body.datos.ProcarianoId).to.equal(4);
+					done();
+				});
+		});
+		
+		it('CP2. Registro duplicado', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.idProcariano = 2;
+	    request(app)
+	    	.post('/api/grupos/1/anadir')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(false);
+					expect(res.body.mensaje).to.equal('Error en el servidor');
+					expect(res.body.error).to.have.property('tipo');
+					expect(res.body.error.tipo).to.equal('SequelizeUniqueConstraintError');
+					expect(res.body.error).to.have.property('mensaje');
+					expect(res.body.error.mensaje).to.equal('Registro duplicado');
+					done();
+				});
+		});
+
+		it('CP3. Chico no es de Formación', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.idProcariano = 5; // Id del Animador Con Rol
+	    request(app)
+	    	.post('/api/grupos/1/anadir')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(false);
+					expect(res.body.mensaje).to.equal('Error en el servidor');
+					expect(res.body.error).to.have.property('mensaje');
+					expect(res.body.error.mensaje).to.equal('El procariano debe ser de Formación');
+					done();
+				});
+		});
+
+		it('CP4. Id del procariano no enviado', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.idProcariano = null; // Id del Animador Con Rol
+	    request(app)
+	    	.post('/api/grupos/1/anadir')
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(false);
+					expect(res.body.mensaje).to.equal('Error en el servidor');
+					expect(res.body.error).to.have.property('mensaje');
+					expect(res.body.error.mensaje).to.equal('No ingresó un procariano');
+					done();
+				});
+		});
+	});
+
+	describe('eliminarGrupo', () => {
 		it('CP1. Eliminación exitosa', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
@@ -331,8 +490,7 @@ describe('GRUPOS', () => {
 	    	.set('x-access-token', token)
 				.end( (err, res) => {
 					expect(res.body.estado).to.equal(true);
-					expect(res.body.mensaje).to.equal('Información completa del grupo obtenida.');
-					expect(res.body.datos.grupo.id).to.equal(3);
+					expect(res.body.mensaje).to.equal('Todos los registros del grupo fueron eliminados');
 					done();
 				});
 		});

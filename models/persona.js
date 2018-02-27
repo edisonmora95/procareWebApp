@@ -314,6 +314,19 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      /**
+        @Descripción:
+          Ingresa una nueva contraseña. No hace commit.
+          Solo retorna correctamente si se modifica solo un registro.
+        @Params:
+          {Int}    idPersona  Id de la Persona
+          {String} contrasenna Contrasenna hasheada
+          {Object} transaction
+        @Success:
+          {Object} registro Número de registros editados. 1
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       ingresarContrasenna: function(idPersona, contrasenna, transaction){
         return new Promise( (resolve, reject) => {
           if( !idPersona )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id') ); }
@@ -328,7 +341,9 @@ module.exports = function(sequelize, DataTypes) {
             transaction  : transaction 
           })
           .then( resultado => {
-            return resolve(resultado);
+            if ( resultado[0] < 1 ) { return reject( errors.SEQUELIZE_ERROR('No se encontró el registro de la persona para editar', 'Edit error') ); }
+            if ( resultado[0] > 1 ) { return reject( errors.SEQUELIZE_ERROR('Se encontraron múltiples registros. Se cancela la edición', 'Edit error') ); }
+            return resolve(resultado[0]);
           })
           .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );

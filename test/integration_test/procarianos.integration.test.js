@@ -11,7 +11,7 @@ const expect 	= chai.expect;
 let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJQZXJzb25hbCJdLCJpZCI6MiwiaWF0IjoxNTEzODkwNzAxfQ.5OQlRcegbehBU2C9Lnwz59zgBPRyBLicpwnpigYllG0';
 
 describe('PROCARIANOS', () => {
-
+	
 	describe('crearProcariano', () => {
 		let req;
 
@@ -32,8 +32,8 @@ describe('PROCARIANOS', () => {
 				universidad 		: 'Espol',
 				parroquia 			: '',
 				fechaOrdenacion : null,
-				estado 					: 'activo',
-				grupo						: 1,
+				estado 					: 'inactivo',
+				grupo						: 2,
 				tipo						: 1
 			};
 		});
@@ -105,7 +105,7 @@ describe('PROCARIANOS', () => {
 					done();
 				});
 		});
-
+		
 		it('CP5. Error Tipo no existente', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
@@ -123,7 +123,7 @@ describe('PROCARIANOS', () => {
 				});
 		});
 
-		it('CP6. Creación exitosa', function(done) {
+		it('CP6. Creación exitosa. Con grupo', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 
@@ -156,8 +156,8 @@ describe('PROCARIANOS', () => {
 				universidad 		: 'Espol',
 				parroquia 			: '',
 				fechaOrdenacion : null,
-				estado 					: 'activo',
-				grupo						: 1,
+				estado 					: 'inactivo',
+				grupo						: null,
 				tipo						: 1
 			};
 			this.timeout(15000);
@@ -175,7 +175,7 @@ describe('PROCARIANOS', () => {
 				});
 		});
 	});
-
+	
 	describe('buscarProcarianosActivos', () => {
 		it('CP1. Búsqueda exitosa', function(done){
 			this.timeout(15000);
@@ -188,11 +188,12 @@ describe('PROCARIANOS', () => {
 					expect(res.body.estado).to.equal(true);
 					expect(res.body.mensaje).to.equal('Búsqueda exitosa');
 					expect(res.body.datos).to.be.an('array');
+					expect(res.body.datos.length).to.equal(7);
 					done();
 				});
 		});
 	});
-
+	
 	describe('buscarChicosFormacionSinGrupo', () => {
 		it('CP1. Búsqueda exitosa', function(done){
 			this.timeout(15000);
@@ -205,18 +206,33 @@ describe('PROCARIANOS', () => {
 					expect(res.body.estado).to.equal(true);
 					expect(res.body.mensaje).to.equal('Búsqueda exitosa');
 					expect(res.body.datos).to.be.an('array');
-					let procarianos = res.body.datos;
-					expect(procarianos.length).to.equal(1)
-					let procariano = procarianos[0];
-					expect(procariano.procarianoId).to.equal(4);
 					done();
 				});
 		});
 	});
-
+	
 	describe('buscarProcarianoPorId', () => {
 		let idPersona;
-		it('CP1. Búsqueda exitosa', function(done){
+		it('CP1. Búsqueda exitosa. Con grupo y tipo actual', function(done){
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    idPersona = 18;
+	    request(app)
+	    	.get('/api/procarianos/' + idPersona)
+	    	.set('x-access-token', token)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(true);
+					expect(res.body.mensaje).to.equal('Búsqueda exitosa');
+					expect(res.body.datos.procariano.id).to.equal(11);
+					const idTipo = res.body.datos.tipoActual.id;
+					expect(idTipo).to.equal(1);
+					const idGrupo = res.body.datos.grupoActual.id;
+					expect(idGrupo).to.equal(2);
+					done();
+				});
+		});
+		
+		it('CP2. Búsqueda exitosa. Sin grupo ni tipo actual', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    idPersona = 4;
@@ -231,7 +247,7 @@ describe('PROCARIANOS', () => {
 				});
 		});
 
-		it('CP2. Registro no existente', function(done){
+		it('CP3. Registro no existente', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    idPersona = 400;
@@ -263,32 +279,47 @@ describe('PROCARIANOS', () => {
 				});
 		});
 	});
-
+	
 	describe('obtenerGrupoActualDeProcariano', () => {
-		let id = 2;
+		let idProcariano = 11;
 
 		it('CP1. Búsqueda exitosa', function(done){
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    request(app)
-	    	.get('/api/procarianos/grupo/' + id)
+	    	.get('/api/procarianos/grupo/' + idProcariano)
 	    	.set('x-access-token', token)
 				.end( (err, res) => {
 					expect(res.body.estado).to.equal(true);
 					expect(res.body.mensaje).to.equal('Búsqueda exitosa');
-					expect(res.body.datos.id).to.equal(1);
+					expect(res.body.datos.id).to.equal(2);
+					done();
+				});
+		});
+
+		it('CP2. Procariano sin grupo', function(done){
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    idProcariano = 1;
+	    request(app)
+	    	.get('/api/procarianos/grupo/' + idProcariano)
+	    	.set('x-access-token', token)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(false);
+					expect(res.body.mensaje).to.equal('Error en el servidor');
+					expect(res.body.error.mensaje).to.equal('No se encontró el registro del grupo del Procariano');
 					done();
 				});
 		});
 	});
-
+	
 	describe('editarProcariano', () => {
 		let req;
 		let idPersona = 8;
 
 		beforeEach( () => {
 			req = {
-				cedula 					: '0927102846',
+				cedula 					: '0023254484',
 				nombres 				: 'Chico',
 				apellidos 			: 'Formación Editado',
 				direccion 			: 'Urdesa',
@@ -360,8 +391,8 @@ describe('PROCARIANOS', () => {
 					//done();
 				});
 		});
-
-		it('CP4. Edición tipo igual', function(done) {
+		
+		it('CP4. Edición tipo igual al anterior', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
 	    req.tipoId = 1;
@@ -377,7 +408,7 @@ describe('PROCARIANOS', () => {
 					}, 1000);
 				});
 		});
-
+		
 		it('CP5. Edición tipo nuevo', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
@@ -391,16 +422,36 @@ describe('PROCARIANOS', () => {
 					expect(res.body.mensaje).to.equal('Se modificó la información del procariano. Incluyendo el tipo');
 					setTimeout( function(){
 						done();
-					}, 1000);
+					}, 2);
 				});
 		});
 
-		xit('CP6. Edición tipo cambio inválido', function(done) {
+		it('CP6. Edición tipo cambio inválido', function(done) {
+			req = {
+				cedula 					: '0123456799',
+				nombres 				: 'ANIMADOR',
+				apellidos 			: 'CON ROL',
+				direccion 			: 'Urdesa',
+				fechaNacimiento : new Date('2004-06-01'),
+				genero 					: 'masculino',
+				contrasenna 		: '',
+				email 					: 'animador_con_rol@gmail.com',
+				celular 				: '0992556793',
+				convencional 		: '042438648',
+				trabajo 				: '',
+				colegio 				: 'COLEGIO',
+				universidad 		: 'UNIVERSIDAD',
+				parroquia 			: '',
+				fechaOrdenacion : null,
+				estado 					: 'activo',
+				tipoId					: 1,
+				idProcariano    : 5
+			};
+
 			this.timeout(15000);
 	    setTimeout(done, 15000);
-	    req.tipoId = 1;
 	    request(app)
-	    	.put('/api/procarianos/' + idPersona)
+	    	.put('/api/procarianos/' + 11)
 	    	.set('x-access-token', token)
 				.send(req)
 				.end( (err, res) => {
@@ -411,7 +462,23 @@ describe('PROCARIANOS', () => {
 					}, 2000);
 				});
 		});
+		
+		it('CP7. Edición correcta. Sin tipo previo', function(done) {
+			this.timeout(15000);
+	    setTimeout(done, 15000);
+	    req.tipoId = 1;
+	    req.idProcariano = 7;
+	    req.email = 'animador_editar_grupo_con_rol@gmail.com';
+	    req.cedula = '0123456700'
+	    request(app)
+	    	.put('/api/procarianos/' + 13)
+	    	.set('x-access-token', token)
+				.send(req)
+				.end( (err, res) => {
+					expect(res.body.estado).to.equal(true);
+					expect(res.body.mensaje).to.equal( 'Se modificó la información del procariano. Se añadió el tipo');
+					done();
+				});
+		});
 	});
-
-	
 });

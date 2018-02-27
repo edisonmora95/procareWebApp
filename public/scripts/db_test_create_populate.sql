@@ -622,3 +622,28 @@ INSERT INTO `tareas` (id, nombre, descripcion, fechaPublicacion, fechaInicio, fe
               /* Creación de tareas */
 INSERT INTO `eventos` (id, nombre, descripcion, fechaInicio, fechaFin, lugar, estado, tipo, createdAt, updatedAt, idOrganizador)
               VALUES (1, 'Chocolate de Reyes', 'Este es el evento del chocolate de reyes', now(), now(), 'Casa Procare', 1, 'tarea', now(), now(), 4);
+
+/* Para test de creación de grupo. CP1. Procariano ya con rol de animador */
+
+INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
+              VALUES(11, '0123456799', 'ANIMADOR', 'CON ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_con_rol@gmail.com', null, now(), now());
+INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
+              VALUES  (5, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 11);
+INSERT INTO `personarol` 
+              VALUES (now(), null, now(), now(), 11, 'Animador');
+INSERT INTO `procarianotipo` 
+              VALUES (now(), null, now(), now(), 5, 2);
+
+/* Para test de edición de grupo. CP3. Procariano sin rol de animador */              
+INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
+              VALUES(12, '0123456709', 'ANIMADOR EDITAR GRUPO', 'SIN ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_editar_grupo_sin_rol@gmail.com', null, now(), now());
+INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
+              VALUES  (6, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 12);
+
+/* Para test de edición de grupo. CP4. Procariano con rol de animador */              
+INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
+              VALUES(13, '0123456700', 'ANIMADOR EDITAR GRUPO', 'CON ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_editar_grupo_con_rol@gmail.com', null, now(), now());
+INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
+              VALUES  (7, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 13);    
+INSERT INTO `personarol` 
+              VALUES (now(), null, now(), now(), 13, 'Animador');                        

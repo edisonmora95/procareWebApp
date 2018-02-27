@@ -84,8 +84,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     classMethods : {
       associate : function(models) {
-        Grupo.hasOne(models.Animador)
-        Grupo.hasMany(models.Reunion, {as : 'Reuniones'})
+        Grupo.hasOne(models.Animador);
+        Grupo.hasMany(models.Reunion, {as : 'Reuniones'});
         Grupo.belongsToMany(models.Procariano, {through: 'ProcarianoGrupo'});
         Grupo.belongsToMany(models.Etapa , {through: 'GrupoEtapa'});
       },
@@ -95,8 +95,8 @@ module.exports = function(sequelize, DataTypes) {
       obtenerGrupoPorIdP: function(idGrupo){
         const Etapa = sequelize.import("../models/etapa");
         return new Promise( (resolve, reject) => {
-          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
-          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
+          if ( !idGrupo )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') ); }
+          if ( idGrupo < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') ); }
           return this.findOne({
             where: {
               id: idGrupo
@@ -128,7 +128,7 @@ module.exports = function(sequelize, DataTypes) {
           .then( resultado => {
             return resolve(resultado);
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });
@@ -136,6 +136,17 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       //FUNDIONES CON TRANSACCIONES
       ///////////////////////////////////////
+      /**
+        @Descripción:
+          Crea el regstro del grupo. No hace commit.
+        @Params:
+          {Object} grupo json con la información necesaria para crear le grupo
+          {Object} transaction
+        @Success:
+          {Object} grupo
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       crearGrupoT: function(grupo, transaction){
         return new Promise( (resolve, reject) => {
           return this.create({
@@ -155,8 +166,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       editarGrupoT: function(grupo, idGrupo, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
-          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
+          if ( !idGrupo )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') ); }
+          if ( idGrupo < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') ); }
           return this.update({
             nombre         : grupo.nombre,
             tipo           : grupo.tipo,
@@ -177,10 +188,21 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      /**
+        @Descripción:
+          Elimina los registro del grupo. No hace commit.
+        @Params:
+          {Int} idGrupo  Id del grupo
+          {Object} transaction
+        @Success:
+          {Int} registro cantidad de registros eliminados
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       eliminarGrupoT: function(idGrupo, transaction){
         return new Promise( (resolve, reject) => {
-          if ( !idGrupo )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') );
-          if ( idGrupo < 0 ) return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') );
+          if ( !idGrupo )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id del grupo') ); }
+          if ( idGrupo < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id del grupo inválido') ); }
           return this.destroy({
             where : {
               id : idGrupo
@@ -188,9 +210,10 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
-            return resolve(resultado);
+            if ( resultado === 1 ) { return resolve(resultado); }
+            return reject( errors.SEQUELIZE_ERROR('Cantidad de registros encontrados incorrecta. Se cancela la eliminación', 'Delete error') );
           })
-          .catch( error => {
+          .catch( fail => {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });

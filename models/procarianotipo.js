@@ -20,6 +20,16 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       //FUNDIONES CON PROMESAS
       ///////////////////////////////////////
+      /**
+        @Descripción:
+          Busca en la base de datos el tipo actual del Procariano.
+        @Params:
+          {Object} idProcariano  Id del Procariano
+        @Success:
+          {Object} registro Registro del tipo actual del Procariano
+        @Error:
+          {Object} fail Sequelize error {tipo, mensaje}
+      */
       obtenerTipoActualDeProcarianoP: function(idProcariano){
         return new Promise( (resolve, reject) => {
           if( !idProcariano )    return reject( errors.SEQUELIZE_FK_ERROR('No ingresó un procariano') );
@@ -79,6 +89,8 @@ module.exports = function(sequelize, DataTypes) {
             transaction : transaction
           })
           .then( resultado => {
+            console.log('resultado:', resultado);
+            //if ( resultado[0] === 0 ) {}
             return this.create({
               TipoId      : tipoNuevo,
               ProcarianoId: idProcariano,

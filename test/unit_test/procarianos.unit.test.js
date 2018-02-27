@@ -143,6 +143,30 @@ describe('PROCARIANOS', () => {
 				done();
 			});
 		});
+
+		it('CP7. PersonaId es null.', done => {
+			procarianoObj.PersonaId = null;
+			ModeloProcariano.crearProcarianoT(procarianoObj, transaction)
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id de la persona', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
+
+		it('CP8. PersonaId es negativo.', done => {
+			procarianoObj.PersonaId = -5;
+			ModeloProcariano.crearProcarianoT(procarianoObj, transaction)
+			.catch( fail => {
+				transaction.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Id de la persona inválido', 'Mensaje obtenido incorrecto');
+				done();
+			});
+		});
 	});
 	
 	describe('obtenerProcarianoPorIdP', () => {
@@ -195,46 +219,6 @@ describe('PROCARIANOS', () => {
 			.catch( fail => {
 				assert.equal(fail.tipo, 'Find error','Tipo de error recibido incorrecto');
 				assert.equal(fail.mensaje, 'No se encontró registro del procariano',  'Mensaje recibido incorrecto');
-				done();
-			});
-		});
-	});
-	
-	describe('obtenerProcarianosDeGrupoP', () => {
-		let idGrupo = 1;
-
-		it('CP1. Id válido', done => {
-			ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
-			.then( procarianos => {
-				procarianos.should.be.array;
-				done();
-			})
-			.catch( error => {
-				done(error);
-			});
-		});
-
-		it('CP2. ID no es enviado.', done => {
-			ModeloProcariano.obtenerProcarianosDeGrupoP(null)
-			.then( resultado => {
-				done();
-			})
-			.catch( fail => {
-				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
-				assert.equal(fail.mensaje, 'No ingresó el id del grupo',  'Mensaje recibido incorrecto');
-				done();
-			});
-		});
-
-		it('CP3. ID es menor a 0.', done => {
-			idGrupo = -5;
-			ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
-			.then( resultado => {
-				done();
-			})
-			.catch( fail => {
-				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
-				assert.equal(fail.mensaje, 'Id del grupo inválido',  'Mensaje recibido incorrecto');
 				done();
 			});
 		});
@@ -310,7 +294,130 @@ describe('PROCARIANOS', () => {
 			});
 		});
 	});
-	
+	/*
+	describe('obtenerProcarianosDeGrupoP', () => {
+		let idGrupo = 1;
+
+		it('CP1. Id válido', done => {
+			ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
+			.then( procarianos => {
+				procarianos.should.be.array;
+				done();
+			})
+			.catch( error => {
+				done(error);
+			});
+		});
+
+		it('CP2. ID no es enviado.', done => {
+			ModeloProcariano.obtenerProcarianosDeGrupoP(null)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id del grupo',  'Mensaje recibido incorrecto');
+				done();
+			});
+		});
+
+		it('CP3. ID es menor a 0.', done => {
+			idGrupo = -5;
+			ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
+			.then( resultado => {
+				done();
+			})
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error','Tipo de error recibido incorrecto');
+				assert.equal(fail.mensaje, 'Id del grupo inválido',  'Mensaje recibido incorrecto');
+				done();
+			});
+		});
+	});
+
+	describe('eliminarProcarianoT', () => {
+		let tEliminar;
+		let idPersonaEliminar = 4;
+
+		beforeEach( () => {
+			return inicializarTransaccion()
+	    .then( t => {
+	    	tEliminar = t;
+	    })
+	    .catch( error => {
+	    	console.log('No se pudo crear la transacción');
+	    });
+		});
+
+		it('CP1. Eliminación exitosa', done => {
+			ModeloProcariano.eliminarProcarianoT(idPersonaEliminar, tEliminar)
+			.then( resultado => {
+				tEliminar.rollback();
+				assert.equal(resultado, 1, 'Cantidad de registros incorrecta');
+				done();
+			})
+			.catch( fail => {
+				tEliminar.rollback();
+				done(fail);
+			});
+		});
+
+		it('CP2. idProcariano es null', done => {
+			ModeloProcariano.eliminarProcarianoT(null, tEliminar)
+			.then( resultado => {
+				tEliminar.rollback();
+				done();
+			})
+			.catch( fail => {
+				tEliminar.rollback();
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id de la persona', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP3. idProcariano es negativo', done => {
+			ModeloProcariano.eliminarProcarianoT(-5, tEliminar)
+			.then( resultado => {
+				tEliminar.rollback();
+				done();
+			})
+			.catch( fail => {
+				tEliminar.rollback();
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Id de la persona inválido', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP4. Procariano no encontrado', done => {
+			ModeloProcariano.eliminarProcarianoT(100, tEliminar)
+			.then( resultado => {
+				tEliminar.rollback();
+				done();
+			})
+			.catch( fail => {
+				tEliminar.rollback();
+				assert.equal(fail.tipo, 'Delete error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No se encontró el registro del procariano para eliminar', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+	});*/
+
+	describe('buscarChicosFormacionP', () => {
+		it('CP1. Búsqueda exitosa', done => {
+			ModeloProcariano.buscarChicosFormacionP()
+			.then( resultado => {
+				resultado.should.be.array;
+				done();
+			})
+			.catch( fail => {
+				done(fail);
+			});
+		});
+	});
+
 	describe('editarProcarianoT', () => {
 		let tEditar;
 		let idPersonaEditar = 4;
@@ -430,89 +537,43 @@ describe('PROCARIANOS', () => {
 				done();
 			});
 		});
-	});
 
-	describe('eliminarProcarianoT', () => {
-		let tEliminar;
-		let idPersonaEliminar = 4;
-
-		beforeEach( () => {
-			return inicializarTransaccion()
-	    .then( t => {
-	    	tEliminar = t;
-	    })
-	    .catch( error => {
-	    	console.log('No se pudo crear la transacción');
-	    });
-		});
-
-		it('CP1. Eliminación exitosa', done => {
-			ModeloProcariano.eliminarProcarianoT(idPersonaEliminar, tEliminar)
-			.then( resultado => {
-				tEliminar.rollback();
-				assert.equal(resultado, 1, 'Cantidad de registros incorrecta');
-				done();
-			})
+		it('CP7. Id de Persona no enviado.', done => {
+			idPersonaEditar = null;
+			ModeloProcariano.editarProcarianoT(idPersonaEditar, procarianoEditar, tEditar)
 			.catch( fail => {
-				tEliminar.rollback();
-				done(fail);
-			});
-		});
-
-		it('CP2. idProcariano es null', done => {
-			ModeloProcariano.eliminarProcarianoT(null, tEliminar)
-			.then( resultado => {
-				tEliminar.rollback();
-				done();
-			})
-			.catch( fail => {
-				tEliminar.rollback();
+				tEditar.rollback();
+				fail.should.be.json;
 				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
-				assert.equal(fail.mensaje, 'No ingresó el id de la persona', 'Mensaje de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id de la persona', 'Mensaje obtenido incorrecto');
 				done();
 			});
 		});
 
-		it('CP3. idProcariano es negativo', done => {
-			ModeloProcariano.eliminarProcarianoT(-5, tEliminar)
-			.then( resultado => {
-				tEliminar.rollback();
-				done();
-			})
+		it('CP8. Id de Persona inválido.', done => {
+			idPersonaEditar = -5;
+			ModeloProcariano.editarProcarianoT(idPersonaEditar, procarianoEditar, tEditar)
 			.catch( fail => {
-				tEliminar.rollback();
+				tEditar.rollback();
+				fail.should.be.json;
 				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
-				assert.equal(fail.mensaje, 'Id de la persona inválido', 'Mensaje de error incorrecto');
+				assert.equal(fail.mensaje, 'Id de la persona inválido', 'Mensaje obtenido incorrecto');
 				done();
 			});
 		});
 
-		it('CP4. Procariano no encontrado', done => {
-			ModeloProcariano.eliminarProcarianoT(100, tEliminar)
-			.then( resultado => {
-				tEliminar.rollback();
-				done();
-			})
+		it('CP9. Registro no encontrado.', done => {
+			idPersonaEditar = 500;
+			ModeloProcariano.editarProcarianoT(idPersonaEditar, procarianoEditar, tEditar)
 			.catch( fail => {
-				tEliminar.rollback();
-				assert.equal(fail.tipo, 'Delete error', 'Tipo de error incorrecto');
-				assert.equal(fail.mensaje, 'No se encontró el registro del procariano para eliminar', 'Mensaje de error incorrecto');
+				tEditar.rollback();
+				fail.should.be.json;
+				assert.equal(fail.tipo, 'Edit error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No se encontró el registro del procariano para editar', 'Mensaje obtenido incorrecto');
 				done();
 			});
 		});
-	});
 
-	describe('buscarChicosFormacionP', () => {
-		it('CP1. Búsqueda exitosa', done => {
-			ModeloProcariano.buscarChicosFormacionP()
-			.then( resultado => {
-				resultado.should.be.array;
-				done();
-			})
-			.catch( fail => {
-				done(fail);
-			});
-		});
 	});
 
 });

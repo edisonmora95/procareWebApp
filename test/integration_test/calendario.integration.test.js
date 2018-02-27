@@ -2,20 +2,17 @@
 
 process.env.NODE_ENV = 'test';
 
-const app     = require('../../app')
+const app     = require('../../app');
 const chai 		= require('chai');
 const request = require('supertest');
-const assert 	= chai.assert;
 const expect 	= chai.expect;
 
 let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJQZXJzb25hbCJdLCJpZCI6MiwiaWF0IjoxNTEzODkwNzAxfQ.5OQlRcegbehBU2C9Lnwz59zgBPRyBLicpwnpigYllG0';
 
-describe('EVENTOS', () => {
+describe('CALENDARIO', () => {
 
 	describe('mostrarCalendario', () => {
 		it('CP1. Búsqueda exitosa', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.get('/api/calendario/')
@@ -31,8 +28,6 @@ describe('EVENTOS', () => {
 
 	describe('mostrarCalendarioUsuario', () => {
 		it('CP1. Búsqueda exitosa', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.get('/api/calendario/usuario/4')
@@ -46,8 +41,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP2. Usuario sin tareas', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.get('/api/calendario/usuario/1')
@@ -61,8 +54,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP3. Usuario no existente', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.get('/api/calendario/usuario/1000')

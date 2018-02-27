@@ -33,7 +33,6 @@ describe('PERSONAS', () => {
 	
 	describe('crearPersonaT', () => {
 		let transaction;
-		let idPersona  = 4;	//Quemado en la base de datos. Id del animador
 		let personaObj = {
 			cedula 					: '0927102848',
 			nombres 				: 'Edison Andre',
@@ -70,8 +69,6 @@ describe('PERSONAS', () => {
 	    .catch( error => {
 	    	console.log('No se pudo crear la transacción');
 	    });
-
-	    
 		});
 
 		it('CP1. Datos correctos', done => {
@@ -855,12 +852,12 @@ describe('PERSONAS', () => {
 	  	ModeloPersona.ingresarContrasenna(idPersona, hash, transaction)
 	  	.then( resultado => {
 	  		resultado.should.be.array;
-	  		assert.equal(resultado[0], 1, 'Cantidad editada incorrecta');
-	  		//transaction.commit();
+	  		assert.equal(resultado, 1, 'Cantidad editada incorrecta');
 	  		transaction.rollback();
 				done();
 	  	})
 	  	.catch( fail => {
+	  		transaction.rollback();
 	  		done(fail);
 	  	});
 	  });
@@ -869,6 +866,7 @@ describe('PERSONAS', () => {
 	  	ModeloPersona.ingresarContrasenna(null, hash, transaction)
 	  	.then( resultado => {
 	  		console.log('ESTO NO DEBERÍA DE PASAR...');
+	  		transaction.rollback();
 				done();
 	  	})
 	  	.catch( fail => {
@@ -883,12 +881,28 @@ describe('PERSONAS', () => {
 	  	ModeloPersona.ingresarContrasenna(-5, hash, transaction)
 	  	.then( resultado => {
 	  		console.log('ESTO NO DEBERÍA DE PASAR...');
+	  		transaction.rollback();
 				done();
 	  	})
 	  	.catch( fail => {
 	  		transaction.rollback();
 	  		assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
 	  		assert.equal(fail.mensaje, 'Id inválido', 'Mensaje de error incorrecto');
+	  		done();
+	  	});
+	  });
+
+	  it('CP4. Registro no encontrado', done => {
+	  	ModeloPersona.ingresarContrasenna(500, hash, transaction)
+	  	.then( resultado => {
+	  		console.log('ESTO NO DEBERÍA DE PASAR...');
+	  		transaction.rollback();
+				done();
+	  	})
+	  	.catch( fail => {
+	  		transaction.rollback();
+	  		assert.equal(fail.tipo, 'Edit error', 'Tipo de error incorrecto');
+	  		assert.equal(fail.mensaje, 'No se encontró el registro de la persona para editar', 'Mensaje de error incorrecto');
 	  		done();
 	  	});
 	  });

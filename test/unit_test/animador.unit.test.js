@@ -27,6 +27,44 @@ let grupoObj   = {
 
 describe('ANIMADOR', () => {
 
+	describe('animadorTieneGrupoActualmente', () => {
+		let idAnimadorConGrupo = 1;
+		it('CP1. Animador si tiene un grupo actualmente', done => {
+			ModeloAnimador.animadorTieneGrupoActualmente(idAnimador)
+			.then( resultado => {
+				assert.equal(resultado, true, 'Error. No encontró registro del grupo');
+				done();
+			});
+		});
+
+		it('CP2. Animador no tiene un grupo actualmente', done => {
+			ModeloAnimador.animadorTieneGrupoActualmente(2)
+			.then( resultado => {
+				assert.equal(resultado, false, 'Error. Se encontró registro del grupo');
+				done();
+			});
+		});
+
+		it('CP3. idAnimador es null', done => {
+			ModeloAnimador.animadorTieneGrupoActualmente(null)
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'No ingresó el id del animador', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+		it('CP4. idAnimador es negativo', done => {
+			ModeloAnimador.animadorTieneGrupoActualmente(-5)
+			.catch( fail => {
+				assert.equal(fail.tipo, 'Foreign key constraint error', 'Tipo de error incorrecto');
+				assert.equal(fail.mensaje, 'Id del animador inválido', 'Mensaje de error incorrecto');
+				done();
+			});
+		});
+
+	});
+
 	describe('agregarAnimadorAGrupoT', () => {
 
 		beforeEach( () => {
@@ -42,8 +80,9 @@ describe('ANIMADOR', () => {
 	  it('CP1. Creación exitosa', done => {
 	  	ModeloAnimador.agregarAnimadorAGrupoT(3, idGrupo, transaction)
 	  	.then( resultado => {
-	  		const animador = resultado.dataValues;
-				animador.should.be.json;
+	  		resultado.should.be.json;
+				assert.equal(resultado.get('ProcarianoId'), 3, 'Animador incorrecto');
+				assert.equal(resultado.get('GrupoId'), idGrupo, 'Grupo incorrecto');
 				transaction.rollback();
 				done();
 	  	})
@@ -51,7 +90,7 @@ describe('ANIMADOR', () => {
 	  		done(fail);
 	  	});
 	  });
-
+	  
 	  it('CP2. idAnimador es null', done => {
 	  	ModeloAnimador.agregarAnimadorAGrupoT(null, idGrupo, transaction)
 	  	.then( resultado => {
@@ -106,10 +145,10 @@ describe('ANIMADOR', () => {
 				assert.equal(fail.mensaje, 'Id del grupo inválido', 'Mensaje incorrecto');
 	  		done();
 	  	});
-	  });
+	  });	
 
 	});
-
+	
 	describe('obtenerAnimadorDeGrupoP', () => {
 		it('CP1. Búsqueda exitosa', done => {
 			ModeloAnimador.obtenerAnimadorDeGrupoP(1)
@@ -335,7 +374,7 @@ describe('ANIMADOR', () => {
 		});
 
 	});
-
+	
 });
 
 function inicializarTransaccion(){

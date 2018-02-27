@@ -9,16 +9,14 @@
 
 const respuesta 						= require('../utils/respuestas');
 const co 										= require('co');
-const utils									=	require('../utils/utils');
 
 const modelo 								= require('../models');
 const ModeloGrupo 					= require('../models/').Grupo;
 const ModeloGrupoEtapa 			= require('../models/').GrupoEtapa;
 const ModeloAnimador 				= require('../models/').Animador;
 const ModeloProcariano 			= require('../models/').Procariano;
-const ModeloPersona 			= require('../models/').Persona;
-const ModeloPersonaRol 			= require('../models/').PersonaRol;
 const ModeloProcarianoGrupo = require('../models/').ProcarianoGrupo;
+const ModeloProcarianoTipo  = require('../models/').ProcarianoTipo;
 
 /* FECHAS DE REUNIONES PROCARE */
 const fechasP = ["2018-01-25", "2018-02-01", "2018-02-08", "2018-02-15", "2018-02-22", "2018-03-01", "2018-03-08", "2018-03-15", "2018-03-22", "2018-03-29", "2018-04-05", "2018-04-12", "2018-04-19", "2018-04-26", "2018-05-03", "2018-05-10", "2018-05-17", "2018-05-24", "2018-05-31", "2018-06-07", "2018-06-14", "2018-06-21", "2018-06-28", "2018-07-05", "2018-07-12", "2018-07-19", "2018-07-26", "2018-08-02", "2018-08-09", "2018-08-16", "2018-08-23", "2018-08-30", "2018-09-06", "2018-09-13", "2018-09-20", "2018-09-27", "2018-10-04", "2018-10-11", "2018-10-18", "2018-10-25", "2018-11-01", "2018-11-08", "2018-11-15", "2018-11-22", "2018-11-29", "2018-12-06", "2018-12-13", "2018-12-20", "2018-12-27"];
@@ -44,13 +42,12 @@ module.exports.crearGrupo = (req, res, next) => {
 		genero 					: req.body.genero,
 	};
 	let idEtapa  = req.body.etapa;
-
 	inicializarTransaccion()
 	.then( t => {
 		co( function*() {
 			let grupo 		 = yield ModeloGrupo.crearGrupoT(grupoObj, t);
 			const idGrupo  = grupo.get('id');
-			let grupoetapa = yield ModeloGrupoEtapa.crearGrupoEtapaT(idGrupo, idEtapa, t);
+			yield ModeloGrupoEtapa.crearGrupoEtapaT(idGrupo, idEtapa, t);
 			res.locals.t       = t;
 			res.locals.idGrupo = idGrupo;
 			next();
@@ -75,8 +72,9 @@ module.exports.crearGrupo = (req, res, next) => {
 			Si el nuevo animador no está registrado como usuario, debe registrarse
 	@ÚltimaModificación: 
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
+		26/02/2018	@edisonmora95	Añadidos controllers nuevos
 */
-module.exports.editarGrupo = (req, res) => {
+module.exports.editarGrupo = (req, res, next) => {
 	let grupo = {
 		id 							: req.params.id_grupo,
 		nombre					: req.body.nombre,
@@ -89,28 +87,26 @@ module.exports.editarGrupo = (req, res) => {
   	animadorAntiguo	: req.body.animadorAntiguo,
   	animadorNuevo		: req.body.animadorNuevo
 	};
-
+	res.locals.datos = {};
 	inicializarTransaccion()
 	.then( t => {
 		co(function*() {
 			const grupoEditado		=	yield ModeloGrupo.editarGrupoT(grupo, grupo.id, t);	//Primero se edita la información general del grupo
 			const cambioEtapa 		=	( grupo.etapaNueva !== '' && (grupo.etapaNueva !== grupo.etapaAntigua) && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
 			const cambioAnimador 	= ( grupo.animadorNuevo !== '' && (grupo.animadorNuevo !== grupo.animadorAntiguo) && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
-			let datosRespuesta 		= {};
-
+			res.locals.datos.grupoEditado = grupoEditado;
 			if( cambioEtapa ){
 				const etapa 				= yield ModeloGrupoEtapa.cambiarGrupoDeEtapaT(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, t);
-				datosRespuesta.etapaNueva = etapa;
+				res.locals.datos.etapaNueva = etapa;
 			}
-
 			if( cambioAnimador ){
-				const animador 	= yield ModeloAnimador.cambiarAnimadorDeGrupoT(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, t);
-				datosRespuesta.animadorNuevo = animador;
+				res.locals.grupo = grupo;
+				res.locals.t     = t;
+				next();
+			}else{
+				t.commit();				
+				return respuesta.okUpdate(res, 'Se editó el grupo correctamente.', res.locals.datos);	
 			}
-
-			t.commit();
-			datosRespuesta.grupoEditado = grupoEditado;
-			return respuesta.okUpdate(res, 'Se editó el grupo correctamente.', datosRespuesta);			
 		})
 		.catch( fail => {
 			t.rollback();
@@ -133,7 +129,7 @@ module.exports.editarGrupo = (req, res) => {
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
 module.exports.eliminarGrupo = (req, res) => {
-	let id = req.params.id;
+	let id = req.params.id_grupo;
 
 	inicializarTransaccion()
 	.then( t => {
@@ -175,22 +171,32 @@ module.exports.anadirProcarianoAGrupo = (req, res) => {
 	const idGrupo 		 = req.params.id_grupo;
 	const idProcariano = req.body.idProcariano;
 
-	inicializarTransaccion()
-	.then( t => {
-		return ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, t)
-		.then( result => {
-			t.commit();
-			return respuesta.okCreate(res, 'Procariano añadido a grupo.', result);
-		})
-		.catch( error2 => {
-			t.rollback();
-			return respuesta.error(res, 'No se pudo añadir a grupo', '', error2);
-		});
+	ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(idProcariano)
+	.then( registro => {
+		if ( registro.get('TipoId') === 1 ) {
+			inicializarTransaccion()
+			.then( t => {
+				return ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, t)
+				.then( result => {
+					t.commit();
+					return respuesta.okCreate(res, 'Procariano añadido a grupo.', result);
+				})
+				.catch( fail => {
+					t.rollback();
+					return respuesta.ERROR_SERVIDOR(res, fail);
+				});
+			})
+			.catch( fail => {
+				return respuesta.ERROR_SERVIDOR(res, fail);
+			});
+		} else {
+			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'El procariano debe ser de Formación' });
+		}
 	})
-	.catch( errorT => {
-		return respuesta.error(res, 'Server error', 'Error al inicializar transacción', errorT);
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
-}
+};
 
 /*
 	@Autor: @GustavoTotoy
@@ -201,7 +207,7 @@ module.exports.anadirProcarianoAGrupo = (req, res) => {
 		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 		11/02/2018	@edisonmora95	Promise.all
 */
-module.exports.obtenerGrupoPorId = (req, res, next) => {
+module.exports.obtenerGrupoPorId = (req, res) => {
 	let idGrupo = req.params.id_grupo;
 	let datosRespuesta = {};
 
@@ -224,10 +230,11 @@ module.exports.obtenerGrupoPorId = (req, res, next) => {
 			return respuesta.okGet(res, 'Información completa del grupo obtenida.', datosRespuesta);
 		})
 		.catch( fail => {
-			return respuesta.error(res, 'No se pudo obtener el grupo', '', fail);	
-		})
-	}).catch( fail => {
-		return respuesta.error(res, 'No se pudo obtener el grupo', '', fail);
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 

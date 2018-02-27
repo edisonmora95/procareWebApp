@@ -148,7 +148,7 @@ const buscarProcarianosActivos = (req, res) => {
 		18/02/2018	@edisonmora95, 	Modificado formato de respuesta de error
 */
 const buscarProcarianoPorId = (req, res) => {
-	const idPersona = req.params.id;
+	const idPersona = req.params.id_persona;
 	let datos 			= {};
 	co(function* (){
 		let procariano 		= yield ModeloProcariano.obtenerProcarianoPorIdPersonaP(idPersona);
@@ -180,7 +180,7 @@ const buscarProcarianoPorId = (req, res) => {
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
 */
 const editarProcariano = (req, res, next) => {
-	const idPersona 			= req.params.id;
+	const idPersona 			= req.params.id_persona;
 	const fechaOrdenacion = (req.body.fechaOrdenacion === '') ? null : new Date(req.body.fechaOrdenacion);
 	const procariano 			= {
 		colegio 				: req.body.colegio,
@@ -301,9 +301,12 @@ const buscarChicosFormacionSinGrupo = (req, res) => {
 		16/09/2017 @edisonmora95 , 	cambiado a promesas.
 */
 const obtenerGrupoActualDeProcariano = (req, res) => {
-	const idProcariano = req.params.id;
+	const idProcariano = req.params.id_procariano;
 	co(function* (){
 		let procarianogrupo = yield ModeloProcarianoGrupo.obtenerGrupoActualDeProcarianoP(idProcariano);
+		if ( !procarianogrupo ) {
+			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'No se encontró el registro del grupo del Procariano'} );
+		}
 		const idGrupo 			=	procarianogrupo.get('GrupoId');
 		let grupoActual 		=	yield ModeloGrupo.obtenerGrupoPorIdP(idGrupo);
 		return respuesta.okGet(res, 'Búsqueda exitosa', grupoActual);
