@@ -91,9 +91,9 @@ module.exports.editarGrupo = (req, res, next) => {
 	inicializarTransaccion()
 	.then( t => {
 		co(function*() {
-			const grupoEditado		=	yield ModeloGrupo.editarGrupoT(grupo, grupo.id, t);	//Primero se edita la información general del grupo
-			const cambioEtapa 		=	( grupo.etapaNueva !== '' && (grupo.etapaNueva !== grupo.etapaAntigua) && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
-			const cambioAnimador 	= ( grupo.animadorNuevo !== '' && (grupo.animadorNuevo !== grupo.animadorAntiguo) && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
+			const grupoEditado   = yield ModeloGrupo.editarGrupoT(grupo, grupo.id, t);	//Primero se edita la información general del grupo
+			const cambioEtapa    = ( grupo.etapaNueva !== NaN && grupo.etapaNueva !== '' && (grupo.etapaNueva !== grupo.etapaAntigua) && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
+			const cambioAnimador = ( grupo.animadorNuevo !== NaN && grupo.animadorNuevo !== '' && (grupo.animadorNuevo !== grupo.animadorAntiguo) && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
 			res.locals.datos.grupoEditado = grupoEditado;
 			if( cambioEtapa ){
 				const etapa 				= yield ModeloGrupoEtapa.cambiarGrupoDeEtapaT(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, t);
@@ -192,6 +192,28 @@ module.exports.anadirProcarianoAGrupo = (req, res) => {
 		} else {
 			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'El procariano debe ser de Formación' });
 		}
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+module.exports.anadirProcarianosAGrupo = (req, res) => {
+	let arrayProcarianos = JSON.parse(req.body.integrantes.toString());
+	console.log('arrayProcarianos:', arrayProcarianos);
+	inicializarTransaccion()
+	.then( t => {
+		ModeloProcarianoGrupo.anadirProcarianosBulk(arrayProcarianos, t)
+		.then( resultado => {
+			console.log('resultado:', resultado)
+			t.commit();
+			return respuesta.okCreate(res, 'Procarianos añadidos al grupo.', null);
+		})
+		.catch( fail => {
+			console.log('fail:', fail);
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
 	})
 	.catch( fail => {
 		return respuesta.ERROR_SERVIDOR(res, fail);

@@ -24,7 +24,7 @@ const usuario = (req, res, next) => {
 const verifyRolView = (arrayRoles) => {
 	return 	(req, res, next) => {
 		let flag    = false;
-		const roles = req.user[0].get('Rols');
+		const roles = req.user.get('Rols');
 		//Busca si el usuario tiene uno de los roles permitidos para la ventana
 		for (let i = 0; i < roles.length; i++) {
 			let nombreRol = roles[i].get('nombre');

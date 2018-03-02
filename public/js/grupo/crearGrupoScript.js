@@ -18,7 +18,7 @@ const dictionary = {
 		}
 	}
 };
-VeeValidate.Validator.updateDictionary(dictionary);
+VeeValidate.Validator.localize(dictionary);
 
 let vm = new Vue({
 	el: '#app',
@@ -84,7 +84,7 @@ let vm = new Vue({
 		obtenerEtapas(self){
 			$.ajax({
 				type   : 'GET',
-				url    : '/api/etapa/',
+				url    : '/api/etapas/',
 				headers: {
 	        "x-access-token" : localStorage.getItem('token')
 		    },
@@ -139,7 +139,7 @@ let vm = new Vue({
 				data: grupo,
 				success(res){
 					if( res.estado ){
-						self.grupo.id = res.datos.grupo.id;
+						self.grupo.id = res.datos;
 						self.estado 	= 'seleccion';
 					}
 				},
@@ -171,28 +171,16 @@ let vm = new Vue({
 			});
 		},
 		agregarAGrupo(self){
+			const data = { integrantes: JSON.stringify(self.integrantes) };
 			$.ajax({
 				type: 'POST',
-				url : '/api/pg/',
+				url : '/api/grupos/' + this.grupo.id + '/anadir/bulk',
 				headers: {
 	        "x-access-token" : localStorage.getItem('token')
 		    },
-				data: { integrantes: JSON.stringify(self.integrantes) },
+				data: data,
 				success(res){
-					console.log(res)
-					if( res.status ){
-						$('#modalGrupoCreado').modal('open');
-					}else{
-						if(res.hasOwnProperty('errors')){
-							let mensajeSequelize = res.sequelizeStatus.errors[0].message;
-							if( mensajeSequelize === 'PRIMARY must be unique'){
-								self.crearMensajeError(self, res);
-							}
-						}else{
-							self.mensajeError = 'Error al ingresar a los procarianos al grupo';
-						}
-						$('#mensajeError').modal('open');
-					}
+					$('#modalGrupoCreado').modal('open');
 				},
 				error(err){
 					self.mensajeError = 'No se pudo conectar con el servidor';

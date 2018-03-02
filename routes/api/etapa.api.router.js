@@ -14,7 +14,7 @@ router.use(authApi.verifyToken);
 	*	@api {get} /api/etapas/	Mostrar Etapas
 	*	@apiDescription Obtiene todas las etapas de la base de datos
 	*	@apiGroup Etapa
-	*	@apiName mostrarEtapa
+	*	@apiName obtenerEtapas
 	*	@apiversion 0.3.0
 	*	@apiPermission Usuario | Personal | Admin
 	*	@apiHeader {String} x-access-token JWT
@@ -25,7 +25,7 @@ router.use(authApi.verifyToken);
 	*	@apiError (ERROR_SERVIDOR) {String}  mensaje	'Error en el servidor'
 	*	@apiError (ERROR_SERVIDOR) {Object}  error		Descripción del error ocurrido.
 */
-router.get('/', authApi.verifyRol(['Personal']), controladorEtapa.mostrarEtapa);
+router.get('/', authApi.verifyRol(['Personal']), controladorEtapa.obtenerEtapas);
 
 //Asignar etapa
 //router.post('/asignar', controladorEtapa.asignarEtapa);

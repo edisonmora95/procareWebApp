@@ -374,6 +374,19 @@ describe('ANIMADOR', () => {
 		});
 
 	});
+
+	describe('obtenerAnimadoresActuales', () => {
+		it('CP1. Caso exitoso', done => {
+			ModeloAnimador.obtenerAnimadoresActuales()
+			.then( resultado => {
+				resultado.should.be.array;
+				const animador = resultado[0];
+				assert.equal(animador.get('ProcarianoId'), 1, 'Ids no coinciden');
+				assert.equal(animador.get('GrupoId'), 1, 'Ids no coinciden');
+				done();
+			})
+		});
+	});
 	
 });
 

@@ -9,3 +9,4 @@ DatosFalsosBase.json
 *.log
 coverage/*
 .nyc_output/*
+apidoc/*

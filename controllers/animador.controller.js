@@ -185,13 +185,31 @@ module.exports.mostrarAnimadores = (req,res,next) => {
 		Devuelve a todos los procarianos que no sean Chico de Formación
 */
 module.exports.posiblesAnimadores = (req,res,next) => {
-	ModeloProcariano.obtenerPosiblesAnimadoresP()
-	.then( resutado => {
-		return respuesta.okGet(res, 'Búsqueda exitosa', resutado);
+	Promise.all([
+		ModeloProcariano.obtenerPosiblesAnimadoresP(),
+		ModeloAnimador.obtenerAnimadoresActuales()
+	])
+	.then( values => {
+		const procarianos  = values[0];
+		const animActuales = values[1];
+		//console.log('procarianos:', procarianos);
+		for (let i = 0; i < animActuales.length; i++) {
+			let animActual = animActuales[i];
+			for (let j = 0; j < procarianos.length; j++) {
+				let procarianoActual = procarianos[j];
+				console.log('anim:', animActual.get('ProcarianoId'), ' procariano:', procarianoActual.get('procarianoId'));
+				if ( animActual.get('ProcarianoId') === procarianoActual.get('procarianoId') ) {
+					procarianos.splice(j, 1);
+					break;
+				}
+			}
+		}
+		return respuesta.okGet(res, 'Búsqueda exitosa', procarianos);
 	})
-	.catch( error => {
-		return respuesta.serverError(res, 'Error en la búsqueda', error);
-	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+
 }
 
 module.exports.obtenerGrupoDeAnimador = (req, res, next) => {

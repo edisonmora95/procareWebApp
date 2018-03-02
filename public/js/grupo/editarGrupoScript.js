@@ -32,9 +32,9 @@ let App = new Vue({
 		/*
 			@Descripción: 
 				Inicializa los elementos de Materialize que se van a usar en el formulario.
-    */
-    inicializarMaterialize(){
-    	$('.modal').modal();
+		*/
+		inicializarMaterialize(){
+			$('.modal').modal();
 			$('select').material_select();
 			$('#selectGenero').change( () => {
 				App.grupo.genero = $('#selectGenero').val();
@@ -45,7 +45,7 @@ let App = new Vue({
 			$('#selectAnimador').change( () => {
 				App.grupo.animadorNuevo = $('#selectAnimador').val();
 			});
-    },
+		},
 		//////////////////////////////////////////////////
 		//Llamadas a la base de datos
 		//////////////////////////////////////////////////
@@ -53,6 +53,9 @@ let App = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: '/api/login/usuarios',
+				headers: {
+					"x-access-token" : localStorage.getItem('token')
+				},
 				success(res){
 					App.usuario = res.datos;
 				}
@@ -69,8 +72,8 @@ let App = new Vue({
 				type: 'GET',
 				url : '/api/grupos/' + idGrupo,
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				success(res){
 					self.grupo 								 = res.datos.grupo;
 					self.grupo.animadorAntiguo = res.datos.procarianoAnimador.procarianoId;
@@ -81,7 +84,7 @@ let App = new Vue({
 					$('#selectGenero').val(self.grupo.genero);
 					$('#selectGenero').material_select();
 					self.obtenerEtapas(self);
-					self.obtenerAnimadores(self);
+					self.obtenerAnimadores(self, res.datos.procarianoAnimador);
 				}
 			});
 		},
@@ -94,12 +97,12 @@ let App = new Vue({
 		obtenerEtapas(self){
 			$.ajax({
 				type: 'GET',
-				url : '/api/etapa/',
+				url : '/api/etapas/',
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				success(res){
-					self.etapas							= res.datos;
+					self.etapas = res.datos;
 					self.armarSelect(self.etapas, '#selectEtapa', self.grupo.etapaAntigua);
 				}
 			});
@@ -110,15 +113,15 @@ let App = new Vue({
 				Las añade al aray para mostrarlas en el <select>
 				Se selecciona la etapa actual del grupo
 		*/
-		obtenerAnimadores(self){
+		obtenerAnimadores(self, animadorAntiguo){
 			$.ajax({
 				type: 'GET',
 				url: '/api/animadores/posibles',
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				success(res){
-					self.animadores = self.armarArrayAnimadores(res.datos);
+					self.animadores = self.armarArrayAnimadores(res.datos, animadorAntiguo);
 					self.armarSelect(self.animadores, '#selectAnimador', self.grupo.animadorAntiguo);
 				}
 			});
@@ -133,20 +136,21 @@ let App = new Vue({
 				type: 'GET',
 				url: '/api/procarianos/formacion/sinGrupo',
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				success(res){
 					self.sinGrupo = self.armarArraySinGrupo(res.datos);	
 				}
 			});
 		},
 		anadirChicoAGrupo(chico, data){
+			const urlApi = '/api/grupos/' + App.idGrupo + '/anadir';
 			$.ajax({
 				type: 'POST',
-				url : '/api/pg/anadir',
+				url : urlApi,
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				data: data,
 				success(res){
 					Materialize.toast('Procariano añadido a grupo', 2000, 'rounded');
@@ -165,8 +169,8 @@ let App = new Vue({
 				type: 'PUT',
 				url : urlApi,
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				data: {
 					idGrupo: App.grupo.id
 				},
@@ -181,13 +185,14 @@ let App = new Vue({
 			})
 		},
 		enviarEdicion(grupo){
+			console.log(grupo)
 			let urlApi = '/api/grupos/' + App.grupo.id;
 			$.ajax({
 				type: 'PUT',
 				url : urlApi,
 				headers: {
-	        "x-access-token" : localStorage.getItem('token')
-		    },
+					"x-access-token" : localStorage.getItem('token')
+				},
 				data: grupo,
 				success(res){
 					Materialize.toast(res.mensaje, 4000);
@@ -237,7 +242,7 @@ let App = new Vue({
 			});		
 			return etapaActual;
 		},
-		armarArrayAnimadores(animadores){
+		armarArrayAnimadores(animadores, animadorAntiguo){
 			let array = [];
 			$.each(animadores, (i, animador) => {
 				let animadorObj = {
@@ -246,6 +251,11 @@ let App = new Vue({
 				};
 				array.push(animadorObj);
 			});
+			let animadorObj = {
+				id : animadorAntiguo.procarianoId,
+				nombre : animadorAntiguo.Persona.nombres + ' ' + animadorAntiguo.Persona.apellidos
+			};
+			array.push(animadorObj);
 			return array;
 		},
 		/*
@@ -293,17 +303,17 @@ let App = new Vue({
 			@Params:
 				array -> datos obtenidos de la base de datos
 				idselect -> id del elemento con #
-    */
-    armarSelect(array, idSelect, actual){
-    	$(idSelect).empty();
-    	$(idSelect).append('<option value=""  disabled selected></option>');
-    	$.each(array, (i, elemento) => {
-    		$(idSelect).append('<option value=' + elemento.id + '>' + elemento.nombre + '</option>');
-    	});
-    	$(idSelect).val(actual);
-    	$(idSelect).material_select();
-    },
-    //////////////////////////////////
+		*/
+		armarSelect(array, idSelect, actual){
+			$(idSelect).empty();
+			$(idSelect).append('<option value=""  disabled selected></option>');
+			$.each(array, (i, elemento) => {
+				$(idSelect).append('<option value=' + elemento.id + '>' + elemento.nombre + '</option>');
+			});
+			$(idSelect).val(actual);
+			$(idSelect).material_select();
+		},
+		//////////////////////////////////
 		//EVENTOS
 		//////////////////////////////////
 		anadir(chico){
@@ -324,6 +334,10 @@ let App = new Vue({
 			if(!App.formCompleto()){
 				$('#modalCamposIncompletos').modal('open');
 			}else{
+				App.grupo.animadorAntiguo = parseInt(App.grupo.animadorAntiguo);
+				App.grupo.animadorNuevo   = parseInt(App.grupo.animadorNuevo);
+				App.grupo.etapaAntigua    = parseInt(App.grupo.etapaAntigua);
+				App.grupo.etapaNueva      = parseInt(App.grupo.etapaNueva);
 				App.enviarEdicion(App.grupo);
 			}
 		},

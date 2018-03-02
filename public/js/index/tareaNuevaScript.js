@@ -34,7 +34,7 @@ const dictionary = {
 		}
 	}
 };
-VeeValidate.Validator.updateDictionary(dictionary);
+VeeValidate.Validator.localize(dictionary);
 
 let tareaApp = new Vue({
 	el: '#tareaApp',
@@ -228,7 +228,7 @@ let tareaApp = new Vue({
 		//Valida que el campo no esté vacío
 		validarCampo(idCampo){
 			const valor = $(idCampo).val();
-			if( valor === '' || valor === null){
+			if( valor === '' || valor === null ){
 				return false;
 			}else{
 				return true;

@@ -164,6 +164,27 @@ router.post('/:id_grupo/anadir',
 						controladorGrupo.anadirProcarianoAGrupo
 					);
 
+/**
+	*	@api {post} /api/grupos/:id_grupo/anadir/bulk Añadir Procarianos a Grupo
+	*	@apiDescription Añade a todos los procarianos indicados en el grupo indicado.
+	*	@apiGroup Grupo
+	*	@apiName anadirProcarianosAGrupo
+	*	@apiversion 0.3.0
+	*	@apiParam {Int}	id_grupo Id del grupo
+	*	@apiParam {Object[]}	integrantes Array de los integrantes del grupo
+	*	@apiPermission Personal
+	*	@apiHeader {String} x-access-token JWT
+	*	@apiSuccess {Boolean} estado True
+	*	@apiSuccess {String}  mensaje 'Procarianos añadidos a grupo.'
+	*	@apiError (ERROR_SERVIDOR) {Boolean} estado	False
+	*	@apiError (ERROR_SERVIDOR) {String}  mensaje	'Error en el servidor'
+	*	@apiError (ERROR_SERVIDOR) {Object}  error		Descripción del error ocurrido.
+*/
+router.post('/:id_grupo/anadir/bulk',
+						authApi.verifyRol(['Personal', 'Admin']), 
+						controladorGrupo.anadirProcarianosAGrupo
+					);
+
 
 router.post('/asistencia/', controladorAsist.ingresarAsistencia);
 router.get('/asistencia/:id_grupo', controladorAsist.obtenerAsistenciasGrupo);

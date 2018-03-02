@@ -5,8 +5,6 @@ var router = express.Router();
 
 router.use(authApi.verifyToken);
 
-//Añadir varios procarianos a un grupo
-router.post('/', controladorProcarianoGrupo.anadirProcarianosAGrupo);
 //Obtener el grupo del procariano
 router.get('/:id_procariano', controladorProcarianoGrupo.obtenerGrupoDeProcariano);
 //Cambiar a un procariano de un grupo

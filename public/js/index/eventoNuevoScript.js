@@ -35,7 +35,7 @@ const dictionary = {
 		}
 	}
 };
-VeeValidate.Validator.updateDictionary(dictionary);
+VeeValidate.Validator.localize(dictionary);
 
 let eventoApp = new Vue({
 	el: '#eventoApp',

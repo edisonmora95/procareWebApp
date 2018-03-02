@@ -141,6 +141,21 @@ module.exports = function(sequelize, DataTypes) {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });
+      },
+      anadirProcarianosBulk : function(array, transaction){
+        return new Promise((resolve, reject) => {
+          return this.bulkCreate(array, {
+            validate    : true,
+            transaction : transaction,
+            fields      : ['fechaInicio', 'GrupoId', 'ProcarianoId']
+          })
+          .then( resultado => {
+            return resolve(resultado);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
       }
     }
   });

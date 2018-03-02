@@ -12,7 +12,8 @@
     "integration-test": "gulp integration-test",
     "coveralls": "gulp coveralls",
     "build-dev": "gulp build-dev",
-    "build-prod": "gulp build-prod"
+    "build-prod": "gulp build-prod",
+    "build-db-test": "gulp create-populate-db-test"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

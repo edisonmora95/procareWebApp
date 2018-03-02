@@ -89,8 +89,10 @@ router.post('/',
 	*	@apiError (ERROR_SERVIDOR) {String}  mensaje	'Error en el servidor'
 	*	@apiError (ERROR_SERVIDOR) {Object}  error		Descripción del error ocurrido.
 */
-router.get('/', authApi.verifyRol(['Personal', 'Admin', 'Director Ejecutivo', 'Director Procare Formacion', 'Director Centro']), controladorProcariano.buscarProcariano);
-
+router.get('/', 
+						authApi.verifyRol(['Personal', 'Admin', 'Director Ejecutivo', 'Director Procare Formacion', 'Director Centro']), 
+						controladorProcariano.buscarProcariano
+					);
 
 /**
 	*	@api {get} /api/procarianos/activos Buscar Procarianos Activos

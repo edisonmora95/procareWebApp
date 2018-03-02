@@ -69,6 +69,19 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
+      obtenerAnimadoresActuales : function(){
+        return new Promise((resolve, reject) => {
+          return this.findAll({
+            where : { fechaFin : null }
+          })
+          .then( registros => {
+            return resolve(registros);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
+      },
       ///////////////////////////////////////
       //FUNDIONES CON TRANSACCIONES
       ///////////////////////////////////////

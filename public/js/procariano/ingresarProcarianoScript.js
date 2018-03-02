@@ -40,7 +40,7 @@ const dictionary = {
 		}
 	}
 };
-VeeValidate.Validator.updateDictionary(dictionary);
+VeeValidate.Validator.localize(dictionary);
 
 let vm = new Vue({
 	el: '#main',
