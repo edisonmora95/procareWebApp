@@ -1,23 +1,41 @@
 {
   "development": {
-    "username": "root",
-    "password": "1234",
-    "database": "procare",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
+    }
   },
   "test": {
-    "username": "root",
-    "password": "1234",
-    "database": "procare",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
+    }
   },
   "production": {
-    "username": "root",
-    "password": "1234",
-    "database": "procare",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "",
+    "password": "",
+    "database": "",
+    "host"    : "",
+    "dialect" : "",
+    "logging" : false,
+    "cloudinary" : {
+      "cloud_name" : "",
+      "api_key"    : "",
+      "api_secret" : ""
+    }
   }
 }

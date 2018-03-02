@@ -1,87 +1,120 @@
 'use strict';
 
-var gulp = require('gulp');
-var nodemon = require('gulp-nodemon');
-var browserSync = require('browser-sync').create();
-var babel = require('gulp-babel');
-var browserify = require('gulp-browserify');
-var runSequence = require('run-sequence');
-var istanbul = require('gulp-istanbul')
-var coveralls = require('gulp-coveralls')
-var mocha = require('gulp-mocha');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var gutil = require('gulp-util');
-var stripDebug = require('gulp-strip-debug');
+let gulp        = require('gulp');
+let nodemon     = require('gulp-nodemon');
+let browserSync = require('browser-sync').create();
+let babel       = require('gulp-babel');
+let browserify  = require('gulp-browserify');
+let runSequence = require('run-sequence');
+let mocha       = require('gulp-mocha');
+let uglify      = require('gulp-uglify');
+let rename      = require('gulp-rename');
+let gutil       = require('gulp-util');
+let clean       = require('gulp-clean');
+let forever     = require('gulp-forever-monitor');
+let gmcfp       = require('gulp-mysql-command-file-processor');
+let apidoc      = require('gulp-apidoc');
 
+const config    = require('./config/config.json');
 
 ////////////////////////////////////////////
-//Tasks para correr la aplicación
+// Tasks para correr la aplicación
 ////////////////////////////////////////////
 
-//CORRER LA APLICACIÓN PARA DEVELOPMENT
+// CORRER LA APLICACIÓN PARA DEVELOPMENT
+// npm run dev
 gulp.task('default', ['js-compile', 'vue-compile'], function(){
-		//Por default, el environment será el de development
-		runSequence('set-dev-node-env', 'nodemon', 'browser-sync');
+	//Por default, el environment será el de development
+	runSequence('set-dev-node-env', 'nodemon', 'browser-sync');
 });
 
-//CORRER LA APLICACIÓN PARA TESTING
-gulp.task('build-test', function() {
-    runSequence('set-test-node-env', 'browser-sync', 'nodemon');
+// CORRER LA APLICACIÓN PARA TESTING
+// npm run test
+gulp.task('run-test', function() {
+    runSequence('set-test-node-env', 'babel', 'vueify-dev', 'nodemon',  'browser-sync');
 });
 
-//CORRER LA APLICACIÓN PARA PRODUCCIÓN
-gulp.task('build-prod', function() {
-    runSequence('set-prod-node-env', 'browser-sync');
+// CORRER LA APLICACIÓN PARA PRODUCCIÓN
+// npm run prod
+gulp.task('run-prod', function() {
+    runSequence('set-prod-node-env', 'forever');
+});
+
+gulp.task('forever', function() {
+  let foreverMonitorOptions = { 
+    env: process.env,
+    args: process.argv,
+    watch: true, 
+    watchIgnorePatterns:  ['.*', 'node_modules/**', 'public/**', 'temp/**']
+  };
+  
+  forever('app.js', foreverMonitorOptions)  
+  .on('watch:restart', function(fileInfo) { 
+    console.log('server was restarted');          
+  })
+  .on('exit', function() {
+    console.log('server was closed');
+  });
 });
 
 ////////////////////////////////////////////
 //Watch tasks
 ////////////////////////////////////////////
 
-//Vigila los cambios en los archivos dentro de la carpeta /public/js/
-//Hace build solo de los archivos cambiados
-gulp.task('js-compile', function() {
-    const src = './public/js/**/*.js';
-    const dest = './public/build';
+// Vigila los cambios en los archivos dentro de la carpeta /public/js/
+// Hace build solo de los archivos cambiados
+gulp.task('js-compile', () => {
+    const src     = './public/js/**/*.js';
+    const dest    = './public/build';
 
-    var jsWatcher = gulp.watch(src, function() {
+    let jsWatcher = gulp.watch(src, () => {
         gutil.log('Compilar js');
     });
 
-    jsWatcher.on('change', function(file) {
+    jsWatcher.on('change', file => {
         gulp.src(file.path, {
                 base: 'public/js'
             }, {
                 read: false
             })
-            .pipe(babel({ //Conversión de ES6 a ES5
+            .pipe(babel({       //Conversión de ES6 a ES5
                 presets: ['es2015']
             }))
-            .pipe(browserify({ //Importa los módulos requeridos
+            .pipe(browserify({  //Importa los módulos requeridos
                 transform: ['vueify'],
             }))
             .pipe(rename({
                 suffix: '.min'
             })) //Cambia la extensión a nombreArchivo.min.js
-            .pipe(uglify()) //Minify
+            //.pipe(uglify()) //Minify
             .pipe(gulp.dest(dest));
     });
 
 });
-//Vigila los cambios de los archivos *.vue
-//Vuelve a hacer build de toda la aplicación
-gulp.task('vue-compile', function() {
+
+// Vigila los cambios de los archivos *.vue
+// Vuelve a hacer build de toda la aplicación
+gulp.task('vue-compile', () => {
     const src = './public/components/**/*.vue';
 
-    var vueWatcher = gulp.watch(src, function() {
+    let vueWatcher = gulp.watch(src, () => {
         gutil.log('Compilar vue');
     });
 
-    vueWatcher.on('change', function(file) {
-        runSequence('babel', 'vueify');
+    vueWatcher.on('change', file => {
+        runSequence('babel', 'vueify-dev');
     });
 
+});
+
+gulp.task('api-docs', function(done) {
+    const src  = 'routes/api/';
+    const dest = 'apidoc/';
+
+    apidoc({
+        src: src,
+        dest: dest
+    }, done);
 });
 
 ////////////////////////////////////////////
@@ -93,16 +126,16 @@ gulp.task('vue-compile', function() {
 	@Descripción:
 		Vigila cambios de *.js, *.css y *.ejs y los injecta en el navegador
 */
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', () => {
     browserSync.init(null, {
-        proxy: "http://localhost/",
-        files: [
+        proxy   : "http://localhost/",
+        files   : [
             "public/build/**/*.js",
             "public/stylesheets/**/*.css",
             "views/**/*.*"
         ],
-        browser: "default",
-        port: 3001,
+        browser : "default",
+        port    : 3001,
     });
 });
 
@@ -111,8 +144,8 @@ gulp.task('browser-sync', function() {
 	@Descripción:
 		Vigila cambios de documentos del servidor y lo reinicia
 */
-gulp.task('nodemon', function(cb) {
-    var started = false;
+gulp.task('nodemon', cb => {
+    let started = false;
     return nodemon({
             script: './bin/www',
             ignore: [
@@ -123,14 +156,13 @@ gulp.task('nodemon', function(cb) {
                 "./test/**/*.*"
             ]
         })
-        .on('start', function() {
+        .on('start', () => {
             if (!started) {
                 cb();
                 started = true;
             }
         });
 });
-
 
 ////////////////////////////////////////////
 //Tasks conversiones
@@ -148,9 +180,9 @@ gulp.task('babel', function() {
 });
 
 //Ipmortación de módulos requeridos
-gulp.task('vueify', function() {
+gulp.task('vueify-prod', function() {
     console.log('Importando los módulos con Vueify');
-    var src = './public/dist/**/*.*';
+    var src   = './public/dist/**/*.*';
     var build = './public/build/';
     gulp.src(src, {
             read: false
@@ -165,17 +197,49 @@ gulp.task('vueify', function() {
         .pipe(gulp.dest(build));
 });
 
-gulp.task('build', function() {
-    runSequence('babel', 'vueify');
+//Para development y testing no se va a minificar
+gulp.task('vueify-dev', function(){
+    console.log('Importando los módulos con Vueify');
+    const src = './public/dist/**/*.*';
+    const build = './public/build/';
+    gulp.src(src, {
+            read: false
+        })
+        .pipe(browserify({
+            transform: ['vueify'],   //anterior
+        }))
+        .pipe(rename({
+            suffix: '.min'           //Cambia la extensión a nombreArchivo.min.js
+        }))                         
+        .pipe(gulp.dest(build));
+});
+
+gulp.task('build-prod', () => {
+    runSequence('babel', 'vueify-prod');
+});
+
+gulp.task('build-dev', () => {
+    runSequence('babel', 'vueify-dev');
+});
+
+////////////////////////////////////////////
+//Clean tasks
+////////////////////////////////////////////
+
+gulp.task('clean', () => {
+    const src = './public/dist/';
+    return  gulp.src(src, {read: false})
+                .pipe(clean());
 });
 
 ////////////////////////////////////////////
 //Tasks para setear variables de entorno
 ////////////////////////////////////////////
 
-gulp.task('set-test-node-env', function() {
+gulp.task('set-test-node-env', function(cb) {
     console.log('Cambiado environment para testing');
-    return process.env.NODE_ENV = 'test';
+    process.env.NODE_ENV = 'test';
+    cb();
 });
 gulp.task('set-dev-node-env', function() {
     console.log('Cambiado environment para development');
@@ -191,50 +255,67 @@ gulp.task('set-prod-node-env', function() {
 ////////////////////////////////////////////
 
 //TASK DE MOCHA
-gulp.task('mocha', function() {
-    gulp.src('./test/nivel/*.js', {
+gulp.task('unit-test', function() {
+    process.env.NODE_ENV = 'test';
+    gulp.src('./test/unit_test/*.unit.test.js', {
             read: false
         })
         .pipe(mocha());
 });
 
-//SCRIPT PARA CORRER TESTS
-gulp.task('test', function() {
-    runSequence('set-test-node-env', 'mocha');
+gulp.task('integration-test', function() {
+    process.env.NODE_ENV = 'test';
+    gulp.src('./test/integration_test/animadores.integration.test.js', {
+            read: false
+        })
+        .pipe(mocha());
 });
 
-//TASK DE ISTANBUL
-/*
-gulp.task('istanbul', function(){
-	gulp.src('./test/etapa/*.js', {read: false})
-		.pipe(mocha())
-		.pipe(istanbul.writeReports())
-		.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
+////////////////////////////////////////////
+//Tasks para base de datos
+////////////////////////////////////////////
+
+gulp.task('creation-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/db_test_creation.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db))
+        .on('end', function() { cb(); });
+    //cb();
 });
-*/
-gulp.task('istanbul', function() {
-    return gulp.src('./test/etapa/*.js')
-        // Right there
-        .pipe(istanbul({
-            includeUntested: true
-        }))
-        .on('finish', function() {
-            gulp.src('./test/etapa/*.js')
-                .pipe(mocha({
-                    reporter: 'spec'
-                }))
-                .pipe(istanbul.writeReports({
-                    dir: './coverage',
-                    reporters: ['lcov'],
-                    reportOpts: {
-                        dir: './coverage'
-                    }
-                }));
+
+gulp.task('populate-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/populate_db_test.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db));
+    cb();
+});
+
+gulp.task('create-populate-db-test', function(cb){
+    process.env.NODE_ENV = 'test';
+    const src = './public/scripts/db_test_create_populate.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db))
+        .on('error', function(err){
+            cb(err);
+        })
+        .on('end', function(){
+            cb();
         });
-});
-
-
-gulp.task('coveralls', function() {
-    gulp.src('./coverage/lcov.info')
-        .pipe(coveralls());
 });

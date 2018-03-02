@@ -1,8 +1,6 @@
 'use strict';
-import Materials from 'vue-materials';
 
 Vue.use(VeeValidate);
-Vue.use(Materials);
 
 /*
 	Validaciones. Cambio de mensajes de error
@@ -37,7 +35,7 @@ const dictionary = {
 		}
 	}
 };
-VeeValidate.Validator.updateDictionary(dictionary);
+VeeValidate.Validator.localize(dictionary);
 
 let eventoApp = new Vue({
 	el: '#eventoApp',
@@ -48,6 +46,7 @@ let eventoApp = new Vue({
 		this.inicializarMaterialize(this);
 	},
 	data: {
+		responsable : '',
 		evento: {
 			nombre: '',
 			fechaInicio: '',
@@ -60,28 +59,15 @@ let eventoApp = new Vue({
 			responsable: ''
 		},
 		procarianos: [],
-		estados	: [
-			{
-				id: '1',
-				text: 'Pendiente'
-			},
-			{
-				id: '2',
-				text: 'En proceso'
-			},
-			{
-				id: '3',
-				text: 'Completada'
-			}
-		],
 		errorObj: {
 			campo: '',
 			msj: ''
 		},
-		msjFechaPasada: 'La fecha ingresada no puede ser una fecha pasada',
-		fechaInicioPasada: false,
-		fechaFinPasada: false,
-		fechaFinMenor: false,
+		errorFechaInicio	: false,
+		msjFechaInicio 		: '',
+		errorFechaFin			: false,
+		msjFechaFin		 		: '',
+		msjErrorServer 		: ''
 	},
 	methods: {
 		//////////////////////////////////////////////////
@@ -95,6 +81,9 @@ let eventoApp = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: urlAPi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.procarianos = res.datos;
 				}
@@ -106,13 +95,16 @@ let eventoApp = new Vue({
 				type: 'POST',
 				url: urlApi,
 				data: evento,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					if(res.status){
-						$('#modalEventoCreado').modal('open');
-					}else{
-						$('#modalEventoErrorServidor').modal('open');
-						console.log(res);
-					}
+					$('#modalEventoCreado').modal('open');
+				},
+				error(err){
+					eventoApp.msjErrorServer = err.responseJSON.mensajeError;
+					$('#modalEventoErrorServidor').modal('open');
+					console.log(err);
 				}
 			});
 		},
@@ -147,150 +139,87 @@ let eventoApp = new Vue({
 		    ampmclickable: true, // make AM PM clickable
 		    aftershow: function(){} //Function for after opening timepicker
 		  });
+		  $('select').material_select();
 			//Asignación de funciones onChange
 			self.asignarFuncionesOnChange(self);
 		},
 		asignarFuncionesOnChange(self){
-			let inputHoraInicio = $('#eventoHoraInicio');
-			let inputHoraFin = $('#eventoHoraFin');	
-			let inputFechaInicio = $('#eventoFechaInicio');
-			let inputFechaFin = $('#eventoFechaFin');
+			let inputHoraInicio 	= $('#horaInicio');
+			let inputHoraFin 			= $('#horaFin');
+			let inputFechaInicio 	= $('#fechaInicio');
+			let inputFechaFin			= $('#fechaFin');
+
 			inputFechaInicio.change( () => {
-		  	const haIngresadoFechaInicio = ( inputFechaInicio.val() != '' );
-		  	const haIngresadoFechaFin = ( inputFechaFin.val() != '' );
-		  	//Valida que la fecha ingresada no sea antes que hoy
-		  	self.fechaInicioPasada = !self.validarFechaAnteriorAHoy(self, '#eventoFechaInicio', '#eventoHoraInicio');
-		  	if( haIngresadoFechaFin ){
-		  		//Valida que la fecha fin sea mayor a la fecha inicio
-		  		const fechaFinMSec = self.obtenerFechaCompleta('#eventoFechaFin', '#eventoHoraFin').getTime();
-		  		const fechaInicioMSec = self.obtenerFechaCompleta('#eventoFechaInicio', '#eventoHoraInicio').getTime();
-		  		self.fechaFinMenor = !self.validarFecha(fechaFinMSec, fechaInicioMSec);
-		  		//Si la fecha es válida, y es menor a la fecha fin se la añade al objeto de evento
-		  		if( !self.fechaFinMenor && !self.fechaInicioPasada ){
-		  			self.bindFecha(self, '#eventoFechaInicio', '#eventoHoraInicio', 'fechaInicio');
-		  		}else{
-		  			//Si no son válidos debe 'encerar' el atributo de fecha para que el evento no se pueda crear
-		  			if(self.fechaInicioPasada){
-		  				self.evento.fechaInicio = '';
-		  			}else if(self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}else{
-		  		//Si no se ha ingresado una fecha fin aún, pero la fecha inicio es válida entonces se la añade al objeto de evento
-		  		if(!self.fechaInicioPasada && haIngresadoFechaInicio){
-		  			self.bindFecha(self, '#eventoFechaInicio', '#eventoHoraInicio', 'fechaInicio');
-		  		}else{
-		  			//Si no son válidos debe 'encerar' el atributo de fecha para que el evento no se pueda crear
-		  			if(self.fechaInicioPasada){
-		  				self.evento.fechaInicio = '';
-		  			}else if(self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}
-		  });
-		  inputHoraInicio.change( () => {
-				const haIngresadoFechaInicio = ( inputFechaInicio.val() != '' );
-		  	const haIngresadoFechaFin = ( inputFechaFin.val() != '' );
-		  	self.fechaInicioPasada = !self.validarFechaAnteriorAHoy(self, '#eventoFechaInicio', '#eventoHoraInicio');
-		  	if( haIngresadoFechaFin ){
-		  		const fechaFinMSec = self.obtenerFechaCompleta('#eventoFechaFin', '#eventoHoraFin').getTime();
-		  		const fechaInicioMSec = self.obtenerFechaCompleta('#eventoFechaInicio', '#eventoHoraInicio').getTime();
-		  		self.fechaFinMenor = !self.validarFecha(fechaFinMSec, fechaInicioMSec);
-		  		if( !self.fechaFinMenor && !self.fechaInicioPasada ){
-		  			self.bindFecha(self, '#eventoFechaInicio', '#eventoHoraInicio', 'fechaInicio');
-		  		}else{
-		  			if(self.fechaInicioPasada){
-		  				self.evento.fechaInicio = '';
-		  			}else if(self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}else{
-		  		if(!self.fechaInicioPasada && haIngresadoFechaInicio){
-		  			self.bindFecha(self, '#eventoFechaInicio', '#eventoHoraInicio', 'fechaInicio');
-		  		}else{
-		  			if(self.fechaInicioPasada){
-		  				self.evento.fechaInicio = '';
-		  			}else if(self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}
+				self.validarFechaInicio(self, inputFechaInicio, inputHoraInicio, inputFechaFin);
 			});
-		  inputFechaFin.change( () => {
-		  	const haIngresadoFechaFin = ( inputFechaFin.val() != '' );
-		  	const haIngresadoFechaInicio = ( inputFechaInicio.val() != '' );
-		  	//Valida que la fecha ingresada no sea antes que hoy
-		  	self.fechaFinPasada = !self.validarFechaAnteriorAHoy(self, '#eventoFechaFin', '#eventoHoraFin');
-		  	if( haIngresadoFechaInicio ){
-		  		//Valida que la fecha fin sea mayor a la fecha inicio
-		  		const fechaFinMSec = self.obtenerFechaCompleta('#eventoFechaFin', '#eventoHoraFin').getTime();
-		  		const fechaInicioMSec = self.obtenerFechaCompleta('#eventoFechaInicio', '#eventoHoraInicio').getTime();
-		  		self.fechaFinMenor = !self.validarFecha(fechaFinMSec, fechaInicioMSec);
-		  		if( !self.fechaFinMenor && !self.fechaFinPasada ){
-		  			self.bindFecha(self, '#eventoFechaFin', '#eventoHoraFin', 'fechaFin');
-		  		}else{
-		  			//Si no son válidos debe 'encerar' el atributo de fecha para que el evento no se pueda crear
-		  			self.evento.fechaFin = '';
-		  		}
-		  	}else{
-		  		if(!self.fechaFinPasada && haIngresadoFechaFin){
-		  			self.bindFecha(self, '#eventoFechaFin', '#eventoHoraFin', 'fechaFin');
-		  		}else{
-		  			//Si no son válidos debe 'encerar' el atributo de fecha para que el evento no se pueda crear
-		  			if(self.fechaFinPasada || self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}
-		  });
+			inputHoraInicio.change( () => {
+				self.validarFechaInicio(self, inputFechaInicio, inputHoraInicio, inputFechaFin);	
+			});
+
+			inputFechaFin.change( () => {
+				self.validarFechaFin(self, inputFechaFin, inputHoraFin, inputFechaInicio, inputHoraFin);
+			});
 			inputHoraFin.change( () => {
-				const haIngresadoFechaFin = ( inputFechaFin.val() != '' );
-		  	const haIngresadoFechaInicio = ( inputFechaInicio.val()!='' );
-				self.fechaFinPasada = !self.validarFechaAnteriorAHoy(self, '#eventoFechaFin', '#eventoHoraFin');
-				if( haIngresadoFechaInicio ){
-		  		const fechaFinMSec = self.obtenerFechaCompleta('#eventoFechaFin', '#eventoHoraFin').getTime();
-		  		const fechaInicioMSec = self.obtenerFechaCompleta('#eventoFechaInicio', '#eventoHoraInicio').getTime();
-		  		self.fechaFinMenor = !self.validarFecha(fechaFinMSec, fechaInicioMSec);
-		  		if( !self.fechaFinMenor && !self.fechaFinPasada ){
-		  			self.bindFecha(self, '#eventoFechaFin', '#eventoHoraFin', 'fechaFin');
-		  		}else{
-		  			self.evento.fechaFin = '';
-		  		}
-		  	}else{
-		  		if(!self.fechaFinPasada && haIngresadoFecha){
-		  			self.bindFecha(self, '#eventoFechaFin', '#eventoHoraFin', 'fechaFin');
-		  		}else{
-		  			if(self.fechaFinPasada || self.fechaFinMenor){
-		  				self.evento.fechaFin = '';
-		  			}
-		  		}
-		  	}
+				self.validarFechaFin(self, inputFechaFin, inputHoraFin, inputFechaInicio, inputHoraFin);
 			});
 		},
 		//////////////////////////////////////////////////
 		//Validaciones
 		//////////////////////////////////////////////////
-		/*
-			@Descripción: Valida que la fecha2 sea menor que la fecha1
-		*/
-		validarFecha(fecha1, fecha2){
-			if( fecha2 > fecha1 ){
-				return false;
-			}else{
-				return true;
+		validarFechaInicio(self, inputF, inputH, inputFechaFin){
+			//Se valida que la fecha no sea antes del día actual
+			const fechaIngresada = self.obtenerFechaCompleta('#fechaInicio', '#horaInicio');
+			const fechaActual 	 = new Date().setHours(0, 0, 0, 0);
+			if( fechaActual > new Date(fechaIngresada).getTime() ){
+				self.errorFechaInicio = true;
+				inputF.val('');
+				inputH.val('');
+				return;
 			}
+			//Se valida que la fecha de inicio sea antes que la fecha fin
+			//Primero se verifica si se ha ingresado fecha fin
+			if( inputFechaFin.val() != '' ){
+				const fechaFin = new Date(self.obtenerFechaCompleta('#fechaFin', '#horaFin')).getTime();
+				if( new Date(fechaIngresada).getTime() > fechaFin ){
+					self.errorFechaInicio = true;
+					self.msjFechaInicio 	= 'La fecha de inicio no puede ser después que la fecha fin';
+					inputF.val('');
+					inputH.val('');
+					return;
+				}
+			}
+			self.errorFechaInicio = false;
+			self.msjFechaInicio 	= '';
+			self.evento.fechaInicio = fechaIngresada;
+			return;
 		},
-		validarFechaAnteriorAHoy(self, idDatePicker, idTimePicker){
-			const haIngresadoFecha = ( $(idDatePicker).val() != '' );
-	  	if( haIngresadoFecha ){
-				const fechaIngresadaMSec = self.obtenerFechaCompleta(idDatePicker, idTimePicker).getTime();
-				const hoyMSec = new Date().setHours(0, 0, 0, 0);
-				return self.validarFecha(fechaIngresadaMSec, hoyMSec);
-	  	}
-	  	return true;
+		validarFechaFin(self, inputF, inputH, inputFechaInicio, inputHoraFin){
+			//Se valida que la fecha no sea antes del día actual
+			const fechaIngresada = self.obtenerFechaCompleta('#fechaFin', '#horaFin');
+			const fechaActual 	 = new Date().setHours(0, 0, 0, 0);
+			if( fechaActual > new Date(fechaIngresada).getTime() ){
+				self.errorFechaFin = true;
+				self.msjFechaFin   = 'No puede ingresar una fecha anterior a hoy';
+				inputF.val('');
+				inputH.val('');
+				return;
+			}
+			//Se valida que la fecha de inicio sea antes que la fecha fin
+			//Primero se verifica si se ha ingresado fecha fin
+			if( inputFechaInicio.val() != '' && inputHoraFin.val() != '' ){
+				const fechaInicio = new Date(self.obtenerFechaCompleta('#fechaInicio', '#horaInicio')).getTime();
+				if( new Date(fechaIngresada).getTime() < fechaInicio ){
+					self.errorFechaFin = true;
+					self.msjFechaFin   = 'La fecha de inicio no puede ser anterior a la fecha inicio';
+					inputF.val('');
+					inputH.val('');
+					return;
+				}
+			}
+			self.errorFechaFin = false;
+			self.msjFechaFin 	 = '';
+			self.evento.fechaFin = fechaIngresada;
+			return;
 		},
 		//Valida que el campo no esté vacío
 		validarCampo(idCampo){
@@ -322,8 +251,7 @@ let eventoApp = new Vue({
 				if( campoAutocompleteValido ){
 					//Finalmente valido las fechas
 					const fechaInicioValida = (self.evento.fechaInicio != '');
-					const fechaFinValida = (self.evento.fechaFin != '');
-					if( fechaInicioValida && fechaFinValida ){	//El objeto evento solo tendrá esas fechas si se han ingresado fechas válidas
+					if( fechaInicioValida ){	//El objeto evento solo tendrá esas fechas si se han ingresado fechas válidas
 						return true;
 					}else{
 						self.mostrarMensajeDeError(self, 'Fechas', 'Verifique que se hayan ingresado fechas correctas');
@@ -350,12 +278,12 @@ let eventoApp = new Vue({
 			@Descripción: Busca el id del responsable seleccionado
 		*/
 		obtenerIdPersonaResponsable(self){
-			let responsable = $('#eventoResponsable').val();
+			let responsable = $('#responsable').val();
 			let seObtuvoId = false;
 			$.each(self.procarianos, function(index, procariano){
-				let nombreCompleto = procariano.nombres + ' ' + procariano.apellidos;
+				let nombreCompleto = procariano.Persona.nombres + ' ' + procariano.Persona.apellidos;
 				if(nombreCompleto === responsable){
-					self.evento.responsable = procariano.personaId;
+					self.evento.responsable = procariano.PersonaId;
 					seObtuvoId = true;
 					return false;
 				}
@@ -425,11 +353,11 @@ let eventoApp = new Vue({
 			this.evento.gastos = 0;
 			this.evento.responsable = '';
 			this.evento.estado = 1;
-			$('#eventoFechaInicio').val('');
-			$('#eventoFechaFin').val('');
-			$('#eventoHoraInicio').val('');
-			$('#eventoHoraFin').val('');
-			$('#eventoResponsable').val('');
+			$('#fechaInicio').val('');
+			$('#fechaFin').val('');
+			$('#horaInicio').val('');
+			$('#horaFin').val('');
+			$('#responsable').val('');
 		}
 	}
 });
@@ -441,7 +369,7 @@ $(document).ready(function(){
 function inicializarAutocomplete(){
 	let datos = {};
 	$.each(eventoApp.$data.procarianos, function(index, procariano){
-		let nombreCompleto = procariano.nombres + ' ' + procariano.apellidos;
+		let nombreCompleto = procariano.Persona.nombres + ' ' + procariano.Persona.apellidos;
 		datos[nombreCompleto] = null;
 	});
   $('input.autocomplete').autocomplete({

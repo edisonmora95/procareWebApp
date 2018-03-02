@@ -4,3 +4,9 @@ npm-debug.log
 /public/build/*
 /public/dist/*
 DatosFalsosBase.json
+.idea/*
+/config/config.json
+*.log
+coverage/*
+.nyc_output/*
+apidoc/*

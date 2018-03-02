@@ -19,6 +19,31 @@ module.exports = function(sequelize, DataTypes) {
             id: idTipo
           }
         }).then(callback);
+      },
+      ///////////////////////////////////////
+      //FUNDIONES CON PROMESAS
+      ///////////////////////////////////////
+      obtenerTipoPorIdP(idTipo){
+        return new Promise( (resolve, reject) => {
+          return this.findOne({
+            where : {
+              id : idTipo
+            }
+          })
+          .then( tipo => {
+            return resolve(tipo);
+          })
+          .catch( error => {
+            return reject(error);
+          });
+        });
+      },
+      obtenerTodosLosTiposP(){
+        return new Promise( (resolve, reject) => {
+          return this.findAll({})
+          .then( resultado  => { return resolve(resultado) })
+          .catch( error     => { return reject(error) });
+        });
       }
     }
   });

@@ -4,29 +4,35 @@
 	@FechaCreación: 15/06/2017
 */
 
-let indexApp = new Vue({
+let App = new Vue({
 	el: '#indexApp',
 	created(){
 		this.obtenerUsuarioLoggeado(this);
 	},
 	mounted(){
-		let self = this;
-		$('.modal').modal();
-		$('select').material_select();
-		let selectEstado = $('#selectEstado');
-		selectEstado.change( () => {
-			const estadoNuevo = $('#selectEstado option:selected').val();
-			self.cambiarEstado(self.eventoSeleccionado, estadoNuevo);
-		});
-		$('#tareas').hide();
+		this.inicializarMaterialize(this);
 	},
 	data: {
-		tareasEventos: [],
+		tareasEventos     : [],
 		eventoSeleccionado: {},
-		usuario: {},
-		esPersonal: false
+		usuario           : {},
+		esPersonal        : false,
+		errorAjax         : {
+			header : '',
+			content: '',
+		},
 	},
 	methods: {
+		inicializarMaterialize(self){
+			$('.modal').modal();
+			$('select').material_select();
+			let selectEstado = $('#selectEstado');
+			selectEstado.change( () => {
+				const estadoNuevo = $('#selectEstado option:selected').val();
+				self.cambiarEstado(self.eventoSeleccionado, estadoNuevo);
+			});
+			$('#tareas').hide();	
+		},
 		/*
 			@Descripción: 
 				Obtiene la información del usuario logeado. Para armar la navbar de acuerdo con su rol.
@@ -34,18 +40,21 @@ let indexApp = new Vue({
 		obtenerUsuarioLoggeado(self){
 			$.ajax({
 				type: 'GET',
-				url: '/api/login/usuarios',
+				url : '/api/login/usuarios',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					self.usuario = res;
-					const esPersonal = self.verificarRolDeUsuario(self, 'Personal');
-					if( esPersonal ){
-						//Si es personal se muestran tooodas las tareas y eventos
-						self.esPersonal = true;
-						self.obtenerTareasEventos(self);
+					App.usuario 		 = res.datos;
+					App.esPersonal   = App.verificarRolDeUsuario('Personal');
+					if( App.esPersonal ){
+						App.obtenerTareasEventos();
 					}else{
-						//Si no es personal, se muestran todos los eventos y solo las tareas asignadas al usuario
-						self.obtenerTareasEventosDeUsuario(self, self.usuario.id);
+						App.obtenerTareasEventosDeUsuario(App.usuario.id);
 					}
+				},
+				error(err){
+					console.log(err)
 				}
 			});
 		},
@@ -55,11 +64,11 @@ let indexApp = new Vue({
 			@Params:
 				rolIndicado -> String -> Rol que se quiere averiguar.
 		*/
-		verificarRolDeUsuario(self, rolIndicado){
-			let roles = self.usuario.roles;
-			let flag = false;
+		verificarRolDeUsuario(rolIndicado){
+			let roles = App.usuario.roles;
+			let flag 	= false;
 			$.each(roles, function(index, rol){
-				if(rol === rolIndicado){
+				if( rol === rolIndicado ){
 					flag = true;
 					return false;
 				}
@@ -69,59 +78,73 @@ let indexApp = new Vue({
 		/*
 			@Descripción: Obtiene todas las tareas de la base de datos, luego arma el calendario con ellas
 		*/
-		obtenerTareasEventos(self){
+		obtenerTareasEventos(){
 			$.ajax({
-				type: 'GET',
-				url: '/api/calendario/',
+				type   : 'GET',
+				url    : '/api/calendario/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					self.tareasEventos = res.datos;
-					self.armarCalendario(self);
+					App.tareasEventos = res.datos;
+					App.armarCalendario(App.tareasEventos);
+				},
+				error(err){
+					if( err.status === 403 ){
+						App.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');	
+					}
+					console.log(err)
 				}
 			});
-		},
+		}, 
 		/*
 			@Descripción: Obtiene todas las tareas de la base de datos del usuario loggeado, luego arma el calendario con ellas
 		*/
-		obtenerTareasEventosDeUsuario(self, idPersona){
+		obtenerTareasEventosDeUsuario(idPersona){
 			const urlApi = '/api/calendario/usuario/' + idPersona;
-			console.log(urlApi)
 			$.ajax({
-				type: 'GET',
-				url: urlApi,
+				type   : 'GET',
+				url    : urlApi,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					console.log(res)
-					if(res.estado){
-						self.tareasEventos = res.datos;
-						self.armarCalendario(self);
-					}
+					App.tareasEventos = res.datos;
+					App.armarCalendario(App.tareasEventos);
 				},
 				error(err){
-					Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');
+					if( err.status === 403 ){
+						App.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');	
+					}
 				}
-			})
+			});
 		},
-		armarCalendario(self){
+		armarCalendario(tareasEventos){
 			$('#calendar').fullCalendar({
 	      //Atributos
 	     	header: {
-	     		left: 'prev,next today',
+	     		left	: 'prev,next today',
 	     		center: 'title',
-	     		right: 'month,agendaWeek,agendaDay'
+	     		right	: 'month,agendaWeek,agendaDay'
 	     	},
 	     	firstDay: 1,
 	     	showNonCurrentDates: false,
-	      navLinks: true,
+	      navLinks	: true,
 	      eventLimit: true, // for all non-agenda views
-	      events: self.tareasEventos,
+	      events 		: tareasEventos,
 	      //Funciones
 	      eventMouseover: function(calEvent, jsEvent, view) {
-	        self.eventoSeleccionado = calEvent;
-	        $('#selectEstado').val(self.eventoSeleccionado.estado);
+	        App.eventoSeleccionado = calEvent;
+	        $('#selectEstado').val(App.eventoSeleccionado.estado);
 	        $('#selectEstado').material_select();
-	        self.cambiarClase(self.eventoSeleccionado);
+	        App.cambiarClase(App.eventoSeleccionado);
 	    	},
 	    	eventRender: function(evento, elemento){
-	    		self.renderizarEventos(evento, elemento);
+	    		App.renderizarEventos(evento, elemento);
 	    	}
 	    });	
 		},
@@ -141,7 +164,7 @@ let indexApp = new Vue({
 	  /////////////////////////////////////////////////////////////
 	  cambiarClase(eventoSeleccionado){
 	  	let divCalendario = $('#calendar');
-	  	let divSeleccion = $('#tareas');
+	  	let divSeleccion 	= $('#tareas');
 
 	  	divCalendario.removeClass('l12');
 	  	divCalendario.addClass('l8');
@@ -149,16 +172,16 @@ let indexApp = new Vue({
 	  	divSeleccion.show();
 	  },
 	  cambiarEstado(evento, estadoNuevo){
-	  	const esTarea = ( evento.type === 'tarea' );
-	  	const esEvento = ( evento.type === 'evento' );
+	  	const esTarea 	 = ( evento.type === 'tarea' );
+	  	const esEvento 	 = ( evento.type === 'evento' );
 	  	let mensajeExito = '';
 	  	let urlApi = '';
 	  	if( esTarea ){
-	  		urlApi = '/api/tareas/cambiarEstado/' + evento.id;
+	  		urlApi 			 = '/api/tareas/cambiarEstado/' + evento.id;
 	  		mensajeExito = 'Tarea realizada'
 	  	}
 	  	if ( esEvento ) {
-	  		urlApi = '/api/eventos/cambiarEstado/' + evento.id;
+	  		urlApi 			 = '/api/eventos/cambiarEstado/' + evento.id;
 	  		mensajeExito = 'Evento completado'
 	  	}
 
@@ -178,38 +201,43 @@ let indexApp = new Vue({
 	  /*
 			@Descripción: Muestra los eventos y tareas en el calendario con el formato indicado por Procare
 	  */
-        renderizarEventos(evento, elemento) {
-            let esTarea = (evento.type === 'tarea');
+    renderizarEventos(evento, elemento) {
+      let esTarea = (evento.type === 'tarea');
 
-            let eventoEsFormacion = (evento.categoria === 1);
-            let eventoEsAccion = (evento.categoria === 2);
-            let eventoEsFundacion = (evento.categoria === 3);
+      let eventoEsFormacion = (evento.categoria === 1);
+      let eventoEsAccion 		= (evento.categoria === 2);
+      let eventoEsFundacion = (evento.categoria === 3);
 
-            let eventoPendiente = (evento.estado === 1);
-            let eventoEnProceso = (evento.estado === 2);
-            let eventoCompletado = (evento.estado === 3);
+      let eventoPendiente  = (evento.estado === 1);
+      let eventoEnProceso  = (evento.estado === 2);
+      let eventoCompletado = (evento.estado === 3);
 
-            if (esTarea) {
-                elemento.addClass('tarea');
-            } else {
-                elemento.addClass('evento');
-            }
+      if (esTarea) {
+        elemento.addClass('tarea');
+      } else {
+        elemento.addClass('evento');
+      }
 
-            if (eventoEsFormacion) {
-                elemento.addClass('formacion');
-            } else if (eventoEsAccion) {
-                elemento.addClass('accion');
-            } else if (eventoEsFundacion) {
-                elemento.addClass('fundacion');
-            }
+      if (eventoEsFormacion) {
+        elemento.addClass('formacion');
+      } else if (eventoEsAccion) {
+        elemento.addClass('accion');
+      } else if (eventoEsFundacion) {
+        elemento.addClass('fundacion');
+      }
 
-            if (eventoPendiente) {
-                elemento.addClass('pendiente');
-            } else if (eventoEnProceso) {
-                elemento.addClass('proceso');
-            } else if (eventoCompletado) {
-                elemento.addClass('completado');
-            }
-        }
-    }
+      if (eventoPendiente) {
+        elemento.addClass('pendiente');
+      } else if (eventoEnProceso) {
+        elemento.addClass('proceso');
+      } else if (eventoCompletado) {
+        elemento.addClass('completado');
+      }
+    },
+    error404(mensaje){
+    	App.errorAjax.header = 'Usuario no autorizado';
+			App.errorAjax.content=  mensaje;	
+			$('#modalAjax').modal('open');
+    },
+  }
 });

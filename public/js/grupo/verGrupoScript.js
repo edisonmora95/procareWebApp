@@ -3,11 +3,8 @@
 	@Autor: @edisonmora95
 	@FechaCreación: 3/06/2017
 */
-import EditarGrupo from './../../components/editarGrupo.vue';
 
-Vue.component('editar-grupo', EditarGrupo);
-
-let verGrupoApp = new Vue({
+let App = new Vue({
 	el: '#verGrupoApp',
 	created(){
 		this.obtenerUsuarioContectado(this);
@@ -38,8 +35,12 @@ let verGrupoApp = new Vue({
 			$.ajax({
 				type: 'GET',
 				url: '/api/login/usuarios',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					self.usuario = res;
+					console.log(res)
+					self.usuario = res.datos;
 					let usuarioEsPersonal = self.verificarTipoUsuario(self, 'Personal');
 					if(usuarioEsPersonal){
 						self.puedeEditar = true;
@@ -52,35 +53,39 @@ let verGrupoApp = new Vue({
 			self.idGrupo = pathname.split('/')[2];
 			$.ajax({
 				type: 'GET',
-				url: '/api/grupos/' + self.idGrupo,
+				url : '/api/grupos/' + self.idGrupo,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
-					self.grupo = res.grupo;
-					self.armarArrayIntegrantes(self, res.procarianos);
-					let animadorObj = {
-						nombres: res.procarianoAnimador.Persona.nombres + ' ' + res.procarianoAnimador.Persona.apellidos,
-						id: res.procarianoAnimador.procarianoId,
-						genero: res.procarianoAnimador.Persona.genero
+					console.log(res)
+					self.grupo 						= res.datos.grupo;
+					self.integrantes 			= self.armarArrayIntegrantes(res.datos.procarianos);
+					let animadorObj			  = {
+						nombres: res.datos.procarianoAnimador.Persona.nombres + ' ' + res.datos.procarianoAnimador.Persona.apellidos,
+						id 		 : res.datos.procarianoAnimador.procarianoId,
+						genero : res.datos.procarianoAnimador.Persona.genero
 					};
 					self.grupo.animadorId = animadorObj.id;
-					self.animador = animadorObj;
-					self.obtenerEtapaDeGrupo(self, res.grupo.Etapas);
+					self.animador 				= animadorObj;
+					self.obtenerEtapaDeGrupo(self, res.datos.grupo.Etapas);
 					self.generoUsuarioImagen();			
 				}
 			});
 		},
-		armarArrayIntegrantes(self, procarianos){
-			self.integrantes = [];
+		armarArrayIntegrantes(procarianos){
+			let integrantes = [];
 			$.each(procarianos, function(index, procariano){
-				if(self.validarProcarianoEnGrupo(procariano)){
+				if(App.validarProcarianoEnGrupo(procariano)){
 					let integranteObj = {
 						idProcariano: procariano.idProcariano,
-						nombre: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
-						idPersona: procariano.Persona.idPersona
+						nombre 			: procariano.Persona.nombres + ' ' + procariano.Persona.apellidos,
+						idPersona		: procariano.Persona.idPersona
 					};
-					self.integrantes.push(integranteObj);
+					integrantes.push(integranteObj);
 				}
 			});
-			console.log(self.integrantes)
+			return integrantes;
 		},
 		validarProcarianoEnGrupo(procariano){
 			let fechaFin = procariano.Grupos[0].ProcarianoGrupo.fechaFin;
@@ -115,13 +120,6 @@ let verGrupoApp = new Vue({
 			}
 		},
 		//Eventos
-		seleccionChico(chico){
-			this.chicoSeleccionado = chico;
-		},
-		habilitarEditar(){
-			this.editar = true;
-			$('select').material_select();
-		},
 		checkIsEmpty(obj){
 			return $.isEmptyObject(obj);
 		},

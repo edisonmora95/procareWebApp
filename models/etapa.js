@@ -1,17 +1,20 @@
 'use strict';
+
+const errors = require('../utils/errors');
+
 module.exports = function(sequelize, DataTypes) {
   const Etapa = sequelize.define('Etapa', {
     nombre:{
-      type: DataTypes.STRING,
+      type     : DataTypes.STRING,
       allowNull: false,
-      unique: true  ,
-      validate: {
-        isIn: {
+      unique   : true  ,
+      validate : {
+        isIn    : {
           args: [ ['Iniciación', 'Primera etapa', 'Segunda etapa', 'Tercera etapa', 'Cuarta etapa', 'Quinta etapa'] ],
-          msg: 'Valor ingresado como nombre de etapa no es válido.'
+          msg : 'Valor ingresado como nombre de etapa no es válido.'
         },
         notEmpty: {
-          msg: 'Nombre no puede ser vacío.'
+          msg : 'Nombre no puede ser vacío.'
         },
       }
     },
@@ -19,25 +22,18 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Etapa.belongsToMany(models.Grupo , {through: 'GrupoEtapa'})
-        // associations can be defined here
+        Etapa.belongsToMany( models.Grupo , { through : 'GrupoEtapa' } );
       },
-      obtenerEtapas: function(callback){
-        this.findAll({     
-        }).then(callback);
-      },
-      crearEtapa: function(nombreEtapa, callback, error){
-        this.create({
-          nombre: nombreEtapa,
-          programa: ""
-        }).then(callback).catch(error);
-      },
-      eliminarEtapa: function(idEtapa, success, error){
-        this.destroy({
-          where:{
-            id: idEtapa
-          }
-        }).then(success).catch(error);
+      obtenerEtapas: function(){
+        return new Promise( (resolve, reject) => {
+          return this.findAll({})
+          .then( resultado => {
+            resolve(resultado)
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
       }
     }
   });

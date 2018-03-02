@@ -157,9 +157,7 @@ var main = new Vue({
 
             });
             this.key = arregloBenefactor.length();
-            console.log("valor de la clave");
-            console.log(key);
-            console.log("fin de valor");
+
         },
         searchInTheList(searchText, currentPage) {
             if (_.isUndefined(searchText)) {

@@ -7,10 +7,6 @@
 	@FechaCreación: 31/05/2017
 */
 
-import Materials from 'vue-materials';
-
-Vue.use(Materials);
-
 let BuscarGrupoApp = new Vue({
 	el: '#BuscarGrupoApp',
 	created: function(){
@@ -18,17 +14,22 @@ let BuscarGrupoApp = new Vue({
 		this.obtenerGrupos(this);
 	},
 	mounted: function(){
+		$('.modal').modal();
 	},
 	data: {
 		grupos: [],
-		grupo:{
-			nombre: '',
-			anio: new Date().getFullYear(),
+		grupo :{
+			nombre  : '',
+			anio    : new Date().getFullYear(),
 			animador: '',
-			etapa: '',
-			genero: ''
+			etapa   : '',
+			genero  : ''
 		},
-		usuario: {}
+		usuario   : {},
+		errorAjax : {
+			header  : '',
+			content : ''
+		}
 	},
 	methods: {
 		obtenerUsuario(){
@@ -48,43 +49,54 @@ let BuscarGrupoApp = new Vue({
 				}
 			});
 		},
+		/*
+			@UltimaModificacion
+				25/12/2017	@edisonmora95	Añadido token al header. Añadido error handler
+		*/
 		obtenerGrupos(self){
 			$.ajax({
-				type: 'GET',
-				url: '/api/grupos/',
+				type   : 'GET',
+				url    : '/api/grupos/',
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
 				success(res){
 					self.armarArrayGrupos(self, res.datos);
+				},
+				error(err){
+					if( err.status === 403 ){
+						BuscarGrupoApp.error404(err.responseJSON.mensaje);
+					}else{
+						Materialize.toast('No se pudieron obtener las tareas y eventos', 4000, 'rounded error');	
+					}
+					console.log(err)
 				}
 			});
 		},
 		armarArrayGrupos(self, grupos){
 			$.each(grupos, function(index, grupo){
 				let grupoObj = {
-					id: grupo.id,
-					nombre: grupo.nombre,
-					tipo: grupo.tipo,
+					id 				 : grupo.id,
+					nombre 		 : grupo.nombre,
+					tipo 			 : grupo.tipo,
 					integrantes: grupo.cantidadChicos,
-					genero: grupo.genero,
-					etapaId: '',
+					genero 		 : grupo.genero,
+					etapaId 	 : '',
 					etapaNombre: ''
 				};
-
 				//Se busca la etapa actual del grupo
 				$.each(grupo.Etapas, function(j, etapa){
 					let fechaFin = etapa.GrupoEtapa.fechaFin;
 					//La etapa actual es aquella que tenga fecha fin null
-					if(fechaFin === null){
+					if( fechaFin === null ){
 						grupoObj.etapaId = etapa.id;
 						grupoObj.etapaNombre = etapa.nombre;
 					}
 				});
-
 				//Solo se añaden los grupos que pertenezcan actualmente a una etapa
-				if(grupoObj.etapaId !== ''){
+				if( grupoObj.etapaId !== '' ){
 					self.grupos.push(grupoObj);
 				}
-
-
 			});
 		},
 		//Eventos
@@ -92,5 +104,10 @@ let BuscarGrupoApp = new Vue({
 			let url = '/grupos/' + grupo.id;
 			window.location.href = url;
 		},
+		error404(mensaje){
+    	App.errorAjax.header = 'Usuario no autorizado';
+			App.errorAjax.content=  mensaje;	
+			$('#modalAjax').modal('open');
+    },
 	}
 });

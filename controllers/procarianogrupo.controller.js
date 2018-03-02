@@ -3,42 +3,6 @@ let respuesta = require('../utils/respuestas');
 
 /*
 	@Descripción:
-		Añade un array de procarianos a un grupo
-*/
-module.exports.anadirProcarianosAGrupo = (req, res, next) => {
-	let array = JSON.parse(req.body.integrantes.toString());
-	modelo.ProcarianoGrupo.bulkCreate(array)
-		.then( () => {
-			return modelo.ProcarianoGrupo.findAll();
-		}).then( pg => {
-			console.log('Exito al ingresar')
-			var jsonRespuesta = {
-				status : true,
-				mensaje : 'Éxito al ingresar',
-				sequelizeStatus : pg
-			}
-			res.json(jsonRespuesta)
-		}).catch( errorIngresar => {
-			console.log('ERROR AL INGRESAR')
-			var jsonRespuesta = {
-				status : false,
-				mensaje : 'ERROR AL INGRESAR',
-				sequelizeStatus : errorIngresar
-			}
-			res.json(jsonRespuesta);
-		}).catch( errorBuscar => {
-			console.log('ERROR AL BUSCAR')
-			var jsonRespuesta = {
-				status : false,
-				mensaje : 'ERROR AL BUSCAR',
-				sequelizeStatus : errorBuscar
-			}
-			res.json(jsonRespuesta);
-		});
-}
-
-/*
-	@Descripción:
 		Obtiene el grupo de un procariano a partir del id
 		Se muestra el grupo que tiene fechaFin = null ya que ese debe ser el actual
 */

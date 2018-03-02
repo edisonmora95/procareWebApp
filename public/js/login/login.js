@@ -1,61 +1,48 @@
 /*
-@Descripcion: 
-@Autor: Jose Viteri
-@FechaCreacion: 01/08/2017
-@UltimaEdicion: --
-
+	@Descripcion: 
+	@Autor: Jose Viteri
+	@FechaCreacion: 01/08/2017
+	@UltimaEdicion: 
+		22/12/2017 @edisonmora95 Cambio de ruta, añade token a LS
 */
-
-
 'use strict';
 
-var appLogin = new Vue({
+let vm = new Vue({
 	el: '#appLogin',
-	mounted(){
+	mounted() {
 		
 	},
 	data: {
-		correo: '',
+		correo     : '',
 		contrasenna: '',
-		fallaLogin: false
+		fallaLogin : false
 	},
 	methods: {
-		login(){
+		login() {
 			let self = this;
 			var url = "/";
 			let obj = {
-				correo : $('#UserName').val(),
+				correo   : $('#UserName').val(),
 				password : $('#Password').val()
 			};
 			$.ajax({
 				type : 'POST',
 				data : obj,
-				url: url,
+				url  : '/api/login/',
 				success(res){
-					console.log(res);
-					if(res.status){
-						window.location.href = '/home';
-					}
-					else{
-						self.fallaLogin = true;
-						self.correo = '';
-						self.contrasenna = '';
-						//console.log(self.fallaLogin);
-					}
-					
+					localStorage.setItem('token', res.token);
+					window.location.href = '/home';
 				},
 				error(res){
 					self.fallaLogin = true;
-					//console.log(self.fallaLogin);
 				}
 			});
-			
-			}
 		}
+	}
 });
 
 $(document).keypress(function(e) {
   if(e.which === 13) {
-    appLogin.login();
+    vm.login();
   }
 });

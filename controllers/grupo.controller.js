@@ -1,297 +1,283 @@
 /*
-@Descripcion: Clase para representar el concepto de Grupo
-@Autor: Gustavo Totoy
-@FechaCreacion: 31/05/2017
-@UltimaFechaModificacion: 31/05/2017 @GustavoTotoy
+	@Descripcion: Clase para representar el concepto de Grupo
+	@Autor: Gustavo Totoy
+	@FechaCreacion: 31/05/2017
+	@UltimaFechaModificacion: 13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
 */
+
 'use strict';
-var modelo = require('../models');
-let respuesta = require('../utils/respuestas');
 
+const respuesta 						= require('../utils/respuestas');
+const co 										= require('co');
 
-module.exports.crearGrupo = (req, res, next) => {
-	let grupoObj = {
-		nombre : req.body.nombre,
-		tipo : req.body.tipo,
-		cantidadChicos : req.body.cantidadChicos,
-		numeroReuniones:  req.body.numeroReuniones,
-		genero : req.body.genero,
-	};
-	let idEtapa = req.body.etapa;
-	let idAnimador = req.body.animador;
-	
-	modelo.Grupo.crearGrupo(grupoObj, (grupo) => {
-		let idGrupo = grupo.get('id');
-		modelo.GrupoEtapa.crearGrupoEtapa(idGrupo, idEtapa, (grupoEtapa) => {
-			modelo.Animador.agregarAnimadorAGrupo(idAnimador, idGrupo, (animador) => {
-				//se va a asignar el rol :"V
-				modelo.Procariano.findOne({
-					where:{id : idAnimador}
-				}).then( procariano => {
-					modelo.PersonaRol.findOne({
-						where: {
-							fechaFin : null,
-							PersonaId : procariano.get('PersonaId'),
-							RolNombre : 'Animador'
-						}
-					}).then( rolBuscar => {
-						if(rolBuscar!=null){
-							let datos = {
-								grupo : grupo,
-								grupoEtapa: grupoEtapa,
-								animador: animador
-							};
-							return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
-						}else{
-							modelo.PersonaRol.create({
-								fechaInicio : new Date(),
-								fechaFin : null,
-								PersonaId : procariano.get('PersonaId'),
-								RolNombre: 'Animador'
-							}).then( rol => {
-								let datos = {
-									grupo : grupo,
-									grupoEtapa: grupoEtapa,
-									animador: animador,
-									rol: rol
-								};
-								return respuesta.okCreate(res, 'Grupo creado exitosamente', datos);
-							}).catch( errorRol => {
-								let datos = {
-									grupo: grupo,
-									grupoEtapa: grupoEtapa,
-									animador: animador,
-									procariano: procariano,
-									errorRolBuscar: errorRolBuscar,
-									errorRol: errorRol
-								};
-								return respuesta.error(res, 'Error en la nueva asignación', '', datos);
-							});
-						}
-					}).catch( errorRolBuscar => {
-						let datos = {
-							grupo: grupo,
-							grupoEtapa: grupoEtapa,
-							animador: animador,
-							procariano: procariano,
-							errorRolBuscar: errorRolBuscar
-						};
-						return respuesta.error(res, 'Algo sucedio busquedad del Animador', '', datos);
-					})
-				}).catch( errorProcariano => {
-					let datos = {
-						grupo : grupo,
-						grupoEtapa: grupoEtapa,
-						animador: animador,
-						errorProcariano: errorProcariano
-					};
-					return respuestas.error(res, 'Algo sucedio en busquedad de Procariano', '', datos);
-				})
-				//continuamos
-			}, (errorAnimador) => {
-				let datos = {
-					grupo : grupo,
-					grupoEtapa: grupoEtapa,
-					errorAnimador: errorAnimador
-				};
-				return respuesta.error(res, 'No se pudo añadir el animador', '', datos);
-			});
-		}, (errorGrupoEtapa) => {
-			let datos = {
-				grupo: grupo,
-				errorGrupoEtapa : errorGrupoEtapa
-			};
-			return respuesta.error(res, 'No se pudo añadir a la etapa', '',datos);
-		});
-	}, (errorGrupo) => {
-		let mensajeError = errorGrupo.errors[0].message;
-		return respuesta.error(res, 'No se pudo crear el grupo', mensajeError, errorGrupo);
-	});
-};
+const modelo 								= require('../models');
+const ModeloGrupo 					= require('../models/').Grupo;
+const ModeloGrupoEtapa 			= require('../models/').GrupoEtapa;
+const ModeloAnimador 				= require('../models/').Animador;
+const ModeloProcariano 			= require('../models/').Procariano;
+const ModeloProcarianoGrupo = require('../models/').ProcarianoGrupo;
+const ModeloProcarianoTipo  = require('../models/').ProcarianoTipo;
 
-module.exports.editarGrupo = (req, res, next) => {
-	let grupo = {
-		id: req.params.id_grupo,
-		nombre: req.body.nombre,
-    	tipo: req.body.tipo,
-    	cantidadChicos: req.body.cantidadChicos,
-    	numeroReuniones: req.body.numeroReuniones,
-    	genero: req.body.genero,
-    	etapaAntigua: req.body.etapaAntigua,
-    	etapaNueva: req.body.etapaNueva,
-    	animadorAntiguo: req.body.animadorAntiguo,
-    	animadorNuevo: req.body.animadorNuevo
-	};
-	modelo.Grupo.editarGrupo(grupo, (successGrupo) => {
-		let cambioEtapa = ( grupo.etapaNueva !== '' && grupo.etapaNueva !== grupo.etapaAntigua && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
-		let cambioAnimador = ( grupo.animadorNuevo !== '' && grupo.animadorNuevo !== grupo.animadorAntiguo && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
-		if(cambioEtapa){
-			modelo.GrupoEtapa.cambiarGrupoDeEtapa(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, (successCambioEtapa) => {
-				//Se pudo cambiar al grupo de etapa
-				if(cambioAnimador){
-					modelo.Animador.cambiarAnimadorDeGrupo(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, (successCambioAnimador) => {
-						//Se pudo cambiar al animador
-						return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'Se pudo editar el grupo y cambiar la etapa y el animador'});
-					}, (errorUA) => {
-						//Error al ponerle fechaFin al registro de animador
-						return res.status(400).json({estado : false, datos : errorUA, mensaje: 'Se pudo editar el grupo y cambiar la etapa, no se pudo eliminar el registro antiguo del animador.'});
-					}, (errorCA) => {
-						//Error al crear el registro de animador
-						return res.status(400).json({estado : false, datos : errorCA, mensaje: 'Se pudo editar el grupo, cambiar la etapa y eliminar el registro antiguo de animador, no se pudo crear el registro nuevo del animador.'});
-					});
-				}else{
-					//Se pudo editar el grupo, cambiar la etapa. No se quiso cambiar el animador
-					return res.status(200).json({estado : true, datos : successCambioEtapa, mensaje: 'Se pudo editar el grupo y cambiar la etapa'});
-				}
-			}, (errorUE) => {
-				//Error al ponerle fechaFin al registro de grupoEtapa
-				return res.status(400).json({estado : false, datos : errorUE, mensaje: 'Se pudo editar el grupo, no se pudo eliminar el registro antiguo de la etapa.'});
-			}, (errorCE) => {
-				//Error al crear el registro de grupoetapa
-				return res.status(400).json({estado : false, datos : errorCE, mensaje: 'Se pudo editar el grupo y eliminar el registro antiguo de etapa, no se pudo crear el registro nuevo de la etapa.'});
-			});
-		}else{
-			if(cambioAnimador){
-				modelo.Animador.cambiarAnimadorDeGrupo(grupo.id, grupo.animadorAntiguo, grupo.animadorNuevo, (successCambioAnimador) => {
-					//Se pudo editar el grupo y se pudo cambiar al animador. No se quiso cambiar de etapa
-					return res.status(200).json({estado : true, datos : successCambioAnimador, mensaje: 'Se pudo editar el grupo y cambiar el animador.'});
-				}, (errorUA) => {
-					//Error al ponerle fechaFin al registro de animador
-					return res.status(400).json({estado : false, datos : errorUA, mensaje: 'Se pudo editar el grupo, no se pudo eliminar el registro antiguo del animador.'});
-				}, (errorCA) => {
-					//Error al crear el registro de animador
-					return res.status(400).json({estado : false, datos : errorCA, mensaje: 'Se pudo editar el grupo y eliminar el registro antiguo de animador, no se pudo crear el registro nuevo del animador.'});
-				});
-			}else{
-				//Se pudo editar el grupo, no se quiso cambiar de etapa ni de animador
-				return res.status(200).json({estado : true, datos : successGrupo, mensaje: 'Se pudo editar el grupo.'});
-			}	
-		}
-	}, (errorGrupo) => {
-		//No se pudo editar el grupo
-		return res.status(400).json({estado : false, datos : errorGrupo, mensaje: 'No se pudo editar el grupo.'});
-	});
-};
-
-module.exports.eliminarGrupo = (req, res, next) => {
-	var id = req.params.id;
-
-	modelo.Animador.destroy({
-	  	where: {
-	    	GrupoId : id
-	  	}
-	}).then( borrarAnimador => {
-
-		modelo.ProcarianoGrupo.destroy({
-		  	where: {
-		    	GrupoId : id
-		  	}
-		}).then( borrarProcarianos => {
-
-			modelo.GrupoEtapa.destroy({
-			  	where: {
-			    	GrupoId : id
-			  	}
-			}).then( borrarEtapa => {
-				
-				modelo.Grupo.destroy({
-				  	where: {
-				    	id : id
-				  	}
-				}).then( borrarGrupo => {
-					
-					let datos = {
-						grupo: borrarGrupo,
-						etapa: borrarEtapa,
-						procarianos: borrarProcarianos,
-						animador: borrarAnimador
-					};
-					return respuesta.okDelete(res, 'Eliminado exitosamente', datos);
-
-				}).catch( errorGrupo => {
-					return respuestas.errorDelete(res, 'un problema ocurrio', errorGrupo);
-				})
-				
-			}).catch( errorEtapa => {
-				return respuestas.errorDelete(res, 'un problema ocurrio', errorEtapa);
-			})
-
-		}).catch( errorProcariano => {
-			return respuestas.errorDelete(res, 'un problema ocurrio', errorProcariano);
-		})
-
-	}).catch( errorAnimador => {
-		return respuestas.errorDelete(res, 'un problema ocurrio', errorAnimador);
-	})
-
-}
+/* FECHAS DE REUNIONES PROCARE */
+const fechasP = ["2018-01-25", "2018-02-01", "2018-02-08", "2018-02-15", "2018-02-22", "2018-03-01", "2018-03-08", "2018-03-15", "2018-03-22", "2018-03-29", "2018-04-05", "2018-04-12", "2018-04-19", "2018-04-26", "2018-05-03", "2018-05-10", "2018-05-17", "2018-05-24", "2018-05-31", "2018-06-07", "2018-06-14", "2018-06-21", "2018-06-28", "2018-07-05", "2018-07-12", "2018-07-19", "2018-07-26", "2018-08-02", "2018-08-09", "2018-08-16", "2018-08-23", "2018-08-30", "2018-09-06", "2018-09-13", "2018-09-20", "2018-09-27", "2018-10-04", "2018-10-11", "2018-10-18", "2018-10-25", "2018-11-01", "2018-11-08", "2018-11-15", "2018-11-22", "2018-11-29", "2018-12-06", "2018-12-13", "2018-12-20", "2018-12-27"];
+/* FECHAS DE REUNIONES PROCARE MUJERES */
+const fechasPM = ["2018-01-30", "2018-02-06", "2018-02-13", "2018-02-20", "2018-02-27", "2018-03-06", "2018-03-13", "2018-03-20", "2018-03-27", "2018-04-03", "2018-04-10", "2018-04-17", "2018-04-24", "2018-05-01", "2018-05-08", "2018-05-15", "2018-05-22", "2018-05-29", "2018-06-05", "2018-06-12", "2018-06-19", "2018-06-26", "2018-07-03", "2018-07-10", "2018-07-17", "2018-07-24", "2018-07-31", "2018-08-07", "2018-08-14", "2018-08-21", "2018-08-28", "2018-09-04", "2018-09-11", "2018-09-18", "2018-09-25", "2018-10-02", "2018-10-09", "2018-10-16", "2018-10-23", "2018-10-30", "2018-11-06", "2018-11-13", "2018-11-20", "2018-11-27", "2018-12-04", "2018-12-11", "2018-12-18", "2018-12-25"];
 
 /*
-	@Descripción: Devuelve todos los grupos de la base de datos. Con su etapa.
+	@Autor: @GustavoTotoy
+	@Descripción:
+		Primero se crea el registro en la tabla Grupos
+		Luego se lo añade al grupo a una etapa, se crea el registro en la tabla GrupoEtapa
+		Se pasa el control al siguiente middleware que es el de Animador
+	@ÚltimaModificación: 
+		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
+		11/02/2018 @edisonmora95 Cambiado a varios middlewares
 */
-module.exports.mostrarGrupos = (req, res, next) => {
-	modelo.Grupo.obtenerTodosLosGrupos((success) => {
-		return respuesta.okGet(res, 'Se obtuvieron los grupos', success);
-	}, (error) => {
+module.exports.crearGrupo = (req, res, next) => {
+	let grupoObj = {
+		nombre 					: req.body.nombre,
+		tipo 						: req.body.tipo,
+		cantidadChicos 	: req.body.cantidadChicos,
+		numeroReuniones	: req.body.numeroReuniones,
+		genero 					: req.body.genero,
+	};
+	let idEtapa  = req.body.etapa;
+	inicializarTransaccion()
+	.then( t => {
+		co( function*() {
+			let grupo 		 = yield ModeloGrupo.crearGrupoT(grupoObj, t);
+			const idGrupo  = grupo.get('id');
+			yield ModeloGrupoEtapa.crearGrupoEtapaT(idGrupo, idEtapa, t);
+			res.locals.t       = t;
+			res.locals.idGrupo = idGrupo;
+			next();
+		})
+		.catch( fail => {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+/*
+	@Autor: @GustavoTotoy
+	@Descripción:
+		Primero se edita la información general del grupo
+		Luego se cambia de etapa, si el usuario ingresó una etapa nueva
+		Luego se cambia al animador, si el usuario ingresó un animador nuevo.
+			Queda por revisar lo siguiente:
+			Si el nuevo animador no está registrado como usuario, debe registrarse
+	@ÚltimaModificación: 
+		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
+		26/02/2018	@edisonmora95	Añadidos controllers nuevos
+*/
+module.exports.editarGrupo = (req, res, next) => {
+	let grupo = {
+		id 							: req.params.id_grupo,
+		nombre					: req.body.nombre,
+  	tipo						: req.body.tipo,
+  	cantidadChicos	: req.body.cantidadChicos,
+  	numeroReuniones	: req.body.numeroReuniones,
+  	genero					: req.body.genero,
+  	etapaAntigua		: req.body.etapaAntigua,
+  	etapaNueva			: req.body.etapaNueva,
+  	animadorAntiguo	: req.body.animadorAntiguo,
+  	animadorNuevo		: req.body.animadorNuevo
+	};
+	res.locals.datos = {};
+	inicializarTransaccion()
+	.then( t => {
+		co(function*() {
+			const grupoEditado   = yield ModeloGrupo.editarGrupoT(grupo, grupo.id, t);	//Primero se edita la información general del grupo
+			const cambioEtapa    = ( grupo.etapaNueva !== NaN && grupo.etapaNueva !== '' && (grupo.etapaNueva !== grupo.etapaAntigua) && grupo.etapaNueva !== null && grupo.etapaAntigua !== null);
+			const cambioAnimador = ( grupo.animadorNuevo !== NaN && grupo.animadorNuevo !== '' && (grupo.animadorNuevo !== grupo.animadorAntiguo) && grupo.animadorNuevo !== null && grupo.animadorAntiguo !== null);
+			res.locals.datos.grupoEditado = grupoEditado;
+			if( cambioEtapa ){
+				const etapa 				= yield ModeloGrupoEtapa.cambiarGrupoDeEtapaT(grupo.id, grupo.etapaAntigua, grupo.etapaNueva, t);
+				res.locals.datos.etapaNueva = etapa;
+			}
+			if( cambioAnimador ){
+				res.locals.grupo = grupo;
+				res.locals.t     = t;
+				next();
+			}else{
+				t.commit();				
+				return respuesta.okUpdate(res, 'Se editó el grupo correctamente.', res.locals.datos);	
+			}
+		})
+		.catch( fail => {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+/*
+	@Autor: @GustavoTotoy
+	@Descripción:
+		Primero se eliminan todos los registros del grupo de la tabla de Animadores
+		Luego se eliminan todos los registros del grupo de la tabla de ProcarianoGRupo
+		Luego se eliminan todos los registros del grupo de la tabla EtapaGrupo
+		Finalmente se elimina el grupo
+	@ÚltimaModificación: 
+		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
+*/
+module.exports.eliminarGrupo = (req, res) => {
+	let id = req.params.id_grupo;
+
+	inicializarTransaccion()
+	.then( t => {
+		Promise.all([
+			ModeloAnimador.eliminarRegistrosDeGrupoT(id, t),
+			ModeloProcarianoGrupo.eliminarRegistrosDeGrupoT(id, t),
+			ModeloGrupoEtapa.eliminarRegistrosDeGrupoT(id, t),
+			ModeloGrupo.eliminarGrupoT(id, t)
+		])
+		.then( values => {
+			t.commit();
+			return respuesta.okDelete(res, 'Todos los registros del grupo fueron eliminados', id);
+		})
+		.catch( fail => {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+/*
+	@Autor: @GustavoTotoy
+	@ÚltimaModificación: 
+*/
+module.exports.mostrarGrupos = (req, res) => {
+	ModeloGrupo.obtenerTodosLosGruposP()
+	.then( grupos => {
+		return respuesta.okGet(res, 'Se obtuvieron los grupos', grupos);
+	})
+	.catch( error => {
 		return respuesta.error(res, 'No se pudieron obtener los grupos', '', error);
 	});
 };
 
-module.exports.anadirProcarianoAGrupo = (req, res, next, persona, procariano) => {
-	modelo.ProcarianoGrupo.create({
-		GrupoId: req.body.grupo,
-		ProcarianoId: procariano.get('id'),
-		fechaInicio: procariano.get('createdAt')
-	}).then( procarianogrupo => {
-		var rjson = {
-			status : true,
-			mensaje : 'Se pudo añadir el Procariano correctamente al Grupo',
-			persona : persona,
-			procariano : procariano,
-			procarianogrupo: procarianogrupo
-		};
-		res.json(rjson);
-	}).catch( error => {
-		var rjson = {
-			status : false,
-			mensaje : 'No se pudo añadir Procariano al grupo',
-			error : error
-			}
-		res.json(rjson);
-	});
-}
+module.exports.anadirProcarianoAGrupo = (req, res) => {
+	const idGrupo 		 = req.params.id_grupo;
+	const idProcariano = req.body.idProcariano;
 
-module.exports.obtenerGrupoPorId = (req, res, next) => {
-	let idGrupo = req.params.id_grupo;
-	modelo.Grupo.obtenerGrupoPorId(idGrupo, (grupo) => {
-		
-		modelo.Procariano.obtenerProcarianosDeGrupo(idGrupo, (procarianos) => {
-
-			modelo.Animador.obtenerAnimadorDeGrupo(idGrupo, (animador) => {
-
-				let idProcariano = animador.get('ProcarianoId');
-				modelo.Procariano.obtenerProcarianoPorId(idProcariano, (procarianoAnimador) => {
-					return res.status(200).json({status: true, grupo: grupo, procarianos: procarianos, animador: animador, procarianoAnimador: procarianoAnimador});
-				}, (errorProcarianoAnimador) => {
-					return res.status(400).json({status: false, procarianos: procarianos, animador: animador, error: errorProcarianoAnimador});
+	ModeloProcarianoTipo.obtenerTipoActualDeProcarianoP(idProcariano)
+	.then( registro => {
+		if ( registro.get('TipoId') === 1 ) {
+			inicializarTransaccion()
+			.then( t => {
+				return ModeloProcarianoGrupo.anadirProcarianoAGrupoT(idGrupo, idProcariano, t)
+				.then( result => {
+					t.commit();
+					return respuesta.okCreate(res, 'Procariano añadido a grupo.', result);
+				})
+				.catch( fail => {
+					t.rollback();
+					return respuesta.ERROR_SERVIDOR(res, fail);
 				});
-				
-			}, (errorAnimador) => {
-				return res.status(400).json({status: false, procarianos: procarianos, error: errorAnimador});
-			});			
-			
-		}, (errorProcarianos) => {
-			return res.status(400).json({status: false, error: errorProcarianos});
+			})
+			.catch( fail => {
+				return respuesta.ERROR_SERVIDOR(res, fail);
+			});
+		} else {
+			return respuesta.ERROR_SERVIDOR(res, { mensaje : 'El procariano debe ser de Formación' });
+		}
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+module.exports.anadirProcarianosAGrupo = (req, res) => {
+	let arrayProcarianos = JSON.parse(req.body.integrantes.toString());
+	console.log('arrayProcarianos:', arrayProcarianos);
+	inicializarTransaccion()
+	.then( t => {
+		ModeloProcarianoGrupo.anadirProcarianosBulk(arrayProcarianos, t)
+		.then( resultado => {
+			console.log('resultado:', resultado)
+			t.commit();
+			return respuesta.okCreate(res, 'Procarianos añadidos al grupo.', null);
+		})
+		.catch( fail => {
+			console.log('fail:', fail);
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
 		});
-		
-	}, (errorGrupo) => {
-		return res.status(400).json({status: false, error: errorGrupo});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
+
+/*
+	@Autor: @GustavoTotoy
+	@Descripción:
+		Primero se obtiene la información del grupo, el animador y los procarianos del grupo
+		Luego la información completa del animador
+	@ÚltimaModificación: 
+		13/09/2017 @edisonmora95 Cambiado a promesas y transacciones
+		11/02/2018	@edisonmora95	Promise.all
+*/
+module.exports.obtenerGrupoPorId = (req, res) => {
+	let idGrupo = req.params.id_grupo;
+	let datosRespuesta = {};
+
+	Promise.all([
+		ModeloGrupo.obtenerGrupoPorIdP(idGrupo),
+		ModeloAnimador.obtenerAnimadorDeGrupoP(idGrupo),
+		ModeloProcariano.obtenerProcarianosDeGrupoP(idGrupo)
+	]).then( values => {
+		let grupo       = values[0];
+		let animador    = values[1];
+		let procarianos = values[2];
+
+		let idProcariano = animador.get('ProcarianoId');
+		ModeloProcariano.obtenerProcarianoPorIdP(idProcariano)
+		.then( infoAnimador => {
+			datosRespuesta.grupo 							= grupo;
+			datosRespuesta.procarianos 				= procarianos;
+			datosRespuesta.animador 					= animador;
+			datosRespuesta.procarianoAnimador = infoAnimador;
+			return respuesta.okGet(res, 'Información completa del grupo obtenida.', datosRespuesta);
+		})
+		.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
 };
 
 
+////////////////////////////////////////////////////////////
 //FUNCIONES INTERNAS
-/*
-cambiarAnimadorDeGrupo(){
+////////////////////////////////////////////////////////////
+function inicializarTransaccion(){
+	return new Promise( (resolve, reject) => {
+		return modelo.sequelize.transaction({
+			autocommit: false,
+		})
+		.then( result => {
+			return resolve(result);
+		})
+		.catch( fail => {
+			const mensaje = 'No se pudo crear la transacción';
+			const tipo    = 'Transaction error';
+			const error   = { mensaje, tipo };
+			return reject(error);
+		});
+	});
+}
 
-}*/

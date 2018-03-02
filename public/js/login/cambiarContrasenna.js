@@ -10,8 +10,6 @@
 
 'use strict';
 
-import Navbar from './../../components/navbar.vue';
-Vue.component('navbar', Navbar); 
 Vue.use(VeeValidate);
 /*
 	Validaciones. Cambio de mensajes de error
@@ -51,73 +49,59 @@ var appCambio = new Vue({
 	methods: {
 		cambio(){
 			let self = this;
-			var url = "/api/login/";
+			var url = "/api/login/cambiar";
 			let obj = {
-				correo : $('#correo').val(),
-				viejaContrasenna : $('#viejaContrasenna').val(),
-				nuevaContrasenna : $('#nuevaContrasenna').val(),
-				nuevaContrasenna2 : $('#nuevaContrasenna2').val()
+				correo 					 : self.correo,
+				viejaContrasenna : self.viejaContrasenna,
+				nuevaContrasenna : self.nuevaContrasenna,
 			};
-			if ( obj.nuevaContrasenna != obj.nuevaContrasenna2){
-				self.fallaCambio = true;
-				self.msg = "Contraseñas no coinciden";
-				//console.log('este es el fallaCambio: ' +  self.fallaCambio);
-				//console.log('este es el msg: ' +  self.msg);
-			}else{
-				$.ajax({
-					type : 'POST',
-					data : obj,
-					url: url,
-					success: function(res){
-						console.log(res);
-						if(res.status){
-							$('#modal1').modal('open');
-							setTimeout(function(){
-								 window.location.href = '/';
-							}, 2000);
-							
-						}
-						else{
-
-							self.fallaCambio = true;
-							self.msg = res.message;
-							//console.log("este es el textContent:" + this.$el);
-							//console.log('este es el msg: ' +  self.msg + " " + res.message);
-							//console.log(res);
-						}
-						
-					},
-					error : function(res){
-						self.fallaCambio = true;
-						self.msg = res.message;
-						//console.log("este es el textContent:" + self.$el.textContent);
-						//console.log('este es el msg: ' +  self.msg);
-						//console.log(res);
-						//console.log(self.fallaLogin);
-					}
-				});
-
-
-			}
-
-			
+			$.ajax({
+				type : 'POST',
+				data : obj,
+				url  : url,
+				headers: {
+	        "x-access-token" : localStorage.getItem('token')
+		    },
+				success: function(res){
+					console.log(res);
+					$('#modal1').modal('open');
+				},
+				error : function(res){
+					console.log(res)
+					self.fallaCambio = true;
+					self.msg = res.message;
+				}
+			});
 		},
 		cancelar(){
 			window.location.href = '/home';
 		},
 		validarAntesDeSubir(){
 			let self = this;
-
-			this.$validator.validateAll().then(respuesta => {
-				//console.log('esta es respuesta');
-			  self.cambio();       
+			this.$validator.validateAll()
+			.then(resultado => {
+				if ( resultado ) {
+					console.log('resultado:', resultado)
+					console.log('nuevaContrasenna:', self.nuevaContrasenna)
+					console.log('nuevaContrasenna2:', self.nuevaContrasenna2)
+					if( self.nuevaContrasenna === self.nuevaContrasenna2 ){
+						self.fallaCambio = false;
+						self.cambio();
+					}else {
+						self.fallaCambio = true;
+						self.msg = "Contraseñas no coinciden";
+						return;
+					}
+				}
+				console.log('esta es respuesta:', resultado);
 	    }).catch(() => {
 	      self.errorObj.campo = self.errors.errors[0].field;
-	      self.errorObj.msj = self.errors.errors[0].msg;
+	      self.errorObj.msj   = self.errors.errors[0].msg;
 	      $('#modalError').modal('open');
 	    });
 			
-		}
+		},
+
 	}
 
 });

@@ -2,10 +2,10 @@
 	<div>
 		<h4 class="center-align">Editar perfil</h4>
 		<form>
-			<v-row id="rowNombresApellidos">
+			<section id="rowNombresApellidos">
 				<div class="col s6 input-field">
 					<input type="text" name="nombres" id="nombres" v-model="procariano.nombres" v-validate="'required|alpha_spaces'">
-					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>
+					<span v-show="errors.has('nombres')" class="help is-danger">{{ errors.first('nombres') }}</span>ssxcvxvc
 					<label for="nombres" class="active">Nombres</label>
 				</div>
 				<div class="col s6 input-field">
@@ -13,8 +13,8 @@
 					<span v-show="errors.has('apellidos')" class="help is-danger">{{ errors.first('apellidos') }}</span>
 					<label for="apellidos" class="active">Apellidos</label>
 				</div>
-			</v-row>
-			<v-row id="rowCedulaFechaNacimiento">
+			</section>
+			<section id="rowCedulaFechaNacimiento">
 				<div class="col s6">
 					<label for="cedula" class="active">Cédula</label>
 					<input type="text" name="cedula" id="cedula" v-model="procariano.cedula" v-validate="'required|digits:10'">
@@ -25,8 +25,8 @@
 					<input type="date" class="datepicker" name="fechaNacimiento" id="fechaNacimiento" v-validate="'required'">
 					<span v-show="errors.has('fecha-nacimiento')" class="help is-danger">{{ errors.first('fecha-nacimiento') }}</span>
 				</div>
-			</v-row>
-			<v-row id="rowDirEmail">
+			</section>
+			<section id="rowDirEmail">
 				<div class="col s6 input-field">
 					<input type="text" name="direccion" id="direccion" v-model="procariano.direccion" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('direccion')" class="help is-danger">{{ errors.first('direccion') }}</span>
@@ -37,8 +37,8 @@
 					<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
 					<label for="email" class="active">Email</label>
 				</div>
-			</v-row>
-			<v-row id="rowTelefonos">
+			</section>
+			<section id="rowTelefonos">
 				<div class="col s6 input-field">
 					<input type="tel" name="celular" id="celular" v-model="procariano.celular" v-validate="'numeric'">
 					<span v-show="errors.has('celular')" class="help is-danger">{{ errors.first('celular') }}</span>
@@ -49,8 +49,8 @@
 					<span v-show="errors.has('convencional')" class="help is-danger">{{ errors.first('convencional') }}</span>
 					<label for="convencional" class="active">Convencional</label>
 				</div>	
-			</v-row>
-			<v-row id="rowTipo">
+			</section>
+			<section id="rowTipo">
 				<div class="col s6 input-field">
 					<v-select name="tipo" id="tipoSelect" v-model="tipoprocariano.id" select-text="" :items="tipos"></v-select>
 					<label class="active">Tipo</label>
@@ -60,8 +60,8 @@
 					</v-select>
 					<label class="active">Grupo</label>
 				</div>
-			</v-row>
-			<v-row id="rowColegioUniversidad">
+			</section>
+			<section id="rowColegioUniversidad">
 				<div class="col s6 input-field">
 					<input type="text" name="colegio" id="colegio" v-model="procariano.colegio" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('colegio')" class="help is-danger">{{ errors.first('colegio') }}</span>
@@ -72,18 +72,18 @@
 					<span v-show="errors.has('universidad')" class="help is-danger">{{ errors.first('universidad') }}</span>
 					<label for="universidad" class="active">Universidad</label>
 				</div>
-			</v-row>
-			<v-row id="rowTrabajo">
+			</section>
+			<section id="rowTrabajo">
 				<div class="col s12 input-field">
 					<input type="text" name="trabajo" id="trabajo" v-model="procariano.trabajo" v-validate="'regex:^([A-Za-z0-9# .\-]+)$'">
 					<span v-show="errors.has('trabajo')" class="help is-danger">{{ errors.first('trabajo') }}</span>
 					<label for="trabajo" class="active">Trabajo</label>
 				</div>
-			</v-row>
-			<v-row id="rowBotones">
+			</section>
+			<section id="rowBotones">
 				<a class="waves-effect waves-light btn" @click="cancelarEdicion">Cancelar</a>
 				<a class="waves-effect waves-light btn pull right" @click="aceptarEdicion">Aceptar</a>
-			</v-row>
+			</section>
 		</form>
 		<!--Modal de mensaje de error-->
 		<div id="modalError" class="modal">
@@ -108,6 +108,17 @@
 	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" @click="cancelarCambioDeGrupo">No</a>
 	    </div>
 	  </div>
+	  <!--Modal de mensaje de error-->
+		<div id="modalErrorRespuesta" class="modal">
+	    <div class="modal-content">
+	      <h4 class="center-align">Error del servidor.</h4>
+	      <p class="center-align">Error al editar procariano</p>
+	      <p class="center-align">"{{errorObj.msj}}"</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+	    </div>
+	  </div>
 	</div>
 	
 </template>
@@ -125,25 +136,25 @@
 	const dictionary = {
 		en: {
 			messages: {
-				email : function(){
+				email(){
 					return 'Ingrese un correo válido.';
 				},
-				required: function(){
+				required(){
 					return 'Este campo es obligatorio.';
 				},
-				alpha_spaces: function(){
+				alpha_spaces(){
 					return 'Este campo sólo puede contener letras y espacios.';
 				},
-				digits: function(field, length){
+				digits(field, length){
 					return 'Este campo sólo puede contener ' + length + ' números.';
 				},
-				numeric: function(){
+				numeric(){
 					return 'Este campo sólo puede contener números.';
 				},
-				alpha_num: function(){
+				alpha_num(){
 					return 'Este campo sólo puede contener letras y números.';
 				},
-				regex: function(field, val){
+				regex(field, val){
 					return 'No ingrese caracteres especiales.';
 				}
 			}
@@ -173,10 +184,12 @@
 				gruposFormacion: [],
 				gruposCaminantes: [],
 				gruposPescadores: [],
-				gruposMayores: []
+				gruposMayores: [],
+				errorServidor: ''
 			}
 		},
 		created(){
+			console.log(this.tipoprocariano)
 			this.obtenerTodosLosGrupos(this);
 			this.obtenerTiposProcariano(this);
 		},
@@ -200,33 +213,33 @@
 				    closeOnSelect: true // Close upon selecting a date
 				});
 				let datePickerFechaNacimiento = $('#fechaNacimiento').pickadate();
-				let picker = datePickerFechaNacimiento.pickadate('picker');
-				picker.set('select', self.procariano.fechaNacimiento, { format: 'yyyy-mm-dd'});
+				let picker 										= datePickerFechaNacimiento.pickadate('picker');
+				picker.set('select', self.procariano.fechaNacimiento, { format : 'yyyy-mm-dd' });
 				//2 way data binding
 				$('#fechaNacimiento').change(function(){
 					self.bindFechaNacimiento();
 				});
 				//Asignación de temporales de grupo previo
-				const tempGrupoProcarianoId = self.grupoprocariano.id;
+				const tempGrupoProcarianoId 	= self.grupoprocariano.id;
 				const tempGrupoProcarianoText = self.grupoprocariano.text;
-				self.tempGrupoPrevio.id = tempGrupoProcarianoId;
-				self.tempGrupoPrevio.text = tempGrupoProcarianoText;
+				self.tempGrupoPrevio.id 			= tempGrupoProcarianoId;
+				self.tempGrupoPrevio.text 		= tempGrupoProcarianoText;
 				//Asignación de temporales de tipo previo
-				const tempTipoProcarianoId = self.tipoprocariano.id;
-				const tempTipoPrevioText = self.tipoprocariano.text;
-				self.tempTipoPrevio.id = tempTipoProcarianoId;
-				self.tempTipoPrevio.text = tempTipoPrevioText;
+				const tempTipoProcarianoId 	= self.tipoprocariano.id;
+				const tempTipoPrevioText 		= self.tipoprocariano.text;
+				self.tempTipoPrevio.id 			= tempTipoProcarianoId;
+				self.tempTipoPrevio.text 		= tempTipoPrevioText;
 				//Habilidar cambio de grupo
 				$('#grupoSelect').change(function(){
 					self.abrirModalCambioGrupo(self);
 				});
 				//Habilitar cambio de tipo
 				$('#tipoSelect').change(function(){
-		    	let optionSelectedVal = $('#tipoSelect option:selected').val();
-		    	let optionSelectedText = $('#tipoSelect option:selected').text();
-		    	self.tipoprocariano.id = optionSelectedVal;
-		    	self.tipoprocariano.text = optionSelectedText;
-		    	self.procariano.tipoId = optionSelectedVal;
+		    	let optionSelectedVal 		= $('#tipoSelect option:selected').val();
+		    	let optionSelectedText 		= $('#tipoSelect option:selected').text();
+		    	self.tipoprocariano.id 		= optionSelectedVal;
+		    	self.tipoprocariano.text 	= optionSelectedText;
+		    	self.procariano.tipoId 		= optionSelectedVal;
 		    	self.armarArraysGrupos(self.gruposObtenidos, self);
 				})
 			},
@@ -246,10 +259,10 @@
 	    */
 	    armarArraysGrupos(grupos, self){
 	    	//No borrar esto. Sirve cuando se eejcuta este método dentro del filtro de grupos
-	    	self.gruposFormacion = [];
+	    	self.gruposFormacion 	= [];
 	    	self.gruposCaminantes = [];
 	    	self.gruposPescadores = [];
-	    	self.gruposMayores = [];
+	    	self.gruposMayores 		= [];
 	    	$.each(grupos, function(index, grupo){
 	    		let grupoObj = {
 	  				id: grupo.id,
@@ -274,7 +287,7 @@
 	    */
 	    formarArrayGruposAMostrar(self){
 	    	let tipoProcariano = self.tipoprocariano.text;
-	    	if(tipoProcariano === 'Procare Formación'){
+	    	if(tipoProcariano === 'Chico Formación'){
 	    		self.grupos = self.gruposFormacion;
 	    	}else if(tipoProcariano === 'Caminante'){
 	    		self.grupos = self.gruposCaminantes;
@@ -329,6 +342,7 @@
 	    		self.tipos.push(tipoObj);
 	    	});
 			},
+			
 			//EVENTOS BOTONES
 			cancelarEdicion(){
 				location.reload();
@@ -344,36 +358,42 @@
 				}
 			},
 			editarProcariano(){
-				let self = this;
-				var path = window.location.pathname;
-				let id = path.split('/')[3];
-				self.flag = false;
-      	var urlApi = '/api/procarianos/' + id;
+				let self 		= this;
+				var path 		= window.location.pathname;
+				let id 			= path.split('/')[3];
+				self.flag 	= false;
+      	var urlApi 	= '/api/procarianos/' + id;
       	$.ajax({
       		type: 'PUT',
       		data: self.procariano,
       		url: urlApi,
       		success: function(res){
+      			console.log(res);
       			location.reload();
+      		},
+      		error: function(err){
+      			console.log(err)
+      			self.errorServidor = err.mensajeError;
+      			$('#modalErrorRespuesta').modal('open');
       		} 
       	});
 			},
 			bindFechaNacimiento(){
-				let self = this;
-				let year = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let self 	= this;
+				let year 	= $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
 				let month = $('#fechaNacimiento').pickadate('picker').get('highlight', 'mm');
-				let day = $('#fechaNacimiento').pickadate('picker').get('highlight', 'dd');
+				let day 	= $('#fechaNacimiento').pickadate('picker').get('highlight', 'dd');
 				if(self.validarFechaNacimiento()){
 					let fechaSeleccionada = year + '/' + month + '/' + day;
-					self.procariano.fechaNacimiento = fechaSeleccionada;				
+					self.procariano.Persona.fechaNacimiento = fechaSeleccionada;				
 				}
 			},
 			validarFechaNacimiento(){
-	    	let self = this;
-	    	let yearSelected = $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
-				let actualYear = new Date().getFullYear();
-				let diferencia = actualYear - yearSelected;
-				if(diferencia < 11){
+	    	let self 					= this;
+	    	let yearSelected 	= $('#fechaNacimiento').pickadate('picker').get('highlight', 'yyyy');
+				let actualYear 		= new Date().getFullYear();
+				let diferencia 		= actualYear - yearSelected;
+				if( diferencia < 11 ){
 					self.abrirModalError('Fecha de nacimiento', 'No puede ingresar a alguien con menos de 11 años.');
 					return false;
 				}
@@ -381,47 +401,47 @@
 	    },
 	    abrirModalError(campo, mensaje){
 	    	self.errorObj.campo = campo;
-        self.errorObj.msj = mensaje;
+        self.errorObj.msj 	= mensaje;
         $('#modalError').modal('open');
 	    },
 	    abrirModalCambioGrupo(self){
 	    	self.grupoprocariano.text = $('#grupoSelect option:selected').text();
-	    	self.grupoprocariano.id = $('#grupoSelect option:selected').val();
+	    	self.grupoprocariano.id 	= $('#grupoSelect option:selected').val();
 	    	$('#modalCambioGrupo').modal('open');
 	    },
 	    cambiarDeGrupo(){
-	    	let self = this;
+	    	let self 		= this;
 	    	let dataObj = {
-	    		idGrupoPrev: self.tempGrupoPrevio.id,
-	    		idGrupoNuevo: self.grupoprocariano.id
+	    		idGrupoPrev  : self.tempGrupoPrevio.id,
+	    		idGrupoNuevo : self.grupoprocariano.id
 	    	};
 	    	if(dataObj.idGrupoPrev === ''){
-	    		self.anadirChicoAGrupo(self, self.procariano.procarianoID, dataObj.idGrupoNuevo);
+	    		self.anadirChicoAGrupo(self, self.procariano.id, dataObj.idGrupoNuevo);
 	    	}else{
 	    		$.ajax({
 		    		type: 'PUT',
-		    		url: '/api/pg/' + self.procariano.procarianoID,
+		    		url : '/api/pg/' + self.procariano.id,
 		    		data: dataObj,
 		    		success(res){
-		    			let msjErrorEditar = 'No se pudo editar ni crear el nuevo registro';
-		    			let msjErrorCrear = 'Se pudo editar pero no crear el nuevo registro';
+		    			let msjErrorEditar	= 'No se pudo editar ni crear el nuevo registro';
+		    			let msjErrorCrear 	= 'Se pudo editar pero no crear el nuevo registro';
 		    			if(res.estado){
 		    				//tempGrupoPrevio ahora es el mismo valor que el grupo actual. Para futuros cambios
-		    				self.tempGrupoPrevio.id = $('#grupoSelect option:selected').val();
+		    				self.tempGrupoPrevio.id 	= $('#grupoSelect option:selected').val();
 		    				self.tempGrupoPrevio.text = $('#grupoSelect option:selected').text();
 		    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
 		    			}else if( !res.estado && res.mensaje === msjErrorEditar ){
 		    				//Regresa al valor previo ya que no se pudo realizar el cambio
-		    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    				const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
 		    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-		    				self.grupoprocariano.id = tempGrupoPrevioId;
+		    				self.grupoprocariano.id 	= tempGrupoPrevioId;
 		    				self.grupoprocariano.text = tempGrupoPrevioText;
 		    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
 		    			}else if( !res.estado && res.mensaje === msjErrorCrear ){
 		    				//Regresa al valor previo ya que no se pudo realizar el cambio
-		    				const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    				const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
 		    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-		    				self.grupoprocariano.id = tempGrupoPrevioId;
+		    				self.grupoprocariano.id 	= tempGrupoPrevioId;
 		    				self.grupoprocariano.text = tempGrupoPrevioText;
 		    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 		    			}else{
@@ -429,9 +449,9 @@
 		    		},
 		    		error(err){
 		    			console.log(err)
-		    			const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+		    			const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
 	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-	    				self.grupoprocariano.id = tempGrupoPrevioId;
+	    				self.grupoprocariano.id 	= tempGrupoPrevioId;
 	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo cambiar de grupo', 4000, 'rounded tooltip-error');
 		    		}
@@ -441,32 +461,32 @@
 	    anadirChicoAGrupo(self, idProcariano, idGrupo){
 				$.ajax({
 					type: 'POST',
-					url: '/api/pg/anadir',
+					url : '/api/pg/anadir',
 					data: {
-						idGrupo: idGrupo,
-						idProcariano: idProcariano
+						idGrupo 			: idGrupo,
+						idProcariano 	: idProcariano
 					},
 					success(res){
 						console.log(res)
 						if(res.estado){
-							const auxId = self.grupoprocariano.id;
-	    				const auxText = self.grupoprocariano.text;
-	    				self.tempGrupoPrevio.id = auxId;
+							const auxId 							= self.grupoprocariano.id;
+	    				const auxText 						= self.grupoprocariano.text;
+	    				self.tempGrupoPrevio.id 	= auxId;
 	    				self.tempGrupoPrevio.text = auxText;
 	    				Materialize.toast('Procariano cambiado de grupo', 4000, 'rounded');
 						}else{
-							const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+							const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
 	    				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-	    				self.grupoprocariano.id = tempGrupoPrevioId;
+	    				self.grupoprocariano.id 	= tempGrupoPrevioId;
 	    				self.grupoprocariano.text = tempGrupoPrevioText;
 	    				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 						}
 					},
 					error(err){
 						console.log(err)
-						const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+						const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
     				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-    				self.grupoprocariano.id = tempGrupoPrevioId;
+    				self.grupoprocariano.id 	= tempGrupoPrevioId;
     				self.grupoprocariano.text = tempGrupoPrevioText;
     				Materialize.toast('No se pudo añadir al nuevo grupo', 4000, 'rounded tooltip-error');
 					}
@@ -474,9 +494,9 @@
 			},
 	    cancelarCambioDeGrupo(){
 	    	let self = this;
-	    	const tempGrupoPrevioId = self.tempGrupoPrevio.id;
+	    	const tempGrupoPrevioId 	= self.tempGrupoPrevio.id;
 				const tempGrupoPrevioText = self.tempGrupoPrevio.text;
-				self.grupoprocariano.id = tempGrupoPrevioId;
+				self.grupoprocariano.id 	= tempGrupoPrevioId;
 				self.grupoprocariano.text = tempGrupoPrevioText;
 	    }
 		}
