@@ -8,101 +8,112 @@
 		<header>
 			<% include ../partials/navbar %>
 		</header>
-		<main class="container" id="asistenciasApp">
-			<v-row class="row" id="rowBusqueda">
-				<article class="col s4">
-					<v-select name="genero" id="genero" select-text="Género" v-model="generoSel">
-						<option value="Procare">Procare</option>
-						<option value="Procare Mujeres">Procare Mujeres</option>
-					</v-select>
+		<main class="container row" id="asistenciasApp">
+			<section class="col s12">
+				<article class="card">
+					<header class="card-content">
+						<h3 class="titulo">Asistencias</h3>
+					</header>
+					<main class="card-content row">
+						<article class="col s4">
+							<label for="genero">Género</label>
+							<select name="genero" id="genero">
+								<option value="" disabled="true" selected="true"></option>
+								<option value="Procare">Procare</option>
+								<option value="Procare Mujeres">Procare Mujeres</option>
+							</select>
+						</article>
+						<article class="col s4">
+							<label for="grupos">Grupos</label>
+							<select name="grupos" id="grupos" disabled="true">
+								<option value="" disabled="true" selected="true"></option>
+								<option v-for="grupo in grupos" :value="grupo.id">{{grupo.nombre}}</option>
+							</select>
+						</article>
+						<article class="col s4">
+							<label for="fechaAsistencia">Fecha de asistencia</label>
+							<input type="text" name="fechaAsistencia" id="fechaAsistencia" class="datepicker" placeholder="dd/mm/aaaa" disabled="true">
+						</article>
+					</main>
 				</article>
-				<article class="col s4">
-					<v-select name="selectGrupos" id="selectGrupos" :items="grupos" select-text="Grupo">
-					</v-select>
+			</section>
+			<section class="col s12" id="sectionResultados" style="display: none">
+				<article class="card">
+					<main class="card-content row">
+						<section class="col s7" id="colChicos">
+							<header>
+								<h5 class="titulo">Lista de integrantes</h5>
+							</header>
+							<main id="listaChicos">
+								<section class="row row-li hoverable" v-for="chico in chicos">
+									<article class="col s6 l8 col-nombre valign-wrapper">
+										<p class="nombre">{{chico.nombre}}</p>
+									</article>
+									<article class="col s6 l4 col-radio valign-wrapper">
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
+											<label v-bind:for="'asist-'+chico.id">A</label>
+										</p>
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
+											<label v-bind:for="'falta-'+chico.id">F</label>
+										</p>
+										<p class="radio">
+											<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
+											<label v-bind:for="'fj-'+chico.id">FJ</label>
+										</p>
+									</article>
+								</section>
+							</main>
+						</section>
+						<section class="col s5" id="colGrupo">
+							<header>
+								<h5 class="titulo">Grupo</h5>
+							</header>
+							<main id="grupo">
+								<h6 class="titulo"><b>{{grupoSel.nombre}}</b></h6>
+								<p>Total de chicos: {{grupoSel.cantidadChicos}}</p>
+								<p>Asistieron: {{totalAsistieron}}</p>
+								<p>Faltaron: {{totalFaltas}}</p>
+								<p>Justificaron: {{totalJustificados}}</p>
+							</main>
+						</section>
+					</main>
+					<footer class=" card-content row">
+						<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="subirAsistencias" >Subir asistencias<a>		
+					</footer>
 				</article>
-				<article class="col s4">
-					<input type="text" name="fechaAsistencia" id="fechaAsistencia" class="datepicker" placeholder="fecha de asistencia">
-				</article>
-			</v-row>
-			<v-row class="row" id="rowResultados">
-					<article class="col s7" id="colChicos">
-						<header>
-							<h5 class="center-align">Lista de integrantes</h5>
-						</header>
-						<main id="listaChicos">
-							<hr>
-							<section class="row row-li" v-for="chico in chicos">
-								
-								<article class="col s6 l8 col-nombre valign-wrapper">
-									<p class="nombre">{{chico.nombre}}</p>
-								</article>
-								
-								<article class="col s6 l4 col-radio valign-wrapper">
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'asist-'+chico.id" class="with-gap">
-										<label v-bind:for="'asist-'+chico.id">A</label>
-									</p>
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'falta-'+chico.id" class="with-gap">
-										<label v-bind:for="'falta-'+chico.id">F</label>
-									</p>
-									<p class="radio">
-										<input type="radio" v-bind:name="'asistencia-'+chico.id" v-bind:id="'fj-'+chico.id" class="with-gap">
-										<label v-bind:for="'fj-'+chico.id">FJ</label>
-									</p>
-								</article>
-								<hr>
-							</section>
-						</main>
-					</article>
-					<article class="col s5" id="colGrupo">
-						<header>
-							<h5 class="center-align">Grupo</h5>
-						</header>
-						<main id="grupo">
-							<h6 class="center-align">{{grupoSel.nombre}}</h6>
-							<p>Total de chicos: {{grupoSel.cantidadChicos}}</p>
-							<p>Asistieron: {{totalAsistieron}}</p>
-							<p>Faltaron: {{totalFaltas}}</p>
-							<p>Justificaron: {{totalJustificados}}</p>
-						</main>
-					</article>
-			</v-row>
-			<v-row id="rowBotones">
-				<a class="btn waves-effect waves-light pull right" type="submit" name="action" @click="subirAsistencias" >Subir asistencias<a>
-			</v-row>
-			
-
+			</section>
 		</main>
-		<div id="modals">
+		<section id="modals">
 			<!-- Modal día incorrecto Structure -->
-		  <div id="modalDia" class="modal">
-		    <div class="modal-content">
+		  <section id="modalDia" class="modal">
+		    <main class="modal-content">
 		      <p class="center-align">El grupo seleccionado no se reúne ese día</p>
-		    </div>
-		    <div class="modal-footer">
+		    </main>
+		    <footer class="modal-footer">
 		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
-		    </div>
-		  </div>
+		    </footer>
+		  </section>
 		  <!-- Modal Confirmación Structure -->
-		  <div id="modalConfirmacion" class="modal">
-		    <div class="modal-content">
+		  <section id="modalConfirmacion" class="modal">
+		    <main class="modal-content">
 		      <p class="center-align">Las asistencias han sido subidas</p>
-		    </div>
-		    <div class="modal-footer">
+		    </main>
+		    <footer class="modal-footer">
 		      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
-		    </div>
-		  </div>
+		    </footer>
+		  </section>
 		  <!-- Modal Error Structure -->
-			<div id="modalError" class="modal">
-				<div class="modal-content">
+			<section id="modalError" class="modal">
+				<main class="modal-content">
 					<p class="center-align">Debe marcar las asistencias de todos los chicos</p>
-				</div>
-				<div class="modal-footer">
+				</main>
+				<footer class="modal-footer">
 					<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
-				</div>
-			</div>
-		</div>
+				</footer>
+			</section>
+		</section>
 	</body>
 	<footer>
 		<% include ../partials/scripts %>

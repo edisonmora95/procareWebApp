@@ -32,6 +32,7 @@ INSERT INTO Tipos(nombre, createdAt, updatedAt) VALUES ('Mayor', now(), now());
 /* DIRECTOR EJECUTIVO */
 INSERT INTO Personas (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) VALUES('0123456789', 'FUNDACION', 'PROCARE', 'Urdesa', '1995-06-01', 'masculino', 'procarewebapp@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
 INSERT INTO PersonaRol VALUES (now(), null, now(), now(), 1, 'Director Ejecutivo');
+<<<<<<< HEAD:public/scripts/populate_db_prod.sql
 /* PERSONAL */
 INSERT INTO  Personas (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) VALUES('0987654321', 'Personal', 'Personal', 'Urdesa', '2000-07-01', 'masculino', 'personal@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
 INSERT INTO PersonaRol VALUES (now(), null, now(), now(), 2, 'Personal');

@@ -1,20 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather:700');
 
-*{
-	/*border: 1px solid black;*/
-}
-
-.container{
-	margin-top: 5%;
-	margin-bottom: : 5%;
-	/*border: 1px solid black;*/
-	padding: 3%;
-	background-color: white;
-	border-radius: 2%;
-}
-body{
-	background-color: #d3dbdb;
-}
 #rowBusqueda, #rowResultados{
 	/*border: 1px solid red;*/
 	padding: 2%;
@@ -47,6 +31,21 @@ body{
 	overflow-y: scroll;
 }
 
-h5{
-	font-family: 'Merriweather', serif;
+.radio label{
+	padding-left: 75% !important;
+}
+
+.radio{
+	margin-right: 5% !important;
+	width: 50px;
+}
+
+#listaChicos, #grupo{
+	margin-top: 10%;
+}
+
+#listaChicos section{
+	padding: 2% 0;
+	border-bottom: 1px solid black;
+	padding-right: 5%;
 }
