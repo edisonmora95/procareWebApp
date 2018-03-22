@@ -12,9 +12,7 @@ hr {
   height: 1px;
   background-color: orange;
 }
-input, textarea{
-  text-transform:uppercase;
-}
+
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
@@ -48,7 +46,6 @@ input[type=number]::-webkit-outer-spin-button {
   .input-field input[type=text].valid {
      border-bottom: 1px solid #21378A;
      box-shadow: 0 1px 0 0 #000;
-     text-transform:uppercase;
    }
 
     .input-field input[type=email].valid {
@@ -86,9 +83,6 @@ legend {
 	color: black;
 }
 
-.modal{
-	width: 25%;
-}
 
 .is-danger{
 	border-color: red !important;
@@ -103,3 +97,6 @@ li a{
 	padding: 0 15% !important;
 }
 
+#article-loading {
+  margin-top: 2%;
+}

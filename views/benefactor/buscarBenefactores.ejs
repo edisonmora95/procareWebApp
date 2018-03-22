@@ -35,14 +35,13 @@
                     </tr>
                   </thead>
                   <tr v-for="item in benefactores">
-                    <td v-if="item.razonSocial!=null">{{item.razonSocial}}</td>
-                    <td v-else>{{item.nombres}} {{item.apellidos}}</td>
+                    <td v-if="item.razonSocial!=null" style="text-transform:uppercase">{{item.razonSocial}}</td>
+                    <td v-else style="text-transform:uppercase">{{item.nombres}} {{item.apellidos}}</td>
                     <td>{{item.cedula}}</td>
                     <td>{{item.tipoDonacion}}</td>
                     <td style="text-align:center;">{{item.diaCobro}}</td>
                     <td style="text-align:center;"> $ {{item.valorContribucion}}</td>
                     <td>
-                      <a @click="irAPerfil(item)"><i class="material-icons blue-text darken-1">edit</i></a>
                       <a @click="PreguntaparaEliminar(item)"> <i class="material-icons  red-text darken-4">delete</i></a>
                       <a :href="'/benefactores/perfil/' + item.personaId"><i class="material-icons">account_circle</i></a>
                     </td>

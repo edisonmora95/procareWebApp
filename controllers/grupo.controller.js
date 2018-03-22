@@ -200,7 +200,6 @@ module.exports.anadirProcarianoAGrupo = (req, res) => {
 
 module.exports.anadirProcarianosAGrupo = (req, res) => {
 	let arrayProcarianos = JSON.parse(req.body.integrantes.toString());
-	console.log('arrayProcarianos:', arrayProcarianos);
 	inicializarTransaccion()
 	.then( t => {
 		ModeloProcarianoGrupo.anadirProcarianosBulk(arrayProcarianos, t)

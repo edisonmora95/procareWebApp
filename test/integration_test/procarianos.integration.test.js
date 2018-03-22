@@ -41,7 +41,7 @@ describe('PROCARIANOS', () => {
 		it('CP1. Error Persona', function(done) {
 			this.timeout(15000);
 	    setTimeout(done, 15000);
-	    req.nombres = null;
+	    req.nombres = '<>';
 	    request(app)
 	    	.post('/api/procarianos/')
 	    	.set('x-access-token', token)
@@ -50,7 +50,7 @@ describe('PROCARIANOS', () => {
 					expect(res.body.estado).to.equal(false);
 					expect(res.body.mensaje).to.equal('Error en el servidor');
 					expect(res.body.error.tipo).to.equal('Validation error');
-					expect(res.body.error.mensaje).to.equal('nombres cannot be null');
+					expect(res.body.error.mensaje).to.equal('No puede ingresar caracteres especiales en "Nombre"');
 					done();
 				});
 		});
@@ -221,6 +221,7 @@ describe('PROCARIANOS', () => {
 	    	.get('/api/procarianos/' + idPersona)
 	    	.set('x-access-token', token)
 				.end( (err, res) => {
+					console.log(res.body)
 					expect(res.body.estado).to.equal(true);
 					expect(res.body.mensaje).to.equal('Búsqueda exitosa');
 					expect(res.body.datos.procariano.id).to.equal(11);

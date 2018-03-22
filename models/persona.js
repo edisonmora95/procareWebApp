@@ -25,14 +25,14 @@ module.exports = function(sequelize, DataTypes) {
           msg   : 'La cédula solo puede contener números'
         },
         len     : {
-          args  : [10, 10],
+          args  : [10, 13],
           msg   : 'La cédula debe tener 10 caracteres'
         },
       }
     },
     nombres: {
       type      : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true,
       validate  : {
         notEmpty  : {
           msg     : 'El campo "Nombres" no puede estar vacío'
@@ -45,7 +45,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     apellidos: {
       type      : DataTypes.STRING,
-      allowNull : false,
+      allowNull : true,
       validate  : {
         notEmpty  : {
           msg     : 'El campo "Apellidos" no puede estar vacío'
@@ -61,7 +61,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : true,
       validate  : {
         not : {
-          args : /[`~,<>;':"/[\]|{}()=_+-\d]/,
+          args : /[`~,<>;':"/[\]|{}()=_+-]/,
           msg  : 'No puede ingresar caracteres especiales en "Razón Social"'
         }
       }
@@ -81,7 +81,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     fechaNacimiento: {
       type      : DataTypes.DATE,
-      allowNull : false,
+      allowNull : true,
       validate  : {
         notEmpty  : {
           msg     : 'El campo "Fecha de nacimiento" no puede estar vacío'
@@ -198,7 +198,7 @@ module.exports = function(sequelize, DataTypes) {
       ///////////////////////////////////////
       buscarPersonaPorCedulaP: function(cedula){
         return new Promise( (resolve, reject) => {
-          if( !cedula ) { return reject('No ingresó la cédula a buscar'); }
+          if( !cedula ) { return reject( errors.SEQUELIZE_ERROR('No ingresó la cédula a buscar', 'Find error') ); }
           return this.findOne({
             where : {
               cedula : cedula
@@ -208,7 +208,7 @@ module.exports = function(sequelize, DataTypes) {
             return resolve(persona);
           })
           .catch( error => {
-            return reject(error);
+            return reject( errors.ERROR_HANDLER(error) );
           });
         });
       },
@@ -370,8 +370,47 @@ module.exports = function(sequelize, DataTypes) {
             return reject( errors.ERROR_HANDLER(fail) );
           });
         });
+      },
+      eliminarPersonaT: function(idPersona, t){
+        return new Promise( (resolve, reject) => {
+          if( !idPersona )     { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la persona') ); }
+          if( idPersona < 0 )  { return reject( errors.SEQUELIZE_FK_ERROR('Id de Persona inválido') ); }
+          return this.destroy({
+            where : {
+              id : idPersona
+            },
+            transaction : t
+          })
+          .then( resultado => {
+            if( resultado < 1 ) return reject( errors.SEQUELIZE_ERROR('No se encontró el registro de la Persona para eliminar', 'Delete error') );
+            return resolve(resultado);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });        
+      },
+      crearEmpresaT: function(empresa, transaction){
+        return new Promise( (resolve, reject) => {
+          if ( !empresa.razonSocial ) { return reject( errors.SEQUELIZE_ERROR('El campo "Razón Social" no puede estar vacío', 'Validation error') ); }
+          return this.create({
+            cedula      : empresa.ruc,
+            razonSocial : empresa.razonSocial,
+            direccion   : empresa.direccion,
+            email       : empresa.email,
+            convencional: empresa.convencional,
+            celular     : empresa.celular,
+            genero      : 'masculino'
+          }, { transaction : transaction } )
+          .then( registro => {
+            return resolve(registro);
+          })
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
+          });
+        });
       }
-
+      
     }
     });
     return Persona;

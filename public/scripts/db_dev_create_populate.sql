@@ -13,9 +13,9 @@
 
 
 -- Dumping database structure for procare_db_test
-DROP DATABASE IF EXISTS `procare_db_test`;
-CREATE DATABASE IF NOT EXISTS `procare_db_test` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `procare_db_test`;
+DROP DATABASE IF EXISTS `procare_db_dev`;
+CREATE DATABASE IF NOT EXISTS `procare_db_dev` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `procare_db_dev`;
 
 -- Dumping structure for table procare_db_test.animadores
 DROP TABLE IF EXISTS `animadores`;
@@ -509,7 +509,7 @@ CREATE TABLE IF NOT EXISTS `tipos` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 
 
-USE procare_db_test;
+USE procare_db_dev;
 /* ETAPAS */
 INSERT INTO `etapas`(nombre, createdAt, updatedAt) VALUES ('Primera etapa', now(), now());
 INSERT INTO `etapas`(nombre, createdAt, updatedAt) VALUES ('Segunda etapa', now(), now());
@@ -577,73 +577,3 @@ INSERT INTO `personarol`
 /* ASESOR */
 INSERT INTO `personas` (cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
               VALUES('0123254484', 'ASESOR', 'NIVEL', 'Urdesa', '1995-06-01', 'masculino', 'asesor@gmail.com', '$2a$10$bBByZWydss11nRa5c3p03OggdPT5IX6gDQj2pxMNU7dk3NdY/ywu2', now(), now());
-
-
-/* TESTS */
-
-/* Grupo a utilizarse para tests de grupo, grupoetapa y animador */
-INSERT INTO `grupos` (id, nombre, tipo, cantidadChicos, numeroReuniones, genero, createdAt, updatedAt)
-              VALUES(1, 'Grupo test', 'Formación', 0, 0, 'Procare', now(), now());
-INSERT INTO `grupoetapa` (fechaInicio, fechaFin, createdAt, updatedAt, EtapaId, GrupoId)
-              VALUES (now(), null, now(), now(), 1, 1);
-/* Se le añade como animador al animador con idProcariano = 1 */              
-INSERT INTO `animadores` (id, fechaInicio, fechaFin, createdAt, updatedAt, ProcarianoId, GrupoId)
-              VALUES (1, now(), null, now(), now(), 1, 1);
-/* Se crea un integrante del grupo */             
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES(8, '0023254484', 'Chico', 'Formacion', 'Urdesa', '2004-06-01', 'masculino', 'chico_formacion@gmail.com', null, now(), now());
-INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES  (2, 'COLEGIO', null, 'activo', now(), now(), 8);
-INSERT INTO `procarianogrupo` (fechaInicio, fechaFin, createdAt, updatedAt, GrupoId, ProcarianoId)
-              VALUES(now(), null, now(), now(), 1, 2);
-INSERT INTO `procarianotipo` (fechaInicio, fechaFin, createdAt, updatedAt, ProcarianoId, TipoId)              
-              VALUES (now(), null, now(), now(), 2, 1);
-
-
-/* Creación del grupo sin etapa y sin animador para test de añadir grupo a etapa y de añadir animador a grupo */
-INSERT INTO `grupos` (id, nombre, tipo, cantidadChicos, numeroReuniones, genero, createdAt, updatedAt)
-              VALUES(2, 'Grupo sin etapa', 'Formacion', 0, 0, 'Procare', now(), now());
-/* Se crea un animador sin rol y sin grupo para test de añadir rol y de añadir animador a grupo */
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES(9, '0123456780', 'ANIMADOR', 'SIN ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_sin_rol@gmail.com', null, now(), now());
-INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES  (3, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 9);
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento, genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES (10, '0125478548', 'Chico Formacion', 'Sin grupo', 'Sur', '2003-02-01', 'masculino', 'chico_sin_grupo@hotmail.com', null, now(), now());
-INSERT INTO  `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES (4, 'Nueva Semilla', null, 'activo', now(), now(), 10);
-INSERT INTO `procarianotipo` (fechaInicio, fechaFin, createdAt, updatedAt, ProcarianoId, TipoId)              
-              VALUES (now(), null, now(), now(), 4, 1);
-
-/* Creación de tareas */
-INSERT INTO `tareas` (id, nombre, descripcion, fechaPublicacion, fechaInicio, fechaFin, prioridad, estado, categoria, tipo, createdAt, updatedAt, idResponsable)
-              VALUES (1, 'Tarea del animador', 'Esta es la tarea del animador', now(), now(), now(), 1, 1, 1, 'tarea', now(), now(), 4);
-
-              /* Creación de tareas */
-INSERT INTO `eventos` (id, nombre, descripcion, fechaInicio, fechaFin, lugar, estado, tipo, createdAt, updatedAt, idOrganizador)
-              VALUES (1, 'Chocolate de Reyes', 'Este es el evento del chocolate de reyes', now(), now(), 'Casa Procare', 1, 'tarea', now(), now(), 4);
-
-/* Para test de creación de grupo. CP1. Procariano ya con rol de animador */
-
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES(11, '0123456799', 'ANIMADOR', 'CON ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_con_rol@gmail.com', null, now(), now());
-INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES  (5, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 11);
-INSERT INTO `personarol` 
-              VALUES (now(), null, now(), now(), 11, 'Animador');
-INSERT INTO `procarianotipo` 
-              VALUES (now(), null, now(), now(), 5, 2);
-
-/* Para test de edición de grupo. CP3. Procariano sin rol de animador */              
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES(12, '0123456709', 'ANIMADOR EDITAR GRUPO', 'SIN ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_editar_grupo_sin_rol@gmail.com', null, now(), now());
-INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES  (6, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 12);
-
-/* Para test de edición de grupo. CP4. Procariano con rol de animador */              
-INSERT INTO `personas` (id, cedula, nombres, apellidos, direccion, fechaNacimiento,genero, email, contrasenna, createdAt, updatedAt) 
-              VALUES(13, '0123456700', 'ANIMADOR EDITAR GRUPO', 'CON ROL', 'Urdesa', '1995-06-01', 'masculino', 'animador_editar_grupo_con_rol@gmail.com', null, now(), now());
-INSERT INTO `procarianos` (id, colegio, universidad, estado, createdAt ,updatedAt, PersonaId)
-              VALUES  (7, 'COLEGIO', 'UNIVERSIDAD', 'activo', now(), now(), 13);    
-INSERT INTO `personarol` 
-              VALUES (now(), null, now(), now(), 13, 'Animador');                        

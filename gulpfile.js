@@ -265,7 +265,7 @@ gulp.task('unit-test', function() {
 
 gulp.task('integration-test', function() {
     process.env.NODE_ENV = 'test';
-    gulp.src('./test/integration_test/animadores.integration.test.js', {
+    gulp.src('./test/integration_test/*.integration.test.js', {
             read: false
         })
         .pipe(mocha());
@@ -318,4 +318,17 @@ gulp.task('create-populate-db-test', function(cb){
         .on('end', function(){
             cb();
         });
+});
+
+gulp.task('create-populate-db-dev', function(cb){
+    process.env.NODE_ENV = 'development';
+    const src = './public/scripts/db_dev_create_populate.sql';
+    const user = config[process.env.NODE_ENV].username;
+    const pwd  = config[process.env.NODE_ENV].password;
+    const host = 'localhost';
+    const port = 3306;
+    const db   = config[process.env.NODE_ENV].database;
+    gulp.src(src)
+        .pipe(gmcfp(user, pwd, host, port, null, db));
+    cb();
 });

@@ -6,7 +6,7 @@
 */
 'use strict';
 
-const bcrypt = require('bcryptjs');
+const errors = require('../utils/errors');
 
 module.exports = function(sequelize, DataTypes) {
   let Benefactor = sequelize.define('Benefactor', {
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         max      : {
           args : [31],
-          msg  : 'El valor de la contribución no puede ser maxor a 31.'
+          msg  : 'El valor de día de cobro no puede ser mayor a 31.'
         }
       }
     },
@@ -96,25 +96,12 @@ module.exports = function(sequelize, DataTypes) {
           msg   : 'No puede ingresar caracteres especiales en "Observación"'
         }
       }
-    }
+    },
   }, {
     classMethods: {
       associate: function(models) {
         Benefactor.belongsTo(models.Persona);
         // Benefactor.belongsToMany(models.Persona, {through: 'BenefactorPersona'});
-      },
-      crearBenefactor: function(benefactor, callback, errorCallback) {
-        this.create({
-          PersonaId: benefactor.PersonaId,
-          valor_contribucion: benefactor.valor_contribucion,
-          dia_cobro: benefactor.dia_cobro,
-          tarjeta_credito: benefactor.tarjeta_credito,
-          tipo_donacion: benefactor.tipo_donacion,
-          estado: benefactor.estado,
-          nombre_gestor: benefactor.nombre_gestor,
-          relacion: benefactor.relacion,
-          observacion: benefactor.observacion
-        }).then(callback).catch(errorCallback);
       },
       obtenerProcarianoPorId: function(idBenefactor, successCallback, errorCallback) {
         const Persona = sequelize.import("../models/persona");
@@ -152,7 +139,7 @@ module.exports = function(sequelize, DataTypes) {
           })
           .catch( error => {
             return reject(error);
-          })
+          });
         });
       },
       obtenerProcarianoPorIdPersonaP: function(idPersona){
@@ -188,6 +175,9 @@ module.exports = function(sequelize, DataTypes) {
       */
       crearBenefactorT: function(benefactor, transaction){
         return new Promise( (resolve, reject) => {
+          if ( !benefactor.PersonaId )    { return reject( errors.SEQUELIZE_FK_ERROR('No ingresó el id de la Persona') ); }
+          if ( typeof benefactor.PersonaId != 'number' ) { return reject( errors.SEQUELIZE_ERROR('El id del benefactor debe ser número', 'Type error')); }
+          if ( benefactor.PersonaId < 0 ) { return reject( errors.SEQUELIZE_FK_ERROR('Id de la Persona inválido') ); }
           return this.create({
             PersonaId         : benefactor.PersonaId,
             valorContribucion : benefactor.valorContribucion,
@@ -202,8 +192,8 @@ module.exports = function(sequelize, DataTypes) {
           .then( benefactor => {
             return resolve(benefactor);
           })
-          .catch( error => {
-            return reject(error);
+          .catch( fail => {
+            return reject( errors.ERROR_HANDLER(fail) );
           });
         });
       }

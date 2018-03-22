@@ -6,9 +6,7 @@
 */
 'use strict';
 
-const utils 		= require('../utils/utils');
 const respuesta = require('../utils/respuestas');
-const co 				= require('co');
 
 const sequelize	 		= require('../models/').sequelize;
 const ModeloPersona	= require('../models/').Persona;
@@ -54,7 +52,26 @@ module.exports.crearPersona = (req, res, next) => {
 	.catch( fail => {
 		return respuesta.ERROR_SERVIDOR(res, fail);
 	});
-}
+};
+
+module.exports.crearEmpresa = (req, res, next) => {
+	inicializarTransaccion()
+	.then( t => {
+		ModeloPersona.crearEmpresaT(req.body, t)
+		.then( empresa => {
+			res.locals.t = t;
+			res.locals.idPersona = empresa.get('id');
+			next();
+		})
+		.catch( fail => {
+			t.rollback();
+			return respuesta.ERROR_SERVIDOR(res, fail);
+		});
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
 
 module.exports.editarPersona = (req, res, next) => {
 	const idPersona 			= req.params.id_persona;
@@ -88,7 +105,42 @@ module.exports.editarPersona = (req, res, next) => {
 	});
 };
 
-
+/*
+	@Autor: @edisonmora95
+	@FechaCreacion : 05/03/2018
+	@Descripcion:
+		*	Busca en la base de datos si existe un registro de Persona con esa cédula
+			*	Si existe, entonces se pasa el control al siguiente Controller de Crear Benefactor
+			*	Si no existe, se pasa el control a Crear Persona y luego a Crear Benefactor
+*/
+module.exports.buscarPorCedula = (req, res, next) => {
+	const identificacion = ( req.body.tipo === 'persona' ) ? req.body.cedula : ( req.body.tipo === 'empresa') ? req.body.ruc : null;
+	ModeloPersona.buscarPersonaPorCedulaP(identificacion)
+	.then( registro => {
+		if( !registro ) {
+			if( req.body.tipo === 'persona' ) {
+				this.crearPersona(req, res, next);	
+			} else if ( req.body.tipo === 'empresa' ) {
+				this.crearEmpresa(req, res, next);
+			} else {
+				return respuesta.ERROR_SERVIDOR(res, { mensaje : 'Tipo de benefactor incorrecto' } );
+			}
+		} else {
+			inicializarTransaccion()
+			.then( t => {
+				res.locals.t = t;
+				res.locals.idPersona = registro.get('id');
+				next();
+			})
+			.catch( fail => {
+				return respuesta.ERROR_SERVIDOR(res, fail);
+			});
+		}
+	})
+	.catch( fail => {
+		return respuesta.ERROR_SERVIDOR(res, fail);
+	});
+};
 
 function inicializarTransaccion(){
 	return new Promise( (resolve, reject) => {

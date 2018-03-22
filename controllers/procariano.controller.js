@@ -77,9 +77,7 @@ const crearProcariano = (req, res) => {
 		21/07/2017 @erialper, agrego la excepción de busquedad
 */
 const buscarProcariano = (req, res) => {
-
 	var jsonModelo = utils.generarJsonProcariano(req.query);
-	
 	ModeloProcariano.findAll({
 	    include: [{
 	        model: ModeloPersona ,
@@ -100,7 +98,7 @@ const buscarProcariano = (req, res) => {
 					cedula 					: 	procariano.Persona.cedula ,
 					nombres 				: 	procariano.Persona.nombres ,
 					apellidos 			: 	procariano.Persona.apellidos ,
-					direccion 			: 	procariano.Persona.fechaNacimiento ,
+					direccion 			: 	procariano.Persona.direccion ,
 					genero 					: 	procariano.Persona.genero ,
 					fechaNacimiento : 	procariano.Persona.fechaNacimiento ,
 					convencional 		: 	procariano.Persona.convencional ,

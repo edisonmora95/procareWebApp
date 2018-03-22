@@ -1,3 +1,4 @@
+'use strict';
 /*
 @Descripcion: Clase controladora de todos los procarianos
 @Autor: Jose Viteri
@@ -5,73 +6,41 @@
 */
 
 var modelo = require('../models');
-var utils     = require('../utils/utils')
-let respuesta = require('../utils/respuestas');
-const co      = require('co');
+const respuesta = require('../utils/respuestas');
 
 let sequelize           = require('../models/').sequelize;
 const ModeloBenefactor  = require('../models/').Benefactor;
-const ModeloPersona     = require('../models/').Persona;
 
 /*
-Autor : JOSE ALCIVAR
-Creado : 06/08/2017
-Modificado: 06/08/2017 @josealcivar agrega un benefactor
+  Autor : JOSE ALCIVAR
+  Creado : 06/08/2017
+  Modificado: 
+    06/08/2017 @josealcivar agrega un benefactor
+    05/03/2018  @edisonmora95 Cambiado a varios Controllers
 */
-const crearBenefactor = (req, res, next) => {
-  let datos = {};
-  let fechaNacimiento = ( req.body.fechaNacimiento === '' ) ? null : new Date(req.body.fechaNacimiento);
-  let razonSocial     = ( req.body.razonSocial === '' ) ? ( req.body.nombres + ' ' + req.body.apellidos ) : req.body.razonSocial;
-  let persona         = {
-      cedula          : req.body.cedula,
-      nombres         : req.body.nombres,
-      apellidos       : req.body.apellidos,
-      razonsocial     : razonSocial,
-      direccion       : req.body.direccion,
-      fechaNacimiento : fechaNacimiento,
-      genero          : req.body.genero,
-      email           : req.body.email,
-      celular         : req.body.celular,
-      trabajo         : req.body.trabajo,
-      convencional    : req.body.convencional
+const crearBenefactor = (req, res) => {
+  let transaction = res.locals.t;
+  const benefactor = {
+    PersonaId         : res.locals.idPersona,
+    valorContribucion : req.body.valorContribucion,
+    diaCobro          : req.body.diaCobro,
+    tarjetaCredito    : req.body.tarjetaCredito,
+    tipoDonacion      : req.body.tipoDonacion,
+    estado            : req.body.estado,
+    nombreGestor      : req.body.nombreGestor,
+    relacion          : req.body.relacion,
+    observacion       : req.body.observacion
   };
-  let valor        = req.body.valorContribucion;
-  let result       = Number( valor.replace(/[^0-9\.]+/g, "") );
-  let valordolares = parseFloat(result);
-
-  co(function* (){
-    let t = yield inicializarTransaccion();
-    let p = yield ModeloPersona.buscarPersonaPorCedulaP(persona.cedula);
-    if ( !p ) {
-      p = yield ModeloPersona.crearPersonaT(persona, t);
-    }
-    const personaId        = p.get('id');
-    const benefactorExiste = yield ModeloBenefactor.obtenerProcarianoPorIdPersonaP(personaId);
-    if ( benefactorExiste ){
-      t.rollback();
-      return respuesta.error(res, 'No se pudo crear al benefactor', 'Ya existe el benefactor en la base de datos', null);
-    }    
-    const benefactor = {
-      PersonaId         : personaId,
-      valorContribucion : valordolares,
-      diaCobro          : req.body.diaCobro,
-      tarjetaCredito    : req.body.tarjetaCredito,
-      tipoDonacion      : req.body.tipoDonacion,
-      estado            : req.body.estado,
-      nombreGestor      : req.body.nombreGestor,
-      relacion          : req.body.relacion,
-      observacion       : req.body.observacion
-    };
-    datos.persona    = p;
-    datos.benefactor = benefactor;
-    yield ModeloBenefactor.crearBenefactorT(benefactor, t);
-    t.commit();
-    return respuesta.okCreate(res, 'Benefactor creado correctamente', datos);
+  ModeloBenefactor.crearBenefactorT(benefactor, transaction)
+  .then( registro => {
+    transaction.commit();
+    return respuesta.okCreate(res, 'Benefactor creado correctamente', registro.get('id'));
   })
   .catch( fail => {
-    const mensajeError = fail.errors[0].message;
-    return respuesta.error(res, 'No se pudo crear al benefactor', mensajeError, fail);
+    res.locals.t.rollback();
+    return respuesta.ERROR_SERVIDOR(res, fail);
   });
+
 };
 
 

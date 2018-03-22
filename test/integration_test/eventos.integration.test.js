@@ -116,10 +116,8 @@ describe('EVENTOS', () => {
 		});
 	});
 
-	describe('eliminarEvento', () => {
+	describe.skip('eliminarEvento', () => {
 		it('CP1. Eliminación exitosa', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.delete('/api/eventos/1')
@@ -132,8 +130,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP2. Id no enviado', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.delete('/api/eventos/')
@@ -145,8 +141,6 @@ describe('EVENTOS', () => {
 		});
 
 		it('CP3. Id inválido', function(done) {
-			this.timeout(15000);
-	    setTimeout(done, 15000);
 
 	    request(app)
 	    	.delete('/api/eventos/2000')
